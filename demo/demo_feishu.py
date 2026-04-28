@@ -262,6 +262,17 @@ class MemoryExtractor:
                 "importance": 0.7,
             })
 
+        # Deduplicate extracted memories by content to avoid storing the same
+        # information multiple times when a message matches several categories.
+        seen_contents = set()
+        unique_memories = []
+        for mem in result["extracted_memories"]:
+            content_key = mem.get("content", "").strip().lower()
+            if content_key not in seen_contents:
+                seen_contents.add(content_key)
+                unique_memories.append(mem)
+        result["extracted_memories"] = unique_memories
+
         # Calculate overall confidence
         if result["classifications"]:
             result["confidence"] = min(0.5 + len(result["classifications"]) * 0.15, 0.95)
@@ -464,14 +475,55 @@ class FeishuMemoryPipeline:
         }
 
     def query_memories(self, query: str, user: str = None) -> List[Dict]:
-        """Search stored memories by query."""
+        """Search stored memories by query.
+
+        Uses multi-strategy matching to handle Chinese text well:
+        1. Exact substring match
+        2. Bigram overlap (splits query into 2-char segments)
+        3. Keyword overlap after splitting on common separators
+
+        When a user/owner filter is provided, results are scoped to that user.
+        """
         query_lower = query.lower()
+        # Build query bigrams for Chinese text matching
+        query_bigrams = set()
+        for i in range(len(query_lower) - 1):
+            query_bigrams.add(query_lower[i:i+2])
+        # Also include individual characters for short queries
+        query_chars = set(query_lower)
+        # Split on common separators to get keyword fragments
+        query_keywords = set(query_lower.split())
+
+        def _score_match(content: str) -> float:
+            """Return a relevance score (0..1) for content vs query."""
+            if not content:
+                return 0.0
+            # Strategy 1: exact substring
+            if query_lower in content:
+                return 1.0
+            # Strategy 2: bigram overlap
+            content_bigrams = set()
+            for i in range(len(content) - 1):
+                content_bigrams.add(content[i:i+2])
+            if query_bigrams:
+                bigram_overlap = len(query_bigrams & content_bigrams) / len(query_bigrams)
+            else:
+                bigram_overlap = 0.0
+            # Strategy 3: keyword overlap
+            keyword_hits = sum(1 for kw in query_keywords if kw in content)
+            keyword_score = keyword_hits / max(len(query_keywords), 1)
+            # Combine: take the best of bigram and keyword strategies
+            return max(bigram_overlap, keyword_score)
+
         results = []
         for mem in self._memories:
+            # User/owner isolation: when user filter is set, only return that user's memories
+            if user is not None and mem.get("source_sender") != user:
+                continue
             content = mem.get("content", "").lower()
-            if query_lower in content or any(w in content for w in query_lower.split()):
-                if user is None or mem.get("source_sender") == user:
-                    results.append(mem)
+            score = _score_match(content)
+            if score > 0.3:  # threshold for a match
+                results.append(mem)
         return results
 
     def push_alerts(self, chat_id: str, alert_type: str = "freshness") -> Dict[str, Any]:
