@@ -2,12 +2,12 @@
   "dataset_name": "anti_interference",
   "version": "2.0",
   "description": "Tests the memory engine's ability to recall target information despite various noise patterns. 25 test cases across 6 categories including expert-level multi-hop and cross-type interference.",
-  "total_cases": 25,
+  "total_cases": 27,
   "difficulty_distribution": {
     "easy": 4,
     "medium": 7,
     "hard": 9,
-    "expert": 5
+    "expert": 7
   },
   "test_cases": [
     {
@@ -23,24 +23,62 @@
           "owner": "local"
         },
         "noise": [
-          {"user_msg": "今天天气不错", "assistant_msg": "是的，天气很好。", "timestamp": "2026-05-01T10:05:00Z"},
-          {"user_msg": "帮我订一杯拿铁咖啡", "assistant_msg": "已为您下单。", "timestamp": "2026-05-01T10:10:00Z"},
-          {"user_msg": "最近有部新电影上映", "assistant_msg": "是的，您可以看看评分。", "timestamp": "2026-05-01T10:15:00Z"},
-          {"user_msg": "明天要开会吗", "assistant_msg": "您明天上午10点有周会。", "timestamp": "2026-05-01T10:20:00Z"}
+          {
+            "user_msg": "今天天气不错",
+            "assistant_msg": "是的，天气很好。",
+            "timestamp": "2026-05-01T10:05:00Z"
+          },
+          {
+            "user_msg": "帮我订一杯拿铁咖啡",
+            "assistant_msg": "已为您下单。",
+            "timestamp": "2026-05-01T10:10:00Z"
+          },
+          {
+            "user_msg": "最近有部新电影上映",
+            "assistant_msg": "是的，您可以看看评分。",
+            "timestamp": "2026-05-01T10:15:00Z"
+          },
+          {
+            "user_msg": "明天要开会吗",
+            "assistant_msg": "您明天上午10点有周会。",
+            "timestamp": "2026-05-01T10:20:00Z"
+          }
         ],
         "query": "客户A 技术方案汇报",
         "max_results": 10
       },
       "expected": {
-        "expected_keywords": ["客户A", "技术方案汇报", "下周三"],
-        "noise_keywords": ["天气", "拿铁", "电影"],
-        "expected_answer_contains": ["客户A"]
+        "expected_keywords": [
+          "客户A",
+          "技术方案汇报",
+          "下周三"
+        ],
+        "noise_keywords": [
+          "天气",
+          "拿铁",
+          "电影"
+        ],
+        "expected_answer_contains": [
+          "客户A"
+        ]
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.90, "min": 0.50},
-        "precision": {"target": 0.85, "min": 0.50},
-        "noise_injection_rate": {"target": 0.05, "max": 0.10},
-        "f1_score": {"target": 0.87, "min": 0.50},
+        "recall": {
+          "target": 0.9,
+          "min": 0.5
+        },
+        "precision": {
+          "target": 0.85,
+          "min": 0.5
+        },
+        "noise_injection_rate": {
+          "target": 0.05,
+          "max": 0.1
+        },
+        "f1_score": {
+          "target": 0.87,
+          "min": 0.5
+        },
         "min_chunks": 1
       }
     },
@@ -62,13 +100,27 @@
         "max_results": 10
       },
       "expected": {
-        "expected_keywords": ["80万", "项目B"],
-        "allowed_variants": ["80万", "80万元", "八十万元"],
-        "expected_answer_contains": ["80万"]
+        "expected_keywords": [
+          "80万",
+          "项目B"
+        ],
+        "allowed_variants": [
+          "80万",
+          "80万元",
+          "八十万元"
+        ],
+        "expected_answer_contains": [
+          "80万"
+        ]
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.90, "min": 0.30},
-        "numeric_accuracy": {"target": 1.0},
+        "recall": {
+          "target": 0.9,
+          "min": 0.3
+        },
+        "numeric_accuracy": {
+          "target": 1.0
+        },
         "min_chunks": 1
       }
     },
@@ -90,13 +142,27 @@
         "max_results": 10
       },
       "expected": {
-        "expected_keywords": ["80万", "项目B"],
-        "allowed_variants": ["80万", "80万元", "八十万元"],
-        "expected_answer_contains": ["80万"]
+        "expected_keywords": [
+          "80万",
+          "项目B"
+        ],
+        "allowed_variants": [
+          "80万",
+          "80万元",
+          "八十万元"
+        ],
+        "expected_answer_contains": [
+          "80万"
+        ]
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.80, "min": 0.30},
-        "numeric_accuracy": {"target": 1.0},
+        "recall": {
+          "target": 0.8,
+          "min": 0.3
+        },
+        "numeric_accuracy": {
+          "target": 1.0
+        },
         "min_chunks": 1
       }
     },
@@ -118,13 +184,27 @@
         "max_results": 10
       },
       "expected": {
-        "expected_keywords": ["80万", "项目B"],
-        "allowed_variants": ["80万", "80万元", "八十万元"],
-        "expected_answer_contains": ["80万"]
+        "expected_keywords": [
+          "80万",
+          "项目B"
+        ],
+        "allowed_variants": [
+          "80万",
+          "80万元",
+          "八十万元"
+        ],
+        "expected_answer_contains": [
+          "80万"
+        ]
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.70, "min": 0.20},
-        "numeric_accuracy": {"target": 1.0},
+        "recall": {
+          "target": 0.7,
+          "min": 0.2
+        },
+        "numeric_accuracy": {
+          "target": 1.0
+        },
         "min_chunks": 1
       }
     },
@@ -146,13 +226,27 @@
         "max_results": 10
       },
       "expected": {
-        "expected_keywords": ["80万", "项目B"],
-        "allowed_variants": ["80万", "80万元", "八十万元"],
-        "expected_answer_contains": ["80万"]
+        "expected_keywords": [
+          "80万",
+          "项目B"
+        ],
+        "allowed_variants": [
+          "80万",
+          "80万元",
+          "八十万元"
+        ],
+        "expected_answer_contains": [
+          "80万"
+        ]
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.50, "min": 0.10},
-        "numeric_accuracy": {"target": 1.0},
+        "recall": {
+          "target": 0.5,
+          "min": 0.1
+        },
+        "numeric_accuracy": {
+          "target": 1.0
+        },
         "min_chunks": 1
       }
     },
@@ -169,23 +263,50 @@
           "owner": "local"
         },
         "noise": [
-          {"user_msg": "项目D的负责人是谁", "assistant_msg": "项目D负责人是李四。", "timestamp": "2026-04-28T09:10:00Z"},
-          {"user_msg": "项目E的技术负责人是王五吗", "assistant_msg": "是的，项目E技术负责人是王五。", "timestamp": "2026-04-28T09:20:00Z"},
-          {"user_msg": "项目F的测试负责人换成赵六了", "assistant_msg": "已更新，项目F测试负责人：赵六。", "timestamp": "2026-04-28T09:30:00Z"}
+          {
+            "user_msg": "项目D的负责人是谁",
+            "assistant_msg": "项目D负责人是李四。",
+            "timestamp": "2026-04-28T09:10:00Z"
+          },
+          {
+            "user_msg": "项目E的技术负责人是王五吗",
+            "assistant_msg": "是的，项目E技术负责人是王五。",
+            "timestamp": "2026-04-28T09:20:00Z"
+          },
+          {
+            "user_msg": "项目F的测试负责人换成赵六了",
+            "assistant_msg": "已更新，项目F测试负责人：赵六。",
+            "timestamp": "2026-04-28T09:30:00Z"
+          }
         ],
         "query": "项目C 技术负责人",
         "max_results": 10
       },
       "expected": {
         "expected_answer": "张三",
-        "distractor_answers": ["李四", "王五", "赵六"],
-        "expected_answer_contains": ["项目C", "张三"]
+        "distractor_answers": [
+          "李四",
+          "王五",
+          "赵六"
+        ],
+        "expected_answer_contains": [
+          "项目C",
+          "张三"
+        ]
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.90, "min": 0.50},
-        "precision": {"target": 0.85, "min": 0.50},
+        "recall": {
+          "target": 0.9,
+          "min": 0.5
+        },
+        "precision": {
+          "target": 0.85,
+          "min": 0.5
+        },
         "max_distractors": 1,
-        "target_found": {"target": 1.0}
+        "target_found": {
+          "target": 1.0
+        }
       }
     },
     {
@@ -201,24 +322,56 @@
           "owner": "local"
         },
         "noise": [
-          {"user_msg": "项目Beta的后端开发是孙八", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:05:00Z"},
-          {"user_msg": "项目Gamma前端由周九负责", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:10:00Z"},
-          {"user_msg": "项目Delta的后端架构师是吴十", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:15:00Z"},
-          {"user_msg": "项目Epsilon的全栈开发是郑十一", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:20:00Z"}
+          {
+            "user_msg": "项目Beta的后端开发是孙八",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:05:00Z"
+          },
+          {
+            "user_msg": "项目Gamma前端由周九负责",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:10:00Z"
+          },
+          {
+            "user_msg": "项目Delta的后端架构师是吴十",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:15:00Z"
+          },
+          {
+            "user_msg": "项目Epsilon的全栈开发是郑十一",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:20:00Z"
+          }
         ],
         "query": "项目Alpha 后端开发",
         "max_results": 10
       },
       "expected": {
         "expected_answer": "陈七",
-        "distractor_answers": ["孙八", "周九", "吴十", "郑十一"],
-        "expected_answer_contains": ["项目Alpha", "陈七"]
+        "distractor_answers": [
+          "孙八",
+          "周九",
+          "吴十",
+          "郑十一"
+        ],
+        "expected_answer_contains": [
+          "项目Alpha",
+          "陈七"
+        ]
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.90, "min": 0.50},
-        "precision": {"target": 0.85, "min": 0.50},
+        "recall": {
+          "target": 0.9,
+          "min": 0.5
+        },
+        "precision": {
+          "target": 0.85,
+          "min": 0.5
+        },
         "max_distractors": 1,
-        "target_found": {"target": 1.0}
+        "target_found": {
+          "target": 1.0
+        }
       }
     },
     {
@@ -234,23 +387,51 @@
           "owner": "local"
         },
         "noise": [
-          {"user_msg": "后端组的周报由王二提交", "assistant_msg": "已记录后端组周报安排。", "timestamp": "2026-04-28T09:10:00Z"},
-          {"user_msg": "测试组的周报由赵三提交", "assistant_msg": "已记录测试组周报安排。", "timestamp": "2026-04-28T09:20:00Z"},
-          {"user_msg": "运维组的周报由钱四提交", "assistant_msg": "已记录运维组周报安排。", "timestamp": "2026-04-28T09:30:00Z"}
+          {
+            "user_msg": "后端组的周报由王二提交",
+            "assistant_msg": "已记录后端组周报安排。",
+            "timestamp": "2026-04-28T09:10:00Z"
+          },
+          {
+            "user_msg": "测试组的周报由赵三提交",
+            "assistant_msg": "已记录测试组周报安排。",
+            "timestamp": "2026-04-28T09:20:00Z"
+          },
+          {
+            "user_msg": "运维组的周报由钱四提交",
+            "assistant_msg": "已记录运维组周报安排。",
+            "timestamp": "2026-04-28T09:30:00Z"
+          }
         ],
         "query": "前端组 周报 提交人 截止时间",
         "max_results": 10
       },
       "expected": {
         "expected_answer": "刘一",
-        "distractor_answers": ["王二", "赵三", "钱四"],
-        "expected_answer_contains": ["前端组", "刘一", "4点"]
+        "distractor_answers": [
+          "王二",
+          "赵三",
+          "钱四"
+        ],
+        "expected_answer_contains": [
+          "前端组",
+          "刘一",
+          "4点"
+        ]
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.90, "min": 0.50},
-        "precision": {"target": 0.85, "min": 0.50},
+        "recall": {
+          "target": 0.9,
+          "min": 0.5
+        },
+        "precision": {
+          "target": 0.85,
+          "min": 0.5
+        },
         "max_distractors": 1,
-        "target_found": {"target": 1.0}
+        "target_found": {
+          "target": 1.0
+        }
       }
     },
     {
@@ -266,23 +447,49 @@
           "owner": "local"
         },
         "noise": [
-          {"user_msg": "张三的薪资是每月22000元", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:10:00Z"},
-          {"user_msg": "李四薪资涨到30000了", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:20:00Z"},
-          {"user_msg": "王五的薪资调整为18000", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:30:00Z"}
+          {
+            "user_msg": "张三的薪资是每月22000元",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:10:00Z"
+          },
+          {
+            "user_msg": "李四薪资涨到30000了",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:20:00Z"
+          },
+          {
+            "user_msg": "王五的薪资调整为18000",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:30:00Z"
+          }
         ],
         "query": "我 薪资 调整",
         "max_results": 10
       },
       "expected": {
         "expected_answer": "25000",
-        "distractor_answers": ["22000", "30000", "18000"],
-        "expected_answer_contains": ["25000"]
+        "distractor_answers": [
+          "22000",
+          "30000",
+          "18000"
+        ],
+        "expected_answer_contains": [
+          "25000"
+        ]
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.90, "min": 0.50},
-        "precision": {"target": 0.85, "min": 0.50},
+        "recall": {
+          "target": 0.9,
+          "min": 0.5
+        },
+        "precision": {
+          "target": 0.85,
+          "min": 0.5
+        },
         "max_distractors": 1,
-        "target_found": {"target": 1.0}
+        "target_found": {
+          "target": 1.0
+        }
       }
     },
     {
@@ -298,23 +505,51 @@
           "owner": "local"
         },
         "noise": [
-          {"user_msg": "和客户ABC的会议是周二下午", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:10:00Z"},
-          {"user_msg": "和客户DEF的电话会议周四", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:20:00Z"},
-          {"user_msg": "客户GHI要周五来公司参观", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:30:00Z"}
+          {
+            "user_msg": "和客户ABC的会议是周二下午",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:10:00Z"
+          },
+          {
+            "user_msg": "和客户DEF的电话会议周四",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:20:00Z"
+          },
+          {
+            "user_msg": "客户GHI要周五来公司参观",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:30:00Z"
+          }
         ],
         "query": "客户XYZ 会议 时间",
         "max_results": 10
       },
       "expected": {
         "expected_answer": "周三上午9点",
-        "distractor_answers": ["周二", "周四", "周五"],
-        "expected_answer_contains": ["客户XYZ", "周三", "9"]
+        "distractor_answers": [
+          "周二",
+          "周四",
+          "周五"
+        ],
+        "expected_answer_contains": [
+          "客户XYZ",
+          "周三",
+          "9"
+        ]
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.90, "min": 0.50},
-        "precision": {"target": 0.85, "min": 0.50},
+        "recall": {
+          "target": 0.9,
+          "min": 0.5
+        },
+        "precision": {
+          "target": 0.85,
+          "min": 0.5
+        },
         "max_distractors": 1,
-        "target_found": {"target": 1.0}
+        "target_found": {
+          "target": 1.0
+        }
       }
     },
     {
@@ -340,10 +575,14 @@
       },
       "expected": {
         "expected_answer": "Herme$2026!",
-        "expected_answer_contains": ["Herme$2026!"]
+        "expected_answer_contains": [
+          "Herme$2026!"
+        ]
       },
       "evaluation_criteria": {
-        "must_retrieve": {"target": 1.0},
+        "must_retrieve": {
+          "target": 1.0
+        },
         "min_chunks": 1
       }
     },
@@ -370,10 +609,14 @@
       },
       "expected": {
         "expected_answer": "Herme$2026!",
-        "expected_answer_contains": ["Herme$2026!"]
+        "expected_answer_contains": [
+          "Herme$2026!"
+        ]
       },
       "evaluation_criteria": {
-        "must_retrieve": {"target": 1.0},
+        "must_retrieve": {
+          "target": 1.0
+        },
         "min_chunks": 1
       }
     },
@@ -400,10 +643,16 @@
       },
       "expected": {
         "expected_answer": "P@ssw0rd",
-        "expected_answer_contains": ["db.internal", "5432", "prod"]
+        "expected_answer_contains": [
+          "db.internal",
+          "5432",
+          "prod"
+        ]
       },
       "evaluation_criteria": {
-        "must_retrieve": {"target": 1.0},
+        "must_retrieve": {
+          "target": 1.0
+        },
         "min_chunks": 1
       }
     },
@@ -420,21 +669,43 @@
           "owner": "user_self"
         },
         "noise": [
-          {"user_msg": "张三下周三也要去拜访客户A", "assistant_msg": "已记录张三的行程。", "timestamp": "2026-05-01T10:05:00Z", "owner": "user_zhangsan"},
-          {"user_msg": "李四下周三去客户B", "assistant_msg": "已记录李四的行程。", "timestamp": "2026-05-01T10:10:00Z", "owner": "user_lisi"}
+          {
+            "user_msg": "张三下周三也要去拜访客户A",
+            "assistant_msg": "已记录张三的行程。",
+            "timestamp": "2026-05-01T10:05:00Z",
+            "owner": "user_zhangsan"
+          },
+          {
+            "user_msg": "李四下周三去客户B",
+            "assistant_msg": "已记录李四的行程。",
+            "timestamp": "2026-05-01T10:10:00Z",
+            "owner": "user_lisi"
+          }
         ],
         "query": "我 客户A",
         "max_results": 10
       },
       "expected": {
         "self_owner": "user_self",
-        "noise_owners": ["user_zhangsan", "user_lisi"],
-        "expected_answer_contains": ["我", "客户A"]
+        "noise_owners": [
+          "user_zhangsan",
+          "user_lisi"
+        ],
+        "expected_answer_contains": [
+          "我",
+          "客户A"
+        ]
       },
       "evaluation_criteria": {
-        "self_identified": {"target": 1.0},
-        "not_confused": {"target": 1.0},
-        "role_accuracy": {"target": 0.95}
+        "self_identified": {
+          "target": 1.0
+        },
+        "not_confused": {
+          "target": 1.0
+        },
+        "role_accuracy": {
+          "target": 0.95
+        }
       }
     },
     {
@@ -450,22 +721,52 @@
           "owner": "user_self"
         },
         "noise": [
-          {"user_msg": "张三负责项目Beta的前端开发", "assistant_msg": "已记录。", "timestamp": "2026-05-01T10:05:00Z", "owner": "user_zhangsan"},
-          {"user_msg": "李四负责项目Gamma的前端开发", "assistant_msg": "已记录。", "timestamp": "2026-05-01T10:10:00Z", "owner": "user_lisi"},
-          {"user_msg": "王五负责项目Delta的前端开发", "assistant_msg": "已记录。", "timestamp": "2026-05-01T10:15:00Z", "owner": "user_wangwu"},
-          {"user_msg": "赵六负责项目Epsilon的前端开发", "assistant_msg": "已记录。", "timestamp": "2026-05-01T10:20:00Z", "owner": "user_zhaoliu"}
+          {
+            "user_msg": "张三负责项目Beta的前端开发",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-05-01T10:05:00Z",
+            "owner": "user_zhangsan"
+          },
+          {
+            "user_msg": "李四负责项目Gamma的前端开发",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-05-01T10:10:00Z",
+            "owner": "user_lisi"
+          },
+          {
+            "user_msg": "王五负责项目Delta的前端开发",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-05-01T10:15:00Z",
+            "owner": "user_wangwu"
+          },
+          {
+            "user_msg": "赵六负责项目Epsilon的前端开发",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-05-01T10:20:00Z",
+            "owner": "user_zhaoliu"
+          }
         ],
         "query": "我 前端开发 负责项目",
         "max_results": 10
       },
       "expected": {
         "self_owner": "user_self",
-        "expected_answer_contains": ["我", "项目Alpha", "前端开发"]
+        "expected_answer_contains": [
+          "我",
+          "项目Alpha",
+          "前端开发"
+        ]
       },
       "evaluation_criteria": {
-        "self_identified": {"target": 1.0},
-        "not_confused": {"target": 1.0},
-        "role_accuracy": {"target": 0.95}
+        "self_identified": {
+          "target": 1.0
+        },
+        "not_confused": {
+          "target": 1.0
+        },
+        "role_accuracy": {
+          "target": 0.95
+        }
       }
     },
     {
@@ -481,21 +782,46 @@
           "owner": "user_self"
         },
         "noise": [
-          {"user_msg": "张三周一上午在A301开项目评审会", "assistant_msg": "已记录。", "timestamp": "2026-05-01T10:05:00Z", "owner": "user_zhangsan"},
-          {"user_msg": "李四周一上午在A302培训新人", "assistant_msg": "已记录。", "timestamp": "2026-05-01T10:10:00Z", "owner": "user_lisi"},
-          {"user_msg": "王五周一在A301下午有面试", "assistant_msg": "已记录。", "timestamp": "2026-05-01T10:15:00Z", "owner": "user_wangwu"}
+          {
+            "user_msg": "张三周一上午在A301开项目评审会",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-05-01T10:05:00Z",
+            "owner": "user_zhangsan"
+          },
+          {
+            "user_msg": "李四周一上午在A302培训新人",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-05-01T10:10:00Z",
+            "owner": "user_lisi"
+          },
+          {
+            "user_msg": "王五周一在A301下午有面试",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-05-01T10:15:00Z",
+            "owner": "user_wangwu"
+          }
         ],
         "query": "我 周一 会议室 安排",
         "max_results": 10
       },
       "expected": {
         "self_owner": "user_self",
-        "expected_answer_contains": ["我", "A301", "面试"]
+        "expected_answer_contains": [
+          "我",
+          "A301",
+          "面试"
+        ]
       },
       "evaluation_criteria": {
-        "self_identified": {"target": 1.0},
-        "not_confused": {"target": 1.0},
-        "role_accuracy": {"target": 0.90}
+        "self_identified": {
+          "target": 1.0
+        },
+        "not_confused": {
+          "target": 1.0
+        },
+        "role_accuracy": {
+          "target": 0.9
+        }
       }
     },
     {
@@ -517,10 +843,17 @@
         "max_results": 10
       },
       "expected": {
-        "expected_answer_contains": ["React", "Go", "技术栈"]
+        "expected_answer_contains": [
+          "React",
+          "Go",
+          "技术栈"
+        ]
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.70, "min": 0.30},
+        "recall": {
+          "target": 0.7,
+          "min": 0.3
+        },
         "min_chunks": 1
       }
     },
@@ -537,18 +870,38 @@
           "owner": "local"
         },
         "noise": [
-          {"user_msg": "今天数据库做了主从切换", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:05:00Z"},
-          {"user_msg": "The frontend deployment is using Vercel now", "assistant_msg": "Noted.", "timestamp": "2026-04-28T09:10:00Z"},
-          {"user_msg": "Redis集群扩容到16个节点了", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:15:00Z"}
+          {
+            "user_msg": "今天数据库做了主从切换",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:05:00Z"
+          },
+          {
+            "user_msg": "The frontend deployment is using Vercel now",
+            "assistant_msg": "Noted.",
+            "timestamp": "2026-04-28T09:10:00Z"
+          },
+          {
+            "user_msg": "Redis集群扩容到16个节点了",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:15:00Z"
+          }
         ],
         "query": "API gateway Kong configuration",
         "max_results": 10
       },
       "expected": {
-        "expected_answer_contains": ["Kong", "3.0", "rate limit", "1000"]
+        "expected_answer_contains": [
+          "Kong",
+          "3.0",
+          "rate limit",
+          "1000"
+        ]
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.80, "min": 0.50},
+        "recall": {
+          "target": 0.8,
+          "min": 0.5
+        },
         "min_chunks": 1
       }
     },
@@ -565,18 +918,37 @@
           "owner": "local"
         },
         "noise": [
-          {"user_msg": "CDN配置更新了，现在用CloudFlare", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:05:00Z"},
-          {"user_msg": "CRS测试发现3个高危漏洞", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:10:00Z"},
-          {"user_msg": "CRM系统升级到v5.2了", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:15:00Z"}
+          {
+            "user_msg": "CDN配置更新了，现在用CloudFlare",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:05:00Z"
+          },
+          {
+            "user_msg": "CRS测试发现3个高危漏洞",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:10:00Z"
+          },
+          {
+            "user_msg": "CRM系统升级到v5.2了",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:15:00Z"
+          }
         ],
         "query": "CI/CD pipeline 部署 K8s",
         "max_results": 10
       },
       "expected": {
-        "expected_answer_contains": ["GitLab CI", "K8s", "staging"]
+        "expected_answer_contains": [
+          "GitLab CI",
+          "K8s",
+          "staging"
+        ]
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.80, "min": 0.40},
+        "recall": {
+          "target": 0.8,
+          "min": 0.4
+        },
         "min_chunks": 1
       }
     },
@@ -593,18 +965,38 @@
           "owner": "local"
         },
         "noise": [
-          {"user_msg": "数据库备份脚本改了一下", "assistant_msg": "好的。", "timestamp": "2026-04-28T09:10:00Z"},
-          {"user_msg": "PostgreSQL 16的新特性调研", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:20:00Z"},
-          {"user_msg": "MySQL性能调优方案", "assistant_msg": "已记录。", "timestamp": "2026-04-28T09:30:00Z"}
+          {
+            "user_msg": "数据库备份脚本改了一下",
+            "assistant_msg": "好的。",
+            "timestamp": "2026-04-28T09:10:00Z"
+          },
+          {
+            "user_msg": "PostgreSQL 16的新特性调研",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:20:00Z"
+          },
+          {
+            "user_msg": "MySQL性能调优方案",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-28T09:30:00Z"
+          }
         ],
         "query": "数据库迁移 PostgreSQL 决策",
         "max_results": 10
       },
       "expected": {
-        "expected_answer_contains": ["MySQL", "PostgreSQL", "迁移", "Q3"]
+        "expected_answer_contains": [
+          "MySQL",
+          "PostgreSQL",
+          "迁移",
+          "Q3"
+        ]
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.80, "min": 0.40},
+        "recall": {
+          "target": 0.8,
+          "min": 0.4
+        },
         "min_chunks": 1
       }
     },
@@ -622,24 +1014,60 @@
           "memory_type": "decision"
         },
         "noise": [
-          {"user_msg": "我个人偏好Python，但项目用Go", "assistant_msg": "已记录偏好。", "timestamp": "2026-04-01T10:05:00Z", "memory_type": "preference"},
-          {"user_msg": "我昨天用了go build编译项目", "assistant_msg": "已记录命令。", "timestamp": "2026-04-02T10:00:00Z", "memory_type": "command"},
-          {"user_msg": "Python的FastAPI写API最快", "assistant_msg": "已记录。", "timestamp": "2026-04-03T10:00:00Z", "memory_type": "preference"},
-          {"user_msg": "项目技术栈再讨论一下？要不要换成Rust", "assistant_msg": "需要团队讨论。", "timestamp": "2026-04-04T10:00:00Z", "memory_type": "discussion"}
+          {
+            "user_msg": "我个人偏好Python，但项目用Go",
+            "assistant_msg": "已记录偏好。",
+            "timestamp": "2026-04-01T10:05:00Z",
+            "memory_type": "preference"
+          },
+          {
+            "user_msg": "我昨天用了go build编译项目",
+            "assistant_msg": "已记录命令。",
+            "timestamp": "2026-04-02T10:00:00Z",
+            "memory_type": "command"
+          },
+          {
+            "user_msg": "Python的FastAPI写API最快",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-03T10:00:00Z",
+            "memory_type": "preference"
+          },
+          {
+            "user_msg": "项目技术栈再讨论一下？要不要换成Rust",
+            "assistant_msg": "需要团队讨论。",
+            "timestamp": "2026-04-04T10:00:00Z",
+            "memory_type": "discussion"
+          }
         ],
         "query": "项目技术栈决策",
         "max_results": 10
       },
       "expected": {
-        "expected_answer_contains": ["Go", "gRPC"],
-        "must_not_confuse_with": ["Python", "Rust"],
+        "expected_answer_contains": [
+          "Go",
+          "gRPC"
+        ],
+        "must_not_confuse_with": [
+          "Python",
+          "Rust"
+        ],
         "memory_type_is": "decision"
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.90, "min": 0.50},
-        "precision": {"target": 0.85, "min": 0.50},
-        "type_disambiguation": {"target": 1.0},
-        "multi_hop_filtering": {"target": 0.90}
+        "recall": {
+          "target": 0.9,
+          "min": 0.5
+        },
+        "precision": {
+          "target": 0.85,
+          "min": 0.5
+        },
+        "type_disambiguation": {
+          "target": 1.0
+        },
+        "multi_hop_filtering": {
+          "target": 0.9
+        }
       }
     },
     {
@@ -655,22 +1083,45 @@
           "owner": "local"
         },
         "noise": [
-          {"user_msg": "数据库密码是 Abc123456", "assistant_msg": "已记录。", "timestamp": "2026-01-10T10:00:00Z"},
-          {"user_msg": "数据库密码改成 Test@2026", "assistant_msg": "已更新。", "timestamp": "2026-02-15T10:00:00Z"},
-          {"user_msg": "密码又改了 P@ssw0rd2026!", "assistant_msg": "已更新。", "timestamp": "2026-03-20T10:00:00Z"}
+          {
+            "user_msg": "数据库密码是 Abc123456",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-01-10T10:00:00Z"
+          },
+          {
+            "user_msg": "数据库密码改成 Test@2026",
+            "assistant_msg": "已更新。",
+            "timestamp": "2026-02-15T10:00:00Z"
+          },
+          {
+            "user_msg": "密码又改了 P@ssw0rd2026!",
+            "assistant_msg": "已更新。",
+            "timestamp": "2026-03-20T10:00:00Z"
+          }
         ],
         "query": "生产数据库密码",
         "max_results": 10
       },
       "expected": {
         "expected_answer": "Xk9#mP2$vL",
-        "must_not_return": ["Abc123456", "Test@2026", "P@ssw0rd2026!"],
+        "must_not_return": [
+          "Abc123456",
+          "Test@2026",
+          "P@ssw0rd2026!"
+        ],
         "latest_version_only": true
       },
       "evaluation_criteria": {
-        "latest_value_accuracy": {"target": 0.95, "min": 0.50},
-        "old_values_excluded": {"target": 0.90},
-        "temporal_order_correct": {"target": 0.95}
+        "latest_value_accuracy": {
+          "target": 0.95,
+          "min": 0.5
+        },
+        "old_values_excluded": {
+          "target": 0.9
+        },
+        "temporal_order_correct": {
+          "target": 0.95
+        }
       }
     },
     {
@@ -686,24 +1137,54 @@
           "owner": "local"
         },
         "noise": [
-          {"user_msg": "Project Titan的PM是李四，deadline 7月15", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:05:00Z"},
-          {"user_msg": "Project Phoenix的tech lead是王五", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:10:00Z"},
-          {"user_msg": "Project Dragon的PM也是张三", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:15:00Z"},
-          {"user_msg": "Project Phoenix的budget是200万", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:20:00Z"}
+          {
+            "user_msg": "Project Titan的PM是李四，deadline 7月15",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:05:00Z"
+          },
+          {
+            "user_msg": "Project Phoenix的tech lead是王五",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          },
+          {
+            "user_msg": "Project Dragon的PM也是张三",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          },
+          {
+            "user_msg": "Project Phoenix的budget是200万",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:20:00Z"
+          }
         ],
         "query": "Project Phoenix deadline",
         "max_results": 10
       },
       "expected": {
         "expected_answer": "6月30日",
-        "expected_answer_contains": ["Phoenix", "6月30"],
-        "must_not_confuse": ["Titan", "Dragon"],
+        "expected_answer_contains": [
+          "Phoenix",
+          "6月30"
+        ],
+        "must_not_confuse": [
+          "Titan",
+          "Dragon"
+        ],
         "entity_disambiguation": true
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.90, "min": 0.50},
-        "precision": {"target": 0.85, "min": 0.50},
-        "entity_accuracy": {"target": 0.95}
+        "recall": {
+          "target": 0.9,
+          "min": 0.5
+        },
+        "precision": {
+          "target": 0.85,
+          "min": 0.5
+        },
+        "entity_accuracy": {
+          "target": 0.95
+        }
       }
     },
     {
@@ -719,22 +1200,46 @@
           "owner": "local"
         },
         "noise": [
-          {"user_msg": "第三方API的限流是每分钟500次", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:05:00Z"},
-          {"user_msg": "消息队列的消费速率是每秒1000条", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:10:00Z"},
-          {"user_msg": "数据库连接池上限是1000", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:15:00Z"}
+          {
+            "user_msg": "第三方API的限流是每分钟500次",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:05:00Z"
+          },
+          {
+            "user_msg": "消息队列的消费速率是每秒1000条",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          },
+          {
+            "user_msg": "数据库连接池上限是1000",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          }
         ],
         "query": "API限流配置",
         "max_results": 10
       },
       "expected": {
         "expected_answer": "每分钟1000次",
-        "must_not_confuse_with": ["每分钟500次(第三方)", "每秒1000条(消息队列)", "1000(连接池)"],
+        "must_not_confuse_with": [
+          "每分钟500次(第三方)",
+          "每秒1000条(消息队列)",
+          "1000(连接池)"
+        ],
         "semantic_disambiguation": true
       },
       "evaluation_criteria": {
-        "recall": {"target": 0.85, "min": 0.40},
-        "precision": {"target": 0.80, "min": 0.40},
-        "semantic_accuracy": {"target": 0.90}
+        "recall": {
+          "target": 0.85,
+          "min": 0.4
+        },
+        "precision": {
+          "target": 0.8,
+          "min": 0.4
+        },
+        "semantic_accuracy": {
+          "target": 0.9
+        }
       }
     },
     {
@@ -753,21 +1258,203 @@
         "noise_spread": {
           "start": "2026-01-16T10:00:00Z",
           "end": "2026-04-29T10:00:00Z",
-          "categories": ["daily_standup", "code_review", "random_chat", "other_projects", "personal"]
+          "categories": [
+            "daily_standup",
+            "code_review",
+            "random_chat",
+            "other_projects",
+            "personal"
+          ]
         },
         "query": "年度OKR KR1",
         "max_results": 10
       },
       "expected": {
-        "expected_answer_contains": ["用户量", "增长50%"],
+        "expected_answer_contains": [
+          "用户量",
+          "增长50%"
+        ],
         "okr_preserved_after_3_months": true
       },
       "evaluation_criteria": {
-        "must_retrieve": {"target": 1.0},
-        "recall": {"target": 0.70, "min": 0.30},
-        "precision": {"target": 0.60, "min": 0.20},
+        "must_retrieve": {
+          "target": 1.0
+        },
+        "recall": {
+          "target": 0.7,
+          "min": 0.3
+        },
+        "precision": {
+          "target": 0.6,
+          "min": 0.2
+        },
         "min_chunks": 1,
         "noise_resilience_at_scale": true
+      }
+    },
+    {
+      "test_id": "anti_interference_026",
+      "name": "Expert: cross-type interference - command, decision, and preference noise",
+      "category": "cross_type_noise",
+      "difficulty": "expert",
+      "input": {
+        "target": {
+          "user_msg": "项目Beta的技术负责人是陈七",
+          "assistant_msg": "已记录，项目Beta技术负责人：陈七。",
+          "timestamp": "2026-04-01T10:00:00Z",
+          "owner": "local"
+        },
+        "noise": [
+          {
+            "user_msg": "git push origin main",
+            "assistant_msg": "命令已执行。",
+            "timestamp": "2026-04-01T10:05:00Z",
+            "type": "command"
+          },
+          {
+            "user_msg": "决定用React Native做移动端",
+            "assistant_msg": "已记录决策。",
+            "timestamp": "2026-04-01T10:10:00Z",
+            "type": "decision"
+          },
+          {
+            "user_msg": "我喜欢用Vim写代码",
+            "assistant_msg": "已记录偏好。",
+            "timestamp": "2026-04-01T10:15:00Z",
+            "type": "preference"
+          },
+          {
+            "user_msg": "项目Beta的测试负责人是王五",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:20:00Z",
+            "type": "knowledge"
+          },
+          {
+            "user_msg": "npm install --save lodash",
+            "assistant_msg": "命令已执行。",
+            "timestamp": "2026-04-01T10:25:00Z",
+            "type": "command"
+          },
+          {
+            "user_msg": "缓存方案确认用Redis",
+            "assistant_msg": "已记录决策。",
+            "timestamp": "2026-04-01T10:30:00Z",
+            "type": "decision"
+          },
+          {
+            "user_msg": "项目Beta的后端用Go语言",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:35:00Z",
+            "type": "knowledge"
+          }
+        ],
+        "query": "项目Beta 技术负责人",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer": "陈七",
+        "distractor_answers": [
+          "王五"
+        ],
+        "expected_answer_contains": [
+          "项目Beta",
+          "陈七"
+        ],
+        "cross_type_noise_filtered": true,
+        "must_not_contain": [
+          "git",
+          "React Native",
+          "Vim",
+          "Redis"
+        ]
+      },
+      "evaluation_criteria": {
+        "recall": {
+          "target": 0.85,
+          "min": 0.4
+        },
+        "precision": {
+          "target": 0.8,
+          "min": 0.4
+        },
+        "cross_type_isolation": {
+          "target": 0.9
+        },
+        "target_found": {
+          "target": 1.0
+        }
+      }
+    },
+    {
+      "test_id": "anti_interference_027",
+      "name": "Expert: adversarial near-duplicate - 95% similar but incorrect noise",
+      "category": "adversarial_near_duplicate",
+      "difficulty": "expert",
+      "input": {
+        "target": {
+          "user_msg": "生产环境API的超时时间设为30秒",
+          "assistant_msg": "已记录：生产API超时 30s。",
+          "timestamp": "2026-04-01T10:00:00Z",
+          "owner": "local"
+        },
+        "noise": [
+          {
+            "user_msg": "生产环境API的超时时间设为3秒",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:05:00Z"
+          },
+          {
+            "user_msg": "测试环境API的超时时间设为30秒",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          },
+          {
+            "user_msg": "生产环境API的超时时间设为300秒",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          },
+          {
+            "user_msg": "生产环境API的重试超时设为30秒",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:20:00Z"
+          },
+          {
+            "user_msg": "生产环境gRPC的超时时间设为30秒",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:25:00Z"
+          }
+        ],
+        "query": "生产环境API超时时间",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer": "30秒",
+        "must_not_confuse_with": [
+          "3秒",
+          "300秒",
+          "30秒(重试)",
+          "30秒(gRPC)"
+        ],
+        "exact_match_required": true,
+        "environment_isolation": "production",
+        "entity_isolation": "API (not gRPC)"
+      },
+      "evaluation_criteria": {
+        "recall": {
+          "target": 0.85,
+          "min": 0.3
+        },
+        "precision": {
+          "target": 0.75,
+          "min": 0.3
+        },
+        "near_duplicate_disambiguation": {
+          "target": 0.9
+        },
+        "numeric_accuracy": {
+          "target": 1.0
+        },
+        "min_chunks": 1
       }
     }
   ]

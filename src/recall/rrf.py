@@ -13,6 +13,7 @@ from typing import List, Dict, Any
 def rrf_fuse(
     ranked_lists: List[List[Dict[str, Any]]],
     k: int = 60,
+    normalize_length: bool = True,
 ) -> Dict[str, float]:
     """
     使用 RRF 算法融合多个排名列表
@@ -20,6 +21,7 @@ def rrf_fuse(
     Args:
         ranked_lists: 多个排名列表，每个列表包含 {id, score} 字典
         k: RRF 常数，默认 60
+        normalize_length: 是否对列表长度归一化，防止长列表主导融合结果
         
     Returns:
         融合后的评分字典 {id: rrf_score}
@@ -27,14 +29,23 @@ def rrf_fuse(
     scores: Dict[str, float] = {}
     
     for ranked_list in ranked_lists:
+        # 长度归一化因子：每个列表贡献的总分归一化到相同水平
+        # 防止候选多的搜索源（如 pattern search）过度主导融合
+        list_len = len(ranked_list) if ranked_list else 1
+        len_norm = 1.0
+        if normalize_length and list_len > 0:
+            # 使用 log 归一化，避免短列表被过度放大
+            import math
+            len_norm = 1.0 / math.log2(max(list_len, 2))
+        
         for rank, item in enumerate(ranked_list):
             item_id = item.get("id", item.get("chunkId", ""))
             if not item_id:
                 continue
             
             prev_score = scores.get(item_id, 0.0)
-            # RRF 公式：1 / (k + rank + 1)
-            rrf_contribution = 1.0 / (k + rank + 1)
+            # RRF 公式：1 / (k + rank + 1)，带长度归一化
+            rrf_contribution = len_norm / (k + rank + 1)
             scores[item_id] = prev_score + rrf_contribution
     
     return scores

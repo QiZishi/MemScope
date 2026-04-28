@@ -44,6 +44,40 @@ class EbbinghausModel:
         lam = self.lambda_map.get(category, 0.01)
         return math.exp(-lam * days_since_access)
 
+    def retention_score_with_reinforcement(
+        self,
+        days_since_access: float,
+        category: str = 'general',
+        access_count: int = 1,
+        quality: int = 3,
+    ) -> float:
+        """
+        带强化学习的记忆保持率。
+        
+        Enhancement: 多次访问和高质量回忆会减缓遗忘速度。
+        每次高质量回忆将等效衰减系数降低，模拟记忆巩固效应。
+        
+        Args:
+            days_since_access: 距上次访问的天数
+            category: 知识类别
+            access_count: 访问次数
+            quality: 最近回忆质量 0-5
+            
+        Returns:
+            记忆保持率 [0, 1]
+        """
+        lam = self.lambda_map.get(category, 0.01)
+        
+        # 强化因子: 多次高质量回忆减缓遗忘
+        # access_count 贡献: log scale, 每次回忆效果递减
+        access_factor = 1.0 / (1.0 + 0.15 * math.log1p(access_count))
+        
+        # quality 贡献: 高质量回忆(4-5)显著减缓遗忘
+        quality_factor = 1.0 - (quality / 5.0) * 0.3  # q=5 -> 0.7x, q=0 -> 1.0x
+        
+        effective_lam = lam * access_factor * quality_factor
+        return math.exp(-effective_lam * days_since_access)
+
     def freshness_status(self, days_since_access: float, category: str = 'general') -> str:
         """判断新鲜度状态: fresh / aging / stale / forgotten"""
         validity = self.VALIDITY_DAYS.get(category, 60)
@@ -56,20 +90,48 @@ class EbbinghausModel:
         else:
             return 'forgotten'
 
-    def next_review_interval(self, review_count: int, category: str = 'general') -> float:
+    def next_review_interval(self, review_count: int, category: str = 'general', quality: int = 3) -> float:
         """计算下次复习间隔（小时）
-        基于 SM-2 算法简化版：
+        基于增强版 SM-2 算法：
+        - quality: 回忆质量 0-5（0=完全忘记, 5=完美回忆）
         - 第1次: 1天
         - 第2次: 3天
         - 第3次: 7天
-        - 第n次: 基础间隔 * 2^(n-1)
+        - 后续基于 easiness factor 动态调整
+        
+        Enhancement: 引入 easiness factor (EF) 动态调整，
+        高质量回忆增加间隔，低质量回忆缩短间隔。
         """
+        # SM-2 easiness factor 计算
+        quality = max(0, min(5, quality))
+        # EF 公式: EF' = EF + (0.1 - (5-q) * (0.08 + (5-q) * 0.02))
+        # 从 EF=2.5 开始
+        ef = 2.5
+        for _ in range(max(0, review_count)):
+            ef_delta = 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)
+            ef = max(1.3, ef + ef_delta)  # EF 最低 1.3
+        
         base_interval_hours = 24  # 1天
-        interval = base_interval_hours * (2 ** min(review_count, 6))
+        if review_count <= 0:
+            interval = base_interval_hours
+        elif review_count == 1:
+            interval = base_interval_hours * 3  # 3天
+        elif review_count == 2:
+            interval = base_interval_hours * 7  # 7天
+        else:
+            # SM-2: interval = interval_prev * EF
+            interval = base_interval_hours * 7 * (ef ** (review_count - 2))
+        
         # 根据知识类型调整
         lam = self.lambda_map.get(category, 0.01)
         type_factor = 0.01 / lam  # 衰减越慢，复习间隔越长
-        return interval * type_factor
+        interval *= type_factor
+        
+        # 质量过低时缩短间隔
+        if quality < 3:
+            interval *= (quality + 1) / 4.0  # q=0 -> 0.25x, q=2 -> 0.75x
+        
+        return interval
 
     def importance_score(
         self,

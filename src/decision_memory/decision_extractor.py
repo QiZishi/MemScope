@@ -28,6 +28,17 @@ class DecisionExtractor:
         r'(?:优先级|priority)(?:改为|调整为|定为)',
         r'(?:结论|总结|决议)',
         r'(?:就|那就)(?:定|用|选)',
+        # 新增: 更多中文决策模式
+        r'(?:投票|表决).*(?:通过|通过了)',
+        r'(?:全票|多数)(?:通过|同意)',
+        r'(?:通过了?|批准了?)(?:这个|该|此)(?:方案|提案|建议)',
+        r'(?:维持|保持)(?:原|现有)(?:方案|决定|状态)',
+        r'(?:切换|迁移|升级)(?:到|为|至)',
+        r'(?:废弃|淘汰|下线)(?:了)?',
+        r'(?:推迟|延期|延后)',
+        r'(?:立即|马上|尽快)(?:执行|实施|上线|部署)',
+        r'(?:统一|规范化?)(?:使用|采用)',
+        r'(?:合并|拆分|重组)',
     ]
 
     # 决策信号词（英文）
@@ -38,6 +49,12 @@ class DecisionExtractor:
         r'deadline\s+(?:is|changed to|extended to)',
         r'(?:owner|assignee)\s+(?:is|changed to)',
         r'(?:priority)\s+(?:set to|changed to)',
+        # 新增: 更多英文决策模式
+        r'(?:migrated?|switched?|upgraded?)\s+(?:to|from)',
+        r'(?:deprecated|sunset|retired?)',
+        r'(?:unified|standardized?)\s+(?:on|to)',
+        r'(?:merged?|split|consolidated?)',
+        r'(?:voted?|ballot)\s+(?:to|on)',
     ]
 
     # 否决/反对信号
@@ -175,6 +192,12 @@ class DecisionExtractor:
             r'(?:决定|确认|选定|敲定|采用|同意)\s*(.+?)(?:[。\.]|$)',
             r'(?:decided|confirmed|agreed)\s+(?:to\s+)?(.+?)(?:\.|$)',
             r'(?:方案|选择|决定)\s*(?:是|为)\s*(.+?)(?:[。\.]|$)',
+            # 新增: 更多决策内容提取模式
+            r'(?:通过了?|批准了?)\s*(.+?)(?:[，,。\.]|$)',
+            r'(?:废弃|淘汰|下线)\s*(.+?)(?:[，,。\.]|$)',
+            r'(?:切换|迁移|升级)(?:到|为|至)\s*(.+?)(?:[，,。\.]|$)',
+            r'(?:推迟|延期|延后)\s*(.+?)(?:[，,。\.]|$)',
+            r'(?:统一|规范化?)\s*(.+?)(?:[，,。\.]|$)',
         ]
         for pattern in patterns:
             match = re.search(pattern, message, re.IGNORECASE)

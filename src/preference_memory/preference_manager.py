@@ -120,9 +120,10 @@ class PreferenceManager:
                 }
                 return result
         elif existing and existing.get('value') == value:
-            # 相同值，提升置信度
+            # 相同值 - 基于证据强度校准置信度
             old_conf = existing.get('confidence', 0.5)
-            confidence = min(old_conf + 0.05, 1.0)
+            evidence_boost = self._calibrate_confidence(old_conf, source, confidence)
+            confidence = min(evidence_boost, 1.0)
 
         # 执行 upsert
         try:
@@ -529,6 +530,47 @@ class PreferenceManager:
         except Exception as e:
             logger.error(f"preference_manager: failed to get preference: {e}")
             return None
+
+    @staticmethod
+    def _calibrate_confidence(
+        current_confidence: float,
+        source: str,
+        new_evidence_confidence: float,
+    ) -> float:
+        """
+        基于证据强度校准置信度。
+        
+        当同一偏好被重复确认时，置信度不是简单累加，
+        而是根据新证据的强度和来源可靠性来校准。
+        
+        原理:
+          - 高质量来源(explicit)的重复确认给予较大提升
+          - 低质量来源(observed)的重复确认给予较小提升
+          - 使用 diminishing returns: 高置信度时提升更小
+        
+        Args:
+            current_confidence: 当前置信度
+            source: 新证据来源
+            new_evidence_confidence: 新证据的置信度
+            
+        Returns:
+            校准后的置信度
+        """
+        # 来源质量因子
+        source_quality = _SOURCE_PRIORITY.get(source, 10) / 100.0  # 归一化到 [0, 1]
+        
+        # Diminishing returns: 置信度越高，提升越小
+        headroom = 1.0 - current_confidence
+        
+        # 基础提升 = headroom * source_quality * 0.1
+        # 每次确认提升剩余空间的10%，按来源质量缩放
+        base_boost = headroom * source_quality * 0.1
+        
+        # 如果新证据置信度高于当前，给予额外提升
+        if new_evidence_confidence > current_confidence:
+            base_boost += (new_evidence_confidence - current_confidence) * 0.05
+        
+        return current_confidence + max(base_boost, 0.01)  # 至少提升 0.01
 
     def _cleanup_low_confidence(self, owner: str) -> int:
         """清理置信度过低的偏好。"""

@@ -2,12 +2,12 @@
   "dataset_name": "preference_memory",
   "version": "3.0",
   "description": "偏好记忆能力评测：测试系统对用户偏好的提取、推断、冲突解决、衰减、演进、多跳推理和跨维度关联能力",
-  "total_cases": 35,
+  "total_cases": 38,
   "difficulty_distribution": {
     "easy": 4,
     "medium": 14,
     "hard": 12,
-    "expert": 5
+    "expert": 8
   },
   "test_cases": [
     {
@@ -16,10 +16,18 @@
       "description": "用户明确表达偏好：'我喜欢用Vim写代码'。系统应提取偏好对象为Vim，偏好类别为代码编辑器",
       "setup": {
         "messages": [
-          {"role": "user", "content": "我喜欢用Vim写代码，快捷键很高效", "timestamp": "2026-04-01T10:00:00"}
+          {
+            "role": "user",
+            "content": "我喜欢用Vim写代码，快捷键很高效",
+            "timestamp": "2026-04-01T10:00:00"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_a", "category": "editor"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_a",
+        "category": "editor"
+      },
       "expected": {
         "preference_found": true,
         "preference_value": "Vim",
@@ -29,7 +37,11 @@
       },
       "difficulty": "easy",
       "priority": "P0",
-      "tags": ["explicit", "extraction", "like"]
+      "tags": [
+        "explicit",
+        "extraction",
+        "like"
+      ]
     },
     {
       "test_id": "pref_002",
@@ -37,10 +49,18 @@
       "description": "用户使用'偏好'一词：'我偏好Tab缩进而不是Space'。系统应正确提取格式化偏好",
       "setup": {
         "messages": [
-          {"role": "user", "content": "代码格式化我偏好Tab缩进，Space太多了按着累", "timestamp": "2026-04-02T14:00:00"}
+          {
+            "role": "user",
+            "content": "代码格式化我偏好Tab缩进，Space太多了按着累",
+            "timestamp": "2026-04-02T14:00:00"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_a", "category": "indentation"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_a",
+        "category": "indentation"
+      },
       "expected": {
         "preference_found": true,
         "preference_value": "Tab",
@@ -49,7 +69,11 @@
       },
       "difficulty": "easy",
       "priority": "P0",
-      "tags": ["explicit", "extraction", "preference"]
+      "tags": [
+        "explicit",
+        "extraction",
+        "preference"
+      ]
     },
     {
       "test_id": "pref_003",
@@ -57,10 +81,18 @@
       "description": "用户使用'以后用'表达未来偏好：'以后用Dark Mode，亮屏太伤眼了'。系统应记录为持续性偏好",
       "setup": {
         "messages": [
-          {"role": "user", "content": "以后用Dark Mode吧，亮屏太伤眼了，所有IDE和终端都切换到暗色主题", "timestamp": "2026-04-03T09:00:00"}
+          {
+            "role": "user",
+            "content": "以后用Dark Mode吧，亮屏太伤眼了，所有IDE和终端都切换到暗色主题",
+            "timestamp": "2026-04-03T09:00:00"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_a", "category": "theme"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_a",
+        "category": "theme"
+      },
       "expected": {
         "preference_found": true,
         "preference_value": "Dark Mode",
@@ -70,7 +102,11 @@
       },
       "difficulty": "easy",
       "priority": "P0",
-      "tags": ["explicit", "extraction", "future-intent"]
+      "tags": [
+        "explicit",
+        "extraction",
+        "future-intent"
+      ]
     },
     {
       "test_id": "pref_004",
@@ -78,10 +114,18 @@
       "description": "用户使用否定表达偏好：'别给我推荐Java相关的东西，我讨厌Java'。系统应记录为负面偏好（排斥Java）",
       "setup": {
         "messages": [
-          {"role": "user", "content": "别给我推荐Java相关的东西，我讨厌Java那套冗长的写法", "timestamp": "2026-04-04T11:00:00"}
+          {
+            "role": "user",
+            "content": "别给我推荐Java相关的东西，我讨厌Java那套冗长的写法",
+            "timestamp": "2026-04-04T11:00:00"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_a", "category": "language"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_a",
+        "category": "language"
+      },
       "expected": {
         "preference_found": true,
         "preference_value": "Java",
@@ -91,7 +135,11 @@
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": ["explicit", "negative", "avoidance"]
+      "tags": [
+        "explicit",
+        "negative",
+        "avoidance"
+      ]
     },
     {
       "test_id": "pref_005",
@@ -99,21 +147,39 @@
       "description": "用户表达有条件偏好：'生产环境用Nginx，开发环境用Caddy'。系统应记录条件分支偏好",
       "setup": {
         "messages": [
-          {"role": "user", "content": "Web服务器选择：生产环境用Nginx，稳定可靠；开发环境用Caddy，配置简单自动HTTPS", "timestamp": "2026-04-05T15:00:00"}
+          {
+            "role": "user",
+            "content": "Web服务器选择：生产环境用Nginx，稳定可靠；开发环境用Caddy，配置简单自动HTTPS",
+            "timestamp": "2026-04-05T15:00:00"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_a", "category": "web_server"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_a",
+        "category": "web_server"
+      },
       "expected": {
         "preference_found": true,
         "conditional_preferences": [
-          {"condition": "production", "value": "Nginx"},
-          {"condition": "development", "value": "Caddy"}
+          {
+            "condition": "production",
+            "value": "Nginx"
+          },
+          {
+            "condition": "development",
+            "value": "Caddy"
+          }
         ],
         "category": "web_server"
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": ["explicit", "conditional", "context-dependent"]
+      "tags": [
+        "explicit",
+        "conditional",
+        "context-dependent"
+      ]
     },
     {
       "test_id": "pref_006",
@@ -121,11 +187,23 @@
       "description": "用户最近30天内使用curl测试API 25次，使用Postman仅2次。系统应推断用户偏好用curl而非Postman做API测试",
       "setup": {
         "tool_usage_logs": [
-          {"tool": "curl", "count": 25, "period": "2026-04-01 to 2026-04-29"},
-          {"tool": "Postman", "count": 2, "period": "2026-04-01 to 2026-04-29"}
+          {
+            "tool": "curl",
+            "count": 25,
+            "period": "2026-04-01 to 2026-04-29"
+          },
+          {
+            "tool": "Postman",
+            "count": 2,
+            "period": "2026-04-01 to 2026-04-29"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_b", "category": "api_testing"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_b",
+        "category": "api_testing"
+      },
       "expected": {
         "preference_found": true,
         "preference_value": "curl",
@@ -134,7 +212,11 @@
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": ["implicit", "inference", "usage-pattern"]
+      "tags": [
+        "implicit",
+        "inference",
+        "usage-pattern"
+      ]
     },
     {
       "test_id": "pref_007",
@@ -148,7 +230,11 @@
           "language": "Python"
         }
       },
-      "query": {"type": "get_preference", "user": "user_b", "category": "quote_style"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_b",
+        "category": "quote_style"
+      },
       "expected": {
         "preference_found": true,
         "preference_value": "single_quotes",
@@ -157,7 +243,11 @@
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": ["implicit", "inference", "code-style"]
+      "tags": [
+        "implicit",
+        "inference",
+        "code-style"
+      ]
     },
     {
       "test_id": "pref_008",
@@ -165,12 +255,28 @@
       "description": "用户总是在晚上10点后开始写代码，白天主要开会和review。系统应推断用户偏好夜间编码",
       "setup": {
         "activity_logs": [
-          {"activity": "code_commit", "time_range": "22:00-02:00", "frequency": "daily"},
-          {"activity": "code_review", "time_range": "10:00-18:00", "frequency": "daily"},
-          {"activity": "meeting", "time_range": "09:00-17:00", "frequency": "weekday"}
+          {
+            "activity": "code_commit",
+            "time_range": "22:00-02:00",
+            "frequency": "daily"
+          },
+          {
+            "activity": "code_review",
+            "time_range": "10:00-18:00",
+            "frequency": "daily"
+          },
+          {
+            "activity": "meeting",
+            "time_range": "09:00-17:00",
+            "frequency": "weekday"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_b", "category": "coding_time"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_b",
+        "category": "coding_time"
+      },
       "expected": {
         "preference_found": true,
         "preference_value": "night_coding",
@@ -179,7 +285,11 @@
       },
       "difficulty": "hard",
       "priority": "P2",
-      "tags": ["implicit", "inference", "time-pattern"]
+      "tags": [
+        "implicit",
+        "inference",
+        "time-pattern"
+      ]
     },
     {
       "test_id": "pref_009",
@@ -187,21 +297,55 @@
       "description": "用户项目中总是同时出现ESLint+Prettier+Husky，从未使用过其他lint/format工具。应推断用户偏好这套工具链",
       "setup": {
         "project_configs": [
-          {"project": "proj1", "tools": ["ESLint", "Prettier", "Husky"]},
-          {"project": "proj2", "tools": ["ESLint", "Prettier", "Husky"]},
-          {"project": "proj3", "tools": ["ESLint", "Prettier", "Husky", "lint-staged"]}
+          {
+            "project": "proj1",
+            "tools": [
+              "ESLint",
+              "Prettier",
+              "Husky"
+            ]
+          },
+          {
+            "project": "proj2",
+            "tools": [
+              "ESLint",
+              "Prettier",
+              "Husky"
+            ]
+          },
+          {
+            "project": "proj3",
+            "tools": [
+              "ESLint",
+              "Prettier",
+              "Husky",
+              "lint-staged"
+            ]
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_b", "category": "code_quality_tools"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_b",
+        "category": "code_quality_tools"
+      },
       "expected": {
         "preference_found": true,
-        "preference_value": ["ESLint", "Prettier", "Husky"],
+        "preference_value": [
+          "ESLint",
+          "Prettier",
+          "Husky"
+        ],
         "inference_source": "project_consistency",
         "confidence": ">= 0.9"
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": ["implicit", "inference", "tool-chain"]
+      "tags": [
+        "implicit",
+        "inference",
+        "tool-chain"
+      ]
     },
     {
       "test_id": "pref_010",
@@ -209,10 +353,18 @@
       "description": "用户只有1次使用记录，不足以推断偏好。系统应返回低置信度或无结果",
       "setup": {
         "tool_usage_logs": [
-          {"tool": "VSCode", "count": 1, "period": "2026-04-29"}
+          {
+            "tool": "VSCode",
+            "count": 1,
+            "period": "2026-04-29"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_c", "category": "editor"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_c",
+        "category": "editor"
+      },
       "expected": {
         "preference_found": false,
         "confidence": "< 0.5",
@@ -220,7 +372,11 @@
       },
       "difficulty": "easy",
       "priority": "P1",
-      "tags": ["implicit", "inference", "insufficient-data"]
+      "tags": [
+        "implicit",
+        "inference",
+        "insufficient-data"
+      ]
     },
     {
       "test_id": "pref_011",
@@ -228,11 +384,23 @@
       "description": "用户2026-01-15说'用React'，2026-04-01说'改用Vue了'。系统应以最新的偏好为准",
       "setup": {
         "messages": [
-          {"role": "user", "content": "前端框架用React，生态好", "timestamp": "2026-01-15T10:00:00"},
-          {"role": "user", "content": "前端框架改用Vue了，上手更快，模板语法更直观", "timestamp": "2026-04-01T10:00:00"}
+          {
+            "role": "user",
+            "content": "前端框架用React，生态好",
+            "timestamp": "2026-01-15T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "前端框架改用Vue了，上手更快，模板语法更直观",
+            "timestamp": "2026-04-01T10:00:00"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_d", "category": "frontend_framework"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_d",
+        "category": "frontend_framework"
+      },
       "expected": {
         "preference_found": true,
         "preference_value": "Vue",
@@ -241,7 +409,11 @@
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": ["conflict", "resolution", "temporal"]
+      "tags": [
+        "conflict",
+        "resolution",
+        "temporal"
+      ]
     },
     {
       "test_id": "pref_012",
@@ -249,7 +421,11 @@
       "description": "系统通过使用模式推断用户偏好TypeScript，但用户明确说'我不喜欢TypeScript，用纯JS就好'。显式表达应覆盖隐式推断",
       "setup": {
         "messages": [
-          {"role": "user", "content": "我不喜欢TypeScript那套类型声明，太啰嗦了，用纯JavaScript就好", "timestamp": "2026-04-10T10:00:00"}
+          {
+            "role": "user",
+            "content": "我不喜欢TypeScript那套类型声明，太啰嗦了，用纯JavaScript就好",
+            "timestamp": "2026-04-10T10:00:00"
+          }
         ],
         "inferred_preference": {
           "value": "TypeScript",
@@ -257,7 +433,11 @@
           "confidence": 0.75
         }
       },
-      "query": {"type": "get_preference", "user": "user_d", "category": "language"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_d",
+        "category": "language"
+      },
       "expected": {
         "preference_found": true,
         "preference_value": "JavaScript",
@@ -266,7 +446,11 @@
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": ["conflict", "explicit-vs-implicit", "override"]
+      "tags": [
+        "conflict",
+        "explicit-vs-implicit",
+        "override"
+      ]
     },
     {
       "test_id": "pref_013",
@@ -274,21 +458,45 @@
       "description": "用户说'我比较喜欢Docker'(弱偏好)和'我强烈推荐用Kubernetes'(强偏好)。系统应区分偏好的强度",
       "setup": {
         "messages": [
-          {"role": "user", "content": "容器化我比较喜欢Docker，简单好用", "timestamp": "2026-03-01T10:00:00"},
-          {"role": "user", "content": "编排工具我强烈推荐用Kubernetes，虽然学习曲线陡但值得投入", "timestamp": "2026-04-01T10:00:00"}
+          {
+            "role": "user",
+            "content": "容器化我比较喜欢Docker，简单好用",
+            "timestamp": "2026-03-01T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "编排工具我强烈推荐用Kubernetes，虽然学习曲线陡但值得投入",
+            "timestamp": "2026-04-01T10:00:00"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_d", "category": "container_tech"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_d",
+        "category": "container_tech"
+      },
       "expected": {
         "preferences": [
-          {"value": "Docker", "strength": "moderate", "sub_category": "containerization"},
-          {"value": "Kubernetes", "strength": "strong", "sub_category": "orchestration"}
+          {
+            "value": "Docker",
+            "strength": "moderate",
+            "sub_category": "containerization"
+          },
+          {
+            "value": "Kubernetes",
+            "strength": "strong",
+            "sub_category": "orchestration"
+          }
         ],
         "strength_differentiated": true
       },
       "difficulty": "hard",
       "priority": "P1",
-      "tags": ["conflict", "strength", "nuance"]
+      "tags": [
+        "conflict",
+        "strength",
+        "nuance"
+      ]
     },
     {
       "test_id": "pref_014",
@@ -296,22 +504,44 @@
       "description": "用户在前端偏好JavaScript，后端偏好Python。虽然都是'编程语言'偏好，但不同领域不应冲突",
       "setup": {
         "messages": [
-          {"role": "user", "content": "前端就用JavaScript，不需要TypeScript", "timestamp": "2026-03-15T10:00:00"},
-          {"role": "user", "content": "后端我喜欢Python，Django写API很快", "timestamp": "2026-03-20T10:00:00"}
+          {
+            "role": "user",
+            "content": "前端就用JavaScript，不需要TypeScript",
+            "timestamp": "2026-03-15T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "后端我喜欢Python，Django写API很快",
+            "timestamp": "2026-03-20T10:00:00"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_d", "category": "language"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_d",
+        "category": "language"
+      },
       "expected": {
         "preferences": [
-          {"value": "JavaScript", "domain": "frontend"},
-          {"value": "Python", "domain": "backend"}
+          {
+            "value": "JavaScript",
+            "domain": "frontend"
+          },
+          {
+            "value": "Python",
+            "domain": "backend"
+          }
         ],
         "domain_separated": true,
         "no_conflict": true
       },
       "difficulty": "hard",
       "priority": "P1",
-      "tags": ["conflict", "domain-separation", "multi-context"]
+      "tags": [
+        "conflict",
+        "domain-separation",
+        "multi-context"
+      ]
     },
     {
       "test_id": "pref_015",
@@ -319,11 +549,23 @@
       "description": "用户说'之前说喜欢Vim，但最近改用VSCode了，Vim那个偏好作废'。系统应标记旧偏好为已撤回",
       "setup": {
         "messages": [
-          {"role": "user", "content": "我喜欢用Vim写代码", "timestamp": "2026-01-01T10:00:00"},
-          {"role": "user", "content": "之前说喜欢Vim，但最近改用VSCode了，Vim那个偏好作废", "timestamp": "2026-04-20T10:00:00"}
+          {
+            "role": "user",
+            "content": "我喜欢用Vim写代码",
+            "timestamp": "2026-01-01T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "之前说喜欢Vim，但最近改用VSCode了，Vim那个偏好作废",
+            "timestamp": "2026-04-20T10:00:00"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_d", "category": "editor"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_d",
+        "category": "editor"
+      },
       "expected": {
         "preference_found": true,
         "preference_value": "VSCode",
@@ -332,7 +574,11 @@
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": ["conflict", "revocation", "update"]
+      "tags": [
+        "conflict",
+        "revocation",
+        "update"
+      ]
     },
     {
       "test_id": "pref_016",
@@ -340,13 +586,21 @@
       "description": "用户90天前(2026-01-30)说过'喜欢用Markdown写文档'，之后再也没提过。该偏好的置信度应随时间衰减",
       "setup": {
         "messages": [
-          {"role": "user", "content": "我喜欢用Markdown写文档，简洁高效", "timestamp": "2026-01-30T10:00:00"}
+          {
+            "role": "user",
+            "content": "我喜欢用Markdown写文档，简洁高效",
+            "timestamp": "2026-01-30T10:00:00"
+          }
         ],
         "last_mention": "2026-01-30",
         "current_time": "2026-04-29",
         "no_subsequent_mentions": true
       },
-      "query": {"type": "get_preference", "user": "user_e", "category": "documentation"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_e",
+        "category": "documentation"
+      },
       "expected": {
         "preference_found": true,
         "preference_value": "Markdown",
@@ -357,7 +611,11 @@
       },
       "difficulty": "hard",
       "priority": "P0",
-      "tags": ["decay", "temporal", "confidence"]
+      "tags": [
+        "decay",
+        "temporal",
+        "confidence"
+      ]
     },
     {
       "test_id": "pref_017",
@@ -365,14 +623,34 @@
       "description": "用户30天内多次提及'用Docker部署'，每次提及都应刷新置信度。该偏好不应衰减",
       "setup": {
         "messages": [
-          {"role": "user", "content": "还是用Docker部署吧", "timestamp": "2026-04-01T10:00:00"},
-          {"role": "user", "content": "Docker镜像构建好了吗？", "timestamp": "2026-04-10T10:00:00"},
-          {"role": "user", "content": "Docker compose配置更新下", "timestamp": "2026-04-20T10:00:00"},
-          {"role": "user", "content": "Docker部署没问题了", "timestamp": "2026-04-28T10:00:00"}
+          {
+            "role": "user",
+            "content": "还是用Docker部署吧",
+            "timestamp": "2026-04-01T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "Docker镜像构建好了吗？",
+            "timestamp": "2026-04-10T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "Docker compose配置更新下",
+            "timestamp": "2026-04-20T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "Docker部署没问题了",
+            "timestamp": "2026-04-28T10:00:00"
+          }
         ],
         "current_time": "2026-04-29"
       },
-      "query": {"type": "get_preference", "user": "user_e", "category": "deployment"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_e",
+        "category": "deployment"
+      },
       "expected": {
         "preference_found": true,
         "preference_value": "Docker",
@@ -383,7 +661,11 @@
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": ["decay", "reaffirmation", "stability"]
+      "tags": [
+        "decay",
+        "reaffirmation",
+        "stability"
+      ]
     },
     {
       "test_id": "pref_018",
@@ -391,12 +673,24 @@
       "description": "用户60天前说'喜欢用Bash脚本'（中等置信度起点），30天前说'喜欢用Zsh'（高置信度起点）。比较两者当前置信度",
       "setup": {
         "messages": [
-          {"role": "user", "content": "Shell脚本我喜欢用Bash", "timestamp": "2026-02-28T10:00:00"},
-          {"role": "user", "content": "终端我超喜欢用Zsh，自动补全太强了", "timestamp": "2026-03-30T10:00:00"}
+          {
+            "role": "user",
+            "content": "Shell脚本我喜欢用Bash",
+            "timestamp": "2026-02-28T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "终端我超喜欢用Zsh，自动补全太强了",
+            "timestamp": "2026-03-30T10:00:00"
+          }
         ],
         "current_time": "2026-04-29"
       },
-      "query": {"type": "get_preference", "user": "user_e", "category": "shell"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_e",
+        "category": "shell"
+      },
       "expected": {
         "bash_preference": {
           "age_days": 60,
@@ -410,7 +704,11 @@
       },
       "difficulty": "hard",
       "priority": "P1",
-      "tags": ["decay", "rate-comparison", "temporal"]
+      "tags": [
+        "decay",
+        "rate-comparison",
+        "temporal"
+      ]
     },
     {
       "test_id": "pref_019",
@@ -418,12 +716,20 @@
       "description": "即使偏好很久未提及(180天)，某些广泛认可的偏好（如'用Git做版本控制'）不应衰减太多，因为有行业共识支撑",
       "setup": {
         "messages": [
-          {"role": "user", "content": "版本控制当然用Git", "timestamp": "2025-10-31T10:00:00"}
+          {
+            "role": "user",
+            "content": "版本控制当然用Git",
+            "timestamp": "2025-10-31T10:00:00"
+          }
         ],
         "current_time": "2026-04-29",
         "industry_consensus": "Git is the standard for version control"
       },
-      "query": {"type": "get_preference", "user": "user_e", "category": "version_control"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_e",
+        "category": "version_control"
+      },
       "expected": {
         "preference_found": true,
         "preference_value": "Git",
@@ -432,7 +738,11 @@
       },
       "difficulty": "hard",
       "priority": "P2",
-      "tags": ["decay", "industry-consensus", "floor"]
+      "tags": [
+        "decay",
+        "industry-consensus",
+        "floor"
+      ]
     },
     {
       "test_id": "pref_020",
@@ -440,13 +750,29 @@
       "description": "用户多次表达同一偏好，且表达强度递增：从'还可以用Python'→'我挺喜欢Python'→'Python是我的最爱'。置信度应递增",
       "setup": {
         "messages": [
-          {"role": "user", "content": "Python还可以，写起来挺快的", "timestamp": "2026-02-01T10:00:00"},
-          {"role": "user", "content": "我挺喜欢Python的，生态太丰富了", "timestamp": "2026-03-15T10:00:00"},
-          {"role": "user", "content": "Python就是我的最爱！数据处理和自动化无敌", "timestamp": "2026-04-25T10:00:00"}
+          {
+            "role": "user",
+            "content": "Python还可以，写起来挺快的",
+            "timestamp": "2026-02-01T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "我挺喜欢Python的，生态太丰富了",
+            "timestamp": "2026-03-15T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "Python就是我的最爱！数据处理和自动化无敌",
+            "timestamp": "2026-04-25T10:00:00"
+          }
         ],
         "current_time": "2026-04-29"
       },
-      "query": {"type": "get_preference", "user": "user_e", "category": "language"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_e",
+        "category": "language"
+      },
       "expected": {
         "preference_found": true,
         "preference_value": "Python",
@@ -456,7 +782,11 @@
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": ["decay", "reinforcement", "strength"]
+      "tags": [
+        "decay",
+        "reinforcement",
+        "strength"
+      ]
     },
     {
       "test_id": "pref_021",
@@ -464,25 +794,54 @@
       "description": "用户3个月前用VSCode，2个月前开始试用Cursor，1个月前完全切换到Cursor。系统应记录偏好的演进过程",
       "setup": {
         "messages": [
-          {"role": "user", "content": "代码编辑器我一直用VSCode", "timestamp": "2026-01-15T10:00:00"},
-          {"role": "user", "content": "最近在试用Cursor，AI补全挺有意思的", "timestamp": "2026-02-20T10:00:00"},
-          {"role": "user", "content": "已经完全切换到Cursor了，比VSCode好用太多", "timestamp": "2026-03-25T10:00:00"}
+          {
+            "role": "user",
+            "content": "代码编辑器我一直用VSCode",
+            "timestamp": "2026-01-15T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "最近在试用Cursor，AI补全挺有意思的",
+            "timestamp": "2026-02-20T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "已经完全切换到Cursor了，比VSCode好用太多",
+            "timestamp": "2026-03-25T10:00:00"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_f", "category": "editor"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_f",
+        "category": "editor"
+      },
       "expected": {
         "current_preference": "Cursor",
         "previous_preference": "VSCode",
         "evolution_timeline": [
-          {"date": "2026-01-15", "value": "VSCode"},
-          {"date": "2026-02-20", "value": "Cursor (trial)"},
-          {"date": "2026-03-25", "value": "Cursor (adopted)"}
+          {
+            "date": "2026-01-15",
+            "value": "VSCode"
+          },
+          {
+            "date": "2026-02-20",
+            "value": "Cursor (trial)"
+          },
+          {
+            "date": "2026-03-25",
+            "value": "Cursor (adopted)"
+          }
         ],
         "transition_complete": true
       },
       "difficulty": "hard",
       "priority": "P0",
-      "tags": ["evolution", "temporal", "tool-migration"]
+      "tags": [
+        "evolution",
+        "temporal",
+        "tool-migration"
+      ]
     },
     {
       "test_id": "pref_022",
@@ -490,20 +849,44 @@
       "description": "用户前端框架偏好从jQuery→React→Next.js逐步演进。系统应记录完整的升级路径",
       "setup": {
         "messages": [
-          {"role": "user", "content": "前端还在用jQuery，老项目没办法", "timestamp": "2026-01-01T10:00:00"},
-          {"role": "user", "content": "新项目开始用React了", "timestamp": "2026-02-15T10:00:00"},
-          {"role": "user", "content": "React加上Next.js，SSR和路由都解决了", "timestamp": "2026-04-01T10:00:00"}
+          {
+            "role": "user",
+            "content": "前端还在用jQuery，老项目没办法",
+            "timestamp": "2026-01-01T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "新项目开始用React了",
+            "timestamp": "2026-02-15T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "React加上Next.js，SSR和路由都解决了",
+            "timestamp": "2026-04-01T10:00:00"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_f", "category": "frontend"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_f",
+        "category": "frontend"
+      },
       "expected": {
         "current_preference": "Next.js",
-        "evolution_path": ["jQuery", "React", "Next.js"],
+        "evolution_path": [
+          "jQuery",
+          "React",
+          "Next.js"
+        ],
         "migration_direction": "modernization"
       },
       "difficulty": "hard",
       "priority": "P1",
-      "tags": ["evolution", "framework", "upgrade-path"]
+      "tags": [
+        "evolution",
+        "framework",
+        "upgrade-path"
+      ]
     },
     {
       "test_id": "pref_023",
@@ -511,12 +894,28 @@
       "description": "用户从TypeScript回退到JavaScript，因为遇到了类型系统的问题。系统应记录回退事件和原因",
       "setup": {
         "messages": [
-          {"role": "user", "content": "新项目开始用TypeScript了", "timestamp": "2026-02-01T10:00:00"},
-          {"role": "user", "content": "TypeScript类型体操太复杂了，调试类型错误比调试业务bug还累", "timestamp": "2026-04-10T10:00:00"},
-          {"role": "user", "content": "还是改回JavaScript吧，类型检查用JSDoc注释就够了", "timestamp": "2026-04-15T10:00:00"}
+          {
+            "role": "user",
+            "content": "新项目开始用TypeScript了",
+            "timestamp": "2026-02-01T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "TypeScript类型体操太复杂了，调试类型错误比调试业务bug还累",
+            "timestamp": "2026-04-10T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "还是改回JavaScript吧，类型检查用JSDoc注释就够了",
+            "timestamp": "2026-04-15T10:00:00"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_f", "category": "language"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_f",
+        "category": "language"
+      },
       "expected": {
         "current_preference": "JavaScript",
         "previous_preference": "TypeScript",
@@ -526,7 +925,11 @@
       },
       "difficulty": "hard",
       "priority": "P1",
-      "tags": ["evolution", "rollback", "complexity"]
+      "tags": [
+        "evolution",
+        "rollback",
+        "complexity"
+      ]
     },
     {
       "test_id": "pref_024",
@@ -534,20 +937,38 @@
       "description": "用户同时维护新旧两套技术栈的偏好：老项目继续用jQuery维护，新项目用React。系统应记录并行偏好而非替代",
       "setup": {
         "messages": [
-          {"role": "user", "content": "老项目的jQuery代码继续维护就行，别重写了。新项目全部用React", "timestamp": "2026-04-01T10:00:00"}
+          {
+            "role": "user",
+            "content": "老项目的jQuery代码继续维护就行，别重写了。新项目全部用React",
+            "timestamp": "2026-04-01T10:00:00"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_f", "category": "frontend"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_f",
+        "category": "frontend"
+      },
       "expected": {
         "parallel_preferences": [
-          {"context": "legacy_projects", "value": "jQuery"},
-          {"context": "new_projects", "value": "React"}
+          {
+            "context": "legacy_projects",
+            "value": "jQuery"
+          },
+          {
+            "context": "new_projects",
+            "value": "React"
+          }
         ],
         "not_replacement": true
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": ["evolution", "parallel", "context-dependent"]
+      "tags": [
+        "evolution",
+        "parallel",
+        "context-dependent"
+      ]
     },
     {
       "test_id": "pref_025",
@@ -555,24 +976,53 @@
       "description": "用户对Docker的偏好从'可以了解一下'→'试用中'→'全面采用'逐步加深。系统应追踪采纳阶段",
       "setup": {
         "messages": [
-          {"role": "user", "content": "Docker可以了解一下，看看适不适合我们", "timestamp": "2026-02-01T10:00:00"},
-          {"role": "user", "content": "Docker试用了一个月，效果不错，继续用", "timestamp": "2026-03-01T10:00:00"},
-          {"role": "user", "content": "Docker全面采用，所有服务容器化", "timestamp": "2026-04-01T10:00:00"}
+          {
+            "role": "user",
+            "content": "Docker可以了解一下，看看适不适合我们",
+            "timestamp": "2026-02-01T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "Docker试用了一个月，效果不错，继续用",
+            "timestamp": "2026-03-01T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "Docker全面采用，所有服务容器化",
+            "timestamp": "2026-04-01T10:00:00"
+          }
         ]
       },
-      "query": {"type": "get_preference", "user": "user_f", "category": "containerization"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_f",
+        "category": "containerization"
+      },
       "expected": {
         "current_preference": "Docker",
         "adoption_stage": "full_adoption",
         "adoption_timeline": [
-          {"stage": "exploring", "date": "2026-02-01"},
-          {"stage": "trialing", "date": "2026-03-01"},
-          {"stage": "adopted", "date": "2026-04-01"}
+          {
+            "stage": "exploring",
+            "date": "2026-02-01"
+          },
+          {
+            "stage": "trialing",
+            "date": "2026-03-01"
+          },
+          {
+            "stage": "adopted",
+            "date": "2026-04-01"
+          }
         ]
       },
       "difficulty": "hard",
       "priority": "P1",
-      "tags": ["evolution", "adoption", "stages"]
+      "tags": [
+        "evolution",
+        "adoption",
+        "stages"
+      ]
     },
     {
       "test_id": "pref_026",
@@ -583,20 +1033,37 @@
           "task": "debugging memory leak",
           "technology": "Node.js",
           "user_preferences": [
-            {"category": "debugging_tool", "value": "Chrome DevTools"},
-            {"category": "profiling_tool", "value": "clinic.js"}
+            {
+              "category": "debugging_tool",
+              "value": "Chrome DevTools"
+            },
+            {
+              "category": "profiling_tool",
+              "value": "clinic.js"
+            }
           ]
         }
       },
-      "query": {"type": "context_recommend", "user": "user_g", "scenario": "memory_leak_debugging"},
+      "query": {
+        "type": "context_recommend",
+        "user": "user_g",
+        "scenario": "memory_leak_debugging"
+      },
       "expected": {
-        "recommendations": ["Chrome DevTools", "clinic.js"],
+        "recommendations": [
+          "Chrome DevTools",
+          "clinic.js"
+        ],
         "reason": "matches_user_debugging_preferences",
         "context_relevant": true
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": ["context-aware", "recommendation", "debugging"]
+      "tags": [
+        "context-aware",
+        "recommendation",
+        "debugging"
+      ]
     },
     {
       "test_id": "pref_027",
@@ -608,22 +1075,47 @@
           "language": "Python",
           "type": "web_application",
           "user_preferences": [
-            {"category": "web_framework", "value": "Django"},
-            {"category": "database", "value": "PostgreSQL"},
-            {"category": "containerization", "value": "Docker"},
-            {"category": "testing", "value": "pytest"}
+            {
+              "category": "web_framework",
+              "value": "Django"
+            },
+            {
+              "category": "database",
+              "value": "PostgreSQL"
+            },
+            {
+              "category": "containerization",
+              "value": "Docker"
+            },
+            {
+              "category": "testing",
+              "value": "pytest"
+            }
           ]
         }
       },
-      "query": {"type": "context_recommend", "user": "user_g", "scenario": "new_python_project"},
+      "query": {
+        "type": "context_recommend",
+        "user": "user_g",
+        "scenario": "new_python_project"
+      },
       "expected": {
-        "recommendations": ["Django", "PostgreSQL", "Docker", "pytest"],
+        "recommendations": [
+          "Django",
+          "PostgreSQL",
+          "Docker",
+          "pytest"
+        ],
         "preference_based": true,
         "covers_full_stack": true
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": ["context-aware", "recommendation", "project-setup"]
+      "tags": [
+        "context-aware",
+        "recommendation",
+        "project-setup"
+      ]
     },
     {
       "test_id": "pref_028",
@@ -633,23 +1125,49 @@
         "current_context": {
           "task": "add_feature",
           "project": "existing_vue_project",
-          "tech_stack": ["Vue", "Vuex", "Element UI"],
+          "tech_stack": [
+            "Vue",
+            "Vuex",
+            "Element UI"
+          ],
           "user_preferences": [
-            {"category": "frontend_framework", "value": "React", "scope": "general"},
-            {"category": "frontend_framework", "value": "Vue", "scope": "this_project"}
+            {
+              "category": "frontend_framework",
+              "value": "React",
+              "scope": "general"
+            },
+            {
+              "category": "frontend_framework",
+              "value": "Vue",
+              "scope": "this_project"
+            }
           ]
         }
       },
-      "query": {"type": "context_recommend", "user": "user_g", "scenario": "feature_development"},
+      "query": {
+        "type": "context_recommend",
+        "user": "user_g",
+        "scenario": "feature_development"
+      },
       "expected": {
-        "recommendations": ["Vue", "Vuex", "Element UI"],
-        "not_recommend": ["React"],
+        "recommendations": [
+          "Vue",
+          "Vuex",
+          "Element UI"
+        ],
+        "not_recommend": [
+          "React"
+        ],
         "conflict_avoided": true,
         "scope_priority": "project_over_general"
       },
       "difficulty": "hard",
       "priority": "P0",
-      "tags": ["context-aware", "conflict-avoidance", "scope"]
+      "tags": [
+        "context-aware",
+        "conflict-avoidance",
+        "scope"
+      ]
     },
     {
       "test_id": "pref_029",
@@ -660,20 +1178,38 @@
           "task": "design_cicd_pipeline",
           "deployment_target": "Kubernetes",
           "user_preferences": [
-            {"category": "orchestration", "value": "Kubernetes"},
-            {"category": "ci_cd", "value": "GitHub Actions"}
+            {
+              "category": "orchestration",
+              "value": "Kubernetes"
+            },
+            {
+              "category": "ci_cd",
+              "value": "GitHub Actions"
+            }
           ]
         }
       },
-      "query": {"type": "context_recommend", "user": "user_g", "scenario": "cicd_for_k8s"},
+      "query": {
+        "type": "context_recommend",
+        "user": "user_g",
+        "scenario": "cicd_for_k8s"
+      },
       "expected": {
-        "recommendations_includes": ["Helm", "ArgoCD", "GitHub Actions"],
+        "recommendations_includes": [
+          "Helm",
+          "ArgoCD",
+          "GitHub Actions"
+        ],
         "cross_domain_linking": true,
         "deployment_context_aware": true
       },
       "difficulty": "hard",
       "priority": "P2",
-      "tags": ["context-aware", "cross-domain", "kubernetes"]
+      "tags": [
+        "context-aware",
+        "cross-domain",
+        "kubernetes"
+      ]
     },
     {
       "test_id": "pref_030",
@@ -685,20 +1221,37 @@
           "language": "Python"
         },
         "user_preferences": [
-          {"category": "language", "value": "Python"},
-          {"category": "editor", "value": "VSCode"}
+          {
+            "category": "language",
+            "value": "Python"
+          },
+          {
+            "category": "editor",
+            "value": "VSCode"
+          }
         ],
         "no_visualization_preference": true
       },
-      "query": {"type": "context_recommend", "user": "user_g", "scenario": "data_visualization"},
+      "query": {
+        "type": "context_recommend",
+        "user": "user_g",
+        "scenario": "data_visualization"
+      },
       "expected": {
-        "recommendations_includes": ["matplotlib", "plotly"],
+        "recommendations_includes": [
+          "matplotlib",
+          "plotly"
+        ],
         "fallback_to_popularity": true,
         "still_language_aware": true
       },
       "difficulty": "medium",
       "priority": "P2",
-      "tags": ["context-aware", "fallback", "popularity"]
+      "tags": [
+        "context-aware",
+        "fallback",
+        "popularity"
+      ]
     },
     {
       "test_id": "pref_031",
@@ -706,26 +1259,66 @@
       "description": "用户偏好Python→因Python偏好选择Django框架→因Django选择PostgreSQL（ORM兼容性）→因PostgreSQL选择pgAdmin工具。系统应推理出偏好之间的因果链",
       "setup": {
         "messages": [
-          {"role": "user", "content": "后端语言我选Python，写起来最顺手", "timestamp": "2026-01-10T10:00:00"},
-          {"role": "user", "content": "Web框架用Django吧，Python生态里最成熟的", "timestamp": "2026-01-15T10:00:00"},
-          {"role": "user", "content": "数据库用PostgreSQL，Django的ORM对PG支持最好", "timestamp": "2026-01-20T10:00:00"},
-          {"role": "user", "content": "数据库管理工具就用pgAdmin吧，和PG配套", "timestamp": "2026-01-25T10:00:00"}
+          {
+            "role": "user",
+            "content": "后端语言我选Python，写起来最顺手",
+            "timestamp": "2026-01-10T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "Web框架用Django吧，Python生态里最成熟的",
+            "timestamp": "2026-01-15T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "数据库用PostgreSQL，Django的ORM对PG支持最好",
+            "timestamp": "2026-01-20T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "数据库管理工具就用pgAdmin吧，和PG配套",
+            "timestamp": "2026-01-25T10:00:00"
+          }
         ]
       },
-      "query": {"type": "preference_causal_chain", "user": "user_h", "start": "language"},
+      "query": {
+        "type": "preference_causal_chain",
+        "user": "user_h",
+        "start": "language"
+      },
       "expected": {
         "causal_chain": [
-          {"category": "language", "value": "Python", "cause": "个人偏好"},
-          {"category": "framework", "value": "Django", "cause": "Python生态最成熟"},
-          {"category": "database", "value": "PostgreSQL", "cause": "Django ORM兼容"},
-          {"category": "db_tool", "value": "pgAdmin", "cause": "PostgreSQL配套"}
+          {
+            "category": "language",
+            "value": "Python",
+            "cause": "个人偏好"
+          },
+          {
+            "category": "framework",
+            "value": "Django",
+            "cause": "Python生态最成熟"
+          },
+          {
+            "category": "database",
+            "value": "PostgreSQL",
+            "cause": "Django ORM兼容"
+          },
+          {
+            "category": "db_tool",
+            "value": "pgAdmin",
+            "cause": "PostgreSQL配套"
+          }
         ],
         "chain_length": 4,
         "multi_hop_reasoning_required": true
       },
       "difficulty": "expert",
       "priority": "P0",
-      "tags": ["multi-hop", "causal-chain", "preference-linking"]
+      "tags": [
+        "multi-hop",
+        "causal-chain",
+        "preference-linking"
+      ]
     },
     {
       "test_id": "pref_032",
@@ -733,14 +1326,34 @@
       "description": "用户1月偏好保守技术栈(Java+Spring)，3月开始接受新潮(Rust+Axum)，4月完全转向新潮技术。系统应追踪偏好漂移的完整过程和速度",
       "setup": {
         "messages": [
-          {"role": "user", "content": "后端就用Java+Spring Boot，稳定最重要", "timestamp": "2026-01-10T10:00:00"},
-          {"role": "user", "content": "Rust性能确实好，可以试试Axum框架", "timestamp": "2026-02-20T10:00:00"},
-          {"role": "user", "content": "新项目全部用Rust+Axum，性能提升太明显了", "timestamp": "2026-03-15T10:00:00"},
-          {"role": "user", "content": "Java太臃肿了，以后都不用了", "timestamp": "2026-04-01T10:00:00"}
+          {
+            "role": "user",
+            "content": "后端就用Java+Spring Boot，稳定最重要",
+            "timestamp": "2026-01-10T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "Rust性能确实好，可以试试Axum框架",
+            "timestamp": "2026-02-20T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "新项目全部用Rust+Axum，性能提升太明显了",
+            "timestamp": "2026-03-15T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "Java太臃肿了，以后都不用了",
+            "timestamp": "2026-04-01T10:00:00"
+          }
         ],
         "current_time": "2026-04-29"
       },
-      "query": {"type": "preference_drift_analysis", "user": "user_i", "category": "backend"},
+      "query": {
+        "type": "preference_drift_analysis",
+        "user": "user_i",
+        "category": "backend"
+      },
       "expected": {
         "current_preference": "Rust+Axum",
         "previous_preference": "Java+Spring Boot",
@@ -752,7 +1365,12 @@
       },
       "difficulty": "expert",
       "priority": "P0",
-      "tags": ["entity-tracking", "preference-drift", "3-month", "temporal"]
+      "tags": [
+        "entity-tracking",
+        "preference-drift",
+        "3-month",
+        "temporal"
+      ]
     },
     {
       "test_id": "pref_033",
@@ -760,15 +1378,29 @@
       "description": "用户使用模式显示偏好TypeScript(使用率80%)，但明确说'不喜欢类型系统'。隐式证据和显式声明矛盾时，显式应优先，但隐式不应完全丢弃",
       "setup": {
         "messages": [
-          {"role": "user", "content": "我不太喜欢TypeScript那套类型声明，太啰嗦了", "timestamp": "2026-04-01T10:00:00"}
+          {
+            "role": "user",
+            "content": "我不太喜欢TypeScript那套类型声明，太啰嗦了",
+            "timestamp": "2026-04-01T10:00:00"
+          }
         ],
         "usage_data": {
-          "TypeScript": {"usage_ratio": 0.8, "period": "2026-01 to 2026-04"},
-          "JavaScript": {"usage_ratio": 0.2, "period": "2026-01 to 2026-04"}
+          "TypeScript": {
+            "usage_ratio": 0.8,
+            "period": "2026-01 to 2026-04"
+          },
+          "JavaScript": {
+            "usage_ratio": 0.2,
+            "period": "2026-01 to 2026-04"
+          }
         },
         "context": "公司项目强制要求TypeScript"
       },
-      "query": {"type": "get_preference", "user": "user_j", "category": "language"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_j",
+        "category": "language"
+      },
       "expected": {
         "explicit_preference": "JavaScript（不喜欢TypeScript）",
         "implicit_evidence": "TypeScript使用率80%",
@@ -779,7 +1411,12 @@
       },
       "difficulty": "expert",
       "priority": "P0",
-      "tags": ["multi-hop", "explicit-vs-implicit", "anti-interference", "context"]
+      "tags": [
+        "multi-hop",
+        "explicit-vs-implicit",
+        "anti-interference",
+        "context"
+      ]
     },
     {
       "test_id": "pref_034",
@@ -787,19 +1424,52 @@
       "description": "用户在不同时间段的偏好变化有规律：工作日偏好CLI工具，周末偏好GUI工具；远程办公时偏好轻量编辑器，在办公室偏好全功能IDE。系统应推断出时间/场景触发条件",
       "setup": {
         "activity_logs": [
-          {"tool": "vim", "context": "remote_work", "day": "weekday", "count": 20},
-          {"tool": "IntelliJ", "context": "office", "day": "weekday", "count": 25},
-          {"tool": "VSCode", "context": "remote_work", "day": "weekend", "count": 10},
-          {"tool": "vim", "context": "remote_work", "day": "weekend", "count": 5}
+          {
+            "tool": "vim",
+            "context": "remote_work",
+            "day": "weekday",
+            "count": 20
+          },
+          {
+            "tool": "IntelliJ",
+            "context": "office",
+            "day": "weekday",
+            "count": 25
+          },
+          {
+            "tool": "VSCode",
+            "context": "remote_work",
+            "day": "weekend",
+            "count": 10
+          },
+          {
+            "tool": "vim",
+            "context": "remote_work",
+            "day": "weekend",
+            "count": 5
+          }
         ],
         "current_time": "2026-04-29"
       },
-      "query": {"type": "preference_trigger_analysis", "user": "user_k", "category": "editor"},
+      "query": {
+        "type": "preference_trigger_analysis",
+        "user": "user_k",
+        "category": "editor"
+      },
       "expected": {
         "conditional_preferences": [
-          {"condition": "office+weekday", "value": "IntelliJ"},
-          {"condition": "remote+weekday", "value": "vim"},
-          {"condition": "weekend", "value": "VSCode"}
+          {
+            "condition": "office+weekday",
+            "value": "IntelliJ"
+          },
+          {
+            "condition": "remote+weekday",
+            "value": "vim"
+          },
+          {
+            "condition": "weekend",
+            "value": "VSCode"
+          }
         ],
         "trigger_conditions_found": true,
         "temporal_pattern_detected": true,
@@ -807,7 +1477,11 @@
       },
       "difficulty": "expert",
       "priority": "P1",
-      "tags": ["temporal-reasoning", "trigger-condition", "pattern-detection"]
+      "tags": [
+        "temporal-reasoning",
+        "trigger-condition",
+        "pattern-detection"
+      ]
     },
     {
       "test_id": "pref_035",
@@ -815,15 +1489,39 @@
       "description": "用户1月强烈偏好Go(多次表达)，2月开始沉默，3月偶尔提及，4月转向Rust。系统应同时考虑衰减和新兴偏好，正确判断当前偏好状态",
       "setup": {
         "messages": [
-          {"role": "user", "content": "Go语言太棒了，并发处理无敌", "timestamp": "2026-01-10T10:00:00"},
-          {"role": "user", "content": "Go的goroutine和channel简直是神器", "timestamp": "2026-01-20T10:00:00"},
-          {"role": "user", "content": "最近在看Rust，所有权模型很有意思", "timestamp": "2026-03-15T10:00:00"},
-          {"role": "user", "content": "Rust的性能和安全性真的无可挑剔", "timestamp": "2026-04-10T10:00:00"},
-          {"role": "user", "content": "新项目准备全面切换到Rust", "timestamp": "2026-04-20T10:00:00"}
+          {
+            "role": "user",
+            "content": "Go语言太棒了，并发处理无敌",
+            "timestamp": "2026-01-10T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "Go的goroutine和channel简直是神器",
+            "timestamp": "2026-01-20T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "最近在看Rust，所有权模型很有意思",
+            "timestamp": "2026-03-15T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "Rust的性能和安全性真的无可挑剔",
+            "timestamp": "2026-04-10T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "新项目准备全面切换到Rust",
+            "timestamp": "2026-04-20T10:00:00"
+          }
         ],
         "current_time": "2026-04-29"
       },
-      "query": {"type": "get_preference", "user": "user_l", "category": "language"},
+      "query": {
+        "type": "get_preference",
+        "user": "user_l",
+        "category": "language"
+      },
       "expected": {
         "current_primary": "Rust",
         "previous_primary": "Go",
@@ -835,7 +1533,196 @@
       },
       "difficulty": "expert",
       "priority": "P0",
-      "tags": ["3-month", "lifecycle", "decay", "emerging-preference"]
+      "tags": [
+        "3-month",
+        "lifecycle",
+        "decay",
+        "emerging-preference"
+      ]
+    },
+    {
+      "test_id": "pref_036",
+      "name": "多用户偏好隔离-5个用户冲突偏好",
+      "description": "5个用户各有冲突的编辑器偏好：Alice偏好Vim，Bob偏好VSCode，Charlie偏好IntelliJ，Dave偏好Emacs，Eve偏好Sublime。查询特定用户时不应返回其他用户偏好",
+      "setup": {
+        "user_preferences": [
+          {
+            "user": "alice",
+            "category": "editor",
+            "value": "Vim",
+            "confidence": 0.9,
+            "timestamp": "2026-04-01"
+          },
+          {
+            "user": "bob",
+            "category": "editor",
+            "value": "VSCode",
+            "confidence": 0.85,
+            "timestamp": "2026-04-02"
+          },
+          {
+            "user": "charlie",
+            "category": "editor",
+            "value": "IntelliJ",
+            "confidence": 0.8,
+            "timestamp": "2026-04-03"
+          },
+          {
+            "user": "dave",
+            "category": "editor",
+            "value": "Emacs",
+            "confidence": 0.95,
+            "timestamp": "2026-04-04"
+          },
+          {
+            "user": "eve",
+            "category": "editor",
+            "value": "Sublime",
+            "confidence": 0.75,
+            "timestamp": "2026-04-05"
+          }
+        ]
+      },
+      "query": {
+        "type": "get_preference",
+        "user": "charlie",
+        "category": "editor"
+      },
+      "expected": {
+        "preference_found": true,
+        "preference_value": "IntelliJ",
+        "user_isolation": true,
+        "must_not_contain": [
+          "Vim",
+          "VSCode",
+          "Emacs",
+          "Sublime"
+        ]
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": [
+        "multi-user",
+        "isolation",
+        "conflict",
+        "5-users"
+      ]
+    },
+    {
+      "test_id": "pref_037",
+      "name": "时序偏好漂移-3个月渐进变化",
+      "description": "用户1月偏好Python(强)，2月开始探索Go(弱→中)，3月开始偏好Go(中→强)，4月完全转向Go。系统应追踪完整的偏好漂移过程",
+      "setup": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Python是最好的语言，生态太丰富了",
+            "timestamp": "2026-01-10T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "最近在学Go，并发模型很有意思",
+            "timestamp": "2026-02-05T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "Go写了个小工具，性能确实不错",
+            "timestamp": "2026-02-25T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "新项目决定用Go，编译速度快部署简单",
+            "timestamp": "2026-03-15T10:00:00"
+          },
+          {
+            "role": "user",
+            "content": "Go已经成了我的主力语言，Python只是写脚本时用",
+            "timestamp": "2026-04-10T10:00:00"
+          }
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {
+        "type": "get_preference",
+        "user": "user_m",
+        "category": "language"
+      },
+      "expected": {
+        "current_primary": "Go",
+        "previous_primary": "Python",
+        "drift_detected": true,
+        "drift_direction": "Python→Go",
+        "drift_confidence_trend": "increasing",
+        "python_still_relevant": true,
+        "python_use_case": "脚本"
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": [
+        "temporal-drift",
+        "gradual-shift",
+        "3-month",
+        "language"
+      ]
+    },
+    {
+      "test_id": "pref_038",
+      "name": "跨域偏好推断-从工具偏好推断编码风格",
+      "description": "用户偏好ESLint+Prettier(代码格式化工具)、严格TypeScript模式、单引号风格。系统应推断出用户偏好严格的编码风格和一致的代码格式",
+      "setup": {
+        "tool_preferences": [
+          {
+            "tool": "ESLint",
+            "config": "strict mode",
+            "timestamp": "2026-03-01"
+          },
+          {
+            "tool": "Prettier",
+            "config": "singleQuote: true, tabWidth: 2",
+            "timestamp": "2026-03-01"
+          },
+          {
+            "tool": "TypeScript",
+            "config": "strict: true, noImplicitAny: true",
+            "timestamp": "2026-03-15"
+          },
+          {
+            "tool": "Husky",
+            "config": "pre-commit lint",
+            "timestamp": "2026-04-01"
+          }
+        ],
+        "code_patterns": {
+          "single_quotes_ratio": 0.95,
+          "type_annotations_ratio": 0.98,
+          "semicolon_usage": "always"
+        }
+      },
+      "query": {
+        "type": "cross_domain_inference",
+        "user": "user_n",
+        "infer": "coding_style"
+      },
+      "expected": {
+        "inferred_style": "strict",
+        "inferred_formatting": "consistent_single_quotes",
+        "inferred_type_safety": "strict_typescript",
+        "cross_domain_linking": true,
+        "confidence": ">= 0.8",
+        "reasoning_chain": [
+          "ESLint strict → strict style",
+          "Prettier singleQuote → single quotes",
+          "TypeScript strict → type safety"
+        ]
+      },
+      "difficulty": "expert",
+      "priority": "P1",
+      "tags": [
+        "cross-domain",
+        "inference",
+        "coding-style",
+        "tool-chain"
+      ]
     }
   ]
 }

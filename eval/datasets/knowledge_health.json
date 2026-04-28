@@ -2,12 +2,12 @@
   "dataset_name": "knowledge_health",
   "version": "3.0",
   "description": "知识健康度评测：测试系统对知识新鲜度、遗忘曲线、知识缺口、单点故障、版本管理、多跳推理和知识关联网络的评估能力",
-  "total_cases": 35,
+  "total_cases": 38,
   "difficulty_distribution": {
     "easy": 4,
     "medium": 14,
     "hard": 12,
-    "expert": 5
+    "expert": 8
   },
   "test_cases": [
     {
@@ -23,7 +23,10 @@
         },
         "current_time": "2026-04-29"
       },
-      "query": {"type": "health_check", "entry_id": "kh_001"},
+      "query": {
+        "type": "health_check",
+        "entry_id": "kh_001"
+      },
       "expected": {
         "freshness": "fresh",
         "age_days": 3,
@@ -32,7 +35,11 @@
       },
       "difficulty": "easy",
       "priority": "P0",
-      "tags": ["freshness", "fresh", "recent"]
+      "tags": [
+        "freshness",
+        "fresh",
+        "recent"
+      ]
     },
     {
       "test_id": "kh_002",
@@ -47,7 +54,10 @@
         },
         "current_time": "2026-04-29"
       },
-      "query": {"type": "health_check", "entry_id": "kh_002"},
+      "query": {
+        "type": "health_check",
+        "entry_id": "kh_002"
+      },
       "expected": {
         "freshness": "aging",
         "age_days": 20,
@@ -57,7 +67,11 @@
       },
       "difficulty": "easy",
       "priority": "P0",
-      "tags": ["freshness", "aging", "verification"]
+      "tags": [
+        "freshness",
+        "aging",
+        "verification"
+      ]
     },
     {
       "test_id": "kh_003",
@@ -72,7 +86,10 @@
         },
         "current_time": "2026-04-29"
       },
-      "query": {"type": "health_check", "entry_id": "kh_003"},
+      "query": {
+        "type": "health_check",
+        "entry_id": "kh_003"
+      },
       "expected": {
         "freshness": "stale",
         "age_days": 60,
@@ -82,7 +99,11 @@
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": ["freshness", "stale", "outdated"]
+      "tags": [
+        "freshness",
+        "stale",
+        "outdated"
+      ]
     },
     {
       "test_id": "kh_004",
@@ -97,7 +118,10 @@
         },
         "current_time": "2026-04-29"
       },
-      "query": {"type": "health_check", "entry_id": "kh_004"},
+      "query": {
+        "type": "health_check",
+        "entry_id": "kh_004"
+      },
       "expected": {
         "freshness": "forgotten",
         "age_days": 120,
@@ -108,7 +132,11 @@
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": ["freshness", "forgotten", "never-accessed"]
+      "tags": [
+        "freshness",
+        "forgotten",
+        "never-accessed"
+      ]
     },
     {
       "test_id": "kh_005",
@@ -124,7 +152,10 @@
         },
         "current_time": "2026-04-29"
       },
-      "query": {"type": "health_check", "entry_id": "kh_005"},
+      "query": {
+        "type": "health_check",
+        "entry_id": "kh_005"
+      },
       "expected": {
         "freshness": "aging",
         "age_days": 60,
@@ -134,7 +165,11 @@
       },
       "difficulty": "hard",
       "priority": "P0",
-      "tags": ["freshness", "access-boost", "aging-retardation"]
+      "tags": [
+        "freshness",
+        "access-boost",
+        "aging-retardation"
+      ]
     },
     {
       "test_id": "kh_006",
@@ -148,7 +183,10 @@
           "reinforcements": 1
         }
       },
-      "query": {"type": "retention_score", "entry_id": "kh_006"},
+      "query": {
+        "type": "retention_score",
+        "entry_id": "kh_006"
+      },
       "expected": {
         "retention_score": ">= 0.9",
         "interval_days": 1,
@@ -156,7 +194,11 @@
       },
       "difficulty": "easy",
       "priority": "P0",
-      "tags": ["forgetting-curve", "retention", "short-interval"]
+      "tags": [
+        "forgetting-curve",
+        "retention",
+        "short-interval"
+      ]
     },
     {
       "test_id": "kh_007",
@@ -170,7 +212,10 @@
           "reinforcements": 1
         }
       },
-      "query": {"type": "retention_score", "entry_id": "kh_007"},
+      "query": {
+        "type": "retention_score",
+        "entry_id": "kh_007"
+      },
       "expected": {
         "retention_score": "0.6-0.85",
         "interval_days": 7,
@@ -178,7 +223,11 @@
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": ["forgetting-curve", "retention", "medium-interval"]
+      "tags": [
+        "forgetting-curve",
+        "retention",
+        "medium-interval"
+      ]
     },
     {
       "test_id": "kh_008",
@@ -192,7 +241,10 @@
           "reinforcements": 0
         }
       },
-      "query": {"type": "retention_score", "entry_id": "kh_008"},
+      "query": {
+        "type": "retention_score",
+        "entry_id": "kh_008"
+      },
       "expected": {
         "retention_score": "0.3-0.6",
         "interval_days": 30,
@@ -200,7 +252,11 @@
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": ["forgetting-curve", "retention", "long-interval"]
+      "tags": [
+        "forgetting-curve",
+        "retention",
+        "long-interval"
+      ]
     },
     {
       "test_id": "kh_009",
@@ -214,7 +270,10 @@
           "reinforcements": 0
         }
       },
-      "query": {"type": "retention_score", "entry_id": "kh_009"},
+      "query": {
+        "type": "retention_score",
+        "entry_id": "kh_009"
+      },
       "expected": {
         "retention_score": "< 0.3",
         "interval_days": 90,
@@ -222,7 +281,11 @@
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": ["forgetting-curve", "retention", "90-day"]
+      "tags": [
+        "forgetting-curve",
+        "retention",
+        "90-day"
+      ]
     },
     {
       "test_id": "kh_010",
@@ -241,12 +304,22 @@
             "content": "团队Git工作流：feature branch → PR → review → merge",
             "stored_at": "2026-04-22T10:00:00",
             "reinforcements": 3,
-            "reinforcement_dates": ["2026-04-24", "2026-04-26", "2026-04-28"]
+            "reinforcement_dates": [
+              "2026-04-24",
+              "2026-04-26",
+              "2026-04-28"
+            ]
           }
         ],
         "recall_at": "2026-04-29T10:00:00"
       },
-      "query": {"type": "retention_comparison", "entry_ids": ["kh_010a", "kh_010b"]},
+      "query": {
+        "type": "retention_comparison",
+        "entry_ids": [
+          "kh_010a",
+          "kh_010b"
+        ]
+      },
       "expected": {
         "kh_010a_retention": "0.6-0.8",
         "kh_010b_retention": ">= 0.9",
@@ -255,7 +328,11 @@
       },
       "difficulty": "hard",
       "priority": "P0",
-      "tags": ["forgetting-curve", "reinforcement", "comparison"]
+      "tags": [
+        "forgetting-curve",
+        "reinforcement",
+        "comparison"
+      ]
     },
     {
       "test_id": "kh_011",
@@ -263,25 +340,61 @@
       "description": "团队有5个知识领域，但只有3个领域有知识记录。系统应识别出2个知识缺口领域",
       "setup": {
         "team_knowledge_coverage": {
-          "required_domains": ["frontend", "backend", "devops", "database", "security"],
+          "required_domains": [
+            "frontend",
+            "backend",
+            "devops",
+            "database",
+            "security"
+          ],
           "covered_domains": {
-            "frontend": {"contributors": ["alice", "bob"], "entries": 15},
-            "backend": {"contributors": ["charlie"], "entries": 8},
-            "devops": {"contributors": ["dave", "eve"], "entries": 10}
+            "frontend": {
+              "contributors": [
+                "alice",
+                "bob"
+              ],
+              "entries": 15
+            },
+            "backend": {
+              "contributors": [
+                "charlie"
+              ],
+              "entries": 8
+            },
+            "devops": {
+              "contributors": [
+                "dave",
+                "eve"
+              ],
+              "entries": 10
+            }
           },
-          "uncovered_domains": ["database", "security"]
+          "uncovered_domains": [
+            "database",
+            "security"
+          ]
         }
       },
-      "query": {"type": "knowledge_gap_analysis", "team": "main_team"},
+      "query": {
+        "type": "knowledge_gap_analysis",
+        "team": "main_team"
+      },
       "expected": {
-        "gaps_found": ["database", "security"],
+        "gaps_found": [
+          "database",
+          "security"
+        ],
         "gap_count": 2,
         "coverage_rate": "60%",
         "risk_level": "high"
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": ["gap-detection", "team", "coverage"]
+      "tags": [
+        "gap-detection",
+        "team",
+        "coverage"
+      ]
     },
     {
       "test_id": "kh_012",
@@ -291,12 +404,18 @@
         "domain_analysis": {
           "domain": "security",
           "entries": [
-            {"content": "使用HTTPS", "depth": "basic"}
+            {
+              "content": "使用HTTPS",
+              "depth": "basic"
+            }
           ],
           "expected_entries_for_adequate_depth": 10
         }
       },
-      "query": {"type": "knowledge_depth_analysis", "domain": "security"},
+      "query": {
+        "type": "knowledge_depth_analysis",
+        "domain": "security"
+      },
       "expected": {
         "has_coverage": true,
         "depth_level": "shallow",
@@ -306,7 +425,11 @@
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": ["gap-detection", "depth", "quality"]
+      "tags": [
+        "gap-detection",
+        "depth",
+        "quality"
+      ]
     },
     {
       "test_id": "kh_013",
@@ -316,14 +439,25 @@
         "domain_analysis": {
           "domain": "annual_review_process",
           "entries": [
-            {"content": "年终总结模板和流程", "created_at": "2026-01-05", "freshness": "stale"},
-            {"content": "绩效评估标准", "created_at": "2026-01-10", "freshness": "stale"}
+            {
+              "content": "年终总结模板和流程",
+              "created_at": "2026-01-05",
+              "freshness": "stale"
+            },
+            {
+              "content": "绩效评估标准",
+              "created_at": "2026-01-10",
+              "freshness": "stale"
+            }
           ],
           "seasonal_relevance": "Q1 only"
         },
         "current_time": "2026-04-29"
       },
-      "query": {"type": "knowledge_gap_analysis", "domain": "annual_review_process"},
+      "query": {
+        "type": "knowledge_gap_analysis",
+        "domain": "annual_review_process"
+      },
       "expected": {
         "has_entries": true,
         "all_stale": true,
@@ -332,7 +466,11 @@
       },
       "difficulty": "hard",
       "priority": "P2",
-      "tags": ["gap-detection", "seasonal", "temporal"]
+      "tags": [
+        "gap-detection",
+        "seasonal",
+        "temporal"
+      ]
     },
     {
       "test_id": "kh_014",
@@ -352,16 +490,27 @@
           }
         }
       },
-      "query": {"type": "cross_project_gap_analysis"},
+      "query": {
+        "type": "cross_project_gap_analysis"
+      },
       "expected": {
-        "project_b_gaps": ["deployment_docs", "api_docs"],
-        "project_b_shallow": ["architecture_docs"],
+        "project_b_gaps": [
+          "deployment_docs",
+          "api_docs"
+        ],
+        "project_b_shallow": [
+          "architecture_docs"
+        ],
         "distribution_inequality": true,
         "highest_risk_project": "project_b"
       },
       "difficulty": "hard",
       "priority": "P1",
-      "tags": ["gap-detection", "cross-project", "distribution"]
+      "tags": [
+        "gap-detection",
+        "cross-project",
+        "distribution"
+      ]
     },
     {
       "test_id": "kh_015",
@@ -382,7 +531,10 @@
           "new_member": "frank"
         }
       },
-      "query": {"type": "onboarding_gap_analysis", "member": "frank"},
+      "query": {
+        "type": "onboarding_gap_analysis",
+        "member": "frank"
+      },
       "expected": {
         "missing_knowledge": [
           "开发环境搭建指南",
@@ -396,7 +548,11 @@
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": ["gap-detection", "onboarding", "new-member"]
+      "tags": [
+        "gap-detection",
+        "onboarding",
+        "new-member"
+      ]
     },
     {
       "test_id": "kh_016",
@@ -405,22 +561,32 @@
       "setup": {
         "knowledge_ownership": {
           "database_architecture": {
-            "contributors": ["zhang_san"],
+            "contributors": [
+              "zhang_san"
+            ],
             "entry_count": 15,
             "criticality": "high",
             "last_updated": "2026-04-20"
           },
           "frontend_components": {
-            "contributors": ["li_si", "wang_wu", "zhao_liu"],
+            "contributors": [
+              "li_si",
+              "wang_wu",
+              "zhao_liu"
+            ],
             "entry_count": 30,
             "criticality": "medium",
             "last_updated": "2026-04-25"
           }
         }
       },
-      "query": {"type": "single_point_of_failure_analysis"},
+      "query": {
+        "type": "single_point_of_failure_analysis"
+      },
       "expected": {
-        "spof_found": ["database_architecture"],
+        "spof_found": [
+          "database_architecture"
+        ],
         "spof_details": {
           "domain": "database_architecture",
           "sole_owner": "zhang_san",
@@ -430,7 +596,11 @@
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": ["spof", "risk", "knowledge-ownership"]
+      "tags": [
+        "spof",
+        "risk",
+        "knowledge-ownership"
+      ]
     },
     {
       "test_id": "kh_017",
@@ -439,20 +609,51 @@
       "setup": {
         "member_expertise": {
           "dave": {
-            "domains": ["devops", "infrastructure", "monitoring", "security"],
-            "unique_domains": ["devops", "infrastructure"],
+            "domains": [
+              "devops",
+              "infrastructure",
+              "monitoring",
+              "security"
+            ],
+            "unique_domains": [
+              "devops",
+              "infrastructure"
+            ],
             "knowledge_entries": 45
           },
-          "alice": {"domains": ["frontend"], "knowledge_entries": 20},
-          "bob": {"domains": ["frontend", "design"], "knowledge_entries": 15},
-          "charlie": {"domains": ["backend"], "knowledge_entries": 18}
+          "alice": {
+            "domains": [
+              "frontend"
+            ],
+            "knowledge_entries": 20
+          },
+          "bob": {
+            "domains": [
+              "frontend",
+              "design"
+            ],
+            "knowledge_entries": 15
+          },
+          "charlie": {
+            "domains": [
+              "backend"
+            ],
+            "knowledge_entries": 18
+          }
         }
       },
-      "query": {"type": "key_person_dependency_analysis"},
+      "query": {
+        "type": "key_person_dependency_analysis"
+      },
       "expected": {
-        "key_persons": ["dave"],
+        "key_persons": [
+          "dave"
+        ],
         "dave_risk": {
-          "unique_domains": ["devops", "infrastructure"],
+          "unique_domains": [
+            "devops",
+            "infrastructure"
+          ],
           "dependency_level": "critical",
           "bus_factor": 1
         },
@@ -460,7 +661,11 @@
       },
       "difficulty": "hard",
       "priority": "P0",
-      "tags": ["spof", "key-person", "bus-factor"]
+      "tags": [
+        "spof",
+        "key-person",
+        "bus-factor"
+      ]
     },
     {
       "test_id": "kh_018",
@@ -469,7 +674,9 @@
       "setup": {
         "knowledge_ownership": {
           "core_api_design": {
-            "contributors": ["external_contractor_wang"],
+            "contributors": [
+              "external_contractor_wang"
+            ],
             "entry_count": 20,
             "criticality": "high",
             "contract_end_date": "2026-05-15",
@@ -478,16 +685,25 @@
         },
         "current_time": "2026-04-29"
       },
-      "query": {"type": "single_point_of_failure_analysis"},
+      "query": {
+        "type": "single_point_of_failure_analysis"
+      },
       "expected": {
-        "spof_found": ["core_api_design"],
+        "spof_found": [
+          "core_api_design"
+        ],
         "urgency": "critical",
         "days_until_risk": 16,
         "action_required": "knowledge_transfer_before_contract_end"
       },
       "difficulty": "hard",
       "priority": "P0",
-      "tags": ["spof", "external", "contractor", "urgency"]
+      "tags": [
+        "spof",
+        "external",
+        "contractor",
+        "urgency"
+      ]
     },
     {
       "test_id": "kh_019",
@@ -496,7 +712,9 @@
       "setup": {
         "knowledge_ownership": {
           "legacy_payment_integration": {
-            "contributors": ["eve"],
+            "contributors": [
+              "eve"
+            ],
             "entry_count": 2,
             "criticality": "high",
             "system_status": "being_deprecated",
@@ -504,16 +722,24 @@
           }
         }
       },
-      "query": {"type": "single_point_of_failure_analysis"},
+      "query": {
+        "type": "single_point_of_failure_analysis"
+      },
       "expected": {
-        "spof_found": ["legacy_payment_integration"],
+        "spof_found": [
+          "legacy_payment_integration"
+        ],
         "spof_type": "deprecated_system",
         "risk": "knowledge_loss_on_decommission",
         "recommendation": "document_before_removal"
       },
       "difficulty": "hard",
       "priority": "P1",
-      "tags": ["spof", "deprecated", "legacy"]
+      "tags": [
+        "spof",
+        "deprecated",
+        "legacy"
+      ]
     },
     {
       "test_id": "kh_020",
@@ -521,13 +747,40 @@
       "description": "所有知识领域都有至少2人掌握，且文档完善。系统应报告无单点故障",
       "setup": {
         "knowledge_ownership": {
-          "frontend": {"contributors": ["alice", "bob", "frank"], "entry_count": 25},
-          "backend": {"contributors": ["charlie", "grace"], "entry_count": 20},
-          "devops": {"contributors": ["dave", "eve"], "entry_count": 18},
-          "database": {"contributors": ["charlie", "dave"], "entry_count": 12}
+          "frontend": {
+            "contributors": [
+              "alice",
+              "bob",
+              "frank"
+            ],
+            "entry_count": 25
+          },
+          "backend": {
+            "contributors": [
+              "charlie",
+              "grace"
+            ],
+            "entry_count": 20
+          },
+          "devops": {
+            "contributors": [
+              "dave",
+              "eve"
+            ],
+            "entry_count": 18
+          },
+          "database": {
+            "contributors": [
+              "charlie",
+              "dave"
+            ],
+            "entry_count": 12
+          }
         }
       },
-      "query": {"type": "single_point_of_failure_analysis"},
+      "query": {
+        "type": "single_point_of_failure_analysis"
+      },
       "expected": {
         "spof_found": [],
         "team_resilience": "strong",
@@ -535,7 +788,11 @@
       },
       "difficulty": "easy",
       "priority": "P1",
-      "tags": ["spof", "no-risk", "resilience"]
+      "tags": [
+        "spof",
+        "no-risk",
+        "resilience"
+      ]
     },
     {
       "test_id": "kh_021",
@@ -551,7 +808,10 @@
         },
         "current_time": "2026-04-29"
       },
-      "query": {"type": "forgetting_alert", "entry_id": "kh_021"},
+      "query": {
+        "type": "forgetting_alert",
+        "entry_id": "kh_021"
+      },
       "expected": {
         "alert_triggered": true,
         "alert_level": "warning",
@@ -561,7 +821,11 @@
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": ["forgetting-alert", "90-day", "warning"]
+      "tags": [
+        "forgetting-alert",
+        "90-day",
+        "warning"
+      ]
     },
     {
       "test_id": "kh_022",
@@ -577,7 +841,10 @@
         },
         "current_time": "2026-04-29"
       },
-      "query": {"type": "forgetting_alert", "entry_id": "kh_022"},
+      "query": {
+        "type": "forgetting_alert",
+        "entry_id": "kh_022"
+      },
       "expected": {
         "alert_triggered": false,
         "retention_score": ">= 0.85",
@@ -585,7 +852,11 @@
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": ["forgetting-alert", "no-alert", "frequent-access"]
+      "tags": [
+        "forgetting-alert",
+        "no-alert",
+        "frequent-access"
+      ]
     },
     {
       "test_id": "kh_023",
@@ -593,15 +864,43 @@
       "description": "2026-01月创建的一批10条知识，到4月都未再访问。系统应批量预警而非逐条处理",
       "setup": {
         "knowledge_batch": [
-          {"id": "batch_001", "content": "旧服务器配置A", "created_at": "2026-01-15", "access_count": 1},
-          {"id": "batch_002", "content": "旧服务器配置B", "created_at": "2026-01-15", "access_count": 0},
-          {"id": "batch_003", "content": "旧服务器配置C", "created_at": "2026-01-20", "access_count": 1},
-          {"id": "batch_004", "content": "旧部署脚本", "created_at": "2026-01-18", "access_count": 0},
-          {"id": "batch_005", "content": "旧环境变量", "created_at": "2026-01-22", "access_count": 2}
+          {
+            "id": "batch_001",
+            "content": "旧服务器配置A",
+            "created_at": "2026-01-15",
+            "access_count": 1
+          },
+          {
+            "id": "batch_002",
+            "content": "旧服务器配置B",
+            "created_at": "2026-01-15",
+            "access_count": 0
+          },
+          {
+            "id": "batch_003",
+            "content": "旧服务器配置C",
+            "created_at": "2026-01-20",
+            "access_count": 1
+          },
+          {
+            "id": "batch_004",
+            "content": "旧部署脚本",
+            "created_at": "2026-01-18",
+            "access_count": 0
+          },
+          {
+            "id": "batch_005",
+            "content": "旧环境变量",
+            "created_at": "2026-01-22",
+            "access_count": 2
+          }
         ],
         "current_time": "2026-04-29"
       },
-      "query": {"type": "batch_forgetting_alert", "time_range": "2026-01-01 to 2026-01-31"},
+      "query": {
+        "type": "batch_forgetting_alert",
+        "time_range": "2026-01-01 to 2026-01-31"
+      },
       "expected": {
         "batch_alert": true,
         "affected_entries": 5,
@@ -610,7 +909,11 @@
       },
       "difficulty": "hard",
       "priority": "P1",
-      "tags": ["forgetting-alert", "batch", "bulk-risk"]
+      "tags": [
+        "forgetting-alert",
+        "batch",
+        "bulk-risk"
+      ]
     },
     {
       "test_id": "kh_024",
@@ -627,7 +930,10 @@
         "current_time": "2026-04-29",
         "forgetting_threshold": 0.3
       },
-      "query": {"type": "forgetting_alert", "entry_id": "kh_024"},
+      "query": {
+        "type": "forgetting_alert",
+        "entry_id": "kh_024"
+      },
       "expected": {
         "alert_triggered": true,
         "alert_level": "pre_warning",
@@ -638,7 +944,11 @@
       },
       "difficulty": "hard",
       "priority": "P0",
-      "tags": ["forgetting-alert", "pre-warning", "threshold"]
+      "tags": [
+        "forgetting-alert",
+        "pre-warning",
+        "threshold"
+      ]
     },
     {
       "test_id": "kh_025",
@@ -653,7 +963,10 @@
         },
         "current_time": "2026-04-29"
       },
-      "query": {"type": "forgetting_alert", "entry_id": "kh_025"},
+      "query": {
+        "type": "forgetting_alert",
+        "entry_id": "kh_025"
+      },
       "expected": {
         "alert_triggered": true,
         "alert_type": "temporal_expiry",
@@ -663,7 +976,11 @@
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": ["forgetting-alert", "temporal", "auto-expiry"]
+      "tags": [
+        "forgetting-alert",
+        "temporal",
+        "auto-expiry"
+      ]
     },
     {
       "test_id": "kh_026",
@@ -685,7 +1002,10 @@
           }
         ]
       },
-      "query": {"type": "get_knowledge", "topic": "API端点"},
+      "query": {
+        "type": "get_knowledge",
+        "topic": "API端点"
+      },
       "expected": {
         "current_version": 2,
         "current_content": "API端点: https://api.example.com/v2",
@@ -695,7 +1015,11 @@
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": ["versioning", "update", "superseded"]
+      "tags": [
+        "versioning",
+        "update",
+        "superseded"
+      ]
     },
     {
       "test_id": "kh_027",
@@ -703,22 +1027,48 @@
       "description": "数据库连接配置经历了3次变更。系统应保留完整的版本历史",
       "setup": {
         "knowledge_versions": [
-          {"version": 1, "content": "数据库: MySQL 5.7 @ localhost", "created_at": "2026-01-01", "status": "archived"},
-          {"version": 2, "content": "数据库: MySQL 8.0 @ db-staging.example.com", "created_at": "2026-02-15", "status": "superseded"},
-          {"version": 3, "content": "数据库: PostgreSQL 15 @ db-prod.example.com", "created_at": "2026-04-01", "status": "current"}
+          {
+            "version": 1,
+            "content": "数据库: MySQL 5.7 @ localhost",
+            "created_at": "2026-01-01",
+            "status": "archived"
+          },
+          {
+            "version": 2,
+            "content": "数据库: MySQL 8.0 @ db-staging.example.com",
+            "created_at": "2026-02-15",
+            "status": "superseded"
+          },
+          {
+            "version": 3,
+            "content": "数据库: PostgreSQL 15 @ db-prod.example.com",
+            "created_at": "2026-04-01",
+            "status": "current"
+          }
         ]
       },
-      "query": {"type": "knowledge_version_history", "topic": "数据库配置"},
+      "query": {
+        "type": "knowledge_version_history",
+        "topic": "数据库配置"
+      },
       "expected": {
         "total_versions": 3,
         "current_version": 3,
         "chronological_order": true,
-        "technology_change": ["MySQL 5.7", "MySQL 8.0", "PostgreSQL 15"],
+        "technology_change": [
+          "MySQL 5.7",
+          "MySQL 8.0",
+          "PostgreSQL 15"
+        ],
         "all_versions_accessible": true
       },
       "difficulty": "hard",
       "priority": "P1",
-      "tags": ["versioning", "multi-version", "history"]
+      "tags": [
+        "versioning",
+        "multi-version",
+        "history"
+      ]
     },
     {
       "test_id": "kh_028",
@@ -731,12 +1081,23 @@
             "version": 1
           },
           "conflicting_updates": [
-            {"author": "alice", "content": "部署端口: 3000", "timestamp": "2026-04-29T10:00:00"},
-            {"author": "bob", "content": "部署端口: 5000", "timestamp": "2026-04-29T10:01:00"}
+            {
+              "author": "alice",
+              "content": "部署端口: 3000",
+              "timestamp": "2026-04-29T10:00:00"
+            },
+            {
+              "author": "bob",
+              "content": "部署端口: 5000",
+              "timestamp": "2026-04-29T10:01:00"
+            }
           ]
         }
       },
-      "query": {"type": "get_knowledge", "topic": "部署端口"},
+      "query": {
+        "type": "get_knowledge",
+        "topic": "部署端口"
+      },
       "expected": {
         "conflict_detected": true,
         "conflicting_versions": 2,
@@ -748,7 +1109,11 @@
       },
       "difficulty": "hard",
       "priority": "P0",
-      "tags": ["versioning", "conflict", "merge-required"]
+      "tags": [
+        "versioning",
+        "conflict",
+        "merge-required"
+      ]
     },
     {
       "test_id": "kh_029",
@@ -756,13 +1121,32 @@
       "description": "发现v3的知识有误，需要回滚到v2。系统应支持版本回滚操作",
       "setup": {
         "knowledge_versions": [
-          {"version": 1, "content": "SSH端口: 22", "status": "archived"},
-          {"version": 2, "content": "SSH端口: 2222", "status": "superseded"},
-          {"version": 3, "content": "SSH端口: 22", "status": "current", "note": "错误回退到默认值"}
+          {
+            "version": 1,
+            "content": "SSH端口: 22",
+            "status": "archived"
+          },
+          {
+            "version": 2,
+            "content": "SSH端口: 2222",
+            "status": "superseded"
+          },
+          {
+            "version": 3,
+            "content": "SSH端口: 22",
+            "status": "current",
+            "note": "错误回退到默认值"
+          }
         ],
-        "rollback_request": {"target_version": 2}
+        "rollback_request": {
+          "target_version": 2
+        }
       },
-      "query": {"type": "rollback_knowledge", "topic": "SSH端口", "target_version": 2},
+      "query": {
+        "type": "rollback_knowledge",
+        "topic": "SSH端口",
+        "target_version": 2
+      },
       "expected": {
         "rollback_successful": true,
         "current_content": "SSH端口: 2222",
@@ -772,7 +1156,11 @@
       },
       "difficulty": "hard",
       "priority": "P1",
-      "tags": ["versioning", "rollback", "error-correction"]
+      "tags": [
+        "versioning",
+        "rollback",
+        "error-correction"
+      ]
     },
     {
       "test_id": "kh_030",
@@ -800,15 +1188,26 @@
           }
         ]
       },
-      "query": {"type": "knowledge_version_history", "topic": "日志级别"},
+      "query": {
+        "type": "knowledge_version_history",
+        "topic": "日志级别"
+      },
       "expected": {
         "all_versions_have_changelog": true,
-        "changelogs": ["初始配置", "排查线上问题临时开启DEBUG", "问题已修复，降低日志级别减少噪音"],
+        "changelogs": [
+          "初始配置",
+          "排查线上问题临时开启DEBUG",
+          "问题已修复，降低日志级别减少噪音"
+        ],
         "story": "问题排查的完整时间线"
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": ["versioning", "changelog", "audit-trail"]
+      "tags": [
+        "versioning",
+        "changelog",
+        "audit-trail"
+      ]
     },
     {
       "test_id": "kh_031",
@@ -816,16 +1215,46 @@
       "description": "知识A(API设计)依赖知识B(数据库Schema)，知识B依赖知识C(业务需求文档)。当知识C过期时，系统应推理出A和B也可能需要更新",
       "setup": {
         "knowledge_graph": [
-          {"id": "k_c", "content": "用户需求：支持多租户SaaS模式", "created_at": "2026-01-15", "freshness": "stale", "type": "requirement"},
-          {"id": "k_b", "content": "数据库Schema：每个租户独立Schema", "created_at": "2026-02-01", "freshness": "aging", "depends_on": ["k_c"], "type": "design"},
-          {"id": "k_a", "content": "API设计：请求头X-Tenant-ID标识租户", "created_at": "2026-02-15", "freshness": "aging", "depends_on": ["k_b"], "type": "implementation"}
+          {
+            "id": "k_c",
+            "content": "用户需求：支持多租户SaaS模式",
+            "created_at": "2026-01-15",
+            "freshness": "stale",
+            "type": "requirement"
+          },
+          {
+            "id": "k_b",
+            "content": "数据库Schema：每个租户独立Schema",
+            "created_at": "2026-02-01",
+            "freshness": "aging",
+            "depends_on": [
+              "k_c"
+            ],
+            "type": "design"
+          },
+          {
+            "id": "k_a",
+            "content": "API设计：请求头X-Tenant-ID标识租户",
+            "created_at": "2026-02-15",
+            "freshness": "aging",
+            "depends_on": [
+              "k_b"
+            ],
+            "type": "implementation"
+          }
         ],
         "current_time": "2026-04-29"
       },
-      "query": {"type": "knowledge_cascade_health", "trigger": "k_c"},
+      "query": {
+        "type": "knowledge_cascade_health",
+        "trigger": "k_c"
+      },
       "expected": {
         "stale_root": "k_c",
-        "cascade_affected": ["k_b", "k_a"],
+        "cascade_affected": [
+          "k_b",
+          "k_a"
+        ],
         "cascade_depth": 2,
         "recommendation": "从需求文档开始逐层更新",
         "multi_hop_reasoning_required": true,
@@ -833,7 +1262,12 @@
       },
       "difficulty": "expert",
       "priority": "P0",
-      "tags": ["multi-hop", "knowledge-graph", "cascade", "dependency"]
+      "tags": [
+        "multi-hop",
+        "knowledge-graph",
+        "cascade",
+        "dependency"
+      ]
     },
     {
       "test_id": "kh_032",
@@ -841,14 +1275,50 @@
       "description": "团队知识从1月集中于dave一人(devops)，到4月已扩展到3人掌握。系统应追踪知识分布的演变并评估团队韧性改善",
       "setup": {
         "knowledge_timeline": [
-          {"period": "2026-01", "devops_contributors": ["dave"], "bus_factor": 1, "entries": 5},
-          {"period": "2026-02", "devops_contributors": ["dave", "eve"], "bus_factor": 1, "entries": 8},
-          {"period": "2026-03", "devops_contributors": ["dave", "eve", "frank"], "bus_factor": 2, "entries": 15},
-          {"period": "2026-04", "devops_contributors": ["dave", "eve", "frank"], "bus_factor": 2, "entries": 20}
+          {
+            "period": "2026-01",
+            "devops_contributors": [
+              "dave"
+            ],
+            "bus_factor": 1,
+            "entries": 5
+          },
+          {
+            "period": "2026-02",
+            "devops_contributors": [
+              "dave",
+              "eve"
+            ],
+            "bus_factor": 1,
+            "entries": 8
+          },
+          {
+            "period": "2026-03",
+            "devops_contributors": [
+              "dave",
+              "eve",
+              "frank"
+            ],
+            "bus_factor": 2,
+            "entries": 15
+          },
+          {
+            "period": "2026-04",
+            "devops_contributors": [
+              "dave",
+              "eve",
+              "frank"
+            ],
+            "bus_factor": 2,
+            "entries": 20
+          }
         ],
         "current_time": "2026-04-29"
       },
-      "query": {"type": "knowledge_evolution_analysis", "domain": "devops"},
+      "query": {
+        "type": "knowledge_evolution_analysis",
+        "domain": "devops"
+      },
       "expected": {
         "initial_bus_factor": 1,
         "current_bus_factor": 2,
@@ -860,7 +1330,12 @@
       },
       "difficulty": "expert",
       "priority": "P0",
-      "tags": ["entity-tracking", "evolution", "bus-factor", "temporal"]
+      "tags": [
+        "entity-tracking",
+        "evolution",
+        "bus-factor",
+        "temporal"
+      ]
     },
     {
       "test_id": "kh_033",
@@ -868,27 +1343,79 @@
       "description": "Q1规划文档已过期→影响依赖它的技术方案→进而影响依赖技术方案的API文档。系统应推理出过期级联并按影响范围排序预警",
       "setup": {
         "knowledge_dependencies": [
-          {"id": "plan_q1", "content": "Q1产品规划", "expired": true, "expiry_reason": "Q1已结束"},
-          {"id": "tech_design", "content": "技术方案设计", "depends_on": "plan_q1", "freshness": "aging"},
-          {"id": "api_doc", "content": "API接口文档", "depends_on": "tech_design", "freshness": "fresh"},
-          {"id": "test_plan", "content": "测试计划", "depends_on": "tech_design", "freshness": "fresh"}
+          {
+            "id": "plan_q1",
+            "content": "Q1产品规划",
+            "expired": true,
+            "expiry_reason": "Q1已结束"
+          },
+          {
+            "id": "tech_design",
+            "content": "技术方案设计",
+            "depends_on": "plan_q1",
+            "freshness": "aging"
+          },
+          {
+            "id": "api_doc",
+            "content": "API接口文档",
+            "depends_on": "tech_design",
+            "freshness": "fresh"
+          },
+          {
+            "id": "test_plan",
+            "content": "测试计划",
+            "depends_on": "tech_design",
+            "freshness": "fresh"
+          }
         ],
         "current_time": "2026-04-29"
       },
-      "query": {"type": "expiry_cascade_warning"},
+      "query": {
+        "type": "expiry_cascade_warning"
+      },
       "expected": {
         "cascade_warnings": [
-          {"level": 1, "item": "plan_q1", "status": "expired", "impact": "直接过期"},
-          {"level": 2, "item": "tech_design", "status": "needs_review", "impact": "可能过期"},
-          {"level": 3, "item": "api_doc", "status": "potentially_affected", "impact": "间接影响"},
-          {"level": 3, "item": "test_plan", "status": "potentially_affected", "impact": "间接影响"}
+          {
+            "level": 1,
+            "item": "plan_q1",
+            "status": "expired",
+            "impact": "直接过期"
+          },
+          {
+            "level": 2,
+            "item": "tech_design",
+            "status": "needs_review",
+            "impact": "可能过期"
+          },
+          {
+            "level": 3,
+            "item": "api_doc",
+            "status": "potentially_affected",
+            "impact": "间接影响"
+          },
+          {
+            "level": 3,
+            "item": "test_plan",
+            "status": "potentially_affected",
+            "impact": "间接影响"
+          }
         ],
-        "priority_order": ["plan_q1", "tech_design", "api_doc", "test_plan"],
+        "priority_order": [
+          "plan_q1",
+          "tech_design",
+          "api_doc",
+          "test_plan"
+        ],
         "temporal_reasoning_required": true
       },
       "difficulty": "expert",
       "priority": "P0",
-      "tags": ["temporal-reasoning", "cascade", "expiry-warning", "priority"]
+      "tags": [
+        "temporal-reasoning",
+        "cascade",
+        "expiry-warning",
+        "priority"
+      ]
     },
     {
       "test_id": "kh_034",
@@ -899,17 +1426,43 @@
           "id": "api_v1",
           "content": "REST API v1接口规范",
           "timeline": [
-            {"date": "2026-01-15", "event": "created", "access_count": 0},
-            {"date": "2026-02-01", "event": "heavy_usage", "access_count": 50, "reinforcements": 5},
-            {"date": "2026-03-01", "event": "access_decline", "access_count": 10, "reinforcements": 0},
-            {"date": "2026-04-01", "event": "superseded", "replacement": "api_v2"}
+            {
+              "date": "2026-01-15",
+              "event": "created",
+              "access_count": 0
+            },
+            {
+              "date": "2026-02-01",
+              "event": "heavy_usage",
+              "access_count": 50,
+              "reinforcements": 5
+            },
+            {
+              "date": "2026-03-01",
+              "event": "access_decline",
+              "access_count": 10,
+              "reinforcements": 0
+            },
+            {
+              "date": "2026-04-01",
+              "event": "superseded",
+              "replacement": "api_v2"
+            }
           ]
         },
         "current_time": "2026-04-29"
       },
-      "query": {"type": "knowledge_lifecycle_report", "entry_id": "api_v1"},
+      "query": {
+        "type": "knowledge_lifecycle_report",
+        "entry_id": "api_v1"
+      },
       "expected": {
-        "lifecycle_stages_detected": ["created", "peak_usage", "decline", "superseded"],
+        "lifecycle_stages_detected": [
+          "created",
+          "peak_usage",
+          "decline",
+          "superseded"
+        ],
         "current_status": "superseded",
         "total_lifespan_days": 77,
         "peak_period": "2026-02",
@@ -918,7 +1471,12 @@
       },
       "difficulty": "expert",
       "priority": "P1",
-      "tags": ["3-month", "lifecycle", "temporal", "versioning"]
+      "tags": [
+        "3-month",
+        "lifecycle",
+        "temporal",
+        "versioning"
+      ]
     },
     {
       "test_id": "kh_035",
@@ -926,26 +1484,229 @@
       "description": "同一主题('部署方案')有5条来自不同人的知识记录，但只有2条互相印证，其他3条互相矛盾。系统应评估知识可靠性并标记可信版本",
       "setup": {
         "knowledge_records": [
-          {"id": "k1", "content": "部署用Docker+K8s", "author": "dave", "timestamp": "2026-04-01", "confidence": 0.9},
-          {"id": "k2", "content": "部署用Docker+K8s", "author": "eve", "timestamp": "2026-04-02", "confidence": 0.85},
-          {"id": "k3", "content": "部署用Docker Compose", "author": "frank", "timestamp": "2026-04-03", "confidence": 0.6},
-          {"id": "k4", "content": "部署还是手动脚本吧", "author": "new_intern", "timestamp": "2026-04-05", "confidence": 0.3},
-          {"id": "k5", "content": "部署用阿里云SAE", "author": "external_consultant", "timestamp": "2026-04-10", "confidence": 0.5}
+          {
+            "id": "k1",
+            "content": "部署用Docker+K8s",
+            "author": "dave",
+            "timestamp": "2026-04-01",
+            "confidence": 0.9
+          },
+          {
+            "id": "k2",
+            "content": "部署用Docker+K8s",
+            "author": "eve",
+            "timestamp": "2026-04-02",
+            "confidence": 0.85
+          },
+          {
+            "id": "k3",
+            "content": "部署用Docker Compose",
+            "author": "frank",
+            "timestamp": "2026-04-03",
+            "confidence": 0.6
+          },
+          {
+            "id": "k4",
+            "content": "部署还是手动脚本吧",
+            "author": "new_intern",
+            "timestamp": "2026-04-05",
+            "confidence": 0.3
+          },
+          {
+            "id": "k5",
+            "content": "部署用阿里云SAE",
+            "author": "external_consultant",
+            "timestamp": "2026-04-10",
+            "confidence": 0.5
+          }
         ]
       },
-      "query": {"type": "knowledge_reliability_assessment", "topic": "部署方案"},
+      "query": {
+        "type": "knowledge_reliability_assessment",
+        "topic": "部署方案"
+      },
       "expected": {
         "consensus_found": true,
         "consensus_content": "Docker+K8s",
-        "consensus_sources": ["dave", "eve"],
+        "consensus_sources": [
+          "dave",
+          "eve"
+        ],
         "reliability_score": ">= 0.85",
-        "outliers": ["Docker Compose", "手动脚本", "阿里云SAE"],
+        "outliers": [
+          "Docker Compose",
+          "手动脚本",
+          "阿里云SAE"
+        ],
         "anti_interference_from_noise": true,
         "multi_hop_reasoning_required": true
       },
       "difficulty": "expert",
       "priority": "P0",
-      "tags": ["multi-hop", "reliability", "anti-interference", "consensus"]
+      "tags": [
+        "multi-hop",
+        "reliability",
+        "anti-interference",
+        "consensus"
+      ]
+    },
+    {
+      "test_id": "kh_036",
+      "name": "知识级联失效-团队成员离职影响多知识域",
+      "description": "核心成员Dave离职，影响devops、infrastructure、monitoring三个知识域。系统应识别所有受影响的知识域并评估风险等级",
+      "setup": {
+        "member_departure": {
+          "member": "dave",
+          "departure_date": "2026-05-15",
+          "owned_domains": [
+            "devops",
+            "infrastructure",
+            "monitoring"
+          ],
+          "knowledge_entries_affected": 45,
+          "sole_owner_domains": [
+            "devops",
+            "infrastructure"
+          ]
+        },
+        "team_backup": {
+          "devops": {
+            "backup": null,
+            "risk": "critical"
+          },
+          "infrastructure": {
+            "backup": null,
+            "risk": "critical"
+          },
+          "monitoring": {
+            "backup": "eve",
+            "risk": "medium"
+          }
+        },
+        "current_time": "2026-04-29"
+      },
+      "query": {
+        "type": "cascade_failure_analysis",
+        "event": "dave_departure"
+      },
+      "expected": {
+        "affected_domains": [
+          "devops",
+          "infrastructure",
+          "monitoring"
+        ],
+        "critical_domains": [
+          "devops",
+          "infrastructure"
+        ],
+        "total_entries_at_risk": 45,
+        "cascade_severity": "high",
+        "days_until_risk": 16,
+        "mitigation_urgency": "critical"
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": [
+        "cascade-failure",
+        "departure",
+        "multi-domain",
+        "risk"
+      ]
+    },
+    {
+      "test_id": "kh_037",
+      "name": "版本冲突检测-两条矛盾知识共存",
+      "description": "同一条知识有两个矛盾版本同时存在：'生产环境用AWS'和'生产环境用阿里云'。系统应检测到冲突并标记",
+      "setup": {
+        "knowledge_entries": [
+          {
+            "id": "k_aws",
+            "content": "生产环境部署在AWS us-east-1",
+            "author": "alice",
+            "created_at": "2026-01-15",
+            "last_updated": "2026-03-01"
+          },
+          {
+            "id": "k_aliyun",
+            "content": "生产环境部署在阿里云华东2区",
+            "author": "bob",
+            "created_at": "2026-03-10",
+            "last_updated": "2026-04-01"
+          }
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {
+        "type": "conflict_detection",
+        "topic": "生产环境位置"
+      },
+      "expected": {
+        "conflict_detected": true,
+        "conflicting_entries": [
+          "k_aws",
+          "k_aliyun"
+        ],
+        "conflict_type": "factual_contradiction",
+        "newer_entry": "k_aliyun",
+        "recommendation": "verify_and_resolve",
+        "resolution_suggestion": "阿里云华东2区(更新的记录)"
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": [
+        "version-conflict",
+        "contradiction",
+        "detection"
+      ]
+    },
+    {
+      "test_id": "kh_038",
+      "name": "知识新鲜度评分-100+条目批量评估",
+      "description": "120条知识条目，创建时间从2025-06到2026-04，系统应正确分类fresh/aging/stale/forgotten并给出整体健康评分",
+      "setup": {
+        "knowledge_entries_batch": {
+          "total": 120,
+          "distribution": {
+            "fresh_0_7days": 25,
+            "aging_8_30days": 35,
+            "stale_31_90days": 40,
+            "forgotten_90plus_days": 20
+          },
+          "date_range": "2025-06-01 to 2026-04-29",
+          "domains": [
+            "frontend",
+            "backend",
+            "devops",
+            "database",
+            "security",
+            "api"
+          ]
+        },
+        "current_time": "2026-04-29"
+      },
+      "query": {
+        "type": "batch_health_assessment",
+        "scope": "all"
+      },
+      "expected": {
+        "total_entries": 120,
+        "fresh_count": 25,
+        "aging_count": 35,
+        "stale_count": 40,
+        "forgotten_count": 20,
+        "overall_health_score": "0.55-0.65",
+        "stale_and_forgotten_ratio": ">= 0.45",
+        "recommendations_generated": true,
+        "priority_refresh_list": true
+      },
+      "difficulty": "expert",
+      "priority": "P1",
+      "tags": [
+        "batch-assessment",
+        "freshness",
+        "100-plus-entries",
+        "health-score"
+      ]
     }
   ]
 }

@@ -26,11 +26,13 @@ from typing import Any, Dict, List, Optional
 # Scoring weights (from evaluation_scheme.md)
 # ---------------------------------------------------------------------------
 SCORING_WEIGHTS = {
-    "anti_interference": 0.25,
-    "contradiction_update": 0.25,
-    "efficiency": 0.20,
+    "anti_interference": 0.15,
+    "contradiction_update": 0.15,
+    "efficiency": 0.15,
+    "direction_a": 0.15,
+    "direction_b": 0.15,
     "direction_c": 0.15,
-    "direction_d": 0.15,
+    "direction_d": 0.10,
 }
 
 SUB_DIMENSION_WEIGHTS = {
@@ -52,6 +54,20 @@ SUB_DIMENSION_WEIGHTS = {
         "memory_usage": 0.15,
         "token_efficiency": 0.15,
         "concurrency": 0.15,
+    },
+    "direction_a": {
+        "command_tracking_accuracy": 0.25,
+        "recommendation_relevance": 0.25,
+        "context_awareness": 0.20,
+        "prefix_match_accuracy": 0.15,
+        "temporal_decay": 0.15,
+    },
+    "direction_b": {
+        "decision_extraction_accuracy": 0.30,
+        "reason_identification": 0.25,
+        "search_precision": 0.20,
+        "multi_turn_tracking": 0.15,
+        "override_detection": 0.10,
     },
     "direction_c": {
         "preference_recall": 0.25,
@@ -198,6 +214,24 @@ def generate_recommendations(
             f"Efficiency score is low ({eff_score:.1f}/100). "
             "Consider optimizing database indexes, adding caching, "
             "or using batch operations for writes."
+        )
+
+    # Direction A recommendations
+    da_score = dimension_scores.get("direction_a", 0)
+    if da_score < 70:
+        recs.append(
+            f"Direction A (command memory) score is low ({da_score:.1f}/100). "
+            "Improve command tracking accuracy, enhance context-aware recommendations, "
+            "and optimize prefix matching algorithms."
+        )
+
+    # Direction B recommendations
+    db_score = dimension_scores.get("direction_b", 0)
+    if db_score < 70:
+        recs.append(
+            f"Direction B (decision memory) score is low ({db_score:.1f}/100). "
+            "Improve decision extraction from conversations, enhance reason identification, "
+            "and add multi-turn decision tracking."
         )
 
     # Direction C recommendations
@@ -405,6 +439,8 @@ def generate_report(
             "anti_interference_target": "≥ 90% recall, ≥ 87% F1",
             "contradiction_update_target": "≥ 95% latest accuracy, ≥ 90% history",
             "efficiency_target": "P50 ≤ 200ms write, ≤ 300ms query",
+            "direction_a_target": "≥ 90% command tracking accuracy, ≥ 85% recommendation relevance",
+            "direction_b_target": "≥ 90% decision extraction accuracy, ≥ 85% search precision",
             "direction_c_target": "≥ 90% preference recall",
             "direction_d_target": "≥ 80% gap detection rate",
         },

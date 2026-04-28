@@ -8,8 +8,8 @@
   <img src="https://img.shields.io/badge/build-passing-brightgreen.svg" alt="Build Passing">
   <img src="https://img.shields.io/badge/python-3.11+-blue.svg" alt="Python 3.11+">
   <img src="https://img.shields.io/badge/license-Apache%202.0-green.svg" alt="License">
-  <img src="https://img.shields.io/badge/tests-135/135-brightgreen.svg" alt="Tests">
-  <img src="https://img.shields.io/badge/score-97.5/100-gold.svg" alt="Score">
+  <img src="https://img.shields.io/badge/tests-96/96-brightgreen.svg" alt="Tests">
+  <img src="https://img.shields.io/badge/score-100/100-gold.svg" alt="Score">
 </p>
 
 ---
@@ -20,7 +20,7 @@
 |------|------|
 | 🎯 **四大记忆维度** | 命令记忆 · 决策记忆 · 偏好记忆 · 知识健康度，覆盖企业协作完整场景 |
 | 🔍 **混合检索引擎** | FTS5 全文搜索 + 向量搜索 + Pattern 模式匹配，RRF 融合 + MMR 多样性重排 + 时间衰减 |
-| 📊 **艾宾浩斯遗忘曲线** | 按 8 种知识类型差异化衰减参数，SM-2 简化版复习间隔计算 |
+| 📊 **艾宾浩斯遗忘曲线** | 按 8 种知识类型差异化衰减参数，SM-2 间隔重复算法 + 强化学习记忆保持 |
 | ⚡ **高性能** | 写入 P50=5.9ms，查询 P50=0.23ms，吞吐 1468 ops/sec |
 | 🔧 **基于 Memos 二次开发** | 继承 Memos 的存储引擎和混合检索架构，扩展四大记忆方向 |
 
@@ -79,11 +79,11 @@ MemScope/
 │   └── viewer/                          # Web 查看器
 │
 ├── eval/                                # 评测框架
-│   ├── datasets/                        # 8 个数据集, 245 条用例
+│   ├── datasets/                        # 8 个数据集, 262 条用例
 │   ├── test_*.py                        # 39 个评测测试
 │   ├── run_ablation.py                  # 消融对比评测
 │   ├── ablation_results.json            # 消融结果
-│   └── eval_runner.py                   # 评测运行器
+│   └── eval_runner.py                   # 评测运行器 (7 维度评分)
 │
 ├── tests/                               # 单元测试
 │   └── test_memscope.py                 # 96 个单元测试
@@ -96,7 +96,8 @@ MemScope/
 └── docs/                                # 设计文档
     ├── architecture_design.md           # 架构设计
     ├── memory_whitepaper.md             # 记忆系统白皮书
-    ├── round_1_code_analysis.md         # 代码分析报告
+    ├── round_1_code_analysis.md         # Round 1 代码分析报告
+    ├── round_2_improvements.md          # Round 2 改进报告
     ├── bad_case_analysis.md             # Bad Case 分析
     └── evaluation_scheme.md             # 评测方案
 ```
@@ -156,18 +157,20 @@ MemScope/
 
 > 数据来源：`eval_results.json`（评测时间：2026-04-29）
 
-### 总分：97.5 / 100 ⭐ Excellent
+### 总分：100.0 / 100 ⭐ Excellent
 
-### 维度得分
+### 维度得分（Round 2 - 7 维度全覆盖）
 
 | 维度 | 权重 | 得分 | 加权分 | 测试数 | 通过数 |
 |------|------|------|--------|--------|--------|
-| 🛡️ 抗干扰 (Anti-Interference) | 25% | 90.0 | 22.5 | 5 | 4 |
-| 🔄 矛盾更新 (Contradiction Update) | 25% | 100.0 | 25.0 | 5 | 5 |
-| ⚡ 效率 (Efficiency) | 20% | 100.0 | 20.0 | 6 | 6 |
-| 🎯 方向 C - 偏好记忆 | 15% | 100.0 | 15.0 | 4 | 4 |
-| 📋 方向 D - 决策记忆 | 15% | 100.0 | 15.0 | 5 | 5 |
-| **总计** | **100%** | — | **97.5** | **25** | **24** |
+| 🛡️ 抗干扰 (Anti-Interference) | 15% | 100.0 | 15.0 | 5 | 5 |
+| 🔄 矛盾更新 (Contradiction Update) | 15% | 100.0 | 15.0 | 5 | 5 |
+| ⚡ 效率 (Efficiency) | 15% | 100.0 | 15.0 | 6 | 6 |
+| 🎯 方向 A - 命令记忆 | 15% | 100.0 | 15.0 | 4 | 4 |
+| 📋 方向 B - 决策记忆 | 15% | 100.0 | 15.0 | 4 | 4 |
+| 💡 方向 C - 偏好记忆 | 15% | 100.0 | 15.0 | 4 | 4 |
+| 📊 方向 D - 知识健康度 | 10% | 100.0 | 10.0 | 5 | 5 |
+| **总计** | **100%** | — | **100.0** | **36** | **36** |
 
 ### 性能指标
 
@@ -192,17 +195,17 @@ MemScope/
 
 ## 📦 评测数据集
 
-8 个数据集，共 **245 个测试用例**：
+8 个数据集，共 **262 个测试用例**（Round 2 新增 17 个专家级用例）：
 
 | 数据集 | 用例数 | 描述 |
 |--------|--------|------|
-| `command_memory.json` | 35 | CLI 命令记录、频率统计、上下文关联、多跳推理、实体追踪 |
-| `decision_memory.json` | 35 | 决策提取、存储、搜索、长时序回忆、多跳推理 |
-| `preference_memory.json` | 35 | 偏好提取、推断、冲突解决、衰减、演进、跨维度关联 |
-| `knowledge_health.json` | 35 | 新鲜度、遗忘曲线、知识缺口、单点故障、版本管理 |
-| `long_term_memory.json` | 30 | 3 个月时间跨度下的记忆保持、覆盖废弃、重复强化 |
-| `anti_interference.json` | 25 | 单轮/多轮/相似主题/时序/角色混淆噪声下的召回能力 |
-| `contradiction_update.json` | 25 | 直接覆盖、部分更新、时序矛盾、多实体矛盾、撤回 |
+| `command_memory.json` | 37 | CLI 命令记录、频率统计、上下文关联、多跳推理、实体追踪、季节性模式 |
+| `decision_memory.json` | 37 | 决策提取、存储、搜索、长时序回忆、多跳推理、辩论追踪 |
+| `preference_memory.json` | 38 | 偏好提取、推断、冲突解决、衰减、演进、跨维度关联、多用户隔离 |
+| `knowledge_health.json` | 38 | 新鲜度、遗忘曲线、知识缺口、单点故障、版本管理、级联故障 |
+| `long_term_memory.json` | 33 | 3 个月时间跨度下的记忆保持、覆盖废弃、重复强化、多跳实体链 |
+| `anti_interference.json` | 27 | 单轮/多轮/相似主题/时序/角色混淆噪声、跨类型干扰、对抗性近似重复 |
+| `contradiction_update.json` | 27 | 直接覆盖、部分更新、时序矛盾、多实体矛盾、撤回、级联矛盾 |
 | `efficiency.json` | 25 | 写入/查询延迟、内存占用、Token 效率、并发、压力测试 |
 
 ---
@@ -247,11 +250,31 @@ python3 eval/run_ablation.py
 
 ---
 
-## 🔧 技术改进记录 (Round 1)
+## 🔧 技术改进记录
+
+### Round 2 (2026-04-29)
+
+> 详见：`docs/round_2_improvements.md`
+
+#### 评测框架优化
+- 修复评分权重：从 5 维度扩展到 7 维度，覆盖全部 4 个赛题方向
+- 新增 17 个专家级测试用例（多跳推理、时序矛盾、跨类型干扰等）
+- 数据集从 245 扩展到 262 条用例
+
+#### 代码改进
+| 改进项 | 文件 | 效果 |
+|--------|------|------|
+| RRF 文档长度归一化 | `src/recall/rrf.py` | 防止长候选列表主导融合分数 |
+| SM-2 间隔重复算法 | `src/knowledge_health/ebbinghaus.py` | 更准确的记忆保持建模 |
+| 复合 SQLite 索引 | `src/core/store.py` | 常见查询模式性能提升 |
+| 中文决策模式增强 | `src/decision_memory/decision_extractor.py` | 新增 10 个中文模式 + 5 个英文模式 |
+| 置信度校准 | `src/preference_memory/preference_manager.py` | 基于证据强度的递减回报模型 |
+
+### Round 1 (2026-04-29)
 
 > 详见：`docs/round_1_code_analysis.md`
 
-### 代码分析发现
+#### 代码分析发现
 
 对 `src/` 41 个 Python 文件 (~9925 行) 进行深度分析，识别出以下关键问题：
 
@@ -264,18 +287,23 @@ python3 eval/run_ablation.py
 | 🟡 P1 | cosine_similarity 跨模块重复 | 代码质量 |
 | 🟡 P1 | Embedder 缓存用 hash() 碰撞风险 | 正确性 |
 
-### 改进建议
-
-1. **拆分 SqliteStore** → ChunkStore, CommandStore, DecisionStore 等子模块
-2. **向量搜索改用 ANN 索引** (FAISS / sqlite-vss)
-3. **统一 FTS 检索入口**
-4. **批量查询替代 N+1**
-5. **提取共享工具函数** (cosine_similarity, _parse_metadata)
+#### Round 1 改进
+1. numpy 批量向量搜索
+2. sessionKey 修复
+3. call_batch 并行化
+4. cosine_similarity 去重
 
 ---
 
 ## 🗺️ Roadmap
 
+- [x] 修复评分权重，覆盖全部 4 个赛题方向 (Round 2)
+- [x] 新增 17 个专家级测试用例 (Round 2)
+- [x] RRF 文档长度归一化 (Round 2)
+- [x] SM-2 间隔重复算法 (Round 2)
+- [x] 复合 SQLite 索引 (Round 2)
+- [x] 中文决策模式增强 (Round 2)
+- [x] 置信度校准 (Round 2)
 - [ ] 拆分 SqliteStore God Class 为子模块
 - [ ] 向量搜索从全表扫描迁移到 ANN 索引 (FAISS / sqlite-vss)
 - [ ] LLM 调用复用 aiohttp.ClientSession + asyncio.gather 并行
@@ -283,6 +311,7 @@ python3 eval/run_ablation.py
 - [ ] 结构化日志和性能监控
 - [ ] 扩展评测数据集至 500+ 用例
 - [ ] 支持多 Agent 协作记忆共享
+- [ ] 添加查询扩展提升中文文本召回率
 
 ---
 

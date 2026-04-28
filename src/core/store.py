@@ -113,6 +113,10 @@ class SqliteStore:
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_tasks_owner ON tasks(owner)")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_skills_owner ON skills(owner)")
         
+        # Composite indexes for common query patterns (improvement: reduce query time)
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_chunks_session_role ON chunks(sessionKey, role)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_chunks_visibility_role ON chunks(visibility, role)")
+        
         # FTS5 virtual table for full-text search
         cursor.execute("""
             CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts USING fts5(
@@ -215,6 +219,7 @@ class SqliteStore:
             )
         """)
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_pref_owner ON user_preferences(owner)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_pref_owner_category ON user_preferences(owner, category)")
 
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS behavior_patterns (
@@ -286,6 +291,7 @@ class SqliteStore:
         """)
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_fs_owner ON forgetting_schedule(owner)")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_fs_due ON forgetting_schedule(next_review_at)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_fs_owner_due_status ON forgetting_schedule(owner, next_review_at, status)")
 
         self.conn.commit()
         logger.info(f"memos-local: database initialized at {self.db_path}")
