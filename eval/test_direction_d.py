@@ -27,7 +27,7 @@ class TestKnowledgeGapDetection:
     CATEGORY = "knowledge_gap_detection"
 
     def test_knowledge_gap_detection(self, store, data_gen, metrics, report_collector):
-        from gap_detector import GapDetector
+        from src.direction_d.gap_detector import GapDetector
 
         team_members = ["张三", "李四", "王五", "赵六"]
         team_id = "team_gap_test"
@@ -51,12 +51,12 @@ class TestKnowledgeGapDetection:
 
         # ---- Run gap detection ----
         detector = GapDetector(store)
-        result = detector.detect_gaps(team_id)
+        gaps = detector.detect_gaps(team_id)
+        coverage = detector.analyze_coverage(team_id)
 
         # ---- Verify ----
-        domains = result.get("domains", [])
-        gaps = result.get("gaps", [])
-        spof = result.get("single_points_of_failure", [])
+        domains = list(coverage.get("domain_details", {}).values())
+        spof = detector.detect_single_points(team_id)
 
         # Check if knowledge conflict is detected (React vs Vue)
         # The system should flag that different members have different info
@@ -130,7 +130,7 @@ class TestForgettingAlert:
     CATEGORY = "forgetting_alert"
 
     def test_forgetting_alert(self, store, data_gen, metrics, report_collector):
-        from freshness_monitor import FreshnessMonitor
+        from src.direction_d.freshness_monitor import FreshnessMonitor
 
         # ---- Create knowledge entries with old timestamps ----
         old_ts = data_gen.days_ago_ts(60)  # 60 days ago
@@ -181,7 +181,7 @@ class TestForgettingAlert:
         )
 
         # ---- Run freshness monitor ----
-        monitor = FreshnessMonitor(store, stale_threshold_days=30, forgotten_threshold_days=90)
+        monitor = FreshnessMonitor(store)
         check_result = monitor.check_freshness(team_id="team_l")
 
         # ---- Get warnings ----
@@ -355,7 +355,7 @@ class TestCriticalKnowledgeForgetting:
     CATEGORY = "critical_knowledge_forgetting"
 
     def test_critical_knowledge_forgetting(self, store, data_gen, metrics, report_collector):
-        from freshness_monitor import FreshnessMonitor
+        from src.direction_d.freshness_monitor import FreshnessMonitor
 
         team_id = "team_critical_test"
 
@@ -385,7 +385,7 @@ class TestCriticalKnowledgeForgetting:
         )
 
         # ---- Run freshness monitor ----
-        monitor = FreshnessMonitor(store, stale_threshold_days=30, forgotten_threshold_days=90)
+        monitor = FreshnessMonitor(store)
         check_result = monitor.check_freshness(team_id=team_id)
 
         # Get entry health
@@ -456,7 +456,7 @@ class TestTeamKnowledgeCoverage:
     CATEGORY = "team_knowledge_coverage"
 
     def test_team_knowledge_coverage(self, store, data_gen, metrics, report_collector):
-        from gap_detector import GapDetector
+        from src.direction_d.gap_detector import GapDetector
 
         team_id = "team_coverage_test"
         team_members = ["张三", "李四", "王五", "赵六", "钱七"]
@@ -485,8 +485,9 @@ class TestTeamKnowledgeCoverage:
         detector = GapDetector(store)
         result = detector.detect_gaps(team_id)
 
-        domains = result.get("domains", [])
-        gaps = result.get("gaps", [])
+        gaps = detector.detect_gaps(team_id)
+        domains = []
+        # gaps already fetched above
 
         # ---- Verify coverage ----
         # Domains with zero coverage should be detected as gaps

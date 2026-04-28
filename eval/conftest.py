@@ -21,29 +21,20 @@ from typing import Any, Dict, List, Optional
 import pytest
 
 # ---------------------------------------------------------------------------
-# Make enterprise_memory_code importable
+# Make modules importable
 # ---------------------------------------------------------------------------
 _OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..")
 _OUTPUT_DIR = os.path.abspath(_OUTPUT_DIR)
-_ENTERPRISE_ROOT = os.path.join(
-    _OUTPUT_DIR, "enterprise_memory_code"
-)
-_ENTERPRISE_ROOT = os.path.abspath(_ENTERPRISE_ROOT)
-_MEMOS_SRC = "/tmp/memos_src"
-_MEMOS_SRC = os.path.abspath(_MEMOS_SRC)
-_STORAGE_SRC = os.path.join(_ENTERPRISE_ROOT, "src", "storage")
-_PREFERENCE_SRC = os.path.join(_ENTERPRISE_ROOT, "src", "preference")
-_ALERT_SRC = os.path.join(_ENTERPRISE_ROOT, "src", "alert")
-
-# Direction module paths (under src/)
 _SRC_DIR = os.path.join(_OUTPUT_DIR, "src")
+
+# Direction module paths
 _DIRECTION_A_SRC = os.path.join(_SRC_DIR, "direction_a")
 _DIRECTION_B_SRC = os.path.join(_SRC_DIR, "direction_b")
 _DIRECTION_C_SRC = os.path.join(_SRC_DIR, "direction_c")
 _DIRECTION_D_SRC = os.path.join(_SRC_DIR, "direction_d")
 
-for p in (_MEMOS_SRC, _ENTERPRISE_ROOT, _STORAGE_SRC, _PREFERENCE_SRC, _ALERT_SRC,
-          _SRC_DIR, _DIRECTION_A_SRC, _DIRECTION_B_SRC, _DIRECTION_C_SRC, _DIRECTION_D_SRC):
+for p in (_OUTPUT_DIR, _SRC_DIR, _DIRECTION_A_SRC, _DIRECTION_B_SRC,
+          _DIRECTION_C_SRC, _DIRECTION_D_SRC):
     if p not in sys.path:
         sys.path.insert(0, p)
 

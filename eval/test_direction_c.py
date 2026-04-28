@@ -38,7 +38,7 @@ class TestHabitRecognition:
         ]
 
         for category, key, value in habits:
-            pm.set_explicit_preference(owner, category, key, value)
+            pm.set_preference(owner, category, key, value, source='explicit')
 
         # ---- Also store as conversation chunks ----
         conv_habits = [
@@ -132,7 +132,7 @@ class TestPreferenceManagement:
         ]
 
         for category, key, value in prefs_data:
-            pm.set_explicit_preference(owner, category, key, value)
+            pm.set_preference(owner, category, key, value, source='explicit')
 
         # ---- Also store as conversation chunks for search ----
         conv_prefs = [
@@ -218,7 +218,7 @@ class TestPreferenceUpdates:
         owner = "user_update_test"
 
         # ---- Set initial preference ----
-        pm.set_explicit_preference(owner, "tool_preference", "task_management", "旧工具")
+        pm.set_preference(owner, "tool_preference", "task_management", "旧工具", source="explicit")
         old_value = pm.get_preference_value(owner, "tool_preference", "task_management")
 
         # Store as chunk too
@@ -230,7 +230,7 @@ class TestPreferenceUpdates:
             store.insert_chunk(chunk)
 
         # ---- Update preference ----
-        pm.set_explicit_preference(owner, "tool_preference", "task_management", "Notion")
+        pm.set_preference(owner, "tool_preference", "task_management", "Notion", source="explicit")
         new_value = pm.get_preference_value(owner, "tool_preference", "task_management")
 
         conv2 = data_gen.make_conversation(
@@ -241,7 +241,7 @@ class TestPreferenceUpdates:
             store.insert_chunk(chunk)
 
         # ---- Update work method ----
-        pm.set_explicit_preference(owner, "work_pattern", "time_method", "番茄工作法")
+        pm.set_preference(owner, "work_pattern", "time_method", "番茄工作法", source="explicit")
         conv3 = data_gen.make_conversation(
             user_msg="我习惯用番茄工作法",
             assistant_msg="已记录。",
@@ -249,7 +249,7 @@ class TestPreferenceUpdates:
         for chunk in data_gen.make_chunks_from_conversation(conv3):
             store.insert_chunk(chunk)
 
-        pm.set_explicit_preference(owner, "work_pattern", "time_method", "时间块管理")
+        pm.set_preference(owner, "work_pattern", "time_method", "时间块管理", source="explicit")
         conv4 = data_gen.make_conversation(
             user_msg="我不用番茄工作法了，现在用时间块的方式",
             assistant_msg="已更新：工作方法变更为时间块管理。",
@@ -325,7 +325,7 @@ class TestContextAwareRecommendations:
             ("schedule", "friday_afternoon", "周五下午做一周总结"),
         ]
         for category, key, value in habits:
-            pm.set_explicit_preference(owner, category, key, value)
+            pm.set_preference(owner, category, key, value, source='explicit')
 
         # Also as chunks
         conv_habits = [
