@@ -1,10 +1,13 @@
-name: enterprise-memory
+name: memscope
 version: 2.0.0
 description: >
-  Enterprise memory plugin for Hermes Agent — extends memos-local-hermes-plugin
-  with personal habit/preference memory (Direction C) and team knowledge health /
-  forgetting alerts (Direction D). Hybrid search (RRF + MMR + recency), task
-  summarization, skill evolution, preference inference, and freshness monitoring.
+  MemScope — Enterprise Long-term Collaboration Memory System for Hermes Agent.
+  Extends memos-local-hermes-plugin with four enterprise memory directions:
+  A) CLI command & workflow memory, B) Feishu decision & context memory,
+  C) Personal habit & preference memory, D) Team knowledge health & forgetting alerts.
+  Features: hybrid search (FTS5+Vector+Pattern), RRF fusion, MMR reranking,
+  Ebbinghaus forgetting curves, LLM-assisted preference extraction,
+  context-aware command recommendations, and decision card push.
 hooks:
   - on_session_start
   - on_session_end
@@ -13,14 +16,9 @@ hooks:
 requires_env:
   - MEMOS_EMBEDDING_MODEL
 config:
-  # Inherited from memos-local-hermes-plugin
-  skill_generation_enabled:
-    type: boolean
-    default: false
-    description: "Enable automatic skill generation from completed tasks"
   db_path:
     type: string
-    default: "memos/memos.db"
+    default: "memos/memscope.db"
     description: "SQLite database path (relative to HERMES_HOME)"
   agent_id:
     type: string
@@ -31,11 +29,26 @@ config:
     default: "private"
     choices: ["private", "shared", "all"]
     description: "Default memory search scope"
-  # Enterprise extensions
   enterprise_features:
     type: boolean
     default: true
-    description: "Enable enterprise features (preferences, alerts, team analysis)"
+    description: "Enable enterprise features (all four directions)"
+  direction_a_enabled:
+    type: boolean
+    default: true
+    description: "Enable CLI command & workflow memory"
+  direction_b_enabled:
+    type: boolean
+    default: true
+    description: "Enable Feishu decision & context memory"
+  direction_c_enabled:
+    type: boolean
+    default: true
+    description: "Enable personal habit & preference memory"
+  direction_d_enabled:
+    type: boolean
+    default: true
+    description: "Enable team knowledge health & forgetting alerts"
   preference_inference_enabled:
     type: boolean
     default: true
@@ -48,10 +61,6 @@ config:
     type: number
     default: 24
     description: "How often to run freshness checks (hours)"
-  gap_detection_interval_hours:
-    type: number
-    default: 48
-    description: "How often to run gap detection (hours)"
   stale_threshold_days:
     type: number
     default: 30
@@ -60,7 +69,3 @@ config:
     type: number
     default: 90
     description: "Days before a knowledge entry is considered forgotten"
-  min_team_size_for_alerts:
-    type: number
-    default: 2
-    description: "Minimum team members needed before gap alerts fire"

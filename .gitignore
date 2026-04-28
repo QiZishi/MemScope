@@ -11,3 +11,11 @@ build/
 *.log
 /tmp/
 progress_save.md
+
+# MemScope specific
+*.db
+memscope.db
+__pycache__/
+*.pyc
+.pytest_cache/
+src_backup/

@@ -1,0 +1,547 @@
+{
+  "dataset_name": "direction_a_cli_command_memory",
+  "version": "1.0",
+  "description": "CLI命令记忆评估数据集：测试高频命令识别、项目路径关联、前缀匹配推荐、上下文感知推荐四个维度的能力",
+  "test_cases": [
+    {
+      "test_id": "cli_hf_01",
+      "name": "高频Git命令识别",
+      "description": "用户频繁使用git add/commit/push，应被识别为高频命令",
+      "category": "high_frequency_command_identification",
+      "difficulty": "easy",
+      "commands": [
+        {"command": "git add .", "exit_code": 0},
+        {"command": "git commit -m 'fix'", "exit_code": 0},
+        {"command": "git push origin main", "exit_code": 0},
+        {"command": "git add .", "exit_code": 0},
+        {"command": "git commit -m 'feat'", "exit_code": 0},
+        {"command": "git push origin main", "exit_code": 0},
+        {"command": "git add .", "exit_code": 0},
+        {"command": "git commit -m 'chore'", "exit_code": 0},
+        {"command": "git push origin main", "exit_code": 0},
+        {"command": "git status", "exit_code": 0}
+      ],
+      "query": "用户最常用的命令是什么？",
+      "expected": {
+        "top_command": "git push origin main",
+        "min_frequency": 3,
+        "expected_commands": ["git add .", "git commit -m 'fix'", "git push origin main"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.9,
+        "precision_target": 0.85,
+        "f1_target": 0.87
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "cli_hf_02",
+      "name": "Docker命令频率排序",
+      "description": "用户在开发环境中频繁使用docker相关命令，应正确排序",
+      "category": "high_frequency_command_identification",
+      "difficulty": "medium",
+      "commands": [
+        {"command": "docker compose up -d", "exit_code": 0},
+        {"command": "docker ps", "exit_code": 0},
+        {"command": "docker logs app", "exit_code": 0},
+        {"command": "docker compose up -d", "exit_code": 0},
+        {"command": "docker ps", "exit_code": 0},
+        {"command": "docker exec -it app bash", "exit_code": 0},
+        {"command": "docker compose down", "exit_code": 0},
+        {"command": "docker compose up -d", "exit_code": 0},
+        {"command": "docker logs app", "exit_code": 0},
+        {"command": "docker images", "exit_code": 0}
+      ],
+      "query": "列出使用频率最高的前3个docker命令",
+      "expected": {
+        "top_command": "docker compose up -d",
+        "min_frequency": 3,
+        "expected_commands": ["docker compose up -d", "docker ps", "docker logs app"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.85,
+        "precision_target": 0.85,
+        "f1_target": 0.85
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "cli_hf_03",
+      "name": "混合命令高频识别",
+      "description": "用户混用git、npm、python命令，应准确识别各类高频命令",
+      "category": "high_frequency_command_identification",
+      "difficulty": "medium",
+      "commands": [
+        {"command": "npm run dev", "exit_code": 0},
+        {"command": "git pull", "exit_code": 0},
+        {"command": "python manage.py runserver", "exit_code": 0},
+        {"command": "npm run dev", "exit_code": 0},
+        {"command": "git pull", "exit_code": 0},
+        {"command": "npm test", "exit_code": 0},
+        {"command": "npm run dev", "exit_code": 0},
+        {"command": "python manage.py migrate", "exit_code": 0},
+        {"command": "npm run dev", "exit_code": 0},
+        {"command": "ls -la", "exit_code": 0}
+      ],
+      "query": "哪些命令被执行了3次以上？",
+      "expected": {
+        "top_command": "npm run dev",
+        "min_frequency": 4,
+        "expected_commands": ["npm run dev"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.95,
+        "precision_target": 0.9,
+        "f1_target": 0.92
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "cli_hf_04",
+      "name": "失败命令不应成为高频",
+      "description": "频繁失败的命令不应被推荐为高频命令",
+      "category": "high_frequency_command_identification",
+      "difficulty": "hard",
+      "commands": [
+        {"command": "npm install", "exit_code": 0},
+        {"command": "npm run build", "exit_code": 0},
+        {"command": "curl http://localhost:3000/api", "exit_code": 7},
+        {"command": "curl http://localhost:3000/api", "exit_code": 7},
+        {"command": "curl http://localhost:3000/api", "exit_code": 7},
+        {"command": "curl http://localhost:3000/api", "exit_code": 7},
+        {"command": "npm run build", "exit_code": 0},
+        {"command": "npm run build", "exit_code": 0},
+        {"command": "npm install", "exit_code": 0},
+        {"command": "npm run build", "exit_code": 0}
+      ],
+      "query": "推荐用户最常用的命令",
+      "expected": {
+        "top_command": "npm run build",
+        "min_frequency": 4,
+        "expected_commands": ["npm run build", "npm install"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.9,
+        "precision_target": 0.8,
+        "f1_target": 0.85
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "cli_hf_05",
+      "name": "长时间会话高频统计",
+      "description": "跨越多天的命令历史中正确统计高频命令",
+      "category": "high_frequency_command_identification",
+      "difficulty": "hard",
+      "commands": [
+        {"command": "git status", "exit_code": 0},
+        {"command": "code .", "exit_code": 0},
+        {"command": "git pull", "exit_code": 0},
+        {"command": "make build", "exit_code": 0},
+        {"command": "make test", "exit_code": 0},
+        {"command": "git pull", "exit_code": 0},
+        {"command": "make build", "exit_code": 0},
+        {"command": "make test", "exit_code": 0},
+        {"command": "git pull", "exit_code": 0},
+        {"command": "make build", "exit_code": 0},
+        {"command": "make test", "exit_code": 0},
+        {"command": "git pull", "exit_code": 0}
+      ],
+      "query": "总结用户日常开发流程中的核心命令",
+      "expected": {
+        "top_command": "git pull",
+        "min_frequency": 4,
+        "expected_commands": ["git pull", "make build", "make test"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.9,
+        "precision_target": 0.85,
+        "f1_target": 0.87
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "cli_pp_01",
+      "name": "Python项目路径关联",
+      "description": "在Python项目目录下执行的命令应与项目路径关联",
+      "category": "project_path_association",
+      "difficulty": "easy",
+      "commands": [
+        {"command": "cd /home/user/myproject", "exit_code": 0},
+        {"command": "python -m venv venv", "exit_code": 0},
+        {"command": "source venv/bin/activate", "exit_code": 0},
+        {"command": "pip install -r requirements.txt", "exit_code": 0},
+        {"command": "python manage.py runserver", "exit_code": 0}
+      ],
+      "query": "/home/user/myproject 项目下常用的命令是什么？",
+      "expected": {
+        "project_path": "/home/user/myproject",
+        "expected_commands": ["python -m venv venv", "pip install -r requirements.txt", "python manage.py runserver"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.9,
+        "precision_target": 0.9,
+        "f1_target": 0.9
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "cli_pp_02",
+      "name": "多项目路径隔离",
+      "description": "不同项目目录下的命令应正确隔离，不互相干扰",
+      "category": "project_path_association",
+      "difficulty": "medium",
+      "commands": [
+        {"command": "cd /home/user/frontend", "exit_code": 0},
+        {"command": "npm install", "exit_code": 0},
+        {"command": "npm run dev", "exit_code": 0},
+        {"command": "cd /home/user/backend", "exit_code": 0},
+        {"command": "go mod tidy", "exit_code": 0},
+        {"command": "go run main.go", "exit_code": 0}
+      ],
+      "query": "/home/user/backend 项目下执行了哪些命令？",
+      "expected": {
+        "project_path": "/home/user/backend",
+        "expected_commands": ["go mod tidy", "go run main.go"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.95,
+        "precision_target": 0.95,
+        "f1_target": 0.95
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "cli_pp_03",
+      "name": "Rust项目路径关联",
+      "description": "识别Rust项目的cargo命令与项目路径的关系",
+      "category": "project_path_association",
+      "difficulty": "medium",
+      "commands": [
+        {"command": "cd /home/user/rust-app", "exit_code": 0},
+        {"command": "cargo build", "exit_code": 0},
+        {"command": "cargo test", "exit_code": 0},
+        {"command": "cargo clippy", "exit_code": 0},
+        {"command": "cargo fmt", "exit_code": 0}
+      ],
+      "query": "列出 /home/user/rust-app 项目的构建和测试命令",
+      "expected": {
+        "project_path": "/home/user/rust-app",
+        "expected_commands": ["cargo build", "cargo test", "cargo clippy"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.9,
+        "precision_target": 0.85,
+        "f1_target": 0.87
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "cli_pp_04",
+      "name": "嵌套目录命令归属",
+      "description": "在子目录执行的命令应正确归属到上级项目",
+      "category": "project_path_association",
+      "difficulty": "hard",
+      "commands": [
+        {"command": "cd /home/user/monorepo", "exit_code": 0},
+        {"command": "cd packages/api", "exit_code": 0},
+        {"command": "npm run lint", "exit_code": 0},
+        {"command": "cd ../web", "exit_code": 0},
+        {"command": "npm run build", "exit_code": 0},
+        {"command": "cd /home/user/monorepo", "exit_code": 0},
+        {"command": "npm run workspaces test", "exit_code": 0}
+      ],
+      "query": "/home/user/monorepo 项目包含哪些子项目的命令？",
+      "expected": {
+        "project_path": "/home/user/monorepo",
+        "sub_projects": ["packages/api", "packages/web"],
+        "expected_commands": ["npm run lint", "npm run build", "npm run workspaces test"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.85,
+        "precision_target": 0.8,
+        "f1_target": 0.82
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "cli_pp_05",
+      "name": "远程服务器路径关联",
+      "description": "SSH远程执行的命令应与远程路径关联",
+      "category": "project_path_association",
+      "difficulty": "hard",
+      "commands": [
+        {"command": "ssh deploy@server 'cd /opt/app && docker compose up -d'", "exit_code": 0},
+        {"command": "ssh deploy@server 'cd /opt/app && docker logs app -f'", "exit_code": 0},
+        {"command": "ssh deploy@server 'cd /opt/app && docker compose restart'", "exit_code": 0}
+      ],
+      "query": "服务器 /opt/app 部署相关的命令有哪些？",
+      "expected": {
+        "project_path": "server:/opt/app",
+        "expected_commands": ["docker compose up -d", "docker logs app -f", "docker compose restart"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.8,
+        "precision_target": 0.8,
+        "f1_target": 0.8
+      },
+      "priority": "P2"
+    },
+    {
+      "test_id": "cli_pm_01",
+      "name": "Git前缀匹配",
+      "description": "输入'git'前缀应推荐常用的git子命令",
+      "category": "prefix_match_recommendation",
+      "difficulty": "easy",
+      "commands": [
+        {"command": "git status", "exit_code": 0},
+        {"command": "git add .", "exit_code": 0},
+        {"command": "git commit -m 'msg'", "exit_code": 0},
+        {"command": "git push", "exit_code": 0},
+        {"command": "git pull", "exit_code": 0},
+        {"command": "git status", "exit_code": 0},
+        {"command": "git log --oneline", "exit_code": 0}
+      ],
+      "query": "用户输入 'git' 时应推荐什么？",
+      "expected": {
+        "prefix": "git",
+        "expected_commands": ["git status", "git add .", "git commit -m 'msg'", "git push", "git pull"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.9,
+        "precision_target": 0.85,
+        "f1_target": 0.87
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "cli_pm_02",
+      "name": "npm前缀匹配",
+      "description": "输入'npm r'前缀应推荐npm run相关的子命令",
+      "category": "prefix_match_recommendation",
+      "difficulty": "easy",
+      "commands": [
+        {"command": "npm run dev", "exit_code": 0},
+        {"command": "npm run build", "exit_code": 0},
+        {"command": "npm run test", "exit_code": 0},
+        {"command": "npm run lint", "exit_code": 0},
+        {"command": "npm run dev", "exit_code": 0},
+        {"command": "npm run build", "exit_code": 0}
+      ],
+      "query": "用户输入 'npm r' 时应推荐什么？",
+      "expected": {
+        "prefix": "npm r",
+        "expected_commands": ["npm run dev", "npm run build", "npm run test", "npm run lint"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.9,
+        "precision_target": 0.9,
+        "f1_target": 0.9
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "cli_pm_03",
+      "name": "docker前缀匹配排序",
+      "description": "输入'docker'前缀应按频率排序推荐",
+      "category": "prefix_match_recommendation",
+      "difficulty": "medium",
+      "commands": [
+        {"command": "docker ps", "exit_code": 0},
+        {"command": "docker ps", "exit_code": 0},
+        {"command": "docker ps", "exit_code": 0},
+        {"command": "docker logs app", "exit_code": 0},
+        {"command": "docker logs app", "exit_code": 0},
+        {"command": "docker exec -it app bash", "exit_code": 0},
+        {"command": "docker images", "exit_code": 0},
+        {"command": "docker compose up -d", "exit_code": 0},
+        {"command": "docker compose up -d", "exit_code": 0}
+      ],
+      "query": "用户输入 'docker' 时推荐排序是什么？",
+      "expected": {
+        "prefix": "docker",
+        "expected_commands": ["docker ps", "docker logs app", "docker compose up -d", "docker exec -it app bash", "docker images"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.85,
+        "precision_target": 0.85,
+        "f1_target": 0.85
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "cli_pm_04",
+      "name": "ssh前缀匹配",
+      "description": "输入'ssh'前缀应推荐常用SSH连接命令",
+      "category": "prefix_match_recommendation",
+      "difficulty": "medium",
+      "commands": [
+        {"command": "ssh deploy@prod-server", "exit_code": 0},
+        {"command": "ssh deploy@staging-server", "exit_code": 0},
+        {"command": "ssh deploy@prod-server", "exit_code": 0},
+        {"command": "ssh deploy@prod-server", "exit_code": 0},
+        {"command": "scp file.tar.gz deploy@prod-server:/tmp/", "exit_code": 0}
+      ],
+      "query": "用户输入 'ssh' 时应推荐什么？",
+      "expected": {
+        "prefix": "ssh",
+        "expected_commands": ["ssh deploy@prod-server", "ssh deploy@staging-server"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.9,
+        "precision_target": 0.9,
+        "f1_target": 0.9
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "cli_pm_05",
+      "name": "模糊前缀匹配",
+      "description": "输入部分命令前缀应支持模糊匹配",
+      "category": "prefix_match_recommendation",
+      "difficulty": "hard",
+      "commands": [
+        {"command": "kubectl get pods", "exit_code": 0},
+        {"command": "kubectl get pods", "exit_code": 0},
+        {"command": "kubectl get pods", "exit_code": 0},
+        {"command": "kubectl describe pod app", "exit_code": 0},
+        {"command": "kubectl logs app", "exit_code": 0},
+        {"command": "kubectl apply -f deploy.yaml", "exit_code": 0},
+        {"command": "k9s", "exit_code": 0}
+      ],
+      "query": "用户输入 'kube' 时应推荐什么？",
+      "expected": {
+        "prefix": "kube",
+        "expected_commands": ["kubectl get pods", "kubectl describe pod app", "kubectl logs app", "kubectl apply -f deploy.yaml"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.85,
+        "precision_target": 0.8,
+        "f1_target": 0.82
+      },
+      "priority": "P2"
+    },
+    {
+      "test_id": "cli_ca_01",
+      "name": "时间上下文推荐-早晨",
+      "description": "早晨时段推荐启动开发环境的命令",
+      "category": "context_aware_recommendation",
+      "difficulty": "easy",
+      "commands": [
+        {"command": "git pull", "exit_code": 0},
+        {"command": "npm install", "exit_code": 0},
+        {"command": "npm run dev", "exit_code": 0},
+        {"command": "docker compose up -d", "exit_code": 0}
+      ],
+      "query": "早上9点开始工作，推荐什么命令？",
+      "expected": {
+        "time_context": "morning",
+        "expected_commands": ["git pull", "docker compose up -d", "npm run dev"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.85,
+        "precision_target": 0.8,
+        "f1_target": 0.82
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "cli_ca_02",
+      "name": "Git状态上下文推荐",
+      "description": "有未提交更改时推荐提交相关命令",
+      "category": "context_aware_recommendation",
+      "difficulty": "medium",
+      "commands": [
+        {"command": "git status", "exit_code": 0},
+        {"command": "git diff", "exit_code": 0},
+        {"command": "git add .", "exit_code": 0},
+        {"command": "git commit -m 'wip'", "exit_code": 0},
+        {"command": "git push", "exit_code": 0}
+      ],
+      "query": "当前有未暂存的更改，推荐什么操作？",
+      "expected": {
+        "context": "unstaged_changes",
+        "expected_commands": ["git add .", "git diff", "git commit -m 'wip'"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.85,
+        "precision_target": 0.85,
+        "f1_target": 0.85
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "cli_ca_03",
+      "name": "部署上下文推荐",
+      "description": "代码推送后推荐部署相关命令",
+      "category": "context_aware_recommendation",
+      "difficulty": "medium",
+      "commands": [
+        {"command": "git push origin main", "exit_code": 0},
+        {"command": "ssh deploy@server 'cd /opt/app && git pull'", "exit_code": 0},
+        {"command": "ssh deploy@server 'cd /opt/app && docker compose up -d --build'", "exit_code": 0},
+        {"command": "ssh deploy@server 'cd /opt/app && docker logs app -f --tail 50'", "exit_code": 0}
+      ],
+      "query": "代码已推送到main分支，接下来该做什么？",
+      "expected": {
+        "context": "post_push",
+        "expected_commands": ["ssh deploy@server 'cd /opt/app && git pull'", "ssh deploy@server 'cd /opt/app && docker compose up -d --build'"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.8,
+        "precision_target": 0.8,
+        "f1_target": 0.8
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "cli_ca_04",
+      "name": "测试失败上下文推荐",
+      "description": "测试失败后推荐调试相关命令",
+      "category": "context_aware_recommendation",
+      "difficulty": "hard",
+      "commands": [
+        {"command": "npm test", "exit_code": 1},
+        {"command": "npm test -- --verbose", "exit_code": 1},
+        {"command": "npm test -- --watch", "exit_code": 1},
+        {"command": "node --inspect node_modules/.bin/jest", "exit_code": 0}
+      ],
+      "query": "测试失败了，推荐什么调试命令？",
+      "expected": {
+        "context": "test_failure",
+        "expected_commands": ["npm test -- --verbose", "npm test -- --watch", "node --inspect node_modules/.bin/jest"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.8,
+        "precision_target": 0.75,
+        "f1_target": 0.77
+      },
+      "priority": "P2"
+    },
+    {
+      "test_id": "cli_ca_05",
+      "name": "项目初始化上下文推荐",
+      "description": "新建项目目录后推荐初始化命令",
+      "category": "context_aware_recommendation",
+      "difficulty": "hard",
+      "commands": [
+        {"command": "mkdir /home/user/new-project", "exit_code": 0},
+        {"command": "cd /home/user/new-project", "exit_code": 0},
+        {"command": "git init", "exit_code": 0},
+        {"command": "npm init -y", "exit_code": 0},
+        {"command": "npm install express", "exit_code": 0}
+      ],
+      "query": "刚创建了一个新的Node.js项目，接下来推荐什么？",
+      "expected": {
+        "context": "new_project_init",
+        "expected_commands": ["git init", "npm init -y", "npm install express"]
+      },
+      "evaluation_criteria": {
+        "recall_target": 0.8,
+        "precision_target": 0.75,
+        "f1_target": 0.77
+      },
+      "priority": "P2"
+    }
+  ]
+}

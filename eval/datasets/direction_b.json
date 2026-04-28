@@ -1,0 +1,568 @@
+{
+  "dataset_name": "direction_b_decision_memory",
+  "version": "1.0",
+  "description": "决策记忆评估数据集：测试决策提取准确性、理由/结论识别、被否决替代方案识别、决策卡片推送相关性四个维度的能力",
+  "test_cases": [
+    {
+      "test_id": "dec_ext_01",
+      "name": "技术栈选型决策提取",
+      "description": "从讨论中提取关于前端框架选型的决策",
+      "category": "decision_extraction_accuracy",
+      "difficulty": "easy",
+      "input": {
+        "messages": [
+          {"sender": "张明", "content": "前端框架大家有什么建议？React还是Vue？", "timestamp_ms": 1714000000000},
+          {"sender": "李华", "content": "我建议用React，生态更成熟", "timestamp_ms": 1714000060000},
+          {"sender": "王芳", "content": "Vue上手更快，但我们团队React经验更多", "timestamp_ms": 1714000120000},
+          {"sender": "张明", "content": "好的，那我们就定React了，下周开始迁移", "timestamp_ms": 1714000180000}
+        ],
+        "project_id": "proj_frontend_v2",
+        "channel_id": "ch_tech_discuss"
+      },
+      "expected": {
+        "expected_title_contains": "前端框架",
+        "expected_decision_contains": "React",
+        "expected_rationale_contains": "团队经验",
+        "expected_alternatives": ["Vue"]
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.9,
+        "rationale_recall": 0.85,
+        "alternative_precision": 0.9
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "dec_ext_02",
+      "name": "数据库选型决策提取",
+      "description": "从讨论中提取数据库技术选型决策",
+      "category": "decision_extraction_accuracy",
+      "difficulty": "easy",
+      "input": {
+        "messages": [
+          {"sender": "陈刚", "content": "新项目用什么数据库？MySQL还是PostgreSQL？", "timestamp_ms": 1714000000000},
+          {"sender": "赵丽", "content": "PostgreSQL支持JSON类型，更适合我们的场景", "timestamp_ms": 1714000060000},
+          {"sender": "陈刚", "content": "同意，那就用PostgreSQL吧", "timestamp_ms": 1714000120000}
+        ],
+        "project_id": "proj_backend_api",
+        "channel_id": "ch_tech_discuss"
+      },
+      "expected": {
+        "expected_title_contains": "数据库",
+        "expected_decision_contains": "PostgreSQL",
+        "expected_rationale_contains": "JSON",
+        "expected_alternatives": ["MySQL"]
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.9,
+        "rationale_recall": 0.85,
+        "alternative_precision": 0.9
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "dec_ext_03",
+      "name": "部署方案决策提取",
+      "description": "从讨论中提取部署方案的决策",
+      "category": "decision_extraction_accuracy",
+      "difficulty": "medium",
+      "input": {
+        "messages": [
+          {"sender": "周伟", "content": "部署方案考虑好了吗？K8s还是直接docker compose？", "timestamp_ms": 1714000000000},
+          {"sender": "吴磊", "content": "目前用户量不大，K8s运维成本太高", "timestamp_ms": 1714000060000},
+          {"sender": "周伟", "content": "确实，先用docker compose，等规模大了再考虑K8s", "timestamp_ms": 1714000120000},
+          {"sender": "吴磊", "content": "好的，我来写docker-compose.yml", "timestamp_ms": 1714000180000}
+        ],
+        "project_id": "proj_saas_platform",
+        "channel_id": "ch_ops"
+      },
+      "expected": {
+        "expected_title_contains": "部署",
+        "expected_decision_contains": "docker compose",
+        "expected_rationale_contains": "运维成本",
+        "expected_alternatives": ["K8s"]
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.85,
+        "rationale_recall": 0.8,
+        "alternative_precision": 0.85
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "dec_ext_04",
+      "name": "API设计方案决策提取",
+      "description": "从讨论中提取API设计方案的决策",
+      "category": "decision_extraction_accuracy",
+      "difficulty": "medium",
+      "input": {
+        "messages": [
+          {"sender": "孙涛", "content": "API设计用REST还是GraphQL？", "timestamp_ms": 1714000000000},
+          {"sender": "刘洋", "content": "GraphQL前端灵活，但后端复杂度高", "timestamp_ms": 1714000060000},
+          {"sender": "孙涛", "content": "我们主要做B端，REST足够了，GraphQL以后再说", "timestamp_ms": 1714000120000},
+          {"sender": "刘洋", "content": "好，那就RESTful API", "timestamp_ms": 1714000180000}
+        ],
+        "project_id": "proj_saas_platform",
+        "channel_id": "ch_tech_discuss"
+      },
+      "expected": {
+        "expected_title_contains": "API",
+        "expected_decision_contains": "REST",
+        "expected_rationale_contains": "B端",
+        "expected_alternatives": ["GraphQL"]
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.85,
+        "rationale_recall": 0.8,
+        "alternative_precision": 0.85
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "dec_ext_05",
+      "name": "多轮讨论决策提取",
+      "description": "从较长的多轮讨论中准确提取最终决策",
+      "category": "decision_extraction_accuracy",
+      "difficulty": "hard",
+      "input": {
+        "messages": [
+          {"sender": "黄磊", "content": "代码规范工具用ESLint还是Prettier？", "timestamp_ms": 1714000000000},
+          {"sender": "林静", "content": "两个都可以用啊，不冲突", "timestamp_ms": 1714000060000},
+          {"sender": "黄磊", "content": "我的意思是ESLint的airbnb配置还是standard配置", "timestamp_ms": 1714000120000},
+          {"sender": "林静", "content": "airbnb太严格了，standard好一些", "timestamp_ms": 1714000180000},
+          {"sender": "黄磊", "content": "那就ESLint + standard配置，再加Prettier格式化", "timestamp_ms": 1714000240000},
+          {"sender": "林静", "content": "👍 没问题", "timestamp_ms": 1714000300000}
+        ],
+        "project_id": "proj_frontend_v2",
+        "channel_id": "ch_tech_discuss"
+      },
+      "expected": {
+        "expected_title_contains": "代码规范",
+        "expected_decision_contains": "ESLint",
+        "expected_rationale_contains": "standard",
+        "expected_alternatives": ["airbnb"]
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.85,
+        "rationale_recall": 0.75,
+        "alternative_precision": 0.8
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "dec_rat_01",
+      "name": "性能理由识别",
+      "description": "识别以性能为理由的技术决策",
+      "category": "rationale_conclusion_identification",
+      "difficulty": "easy",
+      "input": {
+        "messages": [
+          {"sender": "马超", "content": "图片存储用OSS还是本地存储？", "timestamp_ms": 1714000000000},
+          {"sender": "杨帆", "content": "本地存储IO太慢，OSS有CDN加速，性能好很多", "timestamp_ms": 1714000060000},
+          {"sender": "马超", "content": "那就用阿里云OSS吧", "timestamp_ms": 1714000120000}
+        ],
+        "project_id": "proj_media_platform",
+        "channel_id": "ch_tech_discuss"
+      },
+      "expected": {
+        "expected_title_contains": "图片存储",
+        "expected_decision_contains": "OSS",
+        "expected_rationale_contains": "性能",
+        "expected_alternatives": ["本地存储"]
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.9,
+        "rationale_recall": 0.9,
+        "alternative_precision": 0.85
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "dec_rat_02",
+      "name": "成本理由识别",
+      "description": "识别以成本为理由的技术决策",
+      "category": "rationale_conclusion_identification",
+      "difficulty": "easy",
+      "input": {
+        "messages": [
+          {"sender": "郑凯", "content": "CI/CD用GitHub Actions还是Jenkins？", "timestamp_ms": 1714000000000},
+          {"sender": "何敏", "content": "Jenkins需要自己维护服务器，GitHub Actions免费额度够用", "timestamp_ms": 1714000060000},
+          {"sender": "郑凯", "content": "成本确实重要，用GitHub Actions吧", "timestamp_ms": 1714000120000}
+        ],
+        "project_id": "proj_open_source",
+        "channel_id": "ch_devops"
+      },
+      "expected": {
+        "expected_title_contains": "CI/CD",
+        "expected_decision_contains": "GitHub Actions",
+        "expected_rationale_contains": "成本",
+        "expected_alternatives": ["Jenkins"]
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.9,
+        "rationale_recall": 0.9,
+        "alternative_precision": 0.9
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "dec_rat_03",
+      "name": "安全性理由识别",
+      "description": "识别以安全性为理由的技术决策",
+      "category": "rationale_conclusion_identification",
+      "difficulty": "medium",
+      "input": {
+        "messages": [
+          {"sender": "徐鹏", "content": "认证方案用JWT还是Session？", "timestamp_ms": 1714000000000},
+          {"sender": "宋悦", "content": "JWT无状态好扩展，但Session更安全，可以主动失效", "timestamp_ms": 1714000060000},
+          {"sender": "徐鹏", "content": "我们是金融系统，安全性优先，用Session", "timestamp_ms": 1714000120000}
+        ],
+        "project_id": "proj_fintech",
+        "channel_id": "ch_tech_discuss"
+      },
+      "expected": {
+        "expected_title_contains": "认证",
+        "expected_decision_contains": "Session",
+        "expected_rationale_contains": "安全",
+        "expected_alternatives": ["JWT"]
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.9,
+        "rationale_recall": 0.85,
+        "alternative_precision": 0.9
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "dec_rat_04",
+      "name": "团队能力理由识别",
+      "description": "识别以团队能力为理由的技术决策",
+      "category": "rationale_conclusion_identification",
+      "difficulty": "medium",
+      "input": {
+        "messages": [
+          {"sender": "朱琳", "content": "后端用Go还是Java？", "timestamp_ms": 1714000000000},
+          {"sender": "许涛", "content": "Go性能好，但团队Java经验更丰富", "timestamp_ms": 1714000060000},
+          {"sender": "朱琳", "content": "先用Java吧，降低学习成本，后期可以逐步引入Go", "timestamp_ms": 1714000120000}
+        ],
+        "project_id": "proj_microservice",
+        "channel_id": "ch_tech_discuss"
+      },
+      "expected": {
+        "expected_title_contains": "后端",
+        "expected_decision_contains": "Java",
+        "expected_rationale_contains": "团队经验",
+        "expected_alternatives": ["Go"]
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.85,
+        "rationale_recall": 0.85,
+        "alternative_precision": 0.85
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "dec_rat_05",
+      "name": "复合理由识别",
+      "description": "识别包含多个理由的技术决策",
+      "category": "rationale_conclusion_identification",
+      "difficulty": "hard",
+      "input": {
+        "messages": [
+          {"sender": "罗峰", "content": "消息队列用RabbitMQ还是Kafka？", "timestamp_ms": 1714000000000},
+          {"sender": "邓雪", "content": "Kafka吞吐量大，但运维复杂；RabbitMQ简单易用，社区活跃", "timestamp_ms": 1714000060000},
+          {"sender": "罗峰", "content": "我们目前消息量不大，运维能力有限，RabbitMQ更合适", "timestamp_ms": 1714000120000},
+          {"sender": "邓雪", "content": "同意，等业务规模上来再考虑Kafka", "timestamp_ms": 1714000180000}
+        ],
+        "project_id": "proj_order_system",
+        "channel_id": "ch_tech_discuss"
+      },
+      "expected": {
+        "expected_title_contains": "消息队列",
+        "expected_decision_contains": "RabbitMQ",
+        "expected_rationale_contains": "运维",
+        "expected_alternatives": ["Kafka"]
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.85,
+        "rationale_recall": 0.8,
+        "alternative_precision": 0.85
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "dec_alt_01",
+      "name": "明确否决替代方案",
+      "description": "识别被明确否决的替代方案",
+      "category": "rejected_alternatives_identification",
+      "difficulty": "easy",
+      "input": {
+        "messages": [
+          {"sender": "蔡磊", "content": "监控用Prometheus还是Zabbix？", "timestamp_ms": 1714000000000},
+          {"sender": "田甜", "content": "Zabbix太老了，配置复杂", "timestamp_ms": 1714000060000},
+          {"sender": "蔡磊", "content": "Prometheus + Grafana吧，现代方案", "timestamp_ms": 1714000120000}
+        ],
+        "project_id": "proj_infra",
+        "channel_id": "ch_ops"
+      },
+      "expected": {
+        "expected_title_contains": "监控",
+        "expected_decision_contains": "Prometheus",
+        "expected_alternatives": ["Zabbix"]
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.9,
+        "rationale_recall": 0.8,
+        "alternative_precision": 0.95
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "dec_alt_02",
+      "name": "隐含否决替代方案",
+      "description": "识别被隐含否决但未明确说不的替代方案",
+      "category": "rejected_alternatives_identification",
+      "difficulty": "medium",
+      "input": {
+        "messages": [
+          {"sender": "范伟", "content": "项目管理用Jira还是飞书？", "timestamp_ms": 1714000000000},
+          {"sender": "梁静", "content": "Jira功能强大但太重了，飞书够用而且大家都在用", "timestamp_ms": 1714000060000},
+          {"sender": "范伟", "content": "那就飞书吧，减少工具切换", "timestamp_ms": 1714000120000}
+        ],
+        "project_id": "proj_general",
+        "channel_id": "ch_management"
+      },
+      "expected": {
+        "expected_title_contains": "项目管理",
+        "expected_decision_contains": "飞书",
+        "expected_alternatives": ["Jira"]
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.85,
+        "rationale_recall": 0.8,
+        "alternative_precision": 0.9
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "dec_alt_03",
+      "name": "多个替代方案识别",
+      "description": "识别讨论中被否决的多个替代方案",
+      "category": "rejected_alternatives_identification",
+      "difficulty": "medium",
+      "input": {
+        "messages": [
+          {"sender": "韩冰", "content": "UI组件库选哪个？Ant Design、Element UI、Material UI？", "timestamp_ms": 1714000000000},
+          {"sender": "曹阳", "content": "Material UI风格偏西化，Element UI Vue专用", "timestamp_ms": 1714000060000},
+          {"sender": "韩冰", "content": "那还是Ant Design吧，React生态最好", "timestamp_ms": 1714000120000}
+        ],
+        "project_id": "proj_frontend_v2",
+        "channel_id": "ch_tech_discuss"
+      },
+      "expected": {
+        "expected_title_contains": "UI组件库",
+        "expected_decision_contains": "Ant Design",
+        "expected_alternatives": ["Element UI", "Material UI"]
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.9,
+        "rationale_recall": 0.8,
+        "alternative_precision": 0.85
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "dec_alt_04",
+      "name": "部分采纳替代方案",
+      "description": "识别被部分采纳而非完全否决的替代方案",
+      "category": "rejected_alternatives_identification",
+      "difficulty": "hard",
+      "input": {
+        "messages": [
+          {"sender": "谢峰", "content": "日志方案ELK还是自研？", "timestamp_ms": 1714000000000},
+          {"sender": "唐敏", "content": "自研灵活但工作量大，ELK开箱即用但资源消耗大", "timestamp_ms": 1714000060000},
+          {"sender": "谢峰", "content": "先用ELK快速上线，后期自研替换Logstash部分", "timestamp_ms": 1714000120000}
+        ],
+        "project_id": "proj_log_platform",
+        "channel_id": "ch_tech_discuss"
+      },
+      "expected": {
+        "expected_title_contains": "日志",
+        "expected_decision_contains": "ELK",
+        "expected_rationale_contains": "快速上线",
+        "expected_alternatives": ["自研"]
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.8,
+        "rationale_recall": 0.75,
+        "alternative_precision": 0.8
+      },
+      "priority": "P2"
+    },
+    {
+      "test_id": "dec_alt_05",
+      "name": "无替代方案识别",
+      "description": "当讨论中没有明确替代方案时应正确返回空列表",
+      "category": "rejected_alternatives_identification",
+      "difficulty": "hard",
+      "input": {
+        "messages": [
+          {"sender": "冯刚", "content": "项目需要加缓存层，用Redis吧", "timestamp_ms": 1714000000000},
+          {"sender": "蒋丽", "content": "同意，Redis最合适", "timestamp_ms": 1714000060000}
+        ],
+        "project_id": "proj_cache",
+        "channel_id": "ch_tech_discuss"
+      },
+      "expected": {
+        "expected_title_contains": "缓存",
+        "expected_decision_contains": "Redis",
+        "expected_alternatives": []
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.9,
+        "rationale_recall": 0.7,
+        "alternative_precision": 0.95
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "dec_push_01",
+      "name": "高优先级决策卡片推送",
+      "description": "涉及全局架构的决策应高优先级推送",
+      "category": "decision_card_push_relevance",
+      "difficulty": "easy",
+      "input": {
+        "messages": [
+          {"sender": "程鹏", "content": "整体架构用微服务还是单体？", "timestamp_ms": 1714000000000},
+          {"sender": "沈悦", "content": "团队规模小，先单体，后期拆分", "timestamp_ms": 1714000060000},
+          {"sender": "程鹏", "content": "同意，先单体架构", "timestamp_ms": 1714000120000}
+        ],
+        "project_id": "proj_new_system",
+        "channel_id": "ch_architecture"
+      },
+      "expected": {
+        "expected_title_contains": "架构",
+        "expected_decision_contains": "单体",
+        "push_priority": "high",
+        "push_reason": "架构级决策影响全局"
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.9,
+        "rationale_recall": 0.85,
+        "alternative_precision": 0.85
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "dec_push_02",
+      "name": "常规决策卡片推送",
+      "description": "常规技术选型决策正常推送",
+      "category": "decision_card_push_relevance",
+      "difficulty": "medium",
+      "input": {
+        "messages": [
+          {"sender": "苏洋", "content": "测试框架用Jest还是Mocha？", "timestamp_ms": 1714000000000},
+          {"sender": "潘丽", "content": "Jest内置断言和mock，更方便", "timestamp_ms": 1714000060000},
+          {"sender": "苏洋", "content": "那就Jest吧", "timestamp_ms": 1714000120000}
+        ],
+        "project_id": "proj_frontend_v2",
+        "channel_id": "ch_tech_discuss"
+      },
+      "expected": {
+        "expected_title_contains": "测试",
+        "expected_decision_contains": "Jest",
+        "push_priority": "normal",
+        "push_reason": "常规技术选型"
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.85,
+        "rationale_recall": 0.8,
+        "alternative_precision": 0.85
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "dec_push_03",
+      "name": "非决策消息不推送",
+      "description": "普通讨论不包含决策时不应推送卡片",
+      "category": "decision_card_push_relevance",
+      "difficulty": "medium",
+      "input": {
+        "messages": [
+          {"sender": "丁伟", "content": "大家今天都忙什么呢？", "timestamp_ms": 1714000000000},
+          {"sender": "方芳", "content": "在改bug，下午有空再聊", "timestamp_ms": 1714000060000},
+          {"sender": "丁伟", "content": "好的", "timestamp_ms": 1714000120000}
+        ],
+        "project_id": "proj_general",
+        "channel_id": "ch_casual"
+      },
+      "expected": {
+        "should_push": false,
+        "push_reason": "不包含技术决策"
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.95,
+        "rationale_recall": 0.9,
+        "alternative_precision": 0.95
+      },
+      "priority": "P0"
+    },
+    {
+      "test_id": "dec_push_04",
+      "name": "决策变更卡片推送",
+      "description": "之前决策被推翻时应推送变更通知",
+      "category": "decision_card_push_relevance",
+      "difficulty": "hard",
+      "input": {
+        "messages": [
+          {"sender": "龚磊", "content": "之前说用MySQL，但考虑到数据量增长，要不要换成PostgreSQL？", "timestamp_ms": 1714000000000},
+          {"sender": "任雪", "content": "确实，PostgreSQL分区表更好，同意换", "timestamp_ms": 1714000060000},
+          {"sender": "龚磊", "content": "好，数据库改为PostgreSQL", "timestamp_ms": 1714000120000}
+        ],
+        "project_id": "proj_data_platform",
+        "channel_id": "ch_tech_discuss"
+      },
+      "expected": {
+        "expected_title_contains": "数据库",
+        "expected_decision_contains": "PostgreSQL",
+        "push_priority": "high",
+        "push_reason": "决策变更，需通知相关人员",
+        "is_decision_change": true
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.85,
+        "rationale_recall": 0.8,
+        "alternative_precision": 0.85
+      },
+      "priority": "P1"
+    },
+    {
+      "test_id": "dec_push_05",
+      "name": "紧急安全决策推送",
+      "description": "涉及安全的紧急决策应立即推送",
+      "category": "decision_card_push_relevance",
+      "difficulty": "hard",
+      "input": {
+        "messages": [
+          {"sender": "彭涛", "content": "发现安全漏洞，JWT密钥泄露了", "timestamp_ms": 1714000000000},
+          {"sender": "吕敏", "content": "立即轮换密钥，所有token作废", "timestamp_ms": 1714000060000},
+          {"sender": "彭涛", "content": "好，我现在就处理，同时通知所有用户重新登录", "timestamp_ms": 1714000120000}
+        ],
+        "project_id": "proj_auth_service",
+        "channel_id": "ch_security"
+      },
+      "expected": {
+        "expected_title_contains": "安全",
+        "expected_decision_contains": "密钥轮换",
+        "push_priority": "urgent",
+        "push_reason": "安全紧急事件，需立即通知"
+      },
+      "evaluation_criteria": {
+        "extraction_accuracy": 0.9,
+        "rationale_recall": 0.85,
+        "alternative_precision": 0.8
+      },
+      "priority": "P0"
+    }
+  ]
+}
