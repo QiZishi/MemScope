@@ -377,7 +377,7 @@ def store(raw_conn):
             from schema_v2 import delete_user_preference
             return delete_user_preference(self.conn, owner, category, key)
 
-        def decay_preference_confidence(self, decay_factor=0.95, min_confidence=0.1):
+        def decay_preference_confidence(self, owner=None, decay_factor=0.95, min_confidence=0.1):
             from schema_v2 import decay_preference_confidence
             return decay_preference_confidence(self.conn, decay_factor, min_confidence)
 
@@ -389,9 +389,56 @@ def store(raw_conn):
             from schema_v2 import get_behavior_patterns
             return get_behavior_patterns(self.conn, owner, pattern_type, limit)
 
-        def upsert_knowledge_health(self, chunk_id, team_id=None, importance_score=0.5, freshness_status="fresh", category=None):
-            from schema_v2 import upsert_knowledge_health
-            return upsert_knowledge_health(self.conn, chunk_id, team_id, importance_score, freshness_status, category)
+        def upsert_knowledge_health(self, *args, **kwargs):
+            if 'chunk_id' in kwargs:
+                # Old conftest-style API: (chunk_id, team_id, importance_score, freshness_status, category)
+                from schema_v2 import upsert_knowledge_health as _old_upsert
+                return _old_upsert(
+                    self.conn,
+                    kwargs.get('chunk_id'),
+                    kwargs.get('team_id'),
+                    kwargs.get('importance_score', 0.5),
+                    kwargs.get('freshness_status', 'fresh'),
+                    kwargs.get('category'),
+                )
+            else:
+                # New API from FreshnessMonitor: (owner, topic, source, freshness_score, accuracy_score, completeness_score, metadata)
+                owner = kwargs.get('owner', 'default')
+                topic = kwargs.get('topic', '')
+                source = kwargs.get('source')
+                freshness_score = kwargs.get('freshness_score', 1.0)
+                accuracy_score = kwargs.get('accuracy_score', 1.0)
+                completeness_score = kwargs.get('completeness_score', 1.0)
+                metadata = kwargs.get('metadata')
+                now = int(time.time() * 1000)
+                c = self.conn.cursor()
+                c.execute(
+                    "SELECT id FROM knowledge_health WHERE owner = ? AND topic = ?",
+                    (owner, topic),
+                )
+                row = c.fetchone()
+                if row:
+                    kh_id = row[0]
+                    c.execute(
+                        """UPDATE knowledge_health
+                        SET source=?, freshness_score=?, accuracy_score=?,
+                            completeness_score=?, last_verified_at=?, metadata=?, updatedAt=?
+                        WHERE id=?""",
+                        (source, freshness_score, accuracy_score, completeness_score,
+                         now, metadata, now, kh_id),
+                    )
+                else:
+                    kh_id = str(uuid.uuid4())
+                    c.execute(
+                        """INSERT INTO knowledge_health
+                        (id, owner, topic, source, freshness_score, accuracy_score,
+                         completeness_score, last_verified_at, metadata, createdAt, updatedAt)
+                        VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
+                        (kh_id, owner, topic, source, freshness_score, accuracy_score,
+                         completeness_score, now, metadata, now, now),
+                    )
+                self.conn.commit()
+                return kh_id
 
         def record_knowledge_access(self, chunk_id):
             from schema_v2 import record_knowledge_access
@@ -413,9 +460,51 @@ def store(raw_conn):
             from schema_v2 import get_knowledge_alerts
             return get_knowledge_alerts(self.conn, team_id, alert_type, limit)
 
-        def upsert_team_knowledge_map(self, team_id, domain, description=None, member_coverage=None, overall_coverage=0.0, gap_areas=None):
-            from schema_v2 import upsert_team_knowledge_map
-            return upsert_team_knowledge_map(self.conn, team_id, domain, description, member_coverage, overall_coverage, gap_areas)
+        def upsert_team_knowledge_map(self, *args, **kwargs):
+            if 'domain' in kwargs:
+                # Old conftest-style API: (team_id, domain, description, member_coverage, overall_coverage, gap_areas)
+                from schema_v2 import upsert_team_knowledge_map as _old_upsert
+                return _old_upsert(
+                    self.conn,
+                    kwargs.get('team_id'),
+                    kwargs.get('domain'),
+                    kwargs.get('description'),
+                    kwargs.get('member_coverage'),
+                    kwargs.get('overall_coverage', 0.0),
+                    kwargs.get('gap_areas'),
+                )
+            else:
+                # New API from GapDetector: (owner, topic, expert, description, tags)
+                owner = kwargs.get('owner', 'default')
+                topic = kwargs.get('topic', '')
+                expert = kwargs.get('expert')
+                description = kwargs.get('description')
+                tags = kwargs.get('tags')
+                now = int(time.time() * 1000)
+                c = self.conn.cursor()
+                c.execute(
+                    "SELECT id FROM team_knowledge_map WHERE owner = ? AND topic = ?",
+                    (owner, topic),
+                )
+                row = c.fetchone()
+                if row:
+                    tkm_id = row[0]
+                    c.execute(
+                        """UPDATE team_knowledge_map
+                        SET expert=?, description=?, tags=?, updatedAt=?
+                        WHERE id=?""",
+                        (expert, description, tags, now, tkm_id),
+                    )
+                else:
+                    tkm_id = str(uuid.uuid4())
+                    c.execute(
+                        """INSERT INTO team_knowledge_map
+                        (id, owner, topic, expert, resource_url, description, tags, createdAt, updatedAt)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                        (tkm_id, owner, topic, expert, None, description, tags, now, now),
+                    )
+                self.conn.commit()
+                return tkm_id
 
         def get_team_knowledge_map(self, team_id):
             from schema_v2 import get_team_knowledge_map
@@ -424,6 +513,63 @@ def store(raw_conn):
         def list_knowledge_gaps(self, team_id, domain=None, min_severity="low"):
             from schema_v2 import list_knowledge_gaps
             return list_knowledge_gaps(self.conn, team_id, domain, min_severity)
+
+        # --- PreferenceManager-compatible methods ---
+        def upsert_preference(self, owner, category, key, value, source='explicit', confidence=0.5):
+            from schema_v2 import upsert_user_preference
+            return upsert_user_preference(self.conn, owner=owner, category=category, key=key, value=value, confidence=confidence, source=source)
+
+        def get_preference(self, owner, category, key):
+            from schema_v2 import get_user_preference
+            return get_user_preference(self.conn, owner, category, key)
+
+        def list_preferences(self, owner, category=None):
+            from schema_v2 import list_user_preferences
+            return list_user_preferences(self.conn, owner, category)
+
+        def delete_preference(self, owner, category, key):
+            from schema_v2 import delete_user_preference
+            return delete_user_preference(self.conn, owner, category, key)
+
+        # --- FreshnessMonitor-compatible methods ---
+        def update_freshness(self, owner, topic, freshness_score):
+            now = int(time.time() * 1000)
+            c = self.conn.cursor()
+            c.execute(
+                "UPDATE knowledge_health SET freshness_score = ?, updatedAt = ? WHERE owner = ? AND topic = ?",
+                (freshness_score, now, owner, topic),
+            )
+            self.conn.commit()
+            return c.rowcount > 0
+
+        def insert_forgetting_schedule(self, owner, chunk_id=None, topic=None, interval_days=1.0, ease_factor=2.5):
+            now = int(time.time() * 1000)
+            sched_id = str(uuid.uuid4())
+            next_review = now + int(interval_days * 86400000)
+            try:
+                c = self.conn.cursor()
+                c.execute(
+                    """INSERT INTO forgetting_schedule
+                    (id, owner, chunk_id, topic, interval_days, ease_factor, repetitions, next_review_at, createdAt, updatedAt)
+                    VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?)""",
+                    (sched_id, owner, chunk_id, topic, interval_days, ease_factor, next_review, now, now),
+                )
+                self.conn.commit()
+                return sched_id
+            except Exception:
+                return ""
+
+        def get_due_reviews(self, owner):
+            now = int(time.time() * 1000)
+            try:
+                c = self.conn.cursor()
+                c.execute(
+                    "SELECT * FROM forgetting_schedule WHERE owner = ? AND next_review_at <= ? AND status = 'pending' ORDER BY next_review_at",
+                    (owner, now),
+                )
+                return [dict(r) for r in c.fetchall()]
+            except Exception:
+                return []
 
         # --- Direction A: Command tracking ---
         def log_command(self, owner, command, args=None, project_path=None,

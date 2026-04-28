@@ -234,9 +234,14 @@ class DecisionExtractor:
         """从决策内容生成简短标题"""
         if not decision_text:
             return '未命名决策'
+        # 清理前导标点
+        import re
+        cleaned = re.sub(r'^[，,、。.；;：:！!？?\s]+', '', decision_text)
+        if not cleaned:
+            return '未命名决策'
         # 取前30个字符作为标题
-        title = decision_text[:30]
-        if len(decision_text) > 30:
+        title = cleaned[:30]
+        if len(cleaned) > 30:
             title += '...'
         return title
 

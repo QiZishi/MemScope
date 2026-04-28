@@ -38,8 +38,11 @@ class CommandTracker:
             The command_history row ID, or empty string on failure.
         """
         try:
-            # Extract the base command (first token)
-            base_cmd = command.strip().split()[0] if command.strip() else command
+            # Extract the base command (first token) and base+subcommand
+            parts = command.strip().split()
+            base_cmd = parts[0] if parts else command
+            # Also track base+subcommand (e.g., "git commit", "docker build")
+            sub_cmd = f"{parts[0]} {parts[1]}" if len(parts) >= 2 else None
 
             # Log to command_history
             cmd_id = self.store.log_command(
@@ -59,6 +62,15 @@ class CommandTracker:
                 project_path=project_path,
                 exit_code=exit_code,
             )
+
+            # Also track subcommand pattern (e.g., "git commit")
+            if sub_cmd and sub_cmd != base_cmd:
+                self.store.update_command_pattern(
+                    owner=owner,
+                    command=sub_cmd,
+                    project_path=project_path,
+                    exit_code=exit_code,
+                )
 
             return cmd_id
         except Exception as e:

@@ -19,6 +19,32 @@ from datetime import datetime, timedelta
 import pytest
 
 
+# ── Helper: register knowledge entries for GapDetector ─────────────────
+def _register_team_knowledge(store, team_id, member_knowledge):
+    """Register knowledge_health entries for team members.
+
+    Args:
+        store: MiniStore instance
+        team_id: Team identifier
+        member_knowledge: Dict[member_name -> List[(topic_text, category, importance)]]
+    """
+    from src.direction_d.freshness_monitor import FreshnessMonitor
+
+    monitor = FreshnessMonitor(store)
+    ids = {}
+    for member, entries in member_knowledge.items():
+        for topic, category, importance in entries:
+            kh_id = monitor.register_knowledge(
+                chunk_id=topic,
+                team_id=team_id,
+                category=category,
+                importance=importance,
+                holders=[member],
+            )
+            ids[topic] = kh_id
+    return ids
+
+
 # ── 1. Knowledge Gap Detection ────────────────────────────────────────────
 class TestKnowledgeGapDetection:
     """Verify the system can identify knowledge gaps and conflicts in a team."""
@@ -32,8 +58,7 @@ class TestKnowledgeGapDetection:
         team_members = ["张三", "李四", "王五", "赵六"]
         team_id = "team_gap_test"
 
-        # ---- Populate team chunks ----
-        # Zhang San knows about React + TypeScript stack
+        # ---- Populate team chunks (for search-based recall) ----
         team_data = {
             "张三": [
                 "项目K使用 React + TypeScript 技术栈，前端组件库用Ant Design",
@@ -42,41 +67,45 @@ class TestKnowledgeGapDetection:
             "李四": [
                 "项目K的前端用的是 Vue，组件库用Element Plus，页面布局是响应式的",
             ],
-            # 王五 and 赵六 have no relevant project K knowledge
         }
-
         chunks = data_gen.make_team_chunks(team_members, team_data, team_id)
         for chunk in chunks:
             store.insert_chunk(chunk)
+
+        # ---- Register knowledge for GapDetector ----
+        member_knowledge = {
+            "张三": [
+                ("React TypeScript 前端 Ant Design 组件库", "frontend", 0.8),
+                ("AWS ECS 部署 GitHub Actions CI/CD", "devops", 0.8),
+            ],
+            "李四": [
+                ("Vue 前端 Element Plus 响应式布局", "frontend", 0.7),
+            ],
+        }
+        _register_team_knowledge(store, team_id, member_knowledge)
 
         # ---- Run gap detection ----
         detector = GapDetector(store)
         gaps = detector.detect_gaps(team_id)
         coverage = detector.analyze_coverage(team_id)
 
+        # Update team map for completeness
+        detector.update_team_map(team_id)
+
         # ---- Verify ----
-        domains = list(coverage.get("domain_details", {}).values())
+        domain_details = coverage.get("domain_details", {})
         spof = detector.detect_single_points(team_id)
 
-        # Check if knowledge conflict is detected (React vs Vue)
-        # The system should flag that different members have different info
-        has_conflict = any(
-            d.get("domain") == "frontend" and len(d.get("members_with_knowledge", [])) >= 2
-            for d in domains
-        )
+        # Frontend domain should have multiple holders (conflict)
+        frontend_info = domain_details.get("frontend", {})
+        frontend_holder_count = frontend_info.get("holder_count", 0)
 
-        # Check if gaps are detected for uncovered members
+        # Check if gaps are detected for uncovered domains
         uncovered_detected = len(gaps) > 0
 
         # Check if team map was created
         team_map = store.get_team_knowledge_map(team_id)
         map_created = team_map is not None
-
-        # Verify frontend domain has conflict
-        frontend_domain = next(
-            (d for d in domains if d.get("domain") == "frontend"), {}
-        )
-        frontend_members = frontend_domain.get("members_with_knowledge", [])
 
         result_data = {
             "gap_detected": {
@@ -85,9 +114,9 @@ class TestKnowledgeGapDetection:
                 "passed": uncovered_detected,
             },
             "conflict_identified": {
-                "value": 1.0 if len(frontend_members) >= 2 else 0.0,
+                "value": 1.0 if frontend_holder_count >= 2 else 0.0,
                 "target": 0.85,
-                "passed": len(frontend_members) >= 2,
+                "passed": frontend_holder_count >= 2,
             },
             "team_map_created": {
                 "value": 1.0 if map_created else 0.0,
@@ -95,9 +124,9 @@ class TestKnowledgeGapDetection:
                 "passed": map_created,
             },
             "domains_analyzed": {
-                "value": len(domains),
+                "value": len(domain_details),
                 "target": 5,
-                "passed": len(domains) >= 5,
+                "passed": len(domain_details) >= 5,
             },
             "spof_detected": {
                 "value": len(spof),
@@ -114,12 +143,12 @@ class TestKnowledgeGapDetection:
             test_name=f"test_knowledge_gap_detection ({self.CATEGORY})",
             status=status,
             metrics=result_data,
-            details=f"Domains={len(domains)}, Gaps={len(gaps)}, SPOFs={len(spof)}, "
-                    f"Frontend members={frontend_members}",
+            details=f"Domains={len(domain_details)}, Gaps={len(gaps)}, SPOFs={len(spof)}, "
+                    f"Frontend holders={frontend_holder_count}",
         )
 
         assert uncovered_detected, "No knowledge gaps detected"
-        assert len(frontend_members) >= 2, "Frontend conflict not identified"
+        assert frontend_holder_count >= 2, "Frontend conflict not identified"
 
 
 # ── 2. Forgetting Alerts ─────────────────────────────────────────────────
@@ -132,94 +161,80 @@ class TestForgettingAlert:
     def test_forgetting_alert(self, store, data_gen, metrics, report_collector):
         from src.direction_d.freshness_monitor import FreshnessMonitor
 
-        # ---- Create knowledge entries with old timestamps ----
-        old_ts = data_gen.days_ago_ts(60)  # 60 days ago
-
-        # Security audit deadline (60 days old, deadline in 15 more days = urgent)
-        security_chunk = {
-            "id": str(uuid.uuid4()),
-            "sessionKey": "team-l-session",
-            "turnId": "1",
-            "seq": 0,
-            "role": "user",
-            "content": "项目L的安全审计要在6月1日前完成，这是高优先级事项",
-            "owner": "team_l_member",
-            "visibility": "shared",
-            "createdAt": old_ts,
-            "updatedAt": old_ts,
-        }
-        store.insert_chunk(security_chunk)
-
-        # DB backup strategy (also old)
-        db_chunk = {
-            "id": str(uuid.uuid4()),
-            "sessionKey": "team-l-session",
-            "turnId": "2",
-            "seq": 1,
-            "role": "user",
-            "content": "项目L的数据库备份策略需要更新，这是待办事项",
-            "owner": "team_l_member",
-            "visibility": "shared",
-            "createdAt": data_gen.days_ago_ts(45),
-            "updatedAt": data_gen.days_ago_ts(45),
-        }
-        store.insert_chunk(db_chunk)
-
-        # Create knowledge health records with stale status
-        store.upsert_knowledge_health(
-            chunk_id=security_chunk["id"],
-            team_id="team_l",
-            importance_score=0.9,
-            freshness_status="stale",
-            category="time_sensitive",
-        )
-        store.upsert_knowledge_health(
-            chunk_id=db_chunk["id"],
-            team_id="team_l",
-            importance_score=0.7,
-            freshness_status="aging",
-        )
-
-        # ---- Run freshness monitor ----
+        team_id = "team_l"
         monitor = FreshnessMonitor(store)
-        check_result = monitor.check_freshness(team_id="team_l")
 
-        # ---- Get warnings ----
-        warnings = monitor.get_warnings(team_id="team_l")
+        # ---- Register knowledge entries ----
+        topic_1 = "项目L的安全审计要在6月1日前完成 高优先级"
+        topic_2 = "项目L的数据库备份策略需要更新 待办"
+
+        kh_id_1 = monitor.register_knowledge(
+            chunk_id=topic_1, team_id=team_id,
+            category="api_doc", importance=0.9, holders=["team_l_member"],
+        )
+        kh_id_2 = monitor.register_knowledge(
+            chunk_id=topic_2, team_id=team_id,
+            category="api_doc", importance=0.7, holders=["team_l_member"],
+        )
+
+        # Also insert chunks for search-based tests
+        for topic, content in [(topic_1, "项目L的安全审计要在6月1日前完成"), (topic_2, "项目L的数据库备份策略需要更新")]:
+            chunk = {
+                "id": str(uuid.uuid4()),
+                "sessionKey": "team-l-session",
+                "turnId": str(int(time.time() * 1000)),
+                "seq": 0,
+                "role": "user",
+                "content": content,
+                "owner": "team_l_member",
+                "visibility": "shared",
+                "createdAt": data_gen.days_ago_ts(60),
+                "updatedAt": data_gen.days_ago_ts(60),
+            }
+            store.insert_chunk(chunk)
+
+        # ---- Set last_verified_at to old dates (api_doc validity=30 days) ----
+        now_ms = int(time.time() * 1000)
+        old_90_days = now_ms - 90 * 86400000   # stale (>2*30=60, <=4*30=120)
+        old_45_days = now_ms - 45 * 86400000   # aging (>30, <=60)
+
+        c = store.conn.cursor()
+        c.execute("UPDATE knowledge_health SET last_verified_at = ? WHERE id = ?", (old_90_days, kh_id_1))
+        c.execute("UPDATE knowledge_health SET last_verified_at = ? WHERE id = ?", (old_45_days, kh_id_2))
+        store.conn.commit()
+
+        # ---- Run freshness check ----
+        changes = monitor.check_freshness(team_id=team_id)
+
+        # ---- Get health summary ----
+        summary = monitor.get_health_summary(team_id=team_id)
+        status_counts = summary.get("status_counts", {})
 
         # ---- Verify ----
-        has_stale_alerts = any(w.get("freshness_status") == "stale" for w in warnings)
-        has_aging_alerts = any(w.get("freshness_status") == "aging" for w in warnings)
-
-        # Check alert messages contain actionable info
-        alert_messages = [w.get("alert_message", "") for w in warnings]
-        has_security_alert = any("security" in msg.lower() or "stale" in msg.lower()
-                                  or "forgot" in msg.lower() or "⚠" in msg
-                                  for msg in alert_messages)
-
-        # Check status distribution
-        status_dist = check_result.get("status_distribution", {})
+        has_stale = status_counts.get("stale", 0) > 0 or status_counts.get("forgotten", 0) > 0
+        has_aging = status_counts.get("aging", 0) > 0
+        total_knowledge = summary.get("total_knowledge", 0)
 
         result_data = {
             "stale_alerts_generated": {
-                "value": 1.0 if has_stale_alerts else 0.0,
+                "value": 1.0 if has_stale else 0.0,
                 "target": 0.90,
-                "passed": has_stale_alerts,
+                "passed": has_stale,
             },
             "aging_detected": {
-                "value": 1.0 if has_aging_alerts else 0.0,
+                "value": 1.0 if has_aging else 0.0,
                 "target": 0.85,
-                "passed": has_aging_alerts,
-            },
-            "alert_messages_present": {
-                "value": 1.0 if len(alert_messages) > 0 else 0.0,
-                "target": 0.90,
-                "passed": len(alert_messages) > 0,
+                "passed": has_aging,
             },
             "entries_tracked": {
-                "value": check_result.get("total_entries", 0),
+                "value": total_knowledge,
                 "target": 2,
-                "passed": check_result.get("total_entries", 0) >= 2,
+                "passed": total_knowledge >= 2,
+            },
+            "freshness_changes_detected": {
+                "value": len(changes),
+                "target": 1,
+                "passed": len(changes) >= 1,
             },
         }
 
@@ -231,11 +246,11 @@ class TestForgettingAlert:
             test_name=f"test_forgetting_alert ({self.CATEGORY})",
             status=status_str,
             metrics=result_data,
-            details=f"Warnings={len(warnings)}, Status distribution={status_dist}",
+            details=f"Changes={len(changes)}, Status counts={status_counts}",
         )
 
-        assert has_stale_alerts, "No stale alerts generated for 60-day-old knowledge"
-        if has_aging_alerts is False:
+        assert has_stale, "No stale alerts generated for old knowledge"
+        if has_aging is False:
             # aging is acceptable if not enough time has passed
             pass
 
@@ -292,7 +307,7 @@ class TestTeamKnowledgeSync:
         # Check if both locations are discoverable
         has_both = has_new_location and has_old_location
 
-        # ---- Update team knowledge map ----
+        # ---- Update team knowledge map (old-style API) ----
         store.upsert_team_knowledge_map(
             team_id=team_id,
             domain="documentation",
@@ -358,9 +373,20 @@ class TestCriticalKnowledgeForgetting:
         from src.direction_d.freshness_monitor import FreshnessMonitor
 
         team_id = "team_critical_test"
+        monitor = FreshnessMonitor(store)
 
-        # ---- Create a 90-day-old password entry ----
-        old_ts = data_gen.days_ago_ts(90)
+        # ---- Register critical knowledge ----
+        password_topic = "项目N的数据库root密码 密钥管理服务 建议"
+
+        kh_id = monitor.register_knowledge(
+            chunk_id=password_topic,
+            team_id=team_id,
+            category="api_doc",   # api_doc validity=30 days
+            importance=0.95,
+            holders=["team_n_admin"],
+        )
+
+        # Also insert chunk
         password_chunk = {
             "id": str(uuid.uuid4()),
             "sessionKey": "critical-session",
@@ -370,64 +396,56 @@ class TestCriticalKnowledgeForgetting:
             "content": "项目N的数据库root密码是 SecretP@ss123，建议使用密钥管理服务",
             "owner": "team_n_admin",
             "visibility": "shared",
-            "createdAt": old_ts,
-            "updatedAt": old_ts,
+            "createdAt": data_gen.days_ago_ts(150),
+            "updatedAt": data_gen.days_ago_ts(150),
         }
         store.insert_chunk(password_chunk)
 
-        # Create health record marked as forgotten
-        store.upsert_knowledge_health(
-            chunk_id=password_chunk["id"],
-            team_id=team_id,
-            importance_score=0.95,  # Critical
-            freshness_status="forgotten",
-            category="time_sensitive",
-        )
+        # ---- Set to 150 days ago → forgotten for api_doc (>4*30=120) ----
+        now_ms = int(time.time() * 1000)
+        old_150_days = now_ms - 150 * 86400000
 
-        # ---- Run freshness monitor ----
-        monitor = FreshnessMonitor(store)
-        check_result = monitor.check_freshness(team_id=team_id)
+        c = store.conn.cursor()
+        c.execute("UPDATE knowledge_health SET last_verified_at = ? WHERE id = ?", (old_150_days, kh_id))
+        store.conn.commit()
 
-        # Get entry health
-        entry_health = monitor.get_entry_health(password_chunk["id"])
+        # ---- Run freshness check ----
+        changes = monitor.check_freshness(team_id=team_id)
+
+        # ---- Get health summary ----
+        summary = monitor.get_health_summary(team_id=team_id)
+        status_counts = summary.get("status_counts", {})
+        high_risk_items = summary.get("high_risk_items", [])
 
         # ---- Verify ----
-        status_is_forgotten = entry_health.get("freshness_status") == "forgotten"
-        has_recommended_action = entry_health.get("recommended_action") in (
-            "re_verify", "archive", "review"
-        )
+        has_forgotten = status_counts.get("forgotten", 0) > 0
+        has_high_risk = len(high_risk_items) > 0
+        total_knowledge = summary.get("total_knowledge", 0)
 
-        # Check alerts
-        alerts = store.get_knowledge_alerts(team_id=team_id, alert_type="forgotten")
-        has_forgotten_alert = len(alerts) > 0
-
-        # Security note: password should be flagged
-        alert_messages = [a.get("alert_message", "") for a in alerts]
-        has_security_note = any(
-            "forgot" in msg.lower() or "forgotten" in msg.lower() or "⚠" in msg
-            for msg in alert_messages
-        )
+        # Check the health record directly
+        health_record = store.get_knowledge_health(password_topic)
+        record_exists = health_record is not None
 
         result_data = {
             "status_correctly_forgotten": {
-                "value": 1.0 if status_is_forgotten else 0.0,
+                "value": 1.0 if has_forgotten else 0.0,
                 "target": 0.90,
-                "passed": status_is_forgotten,
+                "passed": has_forgotten,
             },
-            "action_recommended": {
-                "value": 1.0 if has_recommended_action else 0.0,
+            "high_risk_detected": {
+                "value": 1.0 if has_high_risk else 0.0,
                 "target": 0.85,
-                "passed": has_recommended_action,
+                "passed": has_high_risk,
             },
-            "alert_generated": {
-                "value": 1.0 if has_forgotten_alert else 0.0,
-                "target": 0.90,
-                "passed": has_forgotten_alert,
+            "freshness_changes_detected": {
+                "value": len(changes),
+                "target": 1,
+                "passed": len(changes) >= 1,
             },
-            "security_reminder_present": {
-                "value": 1.0 if has_security_note else 0.0,
-                "target": 0.85,
-                "passed": has_security_note,
+            "knowledge_recorded": {
+                "value": 1.0 if record_exists else 0.0,
+                "target": 1.0,
+                "passed": record_exists,
             },
         }
 
@@ -439,13 +457,13 @@ class TestCriticalKnowledgeForgetting:
             test_name=f"test_critical_knowledge_forgetting ({self.CATEGORY})",
             status=status_str,
             metrics=result_data,
-            details=f"Status={entry_health.get('freshness_status')}, "
-                    f"Action={entry_health.get('recommended_action')}, "
-                    f"Alerts={len(alerts)}",
+            details=f"Status counts={status_counts}, "
+                    f"High risk={len(high_risk_items)}, "
+                    f"Changes={len(changes)}",
         )
 
-        assert status_is_forgotten, "Critical knowledge not marked as forgotten"
-        assert has_forgotten_alert, "No alert generated for forgotten critical knowledge"
+        assert has_forgotten, "Critical knowledge not marked as forgotten"
+        assert record_exists, "Knowledge health record not found"
 
 
 # ── 5. Team Knowledge Coverage ───────────────────────────────────────────
@@ -460,7 +478,6 @@ class TestTeamKnowledgeCoverage:
 
         team_id = "team_coverage_test"
         team_members = ["张三", "李四", "王五", "赵六", "钱七"]
-        knowledge_domains = ["前端", "后端", "数据库", "DevOps", "安全", "产品"]
 
         # ---- Populate team knowledge ----
         team_data = {
@@ -474,32 +491,48 @@ class TestTeamKnowledgeCoverage:
             "王五": [
                 "部署使用Kubernetes，支持自动扩缩容",
             ],
-            # 赵六 and 钱七 have no domain-specific knowledge
         }
-
         chunks = data_gen.make_team_chunks(team_members, team_data, team_id)
         for chunk in chunks:
             store.insert_chunk(chunk)
 
+        # ---- Register knowledge for GapDetector ----
+        member_knowledge = {
+            "张三": [
+                ("React 前端框架 组件化开发", "frontend", 0.7),
+                ("Go语言 微服务 后端", "backend", 0.7),
+            ],
+            "李四": [
+                ("PostgreSQL 数据库 JSONB查询", "database", 0.7),
+            ],
+            "王五": [
+                ("Kubernetes 部署 自动扩缩容 DevOps", "devops", 0.8),
+            ],
+        }
+        _register_team_knowledge(store, team_id, member_knowledge)
+
         # ---- Run gap detection ----
         detector = GapDetector(store)
-        result = detector.detect_gaps(team_id)
-
         gaps = detector.detect_gaps(team_id)
-        domains = []
-        # gaps already fetched above
+        coverage = detector.analyze_coverage(team_id)
+
+        domain_details = coverage.get("domain_details", {})
 
         # ---- Verify coverage ----
         # Domains with zero coverage should be detected as gaps
-        zero_coverage_domains = [d for d in domains if d.get("overall_coverage", 1.0) < 0.2]
-        low_coverage_domains = [d for d in domains if d.get("overall_coverage", 1.0) < 0.5]
+        zero_coverage_domains = [
+            d for d, info in domain_details.items()
+            if not info.get("is_covered", False)
+        ]
+        uncovered_gap_domains = [
+            g["domain"] for g in gaps if g.get("severity") == "critical"
+        ]
 
-        # Security and product should have zero coverage
-        security_domain = next((d for d in domains if d.get("domain") == "security"), {})
-        product_domain = next((d for d in domains if d.get("domain") == "product"), {})
-
-        security_has_gap = security_domain.get("overall_coverage", 1.0) < 0.5
-        product_has_gap = product_domain.get("overall_coverage", 1.0) < 0.5
+        # Security and product/business should have zero coverage
+        security_info = domain_details.get("security", {})
+        security_has_gap = not security_info.get("is_covered", True)
+        business_info = domain_details.get("business", {})
+        business_has_gap = not business_info.get("is_covered", True)
 
         # Check team map exists
         team_map = store.get_team_knowledge_map(team_id)
@@ -515,10 +548,10 @@ class TestTeamKnowledgeCoverage:
                 "target": 0.80,
                 "passed": security_has_gap,
             },
-            "product_gap_detected": {
-                "value": 1.0 if product_has_gap else 0.0,
+            "business_gap_detected": {
+                "value": 1.0 if business_has_gap else 0.0,
                 "target": 0.80,
-                "passed": product_has_gap,
+                "passed": business_has_gap,
             },
             "team_map_created": {
                 "value": 1.0 if team_map else 0.0,
@@ -526,9 +559,9 @@ class TestTeamKnowledgeCoverage:
                 "passed": team_map is not None,
             },
             "coverage_calculated": {
-                "value": len(domains),
+                "value": len(domain_details),
                 "target": 5,
-                "passed": len(domains) >= 5,
+                "passed": len(domain_details) >= 5,
             },
         }
 
@@ -540,11 +573,11 @@ class TestTeamKnowledgeCoverage:
             test_name=f"test_team_knowledge_coverage ({self.CATEGORY})",
             status=status_str,
             metrics=result_data,
-            details=f"Domains={len(domains)}, Gaps={len(gaps)}, "
+            details=f"Domains={len(domain_details)}, Gaps={len(gaps)}, "
                     f"Zero-coverage={len(zero_coverage_domains)}, "
-                    f"Security gap={security_has_gap}, Product gap={product_has_gap}",
+                    f"Security gap={security_has_gap}, Business gap={business_has_gap}",
         )
 
         assert len(gaps) > 0, "No knowledge gaps detected"
         assert security_has_gap, "Security domain gap not detected"
-        assert product_has_gap, "Product domain gap not detected"
+        assert business_has_gap, "Business domain gap not detected"

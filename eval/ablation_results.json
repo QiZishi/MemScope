@@ -1,0 +1,352 @@
+{
+  "timestamp": "2026-04-29T00:14:33.331392",
+  "results": {
+    "no_memory": {
+      "direction_a": {
+        "score": 0.0
+      },
+      "direction_b": {
+        "score": 0.0
+      },
+      "direction_c": {
+        "score": 0.0
+      },
+      "direction_d": {
+        "score": 0.0
+      },
+      "anti_interference": {
+        "score": 1.0
+      },
+      "contradiction": {
+        "score": 1.0
+      },
+      "efficiency": {
+        "score": 1.0
+      }
+    },
+    "original_memos": {
+      "direction_a": {
+        "score": 0.0
+      },
+      "direction_b": {
+        "score": 0.0
+      },
+      "direction_c": {
+        "zh_extraction": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        },
+        "en_extraction": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        },
+        "preference_crud": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "conflict_resolution": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "preference_list": {
+          "value": 3,
+          "target": 3,
+          "passed": true
+        },
+        "confidence_decay": {
+          "value": 0.855,
+          "target": 0.95,
+          "passed": true
+        },
+        "habit_inference": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        }
+      },
+      "direction_d": {
+        "retention_decay": {
+          "value": 0.5488,
+          "target": 0.5,
+          "passed": true
+        },
+        "freshness_status": {
+          "value": "fresh,aging,stale",
+          "target": "fresh,stale,forgotten",
+          "passed": true
+        },
+        "knowledge_registration": {
+          "value": 0,
+          "target": 3,
+          "passed": false
+        },
+        "gap_detection": {
+          "value": 10,
+          "target": 5,
+          "passed": true
+        },
+        "coverage_analysis": {
+          "value": 10,
+          "target": 10,
+          "passed": true
+        },
+        "single_point_detection": {
+          "value": 2,
+          "target": 1,
+          "passed": true
+        },
+        "review_scheduling": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "importance_scoring": {
+          "value": 0.7009,
+          "target": 0.5,
+          "passed": true
+        }
+      },
+      "anti_interference": {
+        "noise_resistance_preference": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "noise_resistance_decision": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        },
+        "noise_isolation": {
+          "value": 0,
+          "target": 0,
+          "passed": true
+        }
+      },
+      "contradiction": {
+        "direct_override": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "priority_resolution": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        }
+      },
+      "efficiency": {
+        "write_latency_ms": {
+          "value": 2.85,
+          "target": 50,
+          "passed": true
+        },
+        "query_latency_ms": {
+          "value": 0.1,
+          "target": 50,
+          "passed": true
+        },
+        "preference_write_ms": {
+          "value": 1.42,
+          "target": 50,
+          "passed": true
+        }
+      }
+    },
+    "memscope": {
+      "direction_a": {
+        "frequency_tracking": {
+          "value": 4,
+          "target": 4,
+          "passed": true
+        },
+        "project_recall": {
+          "value": 2,
+          "target": 3,
+          "passed": false
+        },
+        "prefix_recommend": {
+          "value": 2,
+          "target": 1,
+          "passed": true
+        },
+        "context_recommend": {
+          "value": 4,
+          "target": 1,
+          "passed": true
+        },
+        "pattern_analysis": {
+          "value": 4,
+          "target": 2,
+          "passed": true
+        }
+      },
+      "direction_b": {
+        "zh_extraction": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        },
+        "en_extraction": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        },
+        "rationale_extraction": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "alternative_extraction": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "save_and_search": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        },
+        "card_push": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        }
+      },
+      "direction_c": {
+        "zh_extraction": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        },
+        "en_extraction": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        },
+        "preference_crud": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "conflict_resolution": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "preference_list": {
+          "value": 3,
+          "target": 3,
+          "passed": true
+        },
+        "confidence_decay": {
+          "value": 0.855,
+          "target": 0.95,
+          "passed": true
+        },
+        "habit_inference": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        }
+      },
+      "direction_d": {
+        "retention_decay": {
+          "value": 0.5488,
+          "target": 0.5,
+          "passed": true
+        },
+        "freshness_status": {
+          "value": "fresh,aging,stale",
+          "target": "fresh,stale,forgotten",
+          "passed": true
+        },
+        "knowledge_registration": {
+          "value": 0,
+          "target": 3,
+          "passed": false
+        },
+        "gap_detection": {
+          "value": 10,
+          "target": 5,
+          "passed": true
+        },
+        "coverage_analysis": {
+          "value": 10,
+          "target": 10,
+          "passed": true
+        },
+        "single_point_detection": {
+          "value": 2,
+          "target": 1,
+          "passed": true
+        },
+        "review_scheduling": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "importance_scoring": {
+          "value": 0.7009,
+          "target": 0.5,
+          "passed": true
+        }
+      },
+      "anti_interference": {
+        "noise_resistance_preference": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "noise_resistance_decision": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        },
+        "noise_isolation": {
+          "value": 0,
+          "target": 0,
+          "passed": true
+        }
+      },
+      "contradiction": {
+        "direct_override": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "priority_resolution": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        }
+      },
+      "efficiency": {
+        "write_latency_ms": {
+          "value": 2.79,
+          "target": 50,
+          "passed": true
+        },
+        "query_latency_ms": {
+          "value": 0.11,
+          "target": 50,
+          "passed": true
+        },
+        "preference_write_ms": {
+          "value": 1.4,
+          "target": 50,
+          "passed": true
+        }
+      }
+    }
+  },
+  "scores": {
+    "no_memory": 0.30000000000000004,
+    "original_memos": 0.6749999999999999,
+    "memscope": 0.945
+  }
+}
