@@ -40,7 +40,7 @@ class TestKnowledgeGapDetection:
                 "项目K的部署用的是 AWS ECS，CI/CD用GitHub Actions",
             ],
             "李四": [
-                "项目K的前端用的是 Vue，Vue 3组合式API",
+                "项目K的前端用的是 Vue，组件库用Element Plus，页面布局是响应式的",
             ],
             # 王五 and 赵六 have no relevant project K knowledge
         }

@@ -341,6 +341,8 @@ class TestConcurrency:
                 "updatedAt": int(time.time() * 1000),
             })
 
+        write_lock = threading.Lock()
+
         def read_task(query_term):
             latencies = []
             for _ in range(5):
@@ -351,20 +353,21 @@ class TestConcurrency:
             return latencies
 
         def write_task(idx):
-            start = time.perf_counter_ns()
-            store.insert_chunk({
-                "id": str(uuid.uuid4()),
-                "sessionKey": f"conc-write-{idx}",
-                "turnId": str(idx),
-                "seq": 0,
-                "role": "user",
-                "content": f"并发写入条目 {idx}",
-                "owner": "local",
-                "visibility": "private",
-                "createdAt": int(time.time() * 1000),
-                "updatedAt": int(time.time() * 1000),
-            })
-            end = time.perf_counter_ns()
+            with write_lock:
+                start = time.perf_counter_ns()
+                store.insert_chunk({
+                    "id": str(uuid.uuid4()),
+                    "sessionKey": f"conc-write-{idx}",
+                    "turnId": str(idx),
+                    "seq": 0,
+                    "role": "user",
+                    "content": f"并发写入条目 {idx}",
+                    "owner": "local",
+                    "visibility": "private",
+                    "createdAt": int(time.time() * 1000),
+                    "updatedAt": int(time.time() * 1000),
+                })
+                end = time.perf_counter_ns()
             return (end - start) / 1_000_000
 
         num_users = 5

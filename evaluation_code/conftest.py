@@ -565,20 +565,22 @@ class ConversationFactory:
         """
         chunks = []
         base_time = int(datetime(2026, 4, 1).timestamp() * 1000)
+        offset = 0  # Global offset to avoid UNIQUE constraint collisions
         for member, contents in domain_content.items():
             for i, content in enumerate(contents):
                 chunks.append({
                     "id": str(uuid.uuid4()),
-                    "sessionKey": f"team-{team_id}-session",
-                    "turnId": str(base_time + i * 60000),
-                    "seq": i,
+                    "sessionKey": f"team-{team_id}-session-{member}",
+                    "turnId": str(base_time + offset * 60000),
+                    "seq": 0,
                     "role": "user",
                     "content": content,
                     "owner": member,
                     "visibility": "shared",
-                    "createdAt": base_time + i * 60000,
-                    "updatedAt": base_time + i * 60000,
+                    "createdAt": base_time + offset * 60000,
+                    "updatedAt": base_time + offset * 60000,
                 })
+                offset += 1
         return chunks
 
     @staticmethod

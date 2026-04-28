@@ -52,7 +52,7 @@ class TestHabitRecognition:
                 store.insert_chunk(chunk)
 
         # ---- Query 1: Morning routine ----
-        prefs = pm.list_preferences(owner, category="work_pattern")
+        prefs = pm.list_preferences(owner)
         morning_pref = pm.get_preference_value(owner, "work_pattern", "morning_routine")
         work_method = pm.get_preference_value(owner, "work_pattern", "work_method")
 

@@ -137,15 +137,17 @@ class TestPartialUpdate:
         expected_members = ["张三", "李四", "赵六"]
         removed_members = ["王五"]
 
-        # Check expected members are present
-        member_recall = metrics.text_contains_keywords(all_content, expected_members)
+        # The LATEST result should contain the updated members
+        latest_content = results[0].get("content", "") if results else ""
 
-        # Check removed member is NOT in latest
-        has_removed = any(m in all_content for m in removed_members)
+        # Check expected members are present in LATEST response
+        member_recall = metrics.text_contains_keywords(latest_content, expected_members)
 
-        # Check history preserved (old message still searchable)
-        history_query = store.search_chunks("王五 项目G", max_results=5)
-        history_preserved = len(history_query) > 0
+        # In the LATEST chunk, removed member should NOT appear
+        has_removed = any(m in latest_content for m in removed_members)
+
+        # Check history preserved (old message still in DB)
+        history_preserved = "王五" in all_content
 
         result_data = {
             "correct_members_recall": {

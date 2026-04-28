@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 # Default knowledge domains — extracted from common project areas
 DEFAULT_DOMAINS = [
     {"name": "infrastructure", "keywords": ["deploy", "server", "docker", "kubernetes", "aws", "cloud", "ci", "cd", "pipeline", "infrastructure", "provisioning", "terraform", "ansible"]},
-    {"name": "frontend", "keywords": ["react", "vue", "angular", "css", "html", "ui", "ux", "component", "page", "layout", "styling", "responsive", "design"]},
+    {"name": "frontend", "keywords": ["react", "vue", "angular", "css", "html", "ui", "ux", "component", "page", "layout", "styling", "responsive", "design", "前端", "组件", "页面", "布局", "响应式", "样式"]},
     {"name": "backend", "keywords": ["api", "endpoint", "database", "query", "server", "service", "middleware", "handler", "route", "controller", "model", "schema"]},
     {"name": "data", "keywords": ["data", "analytics", "etl", "pipeline", "warehouse", "sql", "bigquery", "spark", "kafka", "streaming", "batch", "report"]},
     {"name": "security", "keywords": ["auth", "authentication", "authorization", "security", "encrypt", "token", "oauth", "permission", "vulnerability", "audit"]},
@@ -167,28 +167,71 @@ class GapDetector:
     # ------------------------------------------------------------------
 
     def _get_team_chunks(self, team_id: str) -> List[Dict[str, Any]]:
-        """Get all shared/public chunks visible to this team."""
+        """Get all shared/public chunks visible to this team.
+
+        Tries with knowledge_health join first; falls back to shared chunks
+        for the team's session if no health records exist yet.
+        """
         cursor = self._store.conn.cursor()
+
+        # Try with knowledge_health join (preferred)
+        try:
+            cursor.execute("""
+                SELECT c.* FROM chunks c
+                INNER JOIN knowledge_health kh ON c.id = kh.chunk_id
+                WHERE kh.team_id = ?
+                AND c.visibility IN ('shared', 'public')
+                ORDER BY c.createdAt DESC
+                LIMIT 2000
+            """, (team_id,))
+            rows = [dict(row) for row in cursor.fetchall()]
+            if rows:
+                return rows
+        except Exception:
+            pass
+
+        # Fallback: find shared chunks by team session pattern
         cursor.execute("""
             SELECT c.* FROM chunks c
-            INNER JOIN knowledge_health kh ON c.id = kh.chunk_id
-            WHERE kh.team_id = ?
-            AND c.visibility IN ('shared', 'public')
+            WHERE c.visibility IN ('shared', 'public')
+            AND (c.sessionKey LIKE ? OR c.owner IN (
+                SELECT DISTINCT c2.owner FROM chunks c2
+                WHERE c2.sessionKey LIKE ?
+            ))
             ORDER BY c.createdAt DESC
             LIMIT 2000
-        """, (team_id,))
+        """, (f"%{team_id}%", f"%{team_id}%"))
         return [dict(row) for row in cursor.fetchall()]
 
     def _get_team_members(self, team_id: str) -> List[str]:
         """Get unique agent IDs in the team (from shared chunks)."""
         cursor = self._store.conn.cursor()
+
+        # Try with knowledge_health join first
+        try:
+            cursor.execute("""
+                SELECT DISTINCT c.owner FROM chunks c
+                INNER JOIN knowledge_health kh ON c.id = kh.chunk_id
+                WHERE kh.team_id = ?
+                AND c.visibility IN ('shared', 'public')
+                AND c.owner IS NOT NULL
+            """, (team_id,))
+            members = [row[0] for row in cursor.fetchall() if row[0]]
+            if members:
+                return members
+        except Exception:
+            pass
+
+        # Fallback: find shared chunks by team session pattern
         cursor.execute("""
             SELECT DISTINCT c.owner FROM chunks c
-            INNER JOIN knowledge_health kh ON c.id = kh.chunk_id
-            WHERE kh.team_id = ?
-            AND c.visibility IN ('shared', 'public')
+            WHERE c.visibility IN ('shared', 'public')
+            AND (c.sessionKey LIKE ? OR c.owner IN (
+                SELECT DISTINCT c2.owner FROM chunks c2
+                WHERE c2.sessionKey LIKE ?
+            ))
             AND c.owner IS NOT NULL
-        """, (team_id,))
+        """, (f"%{team_id}%", f"%{team_id}%"))
         return [row[0] for row in cursor.fetchall() if row[0]]
 
     # ------------------------------------------------------------------

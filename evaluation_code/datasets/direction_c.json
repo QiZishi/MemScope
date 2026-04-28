@@ -1,0 +1,797 @@
+{
+  "dataset_name": "direction_c",
+  "version": "1.0",
+  "description": "Tests the memory engine's ability to learn and recall personal work habits/preferences, provide personalized suggestions, and update when preferences change. 20 test cases across 5 categories.",
+  "test_cases": [
+    {
+      "test_id": "direction_c_001",
+      "name": "Work habit recognition: morning routine",
+      "category": "work_habit_recognition",
+      "difficulty": "easy",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "我一般早上先处理邮件，再写代码",
+            "assistant_msg": "已记录您的工作习惯：早间优先处理邮件，然后写代码。",
+            "timestamp": "2026-04-01T09:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "我习惯用番茄工作法，25分钟一个周期",
+            "assistant_msg": "已记录：您使用番茄工作法，25分钟/周期。",
+            "timestamp": "2026-04-02T09:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "我午休一般从12点到1点半",
+            "assistant_msg": "已记录：午休时间 12:00-13:30。",
+            "timestamp": "2026-04-03T09:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "我一般怎么安排上午的工作",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer_contains": ["邮件", "代码", "番茄"],
+        "expected_elements": ["先处理邮件", "再写代码", "番茄工作法"],
+        "recalled_habits_count": 3
+      },
+      "evaluation_criteria": {
+        "preference_recall": {"target": 0.90, "min": 0.60},
+        "context_integration": {"target": 0.85},
+        "min_habits_recalled": 2
+      }
+    },
+    {
+      "test_id": "direction_c_002",
+      "name": "Work habit recognition: afternoon scheduling",
+      "category": "work_habit_recognition",
+      "difficulty": "medium",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "下午一般2点后开始做需要深度思考的工作",
+            "assistant_msg": "已记录：下午14:00后安排深度工作。",
+            "timestamp": "2026-04-01T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "我习惯在4点左右喝杯咖啡休息一下",
+            "assistant_msg": "已记录：16:00左右有咖啡休息时间。",
+            "timestamp": "2026-04-02T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "下班前我会花15分钟整理明天的待办",
+            "assistant_msg": "已记录：下班前15分钟做明日待办整理。",
+            "timestamp": "2026-04-03T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "下午适合安排什么类型的工作",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer_contains": ["深度思考", "2点", "14"],
+        "expected_elements": ["深度工作", "咖啡休息"],
+        "recalled_habits_count": 3
+      },
+      "evaluation_criteria": {
+        "preference_recall": {"target": 0.90, "min": 0.60},
+        "context_integration": {"target": 0.85},
+        "min_habits_recalled": 2
+      }
+    },
+    {
+      "test_id": "direction_c_003",
+      "name": "Communication preference: conclusion first",
+      "category": "communication_preference",
+      "difficulty": "easy",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "跟客户沟通时我喜欢先说结论再说原因",
+            "assistant_msg": "已记录：您的沟通偏好——结论先行。",
+            "timestamp": "2026-04-01T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "写周报的时候我喜欢用数据说话",
+            "assistant_msg": "已记录：周报偏好——数据驱动。",
+            "timestamp": "2026-04-05T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "我比较不喜欢在会议上即兴发言",
+            "assistant_msg": "已记录：偏好——不喜欢即兴会议发言，倾向于提前准备。",
+            "timestamp": "2026-04-10T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "帮我准备一下明天和客户的沟通要点",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_style": "结论先行",
+        "expected_answer_contains": ["结论", "先"],
+        "expected_elements": ["先给出核心结论", "再展开原因"]
+      },
+      "evaluation_criteria": {
+        "preference_recall": {"target": 0.90, "min": 0.60},
+        "style_alignment": {"target": 0.90},
+        "preference_alignment": {"target": 0.85}
+      }
+    },
+    {
+      "test_id": "direction_c_004",
+      "name": "Communication preference: data-driven reports",
+      "category": "communication_preference",
+      "difficulty": "medium",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "写周报的时候我喜欢用数据说话",
+            "assistant_msg": "已记录：周报偏好——数据驱动。",
+            "timestamp": "2026-04-05T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "给老板汇报时要简洁，不超过3页PPT",
+            "assistant_msg": "已记录：汇报偏好——简洁，3页以内。",
+            "timestamp": "2026-04-06T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "我习惯在周报开头放关键指标的变化趋势",
+            "assistant_msg": "已记录：周报格式——开头放关键指标趋势。",
+            "timestamp": "2026-04-07T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "帮我写本周的周报大纲",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_style": "数据驱动",
+        "expected_answer_contains": ["数据", "指标"],
+        "expected_elements": ["包含数据指标", "量化成果"]
+      },
+      "evaluation_criteria": {
+        "preference_recall": {"target": 0.90, "min": 0.60},
+        "style_alignment": {"target": 0.85},
+        "format_compliance": {"target": 0.80}
+      }
+    },
+    {
+      "test_id": "direction_c_005",
+      "name": "Preference update: task management tool switch",
+      "category": "preference_update",
+      "difficulty": "easy",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "我之前用Todoist管理任务",
+            "assistant_msg": "已记录：任务管理工具——Todoist。",
+            "timestamp": "2026-03-01T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "我现在开始用 Notion 做任务管理了",
+            "assistant_msg": "已更新：任务管理工具从Todoist变为 Notion。",
+            "timestamp": "2026-04-20T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "我现在用什么工具管理任务",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value": "Notion",
+        "old_value": "Todoist",
+        "expected_answer_contains": ["Notion"],
+        "must_not_mention_latest": ["Todoist"]
+      },
+      "evaluation_criteria": {
+        "latest_value_accuracy": {"target": 0.95, "min": 0.70},
+        "history_preserved": {"target": 0.85},
+        "min_chunks": 2
+      }
+    },
+    {
+      "test_id": "direction_c_006",
+      "name": "Preference update: time management method change",
+      "category": "preference_update",
+      "difficulty": "medium",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "我习惯用番茄工作法，25分钟一个周期",
+            "assistant_msg": "已记录：工作方法——番茄工作法。",
+            "timestamp": "2026-03-15T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "我不用番茄工作法了，现在用时间块的方式，每块2小时",
+            "assistant_msg": "已更新：工作方法从番茄工作法变更为时间块管理，每块2小时。",
+            "timestamp": "2026-04-25T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "queries": [
+          {
+            "query": "我现在用什么方法管理时间",
+            "expected_answer": "时间块",
+            "expected_answer_contains": ["时间块", "2小时"]
+          },
+          {
+            "query": "我之前用什么方法管理时间",
+            "expected_answer": "番茄工作法",
+            "expected_answer_contains": ["番茄"]
+          }
+        ]
+      },
+      "expected": {
+        "latest_value": "时间块",
+        "old_value": "番茄工作法",
+        "history_accessible": true
+      },
+      "evaluation_criteria": {
+        "latest_value_accuracy": {"target": 0.95, "min": 0.70},
+        "history_preserved": {"target": 0.85},
+        "multi_query_accuracy": {"target": 0.90}
+      }
+    },
+    {
+      "test_id": "direction_c_007",
+      "name": "Preference update: coding style preference change",
+      "category": "preference_update",
+      "difficulty": "hard",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "我写代码喜欢用2个空格缩进",
+            "assistant_msg": "已记录：代码风格——2空格缩进。",
+            "timestamp": "2026-01-15T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "团队统一了代码规范，现在用4个空格缩进",
+            "assistant_msg": "已更新：代码风格——4空格缩进（团队规范）。",
+            "timestamp": "2026-03-01T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "个人项目我还是喜欢2个空格",
+            "assistant_msg": "已记录：个人项目偏好——2空格缩进。",
+            "timestamp": "2026-04-15T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "写代码时我偏好什么缩进风格",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value": "2个空格（个人）/4个空格（团队）",
+        "expected_answer_contains": ["空格", "缩进"],
+        "context_dependent": true
+      },
+      "evaluation_criteria": {
+        "latest_value_accuracy": {"target": 0.85, "min": 0.50},
+        "context_awareness": {"target": 0.80},
+        "min_chunks": 2
+      }
+    },
+    {
+      "test_id": "direction_c_008",
+      "name": "Context-aware recommendation: schedule planning",
+      "category": "context_aware_recommendation",
+      "difficulty": "easy",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "我一般周三下午不安排会议",
+            "assistant_msg": "已记录：周三下午为自由时间。",
+            "timestamp": "2026-04-01T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "我习惯在周五下午做一周总结",
+            "assistant_msg": "已记录：周五下午做一周总结。",
+            "timestamp": "2026-04-03T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "帮我安排下周的工作",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_elements": ["周三下午留空", "周五下午安排总结"],
+        "expected_answer_contains": ["周三", "周五", "总结"]
+      },
+      "evaluation_criteria": {
+        "preference_recall": {"target": 0.90, "min": 0.60},
+        "context_awareness": {"target": 0.85},
+        "recommendation_quality": {"target": 0.80}
+      }
+    },
+    {
+      "test_id": "direction_c_009",
+      "name": "Context-aware recommendation: code review preference",
+      "category": "context_aware_recommendation",
+      "difficulty": "medium",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "我做代码审查喜欢逐文件review",
+            "assistant_msg": "已记录：代码审查偏好——逐文件review。",
+            "timestamp": "2026-04-02T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "review时我会先看测试覆盖率再看代码",
+            "assistant_msg": "已记录：review流程——先看测试覆盖率。",
+            "timestamp": "2026-04-03T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "我关注代码的可读性和可维护性，不太在意性能微优化",
+            "assistant_msg": "已记录：review重点——可读性和可维护性。",
+            "timestamp": "2026-04-04T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "这个PR需要review，帮我制定review计划",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_elements": ["逐文件review", "先看测试覆盖率", "可读性"],
+        "expected_answer_contains": ["文件", "测试", "可读性"]
+      },
+      "evaluation_criteria": {
+        "preference_recall": {"target": 0.90, "min": 0.60},
+        "context_awareness": {"target": 0.85},
+        "actionable_suggestion": {"target": 0.80}
+      }
+    },
+    {
+      "test_id": "direction_c_010",
+      "name": "Preference distinction: work vs personal",
+      "category": "preference_distinction",
+      "difficulty": "easy",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "工作中我用飞书沟通，比较正式",
+            "assistant_msg": "已记录：工作沟通——飞书，正式风格。",
+            "timestamp": "2026-04-01T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "和朋友聊天用微信，比较随意",
+            "assistant_msg": "已记录：私人沟通——微信，随意风格。",
+            "timestamp": "2026-04-02T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "工作中应该用什么沟通工具",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer_contains": ["飞书"],
+        "must_not_mention": ["微信"],
+        "context_filter": "work"
+      },
+      "evaluation_criteria": {
+        "preference_recall": {"target": 0.95, "min": 0.70},
+        "context_distinction": {"target": 0.90},
+        "not_confused": {"target": 1.0}
+      }
+    },
+    {
+      "test_id": "direction_c_011",
+      "name": "Preference distinction: meeting vs deep work",
+      "category": "preference_distinction",
+      "difficulty": "medium",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "开会时我喜欢用飞书文档做共享笔记",
+            "assistant_msg": "已记录：会议工具——飞书文档共享笔记。",
+            "timestamp": "2026-04-01T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "深度工作时我喜欢用Obsidian做笔记",
+            "assistant_msg": "已记录：深度工作笔记工具——Obsidian。",
+            "timestamp": "2026-04-02T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "做技术调研时我用Notion整理信息",
+            "assistant_msg": "已记录：技术调研工具——Notion。",
+            "timestamp": "2026-04-03T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "做深度工作时用什么工具记笔记",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer_contains": ["Obsidian"],
+        "must_not_mention_primary": ["飞书", "Notion"],
+        "context_filter": "deep_work"
+      },
+      "evaluation_criteria": {
+        "preference_recall": {"target": 0.95, "min": 0.70},
+        "context_distinction": {"target": 0.90},
+        "not_confused": {"target": 1.0}
+      }
+    },
+    {
+      "test_id": "direction_c_012",
+      "name": "Work habit recognition: weekly patterns",
+      "category": "work_habit_recognition",
+      "difficulty": "medium",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "周一早上我会先规划本周的任务优先级",
+            "assistant_msg": "已记录：周一早间——规划本周任务优先级。",
+            "timestamp": "2026-04-07T09:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "周三我会集中处理跨部门协作的事务",
+            "assistant_msg": "已记录：周三——跨部门协作集中处理。",
+            "timestamp": "2026-04-09T09:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "周五下午我会做本周总结和下周计划",
+            "assistant_msg": "已记录：周五下午——本周总结与下周计划。",
+            "timestamp": "2026-04-11T14:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "我每周的工作节奏是怎样的",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer_contains": ["周一", "周三", "周五"],
+        "expected_elements": ["周一规划", "周三跨部门", "周五总结"]
+      },
+      "evaluation_criteria": {
+        "preference_recall": {"target": 0.90, "min": 0.60},
+        "pattern_recognition": {"target": 0.85},
+        "min_habits_recalled": 2
+      }
+    },
+    {
+      "test_id": "direction_c_013",
+      "name": "Preference update: IDE preference",
+      "category": "preference_update",
+      "difficulty": "medium",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "我用VS Code写前端代码",
+            "assistant_msg": "已记录：前端IDE——VS Code。",
+            "timestamp": "2026-02-01T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "Go代码我用GoLand写",
+            "assistant_msg": "已记录：Go IDE——GoLand。",
+            "timestamp": "2026-02-01T10:05:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "前端IDE我换成Cursor了，AI补全很好用",
+            "assistant_msg": "已更新：前端IDE从VS Code变为Cursor。",
+            "timestamp": "2026-04-15T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "queries": [
+          {
+            "query": "我写前端用什么IDE",
+            "expected_answer_contains": ["Cursor"]
+          },
+          {
+            "query": "我写Go用什么IDE",
+            "expected_answer_contains": ["GoLand"]
+          }
+        ]
+      },
+      "expected": {
+        "latest_frontend": "Cursor",
+        "unchanged_go": "GoLand",
+        "old_frontend": "VS Code"
+      },
+      "evaluation_criteria": {
+        "latest_value_accuracy": {"target": 0.95, "min": 0.70},
+        "unchanged_preference_preserved": {"target": 0.95},
+        "multi_domain_tracking": {"target": 0.85}
+      }
+    },
+    {
+      "test_id": "direction_c_014",
+      "name": "Communication preference: email style",
+      "category": "communication_preference",
+      "difficulty": "hard",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "写邮件时我喜欢用bullet points而不是长段落",
+            "assistant_msg": "已记录：邮件格式偏好——bullet points。",
+            "timestamp": "2026-04-01T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "给客户邮件开头要寒暄两句",
+            "assistant_msg": "已记录：客户邮件——开头寒暄。",
+            "timestamp": "2026-04-02T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "内部邮件直接说事，不用寒暄",
+            "assistant_msg": "已记录：内部邮件——直接简明。",
+            "timestamp": "2026-04-03T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "帮我写一封给客户的邮件，反馈项目进展",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_elements": ["寒暄开头", "bullet points"],
+        "expected_answer_contains": ["寒暄"],
+        "context": "client_email"
+      },
+      "evaluation_criteria": {
+        "preference_recall": {"target": 0.90, "min": 0.60},
+        "context_awareness": {"target": 0.85},
+        "style_alignment": {"target": 0.85}
+      }
+    },
+    {
+      "test_id": "direction_c_015",
+      "name": "Context-aware recommendation: break scheduling",
+      "category": "context_aware_recommendation",
+      "difficulty": "medium",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "我一般每工作90分钟休息10分钟",
+            "assistant_msg": "已记录：休息节奏——每90分钟休息10分钟。",
+            "timestamp": "2026-04-01T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "午休从12点到1点半",
+            "assistant_msg": "已记录：午休时间 12:00-13:30。",
+            "timestamp": "2026-04-02T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "下午3点后我喜欢站着工作一会儿",
+            "assistant_msg": "已记录：15:00后站式工作。",
+            "timestamp": "2026-04-03T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "帮我规划一下明天从上午9点到下午6点的工作节奏",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_elements": ["9:00开始", "每90分钟休息", "12:00-13:30午休", "15:00站立工作"],
+        "expected_answer_contains": ["休息", "午休"]
+      },
+      "evaluation_criteria": {
+        "preference_recall": {"target": 0.90, "min": 0.60},
+        "recommendation_quality": {"target": 0.85},
+        "schedule_feasibility": {"target": 0.80}
+      }
+    },
+    {
+      "test_id": "direction_c_016",
+      "name": "Preference update: notification settings",
+      "category": "preference_update",
+      "difficulty": "easy",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "我不喜欢收到非紧急的飞书通知",
+            "assistant_msg": "已记录：通知偏好——屏蔽非紧急飞书通知。",
+            "timestamp": "2026-03-15T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "现在飞书通知我可以接受了，不用屏蔽了",
+            "assistant_msg": "已更新：通知偏好——飞书通知可接受。",
+            "timestamp": "2026-04-20T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "我现在对飞书通知的偏好是什么",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value": "可接受飞书通知",
+        "old_value": "屏蔽非紧急通知",
+        "expected_answer_contains": ["接受", "飞书"]
+      },
+      "evaluation_criteria": {
+        "latest_value_accuracy": {"target": 0.95, "min": 0.70},
+        "history_preserved": {"target": 0.80},
+        "min_chunks": 2
+      }
+    },
+    {
+      "test_id": "direction_c_017",
+      "name": "Work habit recognition: focus time blocks",
+      "category": "work_habit_recognition",
+      "difficulty": "hard",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "我上午10点到12点是黄金时间，不要安排会议",
+            "assistant_msg": "已记录：10:00-12:00为黄金时间，避免会议。",
+            "timestamp": "2026-04-01T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "我需要2小时以上的连续时间才能进入心流状态",
+            "assistant_msg": "已记录：心流需要2小时以上连续时间。",
+            "timestamp": "2026-04-02T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "被打断后我需要大约20分钟才能重新进入状态",
+            "assistant_msg": "已记录：被打断后恢复时间约20分钟。",
+            "timestamp": "2026-04-03T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "如何安排明天上午才能让我高效工作",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer_contains": ["10", "12", "2小时", "不安排"],
+        "expected_elements": ["10-12点黄金时间", "避免会议", "连续2小时", "减少打断"]
+      },
+      "evaluation_criteria": {
+        "preference_recall": {"target": 0.90, "min": 0.60},
+        "context_integration": {"target": 0.85},
+        "actionable_suggestion": {"target": 0.80}
+      }
+    },
+    {
+      "test_id": "direction_c_018",
+      "name": "Preference distinction: tech stack per project",
+      "category": "preference_distinction",
+      "difficulty": "hard",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "项目Alpha用React，我喜欢用TypeScript",
+            "assistant_msg": "已记录：项目Alpha——React + TypeScript。",
+            "timestamp": "2026-04-01T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "项目Beta用Vue，用JavaScript就行",
+            "assistant_msg": "已记录：项目Beta——Vue + JavaScript。",
+            "timestamp": "2026-04-02T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "个人项目我用Svelte + TypeScript",
+            "assistant_msg": "已记录：个人项目——Svelte + TypeScript。",
+            "timestamp": "2026-04-03T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "queries": [
+          {
+            "query": "项目Alpha用什么技术栈",
+            "expected_answer_contains": ["React", "TypeScript"]
+          },
+          {
+            "query": "项目Beta用什么技术栈",
+            "expected_answer_contains": ["Vue", "JavaScript"]
+          },
+          {
+            "query": "我个人项目用什么技术栈",
+            "expected_answer_contains": ["Svelte", "TypeScript"]
+          }
+        ]
+      },
+      "expected": {
+        "project_alpha": "React + TypeScript",
+        "project_beta": "Vue + JavaScript",
+        "personal": "Svelte + TypeScript"
+      },
+      "evaluation_criteria": {
+        "multi_project_accuracy": {"target": 0.90, "min": 0.60},
+        "context_distinction": {"target": 0.85},
+        "no_cross_contamination": {"target": 0.90}
+      }
+    },
+    {
+      "test_id": "direction_c_019",
+      "name": "Preference update: documentation tool switch",
+      "category": "preference_update",
+      "difficulty": "medium",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "我用Markdown写技术文档",
+            "assistant_msg": "已记录：技术文档——Markdown。",
+            "timestamp": "2026-02-01T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "现在文档都用飞书文档写了，方便协作",
+            "assistant_msg": "已更新：技术文档从Markdown转为飞书文档。",
+            "timestamp": "2026-04-10T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "我现在用什么写技术文档",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value": "飞书文档",
+        "old_value": "Markdown",
+        "expected_answer_contains": ["飞书文档"]
+      },
+      "evaluation_criteria": {
+        "latest_value_accuracy": {"target": 0.95, "min": 0.70},
+        "history_preserved": {"target": 0.85},
+        "min_chunks": 2
+      }
+    },
+    {
+      "test_id": "direction_c_020",
+      "name": "Context-aware recommendation: meeting preparation",
+      "category": "context_aware_recommendation",
+      "difficulty": "hard",
+      "input": {
+        "conversations": [
+          {
+            "user_msg": "开会前我习惯提前15分钟到",
+            "assistant_msg": "已记录：会前习惯——提前15分钟到达。",
+            "timestamp": "2026-04-01T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "技术评审会我要准备PPT，不超过10页",
+            "assistant_msg": "已记录：技术评审会——准备PPT，10页以内。",
+            "timestamp": "2026-04-02T10:00:00Z",
+            "owner": "user_self"
+          },
+          {
+            "user_msg": "我比较不喜欢在会议上即兴发言",
+            "assistant_msg": "已记录：偏好——不喜欢即兴发言，倾向提前准备。",
+            "timestamp": "2026-04-10T10:00:00Z",
+            "owner": "user_self"
+          }
+        ],
+        "query": "明天下午有技术评审会，帮我准备一下",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_elements": ["提前15分钟到", "准备PPT", "10页以内", "提前准备发言要点"],
+        "expected_answer_contains": ["PPT", "15分钟"]
+      },
+      "evaluation_criteria": {
+        "preference_recall": {"target": 0.90, "min": 0.60},
+        "recommendation_quality": {"target": 0.85},
+        "actionable_suggestion": {"target": 0.80},
+        "preference_alignment": {"target": 0.90}
+      }
+    }
+  ]
+}

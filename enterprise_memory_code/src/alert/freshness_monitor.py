@@ -187,7 +187,7 @@ class FreshnessMonitor:
 
     def _ensure_health_records(self, team_id: Optional[str] = None) -> None:
         """Ensure all chunks have corresponding health records."""
-        from .schema_v2 import upsert_knowledge_health
+        from schema_v2 import upsert_knowledge_health
 
         # Get chunks that don't have health records yet
         cursor = self._store.conn.cursor()
