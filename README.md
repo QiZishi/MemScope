@@ -43,20 +43,19 @@ MemScope/
 ├── LICENSE                            # MIT License
 ├── .gitignore
 ├── plugin.yaml                        # Hermes Agent 插件配置
-├── __init__.py                        # 插件入口
 │
-├── alert/                             # 方向 D — 知识健康监控
-│   ├── __init__.py
-│   ├── freshness_monitor.py           # 知识新鲜度监控（四阶段生命周期）
-│   └── gap_detector.py                # 团队知识缺口检测（10 大领域覆盖分析）
-│
-├── preference/                        # 方向 C — 个人偏好记忆
-│   ├── __init__.py
-│   ├── preference_manager.py          # 偏好 CRUD + 冲突解决 + 置信度衰减
-│   └── habit_inference.py             # 行为模式推断（时间/工具/主题/工作流）
-│
-├── storage/                           # 存储层
-│   └── schema_v2.py                   # SQLite Schema v2（4 张新表 + 全量 CRUD）
+├── src/                               # 核心源码
+│   ├── __init__.py                    # 插件入口
+│   ├── alert/                         # 方向 D — 知识健康监控
+│   │   ├── __init__.py
+│   │   ├── freshness_monitor.py       # 知识新鲜度监控（四阶段生命周期）
+│   │   └── gap_detector.py            # 团队知识缺口检测（10 大领域覆盖分析）
+│   ├── preference/                    # 方向 C — 个人偏好记忆
+│   │   ├── __init__.py
+│   │   ├── preference_manager.py      # 偏好 CRUD + 冲突解决 + 置信度衰减
+│   │   └── habit_inference.py         # 行为模式推断（时间/工具/主题/工作流）
+│   └── storage/                       # 存储层
+│       └── schema_v2.py               # SQLite Schema v2（4 张新表 + 全量 CRUD）
 │
 ├── eval/                              # 评估框架
 │   ├── conftest.py                    # pytest fixtures
@@ -102,14 +101,16 @@ MemScope/
 ┌─────────────────────────────────────────────────────────┐
 │              MemScope Plugin (plugin.yaml)                │
 │                                                          │
-│  ┌──────────────┐  ┌──────────────┐  ┌───────────────┐  │
-│  │  preference/  │  │    alert/    │  │   storage/    │  │
-│  │              │  │              │  │               │  │
-│  │ • preference  │  │ • freshness  │  │ • schema_v2   │  │
-│  │   _manager   │  │   _monitor   │  │ • SQLite      │  │
-│  │ • habit      │  │ • gap        │  │ • 4 tables    │  │
-│  │   _inference │  │   _detector  │  │               │  │
-│  └──────────────┘  └──────────────┘  └───────────────┘  │
+│  ┌─────────────────── src/ ────────────────────────┐  │
+│  │                                                 │  │
+│  │  ┌──────────────┐ ┌──────────────┐ ┌─────────┐ │  │
+│  │  │  preference/  │ │    alert/    │ │ storage/│ │  │
+│  │  │ • preference  │ │ • freshness  │ │ •schema │ │  │
+│  │  │   _manager   │ │   _monitor   │ │  _v2    │ │  │
+│  │  │ • habit      │ │ • gap        │ │         │ │  │
+│  │  │   _inference │ │   _detector  │ │         │ │  │
+│  │  └──────────────┘ └──────────────┘ └─────────┘ │  │
+│  └─────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────┘
 ```
 
