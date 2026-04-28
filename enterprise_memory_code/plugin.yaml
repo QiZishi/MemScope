@@ -1,0 +1,66 @@
+name: enterprise-memory
+version: 2.0.0
+description: >
+  Enterprise memory plugin for Hermes Agent — extends memos-local-hermes-plugin
+  with personal habit/preference memory (Direction C) and team knowledge health /
+  forgetting alerts (Direction D). Hybrid search (RRF + MMR + recency), task
+  summarization, skill evolution, preference inference, and freshness monitoring.
+hooks:
+  - on_session_start
+  - on_session_end
+  - pre_llm_call
+  - post_llm_call
+requires_env:
+  - MEMOS_EMBEDDING_MODEL
+config:
+  # Inherited from memos-local-hermes-plugin
+  skill_generation_enabled:
+    type: boolean
+    default: false
+    description: "Enable automatic skill generation from completed tasks"
+  db_path:
+    type: string
+    default: "memos/memos.db"
+    description: "SQLite database path (relative to HERMES_HOME)"
+  agent_id:
+    type: string
+    default: "default"
+    description: "Unique agent identifier for memory isolation"
+  default_scope:
+    type: string
+    default: "private"
+    choices: ["private", "shared", "all"]
+    description: "Default memory search scope"
+  # Enterprise extensions
+  enterprise_features:
+    type: boolean
+    default: true
+    description: "Enable enterprise features (preferences, alerts, team analysis)"
+  preference_inference_enabled:
+    type: boolean
+    default: true
+    description: "Enable automatic preference/habit inference from interactions"
+  knowledge_health_enabled:
+    type: boolean
+    default: true
+    description: "Enable team knowledge health monitoring and alerts"
+  freshness_check_interval_hours:
+    type: number
+    default: 24
+    description: "How often to run freshness checks (hours)"
+  gap_detection_interval_hours:
+    type: number
+    default: 48
+    description: "How often to run gap detection (hours)"
+  stale_threshold_days:
+    type: number
+    default: 30
+    description: "Days before a knowledge entry is considered stale"
+  forgotten_threshold_days:
+    type: number
+    default: 90
+    description: "Days before a knowledge entry is considered forgotten"
+  min_team_size_for_alerts:
+    type: number
+    default: 2
+    description: "Minimum team members needed before gap alerts fire"
