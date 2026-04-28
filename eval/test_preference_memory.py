@@ -25,7 +25,7 @@ class TestHabitRecognition:
     CATEGORY = "work_habit_recognition"
 
     def test_habit_recognition(self, store, data_gen, metrics, report_collector):
-        from src.direction_c.preference_manager import PreferenceManager
+        from src.preference_memory.preference_manager import PreferenceManager
 
         pm = PreferenceManager(store)
         owner = "user_habit_test"
@@ -119,7 +119,7 @@ class TestPreferenceManagement:
     CATEGORY = "communication_preference"
 
     def test_preference_management(self, store, data_gen, metrics, report_collector):
-        from src.direction_c.preference_manager import PreferenceManager
+        from src.preference_memory.preference_manager import PreferenceManager
 
         pm = PreferenceManager(store)
         owner = "user_pref_test"
@@ -212,7 +212,7 @@ class TestPreferenceUpdates:
     CATEGORY = "preference_update"
 
     def test_preference_updates(self, store, data_gen, metrics, report_collector):
-        from src.direction_c.preference_manager import PreferenceManager
+        from src.preference_memory.preference_manager import PreferenceManager
 
         pm = PreferenceManager(store)
         owner = "user_update_test"
@@ -313,7 +313,7 @@ class TestContextAwareRecommendations:
     CATEGORY = "context_aware_recommendation"
 
     def test_context_aware_recommendations(self, store, data_gen, metrics, report_collector):
-        from src.direction_c.preference_manager import PreferenceManager
+        from src.preference_memory.preference_manager import PreferenceManager
 
         pm = PreferenceManager(store)
         owner = "user_context_test"

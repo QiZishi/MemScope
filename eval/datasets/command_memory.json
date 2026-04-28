@@ -1,0 +1,709 @@
+{
+  "dataset_name": "command_memory",
+  "version": "2.0",
+  "description": "命令记忆能力评测：测试系统对用户历史命令的记录、频率统计、上下文关联和智能推荐能力",
+  "total_cases": 30,
+  "difficulty_distribution": {
+    "easy": 5,
+    "medium": 15,
+    "hard": 10
+  },
+  "test_cases": [
+    {
+      "test_id": "cmd_001",
+      "name": "高频命令识别-多用户交叉",
+      "description": "用户A高频使用git(8次), docker(3次); 用户B高频使用npm(6次), node(4次). 查询A的高频命令时不应包含npm或node，验证系统能正确区分不同用户的命令历史",
+      "setup": {
+        "user_a_commands": [
+          {"command": "git status", "count": 4},
+          {"command": "git commit", "count": 4},
+          {"command": "docker build", "count": 3}
+        ],
+        "user_b_commands": [
+          {"command": "npm install", "count": 3},
+          {"command": "npm test", "count": 3},
+          {"command": "node server.js", "count": 4}
+        ]
+      },
+      "query": {"user": "user_a", "type": "frequent"},
+      "expected": {
+        "top_command": "git",
+        "min_frequency": 8,
+        "must_not_contain": ["npm", "node"]
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["cross-user", "frequency", "isolation"]
+    },
+    {
+      "test_id": "cmd_002",
+      "name": "高频命令识别-均匀分布",
+      "description": "用户C的5个命令各使用了2次，频率完全相同。系统应返回全部5个命令并按某种稳定排序，不应遗漏任何一个",
+      "setup": {
+        "user_c_commands": [
+          {"command": "ls -la", "count": 2},
+          {"command": "cd /home", "count": 2},
+          {"command": "cat README.md", "count": 2},
+          {"command": "grep error", "count": 2},
+          {"command": "tail -f log", "count": 2}
+        ]
+      },
+      "query": {"user": "user_c", "type": "frequent", "limit": 5},
+      "expected": {
+        "all_commands_present": ["ls -la", "cd /home", "cat README.md", "grep error", "tail -f log"],
+        "count_of_results": 5,
+        "all_frequencies_equal": true
+      },
+      "difficulty": "easy",
+      "priority": "P1",
+      "tags": ["frequency", "edge-case", "uniform-distribution"]
+    },
+    {
+      "test_id": "cmd_003",
+      "name": "高频命令识别-极端偏斜分布",
+      "description": "用户D的命令历史中，git status出现了100次，其他命令各出现1次。验证系统能正确处理极端偏斜的频率分布，git status应排第一",
+      "setup": {
+        "user_d_commands": [
+          {"command": "git status", "count": 100},
+          {"command": "vim config.yaml", "count": 1},
+          {"command": "python test.py", "count": 1},
+          {"command": "ssh deploy@server", "count": 1},
+          {"command": "curl localhost:8080", "count": 1}
+        ]
+      },
+      "query": {"user": "user_d", "type": "frequent", "limit": 3},
+      "expected": {
+        "rank_1": "git status",
+        "rank_1_frequency": 100,
+        "rank_2_frequency": 1,
+        "top_to_second_ratio": ">= 50"
+      },
+      "difficulty": "easy",
+      "priority": "P1",
+      "tags": ["frequency", "edge-case", "skewed-distribution"]
+    },
+    {
+      "test_id": "cmd_004",
+      "name": "高频命令识别-时间衰减",
+      "description": "用户E在3个月前大量使用svn(20次)，最近1周大量使用git(15次)。如果系统支持时间加权，最近的git应排名高于历史svn",
+      "setup": {
+        "user_e_commands": [
+          {"command": "svn update", "count": 10, "timestamp": "2026-01-15"},
+          {"command": "svn commit", "count": 10, "timestamp": "2026-01-15"},
+          {"command": "git pull", "count": 8, "timestamp": "2026-04-25"},
+          {"command": "git push", "count": 7, "timestamp": "2026-04-26"}
+        ],
+        "query_time": "2026-04-29"
+      },
+      "query": {"user": "user_e", "type": "frequent", "time_weighted": true},
+      "expected": {
+        "top_command": "git",
+        "git_rank_higher_than_svn": true
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["frequency", "temporal", "time-decay"]
+    },
+    {
+      "test_id": "cmd_005",
+      "name": "高频命令识别-新用户无历史",
+      "description": "用户F是新用户，没有任何命令历史。系统应返回空列表或明确提示无数据，不应报错或返回其他用户的数据",
+      "setup": {
+        "existing_users": {
+          "user_a_commands": [{"command": "git status", "count": 10}]
+        },
+        "new_user": "user_f"
+      },
+      "query": {"user": "user_f", "type": "frequent"},
+      "expected": {
+        "result": "empty",
+        "must_not_contain": ["git status"],
+        "error": false
+      },
+      "difficulty": "easy",
+      "priority": "P0",
+      "tags": ["frequency", "edge-case", "empty-history"]
+    },
+    {
+      "test_id": "cmd_006",
+      "name": "高频命令识别-含特殊字符命令",
+      "description": "用户G的命令中包含特殊字符：管道符、重定向、引号等。系统应正确记录和统计这些含特殊字符的命令",
+      "setup": {
+        "user_g_commands": [
+          {"command": "cat log.txt | grep ERROR | wc -l", "count": 5},
+          {"command": "echo \"hello world\" > output.txt", "count": 3},
+          {"command": "find . -name '*.py' -exec grep TODO {} \\;", "count": 2}
+        ]
+      },
+      "query": {"user": "user_g", "type": "frequent"},
+      "expected": {
+        "top_command": "cat log.txt | grep ERROR | wc -l",
+        "all_commands_preserved": true,
+        "special_chars_intact": true
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["frequency", "special-chars", "edge-case"]
+    },
+    {
+      "test_id": "cmd_007",
+      "name": "项目路径关联-同用户多项目",
+      "description": "用户H在项目A(/home/h/projectA)中使用npm/yarn命令，在项目B(/home/h/projectB)中使用python/pip命令。查询项目A的命令应只返回npm/yarn相关",
+      "setup": {
+        "user_h_commands": [
+          {"command": "npm install", "path": "/home/h/projectA", "count": 5},
+          {"command": "npm test", "path": "/home/h/projectA", "count": 3},
+          {"command": "yarn build", "path": "/home/h/projectA", "count": 2},
+          {"command": "pip install django", "path": "/home/h/projectB", "count": 4},
+          {"command": "python manage.py runserver", "path": "/home/h/projectB", "count": 6}
+        ]
+      },
+      "query": {"user": "user_h", "type": "project_commands", "project": "/home/h/projectA"},
+      "expected": {
+        "commands_in_result": ["npm install", "npm test", "yarn build"],
+        "must_not_contain": ["pip install django", "python manage.py runserver"],
+        "project_specific": true
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["project-path", "cross-user", "isolation"]
+    },
+    {
+      "test_id": "cmd_008",
+      "name": "项目路径关联-嵌套项目",
+      "description": "用户I在/home/i/monorepo和/home/i/monorepo/packages/frontend两个路径下工作。查询monorepo级别应包含所有子路径命令，查询frontend子路径应只包含frontend命令",
+      "setup": {
+        "user_i_commands": [
+          {"command": "docker compose up", "path": "/home/i/monorepo", "count": 3},
+          {"command": "make deploy", "path": "/home/i/monorepo", "count": 2},
+          {"command": "npm run dev", "path": "/home/i/monorepo/packages/frontend", "count": 8},
+          {"command": "npm run build", "path": "/home/i/monorepo/packages/frontend", "count": 4}
+        ]
+      },
+      "query": {"user": "user_i", "type": "project_commands", "project": "/home/i/monorepo/packages/frontend"},
+      "expected": {
+        "commands_in_result": ["npm run dev", "npm run build"],
+        "must_not_contain": ["docker compose up", "make deploy"],
+        "nested_project_handling": "exact_path_match"
+      },
+      "difficulty": "hard",
+      "priority": "P1",
+      "tags": ["project-path", "nested", "monorepo"]
+    },
+    {
+      "test_id": "cmd_009",
+      "name": "项目路径关联-跨项目相同命令",
+      "description": "用户J在3个不同项目中都使用了npm install，但频率不同。系统应能区分同一命令在不同项目中的使用情况",
+      "setup": {
+        "user_j_commands": [
+          {"command": "npm install", "path": "/home/j/frontend", "count": 10},
+          {"command": "npm install", "path": "/home/j/backend", "count": 3},
+          {"command": "npm install", "path": "/home/j/shared-lib", "count": 1}
+        ]
+      },
+      "query": {"user": "user_j", "type": "project_commands", "project": "/home/j/shared-lib"},
+      "expected": {
+        "npm_install_count": 1,
+        "not_from_other_projects": true
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["project-path", "same-command", "count-isolation"]
+    },
+    {
+      "test_id": "cmd_010",
+      "name": "项目路径关联-路径相似但不同",
+      "description": "用户K在/home/k/app和/home/k/app-test两个路径下工作，虽然路径前缀相似但完全不同。系统不应混淆",
+      "setup": {
+        "user_k_commands": [
+          {"command": "go run main.go", "path": "/home/k/app", "count": 7},
+          {"command": "go test ./...", "path": "/home/k/app-test", "count": 5}
+        ]
+      },
+      "query": {"user": "user_k", "type": "project_commands", "project": "/home/k/app"},
+      "expected": {
+        "commands_in_result": ["go run main.go"],
+        "must_not_contain": ["go test ./..."],
+        "path_prefix_confusion": false
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["project-path", "edge-case", "path-confusion"]
+    },
+    {
+      "test_id": "cmd_011",
+      "name": "项目路径关联-项目合并统计",
+      "description": "用户L想知道在所有项目中最常用的命令是什么。查询应跨所有项目聚合统计",
+      "setup": {
+        "user_l_commands": [
+          {"command": "git status", "path": "/home/l/proj1", "count": 5},
+          {"command": "git status", "path": "/home/l/proj2", "count": 4},
+          {"command": "git status", "path": "/home/l/proj3", "count": 3},
+          {"command": "npm test", "path": "/home/l/proj1", "count": 8}
+        ]
+      },
+      "query": {"user": "user_l", "type": "frequent", "all_projects": true},
+      "expected": {
+        "git_status_total": 12,
+        "npm_test_total": 8,
+        "top_command": "git status"
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["project-path", "aggregation", "cross-project"]
+    },
+    {
+      "test_id": "cmd_012",
+      "name": "项目路径关联-空项目",
+      "description": "用户M在一个从未使用过的项目路径下查询命令。系统应返回空结果而非错误",
+      "setup": {
+        "user_m_commands": [
+          {"command": "ls", "path": "/home/m/active-project", "count": 2}
+        ]
+      },
+      "query": {"user": "user_m", "type": "project_commands", "project": "/home/m/empty-project"},
+      "expected": {
+        "result": "empty",
+        "error": false
+      },
+      "difficulty": "easy",
+      "priority": "P1",
+      "tags": ["project-path", "edge-case", "empty-result"]
+    },
+    {
+      "test_id": "cmd_013",
+      "name": "前缀匹配推荐-单字符前缀",
+      "description": "用户N输入'g'作为前缀，历史中有git status、go run、grep命令。系统应返回所有以g开头的命令候选",
+      "setup": {
+        "user_n_commands": [
+          {"command": "git status", "count": 5},
+          {"command": "go run main.go", "count": 3},
+          {"command": "grep -r TODO", "count": 2},
+          {"command": "npm install", "count": 4}
+        ]
+      },
+      "query": {"user": "user_n", "type": "prefix_match", "prefix": "g"},
+      "expected": {
+        "candidates": ["git status", "go run main.go", "grep -r TODO"],
+        "must_not_contain": ["npm install"],
+        "count": 3
+      },
+      "difficulty": "easy",
+      "priority": "P0",
+      "tags": ["prefix-match", "basic", "single-char"]
+    },
+    {
+      "test_id": "cmd_014",
+      "name": "前缀匹配推荐-长前缀精确匹配",
+      "description": "用户O输入'git co'作为前缀，历史中有git commit、git config、git checkout。应返回这三个候选",
+      "setup": {
+        "user_o_commands": [
+          {"command": "git commit -m \"fix\"", "count": 6},
+          {"command": "git config user.name", "count": 2},
+          {"command": "git checkout main", "count": 4},
+          {"command": "git push origin main", "count": 3},
+          {"command": "docker compose up", "count": 5}
+        ]
+      },
+      "query": {"user": "user_o", "type": "prefix_match", "prefix": "git co"},
+      "expected": {
+        "candidates": ["git commit -m \"fix\"", "git config user.name", "git checkout main"],
+        "must_not_contain": ["git push origin main", "docker compose up"],
+        "count": 3
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["prefix-match", "multi-candidate", "long-prefix"]
+    },
+    {
+      "test_id": "cmd_015",
+      "name": "前缀匹配推荐-无匹配",
+      "description": "用户P输入'xyz'作为前缀，历史中没有任何以xyz开头的命令。应返回空结果",
+      "setup": {
+        "user_p_commands": [
+          {"command": "git status", "count": 5},
+          {"command": "npm test", "count": 3}
+        ]
+      },
+      "query": {"user": "user_p", "type": "prefix_match", "prefix": "xyz"},
+      "expected": {
+        "candidates": [],
+        "count": 0,
+        "error": false
+      },
+      "difficulty": "easy",
+      "priority": "P1",
+      "tags": ["prefix-match", "edge-case", "no-match"]
+    },
+    {
+      "test_id": "cmd_016",
+      "name": "前缀匹配推荐-频率排序",
+      "description": "用户Q输入'docker'前缀，有3个docker相关命令但频率不同。候选应按频率从高到低排序",
+      "setup": {
+        "user_q_commands": [
+          {"command": "docker build -t app .", "count": 10},
+          {"command": "docker compose up -d", "count": 5},
+          {"command": "docker ps", "count": 15},
+          {"command": "git push", "count": 20}
+        ]
+      },
+      "query": {"user": "user_q", "type": "prefix_match", "prefix": "docker"},
+      "expected": {
+        "candidates_ordered": ["docker ps", "docker build -t app .", "docker compose up -d"],
+        "sort_by": "frequency_desc"
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["prefix-match", "ranking", "frequency-sort"]
+    },
+    {
+      "test_id": "cmd_017",
+      "name": "前缀匹配推荐-大小写不敏感",
+      "description": "用户R输入'Git'作为前缀（大写G），历史中有'git status'（小写）。系统应做大小写不敏感匹配",
+      "setup": {
+        "user_r_commands": [
+          {"command": "git status", "count": 5},
+          {"command": "git commit", "count": 3}
+        ]
+      },
+      "query": {"user": "user_r", "type": "prefix_match", "prefix": "Git"},
+      "expected": {
+        "candidates": ["git status", "git commit"],
+        "case_insensitive": true
+      },
+      "difficulty": "medium",
+      "priority": "P2",
+      "tags": ["prefix-match", "case-insensitive", "edge-case"]
+    },
+    {
+      "test_id": "cmd_018",
+      "name": "前缀匹配推荐-限制返回数量",
+      "description": "用户S输入'git'前缀，有10个git相关命令。查询limit=3时应只返回频率最高的3个",
+      "setup": {
+        "user_s_commands": [
+          {"command": "git status", "count": 20},
+          {"command": "git add .", "count": 15},
+          {"command": "git commit -m", "count": 12},
+          {"command": "git push", "count": 10},
+          {"command": "git pull", "count": 8},
+          {"command": "git log", "count": 6},
+          {"command": "git diff", "count": 5},
+          {"command": "git stash", "count": 3},
+          {"command": "git branch", "count": 2},
+          {"command": "git merge", "count": 1}
+        ]
+      },
+      "query": {"user": "user_s", "type": "prefix_match", "prefix": "git", "limit": 3},
+      "expected": {
+        "candidates": ["git status", "git add .", "git commit -m"],
+        "count": 3
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["prefix-match", "limit", "truncation"]
+    },
+    {
+      "test_id": "cmd_019",
+      "name": "上下文感知推荐-连续命令序列",
+      "description": "用户T最近3条命令依次是git add、git status、git commit。下一条命令应推荐git push，因为这是标准的git工作流",
+      "setup": {
+        "user_t_recent_sequence": [
+          {"command": "git add .", "timestamp": "2026-04-29T10:00:00"},
+          {"command": "git status", "timestamp": "2026-04-29T10:01:00"},
+          {"command": "git commit -m \"feature\"", "timestamp": "2026-04-29T10:02:00"}
+        ],
+        "user_t_history": [
+          {"command": "git add .", "count": 20},
+          {"command": "git status", "count": 18},
+          {"command": "git commit -m", "count": 17},
+          {"command": "git push", "count": 16}
+        ]
+      },
+      "query": {"user": "user_t", "type": "context_recommend", "recent_window": 3},
+      "expected": {
+        "top_recommendation": "git push",
+        "reason": "sequential_pattern"
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["context-aware", "sequence", "workflow"]
+    },
+    {
+      "test_id": "cmd_020",
+      "name": "上下文感知推荐-测试后修复模式",
+      "description": "用户U刚执行了npm test（测试失败），然后执行了vim src/app.js（编辑代码）。系统应推荐npm test（重新测试验证）而非npm run build",
+      "setup": {
+        "user_u_recent_sequence": [
+          {"command": "npm test", "timestamp": "2026-04-29T14:00:00"},
+          {"command": "vim src/app.js", "timestamp": "2026-04-29T14:05:00"}
+        ],
+        "user_u_history": [
+          {"command": "npm test", "count": 30},
+          {"command": "npm run build", "count": 10},
+          {"command": "git commit", "count": 20}
+        ]
+      },
+      "query": {"user": "user_u", "type": "context_recommend", "recent_window": 2},
+      "expected": {
+        "top_recommendation": "npm test",
+        "reason": "test_after_edit_pattern"
+      },
+      "difficulty": "hard",
+      "priority": "P1",
+      "tags": ["context-aware", "debugging", "workflow"]
+    },
+    {
+      "test_id": "cmd_021",
+      "name": "上下文感知推荐-部署序列",
+      "description": "用户V最近执行了docker build和docker tag。历史模式显示之后通常执行docker push。应推荐docker push",
+      "setup": {
+        "user_v_recent_sequence": [
+          {"command": "docker build -t myapp:v2 .", "timestamp": "2026-04-29T16:00:00"},
+          {"command": "docker tag myapp:v2 registry/myapp:v2", "timestamp": "2026-04-29T16:05:00"}
+        ],
+        "user_v_history_pattern": {
+          "sequence": ["docker build", "docker tag", "docker push"],
+          "occurrences": 15
+        }
+      },
+      "query": {"user": "user_v", "type": "context_recommend", "recent_window": 2},
+      "expected": {
+        "top_recommendation": "docker push",
+        "reason": "deployment_sequence_pattern"
+      },
+      "difficulty": "hard",
+      "priority": "P1",
+      "tags": ["context-aware", "deployment", "sequence"]
+    },
+    {
+      "test_id": "cmd_022",
+      "name": "上下文感知推荐-无明显模式",
+      "description": "用户W最近执行了两条无关命令：ls和cat README.md。历史中也没有明显的序列模式。系统应回退到频率推荐",
+      "setup": {
+        "user_w_recent_sequence": [
+          {"command": "ls -la", "timestamp": "2026-04-29T09:00:00"},
+          {"command": "cat README.md", "timestamp": "2026-04-29T09:01:00"}
+        ],
+        "user_w_history": [
+          {"command": "ls -la", "count": 5},
+          {"command": "cat README.md", "count": 3},
+          {"command": "git status", "count": 20}
+        ]
+      },
+      "query": {"user": "user_w", "type": "context_recommend", "recent_window": 2},
+      "expected": {
+        "top_recommendation": "git status",
+        "fallback_to_frequency": true
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["context-aware", "fallback", "no-pattern"]
+    },
+    {
+      "test_id": "cmd_023",
+      "name": "上下文感知推荐-错误恢复模式",
+      "description": "用户X执行了kubectl apply但失败了，然后查看了pod状态。历史显示这种情况下通常会编辑yaml再重新apply",
+      "setup": {
+        "user_x_recent_sequence": [
+          {"command": "kubectl apply -f deploy.yaml", "timestamp": "2026-04-29T11:00:00"},
+          {"command": "kubectl get pods", "timestamp": "2026-04-29T11:01:00"}
+        ],
+        "user_x_history_pattern": {
+          "after_kubectl_apply_then_get_pods": ["vim deploy.yaml", "kubectl apply -f deploy.yaml"],
+          "occurrences": 8
+        }
+      },
+      "query": {"user": "user_x", "type": "context_recommend", "recent_window": 2},
+      "expected": {
+        "top_recommendations": ["vim deploy.yaml", "kubectl apply -f deploy.yaml"],
+        "reason": "error_recovery_pattern"
+      },
+      "difficulty": "hard",
+      "priority": "P2",
+      "tags": ["context-aware", "error-recovery", "kubernetes"]
+    },
+    {
+      "test_id": "cmd_024",
+      "name": "上下文感知推荐-空历史回退",
+      "description": "用户Y是新用户，只有当前这一条命令，没有历史。系统应返回空推荐或基于全局流行度推荐",
+      "setup": {
+        "user_y_recent_sequence": [
+          {"command": "git init", "timestamp": "2026-04-29T08:00:00"}
+        ],
+        "user_y_history": []
+      },
+      "query": {"user": "user_y", "type": "context_recommend", "recent_window": 1},
+      "expected": {
+        "result_type": "empty_or_global_fallback",
+        "error": false
+      },
+      "difficulty": "medium",
+      "priority": "P2",
+      "tags": ["context-aware", "new-user", "edge-case"]
+    },
+    {
+      "test_id": "cmd_025",
+      "name": "子命令区分-git commit vs git push",
+      "description": "用户Z使用git commit 15次和git push 5次。查询git子命令分布时，commit和push应作为独立命令统计",
+      "setup": {
+        "user_z_commands": [
+          {"command": "git commit -m \"msg\"", "count": 10},
+          {"command": "git commit --amend", "count": 5},
+          {"command": "git push origin main", "count": 3},
+          {"command": "git push", "count": 2}
+        ]
+      },
+      "query": {"user": "user_z", "type": "subcommand_analysis", "base_command": "git"},
+      "expected": {
+        "commit_total": 15,
+        "push_total": 5,
+        "subcommands_separated": true,
+        "commit_is_top_subcommand": true
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["subcommand", "git", "analysis"]
+    },
+    {
+      "test_id": "cmd_026",
+      "name": "子命令区分-docker复合命令",
+      "description": "用户AA使用了docker build、docker run、docker compose等多种docker子命令。系统应正确分类和统计每种子命令",
+      "setup": {
+        "user_aa_commands": [
+          {"command": "docker build -t app .", "count": 8},
+          {"command": "docker run -d -p 8080:80 app", "count": 6},
+          {"command": "docker compose up -d", "count": 10},
+          {"command": "docker compose down", "count": 7},
+          {"command": "docker ps", "count": 12},
+          {"command": "docker logs container_name", "count": 4}
+        ]
+      },
+      "query": {"user": "user_aa", "type": "subcommand_analysis", "base_command": "docker"},
+      "expected": {
+        "subcommands": {
+          "compose": 17,
+          "ps": 12,
+          "build": 8,
+          "run": 6,
+          "logs": 4
+        },
+        "compose_includes_both_up_and_down": true
+      },
+      "difficulty": "hard",
+      "priority": "P1",
+      "tags": ["subcommand", "docker", "grouping"]
+    },
+    {
+      "test_id": "cmd_027",
+      "name": "子命令区分-npm run自定义脚本",
+      "description": "用户BB使用了npm run dev、npm run build、npm run test等自定义脚本。系统应将npm run视为npm的子命令，并进一步区分不同的script",
+      "setup": {
+        "user_bb_commands": [
+          {"command": "npm run dev", "count": 20},
+          {"command": "npm run build", "count": 10},
+          {"command": "npm run test", "count": 8},
+          {"command": "npm run lint", "count": 5},
+          {"command": "npm install", "count": 3},
+          {"command": "npm publish", "count": 1}
+        ]
+      },
+      "query": {"user": "user_bb", "type": "subcommand_analysis", "base_command": "npm"},
+      "expected": {
+        "run_subcommands": {
+          "dev": 20,
+          "build": 10,
+          "test": 8,
+          "lint": 5
+        },
+        "non_run_subcommands": {
+          "install": 3,
+          "publish": 1
+        }
+      },
+      "difficulty": "hard",
+      "priority": "P1",
+      "tags": ["subcommand", "npm", "custom-scripts"]
+    },
+    {
+      "test_id": "cmd_028",
+      "name": "子命令区分-kubectl资源操作",
+      "description": "用户CC使用了kubectl get pods、kubectl get services、kubectl delete pod等命令。系统应能区分不同资源类型和操作类型",
+      "setup": {
+        "user_cc_commands": [
+          {"command": "kubectl get pods", "count": 15},
+          {"command": "kubectl get services", "count": 5},
+          {"command": "kubectl get deployments", "count": 3},
+          {"command": "kubectl describe pod mypod", "count": 4},
+          {"command": "kubectl delete pod oldpod", "count": 2},
+          {"command": "kubectl logs mypod", "count": 8}
+        ]
+      },
+      "query": {"user": "user_cc", "type": "subcommand_analysis", "base_command": "kubectl"},
+      "expected": {
+        "operation_breakdown": {
+          "get": 23,
+          "logs": 8,
+          "describe": 4,
+          "delete": 2
+        },
+        "resource_breakdown_under_get": {
+          "pods": 15,
+          "services": 5,
+          "deployments": 3
+        }
+      },
+      "difficulty": "hard",
+      "priority": "P2",
+      "tags": ["subcommand", "kubernetes", "resource-analysis"]
+    },
+    {
+      "test_id": "cmd_029",
+      "name": "子命令区分-跨基础命令比较",
+      "description": "用户DD想知道他最常用的操作类型是'查看'还是'修改'。需要跨git/docker/npm等基础命令分析操作语义",
+      "setup": {
+        "user_dd_commands": [
+          {"command": "git status", "count": 10},
+          {"command": "git diff", "count": 8},
+          {"command": "git log", "count": 5},
+          {"command": "docker ps", "count": 7},
+          {"command": "docker logs app", "count": 6},
+          {"command": "git commit -m", "count": 3},
+          {"command": "docker build -t app .", "count": 2}
+        ]
+      },
+      "query": {"user": "user_dd", "type": "semantic_analysis", "categories": ["view", "modify"]},
+      "expected": {
+        "view_commands": ["git status", "git diff", "git log", "docker ps", "docker logs app"],
+        "modify_commands": ["git commit -m", "docker build -t app ."],
+        "view_total": 36,
+        "modify_total": 5,
+        "dominant_category": "view"
+      },
+      "difficulty": "hard",
+      "priority": "P2",
+      "tags": ["subcommand", "semantic", "cross-tool", "analysis"]
+    },
+    {
+      "test_id": "cmd_030",
+      "name": "子命令区分-同名子命令跨工具",
+      "description": "用户EE同时使用git log和docker logs。虽然都含'log'但属于不同工具的子命令，不应混淆",
+      "setup": {
+        "user_ee_commands": [
+          {"command": "git log --oneline", "count": 8},
+          {"command": "git log --graph", "count": 3},
+          {"command": "docker logs mycontainer", "count": 5},
+          {"command": "kubectl logs mypod", "count": 4}
+        ]
+      },
+      "query": {"user": "user_ee", "type": "subcommand_analysis", "base_command": "git"},
+      "expected": {
+        "git_log_total": 11,
+        "must_not_include": ["docker logs", "kubectl logs"],
+        "tool_isolation": true
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["subcommand", "isolation", "cross-tool", "ambiguity"]
+    }
+  ]
+}

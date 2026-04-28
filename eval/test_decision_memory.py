@@ -25,7 +25,7 @@ class TestDecisionExtraction:
     CATEGORY = "decision_extraction"
 
     def test_decision_extraction(self, store, data_gen, metrics, report_collector):
-        from direction_b.decision_extractor import DecisionExtractor
+        from decision_memory.decision_extractor import DecisionExtractor
 
         extractor = DecisionExtractor(store)
 
@@ -154,7 +154,7 @@ class TestDecisionSearch:
     CATEGORY = "decision_search"
 
     def test_decision_search(self, store, data_gen, metrics, report_collector):
-        from direction_b.decision_extractor import DecisionExtractor
+        from decision_memory.decision_extractor import DecisionExtractor
 
         extractor = DecisionExtractor(store)
         owner = "user_dec_search"
@@ -284,7 +284,7 @@ class TestDecisionCards:
     CATEGORY = "decision_cards"
 
     def test_decision_cards(self, store, data_gen, metrics, report_collector):
-        from direction_b.decision_card import DecisionCardManager
+        from decision_memory.decision_card import DecisionCardManager
 
         card_mgr = DecisionCardManager(store)
         owner = "user_dec_cards"
@@ -430,8 +430,8 @@ class TestDecisionLifecycle:
     CATEGORY = "decision_lifecycle"
 
     def test_decision_lifecycle(self, store, data_gen, metrics, report_collector):
-        from direction_b.decision_extractor import DecisionExtractor
-        from direction_b.decision_card import DecisionCardManager
+        from decision_memory.decision_extractor import DecisionExtractor
+        from decision_memory.decision_card import DecisionCardManager
 
         extractor = DecisionExtractor(store)
         card_mgr = DecisionCardManager(store)

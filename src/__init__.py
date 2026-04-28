@@ -33,31 +33,31 @@ except ImportError:
 
 # Direction modules
 try:
-    from .direction_a.command_tracker import CommandTracker
-    from .direction_a.recommender import CommandRecommender
-    from .direction_b.decision_extractor import DecisionExtractor
-    from .direction_b.decision_card import DecisionCardManager
-    from .direction_c.preference_extractor import PreferenceExtractor
-    from .direction_c.preference_manager import PreferenceManager
-    from .direction_c.habit_inference import HabitInference
-    from .direction_d.ebbinghaus import EbbinghausModel
-    from .direction_d.freshness_monitor import FreshnessMonitor
-    from .direction_d.gap_detector import GapDetector
+    from .command_memory.command_tracker import CommandTracker
+    from .command_memory.recommender import CommandRecommender
+    from .decision_memory.decision_extractor import DecisionExtractor
+    from .decision_memory.decision_card import DecisionCardManager
+    from .preference_memory.preference_extractor import PreferenceExtractor
+    from .preference_memory.preference_manager import PreferenceManager
+    from .preference_memory.habit_inference import HabitInference
+    from .knowledge_health.ebbinghaus import EbbinghausModel
+    from .knowledge_health.freshness_monitor import FreshnessMonitor
+    from .knowledge_health.gap_detector import GapDetector
 except ImportError:
     import sys
     _dir = os.path.dirname(os.path.abspath(__file__))
     if _dir not in sys.path:
         sys.path.insert(0, _dir)
-    from direction_a.command_tracker import CommandTracker
-    from direction_a.recommender import CommandRecommender
-    from direction_b.decision_extractor import DecisionExtractor
-    from direction_b.decision_card import DecisionCardManager
-    from direction_c.preference_extractor import PreferenceExtractor
-    from direction_c.preference_manager import PreferenceManager
-    from direction_c.habit_inference import HabitInference
-    from direction_d.ebbinghaus import EbbinghausModel
-    from direction_d.freshness_monitor import FreshnessMonitor
-    from direction_d.gap_detector import GapDetector
+    from command_memory.command_tracker import CommandTracker
+    from command_memory.recommender import CommandRecommender
+    from decision_memory.decision_extractor import DecisionExtractor
+    from decision_memory.decision_card import DecisionCardManager
+    from preference_memory.preference_extractor import PreferenceExtractor
+    from preference_memory.preference_manager import PreferenceManager
+    from preference_memory.habit_inference import HabitInference
+    from knowledge_health.ebbinghaus import EbbinghausModel
+    from knowledge_health.freshness_monitor import FreshnessMonitor
+    from knowledge_health.gap_detector import GapDetector
 
 
 class MemScopeProvider:

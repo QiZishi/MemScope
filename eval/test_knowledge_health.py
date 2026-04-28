@@ -28,7 +28,7 @@ def _register_team_knowledge(store, team_id, member_knowledge):
         team_id: Team identifier
         member_knowledge: Dict[member_name -> List[(topic_text, category, importance)]]
     """
-    from src.direction_d.freshness_monitor import FreshnessMonitor
+    from src.knowledge_health.freshness_monitor import FreshnessMonitor
 
     monitor = FreshnessMonitor(store)
     ids = {}
@@ -53,7 +53,7 @@ class TestKnowledgeGapDetection:
     CATEGORY = "knowledge_gap_detection"
 
     def test_knowledge_gap_detection(self, store, data_gen, metrics, report_collector):
-        from src.direction_d.gap_detector import GapDetector
+        from src.knowledge_health.gap_detector import GapDetector
 
         team_members = ["张三", "李四", "王五", "赵六"]
         team_id = "team_gap_test"
@@ -159,7 +159,7 @@ class TestForgettingAlert:
     CATEGORY = "forgetting_alert"
 
     def test_forgetting_alert(self, store, data_gen, metrics, report_collector):
-        from src.direction_d.freshness_monitor import FreshnessMonitor
+        from src.knowledge_health.freshness_monitor import FreshnessMonitor
 
         team_id = "team_l"
         monitor = FreshnessMonitor(store)
@@ -370,7 +370,7 @@ class TestCriticalKnowledgeForgetting:
     CATEGORY = "critical_knowledge_forgetting"
 
     def test_critical_knowledge_forgetting(self, store, data_gen, metrics, report_collector):
-        from src.direction_d.freshness_monitor import FreshnessMonitor
+        from src.knowledge_health.freshness_monitor import FreshnessMonitor
 
         team_id = "team_critical_test"
         monitor = FreshnessMonitor(store)
@@ -474,7 +474,7 @@ class TestTeamKnowledgeCoverage:
     CATEGORY = "team_knowledge_coverage"
 
     def test_team_knowledge_coverage(self, store, data_gen, metrics, report_collector):
-        from src.direction_d.gap_detector import GapDetector
+        from src.knowledge_health.gap_detector import GapDetector
 
         team_id = "team_coverage_test"
         team_members = ["张三", "李四", "王五", "赵六", "钱七"]

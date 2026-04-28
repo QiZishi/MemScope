@@ -28,10 +28,10 @@ _OUTPUT_DIR = os.path.abspath(_OUTPUT_DIR)
 _SRC_DIR = os.path.join(_OUTPUT_DIR, "src")
 
 # Direction module paths
-_DIRECTION_A_SRC = os.path.join(_SRC_DIR, "direction_a")
-_DIRECTION_B_SRC = os.path.join(_SRC_DIR, "direction_b")
-_DIRECTION_C_SRC = os.path.join(_SRC_DIR, "direction_c")
-_DIRECTION_D_SRC = os.path.join(_SRC_DIR, "direction_d")
+_DIRECTION_A_SRC = os.path.join(_SRC_DIR, "command_memory")
+_DIRECTION_B_SRC = os.path.join(_SRC_DIR, "decision_memory")
+_DIRECTION_C_SRC = os.path.join(_SRC_DIR, "preference_memory")
+_DIRECTION_D_SRC = os.path.join(_SRC_DIR, "knowledge_health")
 
 for p in (_OUTPUT_DIR, _SRC_DIR, _DIRECTION_A_SRC, _DIRECTION_B_SRC,
           _DIRECTION_C_SRC, _DIRECTION_D_SRC):

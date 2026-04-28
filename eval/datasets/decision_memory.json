@@ -1,0 +1,660 @@
+{
+  "dataset_name": "decision_memory",
+  "version": "2.0",
+  "description": "决策记忆能力评测：测试系统对团队/用户决策的提取、存储、搜索和长时序回忆能力",
+  "total_cases": 30,
+  "difficulty_distribution": {
+    "easy": 5,
+    "medium": 15,
+    "hard": 10
+  },
+  "test_cases": [
+    {
+      "test_id": "dec_001",
+      "name": "中文决策提取-定下来",
+      "description": "对话中使用'定下来'表达决策：'数据库就定下来用PostgreSQL吧'。系统应提取出决策内容：数据库使用PostgreSQL",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "数据库选型讨论了好几天了，MySQL和PostgreSQL都可以，大家怎么看？", "timestamp": "2026-04-01T10:00:00"},
+          {"role": "assistant", "content": "MySQL适合简单场景，PostgreSQL对JSON支持更好", "timestamp": "2026-04-01T10:01:00"},
+          {"role": "user", "content": "好的，数据库就定下来用PostgreSQL吧，JSON支持对我们很重要", "timestamp": "2026-04-01T10:02:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "数据库"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "PostgreSQL",
+        "decision_type": "技术选型",
+        "has_reason": true,
+        "reason_keywords": ["JSON支持"]
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["chinese", "extraction", "tech-selection"]
+    },
+    {
+      "test_id": "dec_002",
+      "name": "中文决策提取-敲定",
+      "description": "对话中使用'敲定'表达决策：'方案A就敲定了，下周开始执行'。系统应识别'敲定'为决策动词",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "方案A和方案B的对比报告出来了，A的成本更低但周期长，B快但贵", "timestamp": "2026-04-02T14:00:00"},
+          {"role": "user", "content": "综合考虑，方案A就敲定了，下周开始执行。虽然周期长但ROI更高", "timestamp": "2026-04-02T14:05:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "方案"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "方案A",
+        "decision_verb": "敲定",
+        "execution_time": "下周"
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["chinese", "extraction", "action-plan"]
+    },
+    {
+      "test_id": "dec_003",
+      "name": "中文决策提取-确认",
+      "description": "对话中使用'确认'表达决策：'确认采用React Native作为移动端方案'。系统应提取完整的决策对象",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "移动端技术栈大家讨论一下，Flutter还是React Native？", "timestamp": "2026-04-03T09:00:00"},
+          {"role": "assistant", "content": "Flutter性能更好，但RN生态更成熟，团队已有JS经验", "timestamp": "2026-04-03T09:01:00"},
+          {"role": "user", "content": "确认采用React Native作为移动端方案，主要是团队技术栈匹配", "timestamp": "2026-04-03T09:10:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "移动端"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "React Native",
+        "scope": "移动端",
+        "reason": "团队技术栈匹配"
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["chinese", "extraction", "tech-stack"]
+    },
+    {
+      "test_id": "dec_004",
+      "name": "中文决策提取-采用",
+      "description": "对话中使用'采用'表达决策，但上下文中有多个选项。系统应正确识别最终采用的是哪一个",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "CI/CD方案有三个：Jenkins、GitHub Actions、GitLab CI", "timestamp": "2026-04-04T11:00:00"},
+          {"role": "user", "content": "Jenkins太重了，GitLab CI我们没用GitLab。最终采用GitHub Actions，和我们的代码托管一致", "timestamp": "2026-04-04T11:05:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "CI/CD"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "GitHub Actions",
+        "rejected_options": ["Jenkins", "GitLab CI"],
+        "reason": "代码托管一致"
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["chinese", "extraction", "comparison"]
+    },
+    {
+      "test_id": "dec_005",
+      "name": "中文决策提取-选定",
+      "description": "对话中使用'选定'表达决策，涉及具体版本号。系统应提取精确的版本信息",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "Python版本需要统一，3.9还是3.11？", "timestamp": "2026-04-05T15:00:00"},
+          {"role": "user", "content": "选定Python 3.11作为项目标准版本，性能提升明显且兼容性好", "timestamp": "2026-04-05T15:03:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "Python版本"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "Python 3.11",
+        "precision": "version_number",
+        "scope": "项目标准"
+      },
+      "difficulty": "easy",
+      "priority": "P1",
+      "tags": ["chinese", "extraction", "version"]
+    },
+    {
+      "test_id": "dec_006",
+      "name": "英文决策提取-decided",
+      "description": "对话中使用decided表达决策：'We decided to go with Kubernetes for orchestration'。系统应正确提取英文决策",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "We need to choose an orchestration platform: K8s, Docker Swarm, or Nomad", "timestamp": "2026-04-06T10:00:00"},
+          {"role": "user", "content": "After evaluating all options, we decided to go with Kubernetes for orchestration. The ecosystem and community support are unmatched", "timestamp": "2026-04-06T10:15:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "orchestration"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "Kubernetes",
+        "language": "en",
+        "rejected_options": ["Docker Swarm", "Nomad"]
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["english", "extraction", "infrastructure"]
+    },
+    {
+      "test_id": "dec_007",
+      "name": "英文决策提取-confirmed",
+      "description": "对话中使用confirmed表达决策：'Confirmed: we will use Stripe for payment processing'。系统应识别冒号后的决策内容",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "Should we use Stripe or PayPal for payments?", "timestamp": "2026-04-07T09:00:00"},
+          {"role": "user", "content": "Confirmed: we will use Stripe for payment processing. Better API docs and developer experience", "timestamp": "2026-04-07T09:20:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "payment"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "Stripe",
+        "decision_verb": "confirmed",
+        "reason": "API文档和开发体验"
+      },
+      "difficulty": "easy",
+      "priority": "P0",
+      "tags": ["english", "extraction", "payment"]
+    },
+    {
+      "test_id": "dec_008",
+      "name": "英文决策提取-agreed",
+      "description": "对话中使用agreed表达团队共识：'The team agreed on using 2-week sprints'。系统应提取团队级别的决策",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "Sprint duration discussion: 1 week, 2 weeks, or 3 weeks?", "timestamp": "2026-04-08T14:00:00"},
+          {"role": "user", "content": "After the retro, the team agreed on using 2-week sprints starting next quarter", "timestamp": "2026-04-08T14:30:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "sprint"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "2-week sprints",
+        "decision_scope": "team",
+        "effective_time": "next quarter"
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["english", "extraction", "process", "team"]
+    },
+    {
+      "test_id": "dec_009",
+      "name": "英文决策提取-approved",
+      "description": "对话中使用approved表达正式批准：'The architecture review board approved the microservices migration plan'。系统应识别正式审批级别的决策",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "Architecture review board meeting results:", "timestamp": "2026-04-09T16:00:00"},
+          {"role": "user", "content": "The architecture review board approved the microservices migration plan. Phase 1 starts in May, targeting the user service first", "timestamp": "2026-04-09T16:05:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "microservices"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "microservices migration plan",
+        "decision_authority": "architecture review board",
+        "phases": ["Phase 1: user service, May"]
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["english", "extraction", "architecture", "formal"]
+    },
+    {
+      "test_id": "dec_010",
+      "name": "英文决策提取-finalized",
+      "description": "对话中使用finalized表达最终确定：'The API contract has been finalized with v2 endpoints'。系统应区分草案和最终版本",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "API draft v1 was rejected due to inconsistent naming", "timestamp": "2026-03-20T10:00:00"},
+          {"role": "user", "content": "API draft v2 reviewed and feedback incorporated", "timestamp": "2026-04-01T10:00:00"},
+          {"role": "user", "content": "The API contract has been finalized with v2 endpoints. All teams should start integration", "timestamp": "2026-04-10T10:00:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "API contract"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "v2 endpoints",
+        "status": "finalized",
+        "previous_rejected": "v1",
+        "action_required": "start integration"
+      },
+      "difficulty": "hard",
+      "priority": "P1",
+      "tags": ["english", "extraction", "versioning", "formal"]
+    },
+    {
+      "test_id": "dec_011",
+      "name": "理由/否决识别-因为",
+      "description": "决策附带'因为'引导的理由：'采用MongoDB因为文档模型匹配我们的数据结构'。系统应同时提取决策和理由",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "最终采用MongoDB作为主数据库，因为文档模型匹配我们的数据结构，而且水平扩展能力好", "timestamp": "2026-04-11T10:00:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "数据库"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "MongoDB",
+        "reasons": ["文档模型匹配数据结构", "水平扩展能力好"],
+        "reason_connector": "因为"
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["reasoning", "extraction", "because"]
+    },
+    {
+      "test_id": "dec_012",
+      "name": "理由/否决识别-考虑到",
+      "description": "决策附带'考虑到'引导的理由。系统应提取'考虑到'后面的因素作为决策依据",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "考虑到团队规模只有5人，考虑到维护成本，我们不做微服务了，用单体架构更合适", "timestamp": "2026-04-12T14:00:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "架构"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "单体架构",
+        "rejected_option": "微服务",
+        "reasons": ["团队规模只有5人", "维护成本"]
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["reasoning", "extraction", "considering"]
+    },
+    {
+      "test_id": "dec_013",
+      "name": "理由/否决识别-优点是",
+      "description": "对话中列出方案优点作为决策依据：'选TypeScript的优点是类型安全和IDE支持好'。系统应提取优点列表",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "前端语言定下来了，选TypeScript。优点是：1)类型安全减少bug 2)IDE支持好开发效率高 3)社区活跃生态丰富", "timestamp": "2026-04-13T11:00:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "前端语言"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "TypeScript",
+        "advantages": ["类型安全减少bug", "IDE支持好开发效率高", "社区活跃生态丰富"],
+        "advantage_count": 3
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["reasoning", "extraction", "advantages"]
+    },
+    {
+      "test_id": "dec_014",
+      "name": "理由/否决识别-不做X",
+      "description": "对话中使用'不做X'否决方案：'前端不做SSR了，SEO需求不强'。系统应识别否决决策",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "之前说要做SSR，但重新评估后前端不做SSR了，SEO需求不强，CSR够用且开发更快", "timestamp": "2026-04-14T15:00:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "SSR"},
+      "expected": {
+        "decision_found": true,
+        "decision_type": "否决",
+        "rejected_option": "SSR",
+        "alternative": "CSR",
+        "reasons": ["SEO需求不强", "开发更快"]
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["reasoning", "extraction", "rejection"]
+    },
+    {
+      "test_id": "dec_015",
+      "name": "理由/否决识别-放弃Y",
+      "description": "对话中使用'放弃Y'表达否决：'放弃GraphQL，REST API更适合我们的场景'。系统应识别放弃和替代方案",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "API方案最终放弃了GraphQL，改用REST API。原因是我们团队对GraphQL经验不足，而且REST的工具链更成熟", "timestamp": "2026-04-15T09:00:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "API方案"},
+      "expected": {
+        "decision_found": true,
+        "rejected_option": "GraphQL",
+        "alternative": "REST API",
+        "reasons": ["团队经验不足", "工具链更成熟"]
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["reasoning", "extraction", "abandonment"]
+    },
+    {
+      "test_id": "dec_016",
+      "name": "多轮对话决策-5轮讨论后决策",
+      "description": "5轮对话中逐步排除选项，最终在第5轮做出决策。系统需要综合所有轮次才能理解完整的决策过程",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "消息队列选型：Kafka vs RabbitMQ vs Redis Stream", "timestamp": "2026-04-16T10:00:00"},
+          {"role": "assistant", "content": "Kafka适合高吞吐，RabbitMQ适合复杂路由，Redis Stream最轻量", "timestamp": "2026-04-16T10:01:00"},
+          {"role": "user", "content": "我们的QPS大概多少？需要持久化吗？", "timestamp": "2026-04-16T10:02:00"},
+          {"role": "assistant", "content": "如果QPS超过10万且需要持久化，Kafka最合适。如果QPS低且需要复杂路由，RabbitMQ更好", "timestamp": "2026-04-16T10:03:00"},
+          {"role": "user", "content": "QPS大概5000，需要简单的发布订阅，不需要复杂路由。而且我们已经有Redis了", "timestamp": "2026-04-16T10:04:00"},
+          {"role": "user", "content": "那就用Redis Stream吧，够用且不用引入新组件", "timestamp": "2026-04-16T10:05:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "消息队列"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "Redis Stream",
+        "decision_round": 5,
+        "rejected_options": ["Kafka", "RabbitMQ"],
+        "reasons": ["QPS低(5000)", "已有Redis", "不用引入新组件"]
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["multi-turn", "extraction", "gradual"]
+    },
+    {
+      "test_id": "dec_017",
+      "name": "多轮对话决策-3轮争论后达成共识",
+      "description": "3轮对话中两个人有不同意见，最终达成共识。系统需要理解争论过程和最终结论",
+      "setup": {
+        "messages": [
+          {"role": "user_a", "content": "我觉得应该用Terraform做基础设施管理", "timestamp": "2026-04-17T10:00:00"},
+          {"role": "user_b", "content": "我倾向于Pulumi，可以用真正的编程语言写配置", "timestamp": "2026-04-17T10:01:00"},
+          {"role": "user_a", "content": "但Terraform的provider生态更丰富，社区更大", "timestamp": "2026-04-17T10:02:00"},
+          {"role": "user_b", "content": "确实，provider数量是个优势。好吧，那我们一起用Terraform", "timestamp": "2026-04-17T10:03:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "基础设施管理"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "Terraform",
+        "consensus_reached": true,
+        "original_dissent": "Pulumi",
+        "final_agreement_by": "user_b"
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["multi-turn", "consensus", "debate"]
+    },
+    {
+      "test_id": "dec_018",
+      "name": "多轮对话决策-决策修改",
+      "description": "第2轮做出决策，但第4轮因新信息推翻了原决策。系统应记录最终决策而非中间决策",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "日志收集用ELK吧", "timestamp": "2026-04-18T10:00:00"},
+          {"role": "user", "content": "好的，ELK方案定了", "timestamp": "2026-04-18T10:01:00"},
+          {"role": "user", "content": "等一下，我刚发现ELK的许可证变了，从Apache变成SSPL了", "timestamp": "2026-04-18T14:00:00"},
+          {"role": "user", "content": "那改用Loki+Grafana方案吧，开源且轻量", "timestamp": "2026-04-18T14:05:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "日志收集"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "Loki+Grafana",
+        "previous_decision": "ELK",
+        "previous_decision_overridden": true,
+        "overridden_reason": "许可证变更为SSPL"
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["multi-turn", "override", "license"]
+    },
+    {
+      "test_id": "dec_019",
+      "name": "多轮对话决策-隐式决策",
+      "description": "对话中没有明确的决策动词，但通过行动暗示了决策：'我已经把Redis配置加上了'暗示选了Redis",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "缓存方案还是Redis和Memcached二选一", "timestamp": "2026-04-19T10:00:00"},
+          {"role": "user", "content": "算了不纠结了，我已经把Redis配置加上了，数据结构丰富一些", "timestamp": "2026-04-19T10:10:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "缓存"},
+      "expected": {
+        "decision_found": true,
+        "decision_content": "Redis",
+        "decision_style": "implicit_action",
+        "rejected_option": "Memcached"
+      },
+      "difficulty": "hard",
+      "priority": "P1",
+      "tags": ["multi-turn", "implicit", "action-based"]
+    },
+    {
+      "test_id": "dec_020",
+      "name": "多轮对话决策-条件决策",
+      "description": "决策是有条件的：'如果用户量超过100万就上Kafka，否则用Redis Stream'。系统应记录条件决策的完整结构",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "消息队列方案分两种情况：如果用户量超过100万就上Kafka，否则用Redis Stream。当前阶段用Redis Stream", "timestamp": "2026-04-20T10:00:00"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "消息队列"},
+      "expected": {
+        "decision_found": true,
+        "decision_type": "conditional",
+        "current_decision": "Redis Stream",
+        "conditional_decision": "Kafka if users > 1M",
+        "conditions": [{"condition": "用户量超过100万", "decision": "Kafka"}, {"condition": "默认", "decision": "Redis Stream"}]
+      },
+      "difficulty": "hard",
+      "priority": "P1",
+      "tags": ["conditional", "extraction", "scaling"]
+    },
+    {
+      "test_id": "dec_021",
+      "name": "决策搜索准确性-精确命中",
+      "description": "搜索关键词'PostgreSQL'应精确命中之前关于数据库选PostgreSQL的决策",
+      "setup": {
+        "stored_decisions": [
+          {"content": "数据库选PostgreSQL", "keywords": ["数据库", "PostgreSQL"], "timestamp": "2026-04-01"},
+          {"content": "缓存选Redis", "keywords": ["缓存", "Redis"], "timestamp": "2026-04-05"},
+          {"content": "消息队列选Kafka", "keywords": ["消息队列", "Kafka"], "timestamp": "2026-04-10"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "PostgreSQL"},
+      "expected": {
+        "results_count": 1,
+        "top_result": "数据库选PostgreSQL",
+        "relevance": "exact_match"
+      },
+      "difficulty": "easy",
+      "priority": "P0",
+      "tags": ["search", "precision", "exact-match"]
+    },
+    {
+      "test_id": "dec_022",
+      "name": "决策搜索准确性-语义搜索",
+      "description": "搜索'后端框架'应命中之前关于'采用Django'的决策，即使决策文本中没有'后端框架'这个词",
+      "setup": {
+        "stored_decisions": [
+          {"content": "Web开发采用Django框架", "keywords": ["Web", "Django", "框架"], "timestamp": "2026-03-15"},
+          {"content": "前端选React", "keywords": ["前端", "React"], "timestamp": "2026-03-20"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "后端框架"},
+      "expected": {
+        "results_count": 1,
+        "top_result": "Web开发采用Django框架",
+        "relevance": "semantic_match"
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["search", "semantic", "synonym"]
+    },
+    {
+      "test_id": "dec_023",
+      "name": "决策搜索准确性-不命中",
+      "description": "搜索'区块链'应返回空结果，因为历史决策中没有任何关于区块链的内容",
+      "setup": {
+        "stored_decisions": [
+          {"content": "数据库选PostgreSQL", "keywords": ["数据库", "PostgreSQL"], "timestamp": "2026-04-01"},
+          {"content": "缓存选Redis", "keywords": ["缓存", "Redis"], "timestamp": "2026-04-05"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "区块链"},
+      "expected": {
+        "results_count": 0,
+        "error": false
+      },
+      "difficulty": "easy",
+      "priority": "P1",
+      "tags": ["search", "no-match", "edge-case"]
+    },
+    {
+      "test_id": "dec_024",
+      "name": "决策搜索准确性-模糊匹配",
+      "description": "搜索'DB'应能模糊匹配到数据库相关的决策，包括PostgreSQL、MySQL等",
+      "setup": {
+        "stored_decisions": [
+          {"content": "主数据库选PostgreSQL", "keywords": ["数据库", "PostgreSQL"], "timestamp": "2026-04-01"},
+          {"content": "缓存数据库选Redis", "keywords": ["缓存", "Redis", "数据库"], "timestamp": "2026-04-05"},
+          {"content": "前端框架选React", "keywords": ["前端", "React"], "timestamp": "2026-04-10"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "DB", "fuzzy": true},
+      "expected": {
+        "results_count": 2,
+        "matched_decisions": ["主数据库选PostgreSQL", "缓存数据库选Redis"],
+        "must_not_include": "前端框架选React"
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["search", "fuzzy", "abbreviation"]
+    },
+    {
+      "test_id": "dec_025",
+      "name": "决策搜索准确性-时间排序",
+      "description": "搜索'部署'返回多条结果时，应按时间从新到旧排序。最新的部署决策排第一",
+      "setup": {
+        "stored_decisions": [
+          {"content": "部署用Docker Compose", "keywords": ["部署", "Docker"], "timestamp": "2026-01-15"},
+          {"content": "部署改用Kubernetes", "keywords": ["部署", "Kubernetes"], "timestamp": "2026-03-01"},
+          {"content": "部署方案最终确定Helm Chart", "keywords": ["部署", "Helm", "Kubernetes"], "timestamp": "2026-04-20"}
+        ]
+      },
+      "query": {"type": "search_decisions", "keyword": "部署", "sort": "time_desc"},
+      "expected": {
+        "results_count": 3,
+        "order": ["部署方案最终确定Helm Chart", "部署改用Kubernetes", "部署用Docker Compose"],
+        "top_result_is_latest": true
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["search", "sorting", "temporal"]
+    },
+    {
+      "test_id": "dec_026",
+      "name": "长时序决策回忆-90天前决策",
+      "description": "90天前(2026-01-30)团队做出了'使用Go语言重写核心服务'的决策。现在(2026-04-29)搜索应该仍能找到这条决策",
+      "setup": {
+        "stored_decisions": [
+          {"content": "使用Go语言重写核心服务", "keywords": ["Go", "重写", "核心服务"], "timestamp": "2026-01-30"},
+          {"content": "数据库选PostgreSQL", "keywords": ["数据库", "PostgreSQL"], "timestamp": "2026-04-01"}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "search_decisions", "keyword": "Go语言"},
+      "expected": {
+        "results_count": 1,
+        "top_result": "使用Go语言重写核心服务",
+        "decision_age_days": 89,
+        "still_retrievable": true
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["temporal", "recall", "90-day"]
+    },
+    {
+      "test_id": "dec_027",
+      "name": "长时序决策回忆-被覆盖的旧决策",
+      "description": "2026-01-15决定用MySQL，2026-03-01改用PostgreSQL。现在搜索'数据库'应返回最新决策PostgreSQL，但旧决策MySQL也应可查到",
+      "setup": {
+        "stored_decisions": [
+          {"content": "数据库选MySQL", "keywords": ["数据库", "MySQL"], "timestamp": "2026-01-15", "status": "superseded"},
+          {"content": "数据库改用PostgreSQL", "keywords": ["数据库", "PostgreSQL"], "timestamp": "2026-03-01", "status": "active"}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "search_decisions", "keyword": "数据库"},
+      "expected": {
+        "results_count": 2,
+        "top_result": "数据库改用PostgreSQL",
+        "old_decision_accessible": true,
+        "old_decision_marked_superseded": true
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["temporal", "superseded", "history"]
+    },
+    {
+      "test_id": "dec_028",
+      "name": "长时序决策回忆-渐进式决策链",
+      "description": "部署方案经历了4个阶段的演进：手动部署→脚本→Docker→K8s。搜索'部署演进'应能返回完整链条",
+      "setup": {
+        "stored_decisions": [
+          {"content": "从手动部署改为脚本自动化部署", "keywords": ["部署", "自动化"], "timestamp": "2026-01-10"},
+          {"content": "部署脚本升级为Docker容器化", "keywords": ["部署", "Docker"], "timestamp": "2026-02-01"},
+          {"content": "容器化部署迁移到Kubernetes", "keywords": ["部署", "Kubernetes"], "timestamp": "2026-03-15"},
+          {"content": "Kubernetes部署采用Helm Chart管理", "keywords": ["部署", "Helm"], "timestamp": "2026-04-10"}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "search_decisions", "keyword": "部署"},
+      "expected": {
+        "results_count": 4,
+        "chronological_order": true,
+        "evolution_chain": ["脚本自动化", "Docker", "Kubernetes", "Helm Chart"],
+        "chain_complete": true
+      },
+      "difficulty": "hard",
+      "priority": "P1",
+      "tags": ["temporal", "evolution", "chain"]
+    },
+    {
+      "test_id": "dec_029",
+      "name": "长时序决策回忆-跨月决策对比",
+      "description": "1月决定用REST API，3月决定用GraphQL（仅用于内部服务），4月决定回退到REST API。系统应能检索到完整的决策变迁历史",
+      "setup": {
+        "stored_decisions": [
+          {"content": "API设计采用REST风格", "keywords": ["API", "REST"], "timestamp": "2026-01-20"},
+          {"content": "内部服务API改用GraphQL", "keywords": ["API", "GraphQL", "内部"], "timestamp": "2026-03-05"},
+          {"content": "GraphQL方案遇到性能问题，回退到REST API", "keywords": ["API", "REST", "回退"], "timestamp": "2026-04-15"}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "search_decisions", "keyword": "API"},
+      "expected": {
+        "results_count": 3,
+        "latest_decision": "GraphQL方案遇到性能问题，回退到REST API",
+        "decision_history_accessible": true,
+        "timeline_reversible": true
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["temporal", "rollback", "history"]
+    },
+    {
+      "test_id": "dec_030",
+      "name": "长时序决策回忆-过期但仍需引用",
+      "description": "3个月前决定的'Sprint周期为1周'后来改成了2周，但搜索'Sprint历史'时两条决策都应可检索到，因为需要参考历史数据",
+      "setup": {
+        "stored_decisions": [
+          {"content": "Sprint周期定为1周", "keywords": ["Sprint", "周期"], "timestamp": "2026-01-25", "status": "superseded"},
+          {"content": "Sprint周期调整为2周", "keywords": ["Sprint", "周期", "调整"], "timestamp": "2026-03-01", "status": "active"}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "search_decisions", "keyword": "Sprint周期"},
+      "expected": {
+        "results_count": 2,
+        "active_decision": "Sprint周期调整为2周",
+        "historical_decision_accessible": true,
+        "historical_decision": "Sprint周期定为1周"
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["temporal", "historical-reference", "superseded"]
+    }
+  ]
+}

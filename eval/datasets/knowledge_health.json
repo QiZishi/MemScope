@@ -1,0 +1,813 @@
+{
+  "dataset_name": "knowledge_health",
+  "version": "2.0",
+  "description": "知识健康度评测：测试系统对知识新鲜度、遗忘曲线、知识缺口、单点故障和版本管理的评估能力",
+  "total_cases": 30,
+  "difficulty_distribution": {
+    "easy": 5,
+    "medium": 15,
+    "hard": 10
+  },
+  "test_cases": [
+    {
+      "test_id": "kh_001",
+      "name": "知识新鲜度-刚创建的知识(fresh)",
+      "description": "3天前创建的知识条目，应该被标记为fresh（新鲜）。当前时间2026-04-29，知识创建于2026-04-26",
+      "setup": {
+        "knowledge_entry": {
+          "content": "项目使用React 18 + TypeScript + Vite构建",
+          "created_at": "2026-04-26",
+          "last_accessed": "2026-04-28",
+          "access_count": 5
+        },
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "health_check", "entry_id": "kh_001"},
+      "expected": {
+        "freshness": "fresh",
+        "age_days": 3,
+        "confidence": ">= 0.95",
+        "needs_refresh": false
+      },
+      "difficulty": "easy",
+      "priority": "P0",
+      "tags": ["freshness", "fresh", "recent"]
+    },
+    {
+      "test_id": "kh_002",
+      "name": "知识新鲜度-开始老化的知识(aging)",
+      "description": "20天前创建的知识条目，开始进入aging（老化）阶段。信息可能仍然有效但值得验证",
+      "setup": {
+        "knowledge_entry": {
+          "content": "团队成员：张三(后端)、李四(前端)、王五(运维)",
+          "created_at": "2026-04-09",
+          "last_accessed": "2026-04-15",
+          "access_count": 8
+        },
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "health_check", "entry_id": "kh_002"},
+      "expected": {
+        "freshness": "aging",
+        "age_days": 20,
+        "confidence": "0.7-0.9",
+        "needs_refresh": false,
+        "suggestion": "consider_verification"
+      },
+      "difficulty": "easy",
+      "priority": "P0",
+      "tags": ["freshness", "aging", "verification"]
+    },
+    {
+      "test_id": "kh_003",
+      "name": "知识新鲜度-过时的知识(stale)",
+      "description": "60天前创建且未更新的知识条目，应标记为stale（过时）。很可能已经不准确",
+      "setup": {
+        "knowledge_entry": {
+          "content": "生产环境部署在AWS us-east-1的EKS集群上",
+          "created_at": "2026-02-28",
+          "last_accessed": "2026-03-15",
+          "access_count": 12
+        },
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "health_check", "entry_id": "kh_003"},
+      "expected": {
+        "freshness": "stale",
+        "age_days": 60,
+        "confidence": "0.4-0.7",
+        "needs_refresh": true,
+        "suggestion": "urgent_verification"
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["freshness", "stale", "outdated"]
+    },
+    {
+      "test_id": "kh_004",
+      "name": "知识新鲜度-已被遗忘的知识(forgotten)",
+      "description": "120天前创建的知识，从未被访问过，应标记为forgotten（遗忘）。可能完全无效",
+      "setup": {
+        "knowledge_entry": {
+          "content": "旧项目的数据库连接字符串：mysql://old-server:3306/app",
+          "created_at": "2025-12-30",
+          "last_accessed": null,
+          "access_count": 0
+        },
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "health_check", "entry_id": "kh_004"},
+      "expected": {
+        "freshness": "forgotten",
+        "age_days": 120,
+        "confidence": "< 0.3",
+        "needs_refresh": true,
+        "suggestion": "archive_or_delete",
+        "never_accessed": true
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["freshness", "forgotten", "never-accessed"]
+    },
+    {
+      "test_id": "kh_005",
+      "name": "知识新鲜度-频繁访问延缓老化",
+      "description": "60天前创建的知识，但每天都在被访问。频繁访问应延缓老化速度，可能仍标记为aging而非stale",
+      "setup": {
+        "knowledge_entry": {
+          "content": "API基础URL: https://api.example.com/v2",
+          "created_at": "2026-02-28",
+          "last_accessed": "2026-04-29",
+          "access_count": 60,
+          "access_frequency": "daily"
+        },
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "health_check", "entry_id": "kh_005"},
+      "expected": {
+        "freshness": "aging",
+        "age_days": 60,
+        "confidence": ">= 0.7",
+        "needs_refresh": false,
+        "freshness_boost_from_access": true
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["freshness", "access-boost", "aging-retardation"]
+    },
+    {
+      "test_id": "kh_006",
+      "name": "遗忘曲线-1天后回忆",
+      "description": "1天前存储的知识，回忆时retention score应非常高（接近1.0）",
+      "setup": {
+        "knowledge_entry": {
+          "content": "新同事赵六的邮箱是zhaoliu@example.com",
+          "stored_at": "2026-04-28T10:00:00",
+          "recall_at": "2026-04-29T10:00:00",
+          "reinforcements": 1
+        }
+      },
+      "query": {"type": "retention_score", "entry_id": "kh_006"},
+      "expected": {
+        "retention_score": ">= 0.9",
+        "interval_days": 1,
+        "curve_position": "high_retention"
+      },
+      "difficulty": "easy",
+      "priority": "P0",
+      "tags": ["forgetting-curve", "retention", "short-interval"]
+    },
+    {
+      "test_id": "kh_007",
+      "name": "遗忘曲线-7天后回忆",
+      "description": "7天前存储的知识，retention score应有所下降但仍在可接受范围内",
+      "setup": {
+        "knowledge_entry": {
+          "content": "CI/CD流水线的触发条件：push到main分支或创建PR",
+          "stored_at": "2026-04-22T10:00:00",
+          "recall_at": "2026-04-29T10:00:00",
+          "reinforcements": 1
+        }
+      },
+      "query": {"type": "retention_score", "entry_id": "kh_007"},
+      "expected": {
+        "retention_score": "0.6-0.85",
+        "interval_days": 7,
+        "curve_position": "moderate_retention"
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["forgetting-curve", "retention", "medium-interval"]
+    },
+    {
+      "test_id": "kh_008",
+      "name": "遗忘曲线-30天后回忆",
+      "description": "30天前存储的知识，retention score应显著下降",
+      "setup": {
+        "knowledge_entry": {
+          "content": "上次团建去了密室逃脱，主题是古墓探险",
+          "stored_at": "2026-03-30T10:00:00",
+          "recall_at": "2026-04-29T10:00:00",
+          "reinforcements": 0
+        }
+      },
+      "query": {"type": "retention_score", "entry_id": "kh_008"},
+      "expected": {
+        "retention_score": "0.3-0.6",
+        "interval_days": 30,
+        "curve_position": "low_retention"
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["forgetting-curve", "retention", "long-interval"]
+    },
+    {
+      "test_id": "kh_009",
+      "name": "遗忘曲线-90天后回忆",
+      "description": "90天前存储的知识，retention score应非常低，接近遗忘阈值",
+      "setup": {
+        "knowledge_entry": {
+          "content": "去年Q1的技术评审结论：前端性能优化方案A",
+          "stored_at": "2026-01-30T10:00:00",
+          "recall_at": "2026-04-29T10:00:00",
+          "reinforcements": 0
+        }
+      },
+      "query": {"type": "retention_score", "entry_id": "kh_009"},
+      "expected": {
+        "retention_score": "< 0.3",
+        "interval_days": 90,
+        "curve_position": "near_forget"
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["forgetting-curve", "retention", "90-day"]
+    },
+    {
+      "test_id": "kh_010",
+      "name": "遗忘曲线-重复强化效果",
+      "description": "同一条知识在7天内被重复强化3次，retention score应明显高于只存储1次的情况",
+      "setup": {
+        "knowledge_entries": [
+          {
+            "id": "kh_010a",
+            "content": "团队Git工作流：feature branch → PR → review → merge",
+            "stored_at": "2026-04-22T10:00:00",
+            "reinforcements": 0
+          },
+          {
+            "id": "kh_010b",
+            "content": "团队Git工作流：feature branch → PR → review → merge",
+            "stored_at": "2026-04-22T10:00:00",
+            "reinforcements": 3,
+            "reinforcement_dates": ["2026-04-24", "2026-04-26", "2026-04-28"]
+          }
+        ],
+        "recall_at": "2026-04-29T10:00:00"
+      },
+      "query": {"type": "retention_comparison", "entry_ids": ["kh_010a", "kh_010b"]},
+      "expected": {
+        "kh_010a_retention": "0.6-0.8",
+        "kh_010b_retention": ">= 0.9",
+        "reinforcement_effect": true,
+        "kh_010b_higher": true
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["forgetting-curve", "reinforcement", "comparison"]
+    },
+    {
+      "test_id": "kh_011",
+      "name": "知识缺口检测-全团队覆盖分析",
+      "description": "团队有5个知识领域，但只有3个领域有知识记录。系统应识别出2个知识缺口领域",
+      "setup": {
+        "team_knowledge_coverage": {
+          "required_domains": ["frontend", "backend", "devops", "database", "security"],
+          "covered_domains": {
+            "frontend": {"contributors": ["alice", "bob"], "entries": 15},
+            "backend": {"contributors": ["charlie"], "entries": 8},
+            "devops": {"contributors": ["dave", "eve"], "entries": 10}
+          },
+          "uncovered_domains": ["database", "security"]
+        }
+      },
+      "query": {"type": "knowledge_gap_analysis", "team": "main_team"},
+      "expected": {
+        "gaps_found": ["database", "security"],
+        "gap_count": 2,
+        "coverage_rate": "60%",
+        "risk_level": "high"
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["gap-detection", "team", "coverage"]
+    },
+    {
+      "test_id": "kh_012",
+      "name": "知识缺口检测-深度不足",
+      "description": "某个领域有知识记录但条目很少（只有1条），说明深度不足。系统应区分'无覆盖'和'浅覆盖'",
+      "setup": {
+        "domain_analysis": {
+          "domain": "security",
+          "entries": [
+            {"content": "使用HTTPS", "depth": "basic"}
+          ],
+          "expected_entries_for_adequate_depth": 10
+        }
+      },
+      "query": {"type": "knowledge_depth_analysis", "domain": "security"},
+      "expected": {
+        "has_coverage": true,
+        "depth_level": "shallow",
+        "entries_count": 1,
+        "required_for_adequate": 10,
+        "gap_type": "depth_insufficient"
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["gap-detection", "depth", "quality"]
+    },
+    {
+      "test_id": "kh_013",
+      "name": "知识缺口检测-季节性缺口",
+      "description": "年终总结相关的知识在1月有大量记录，但到4月已经过时。系统应识别季节性知识的时效性缺口",
+      "setup": {
+        "domain_analysis": {
+          "domain": "annual_review_process",
+          "entries": [
+            {"content": "年终总结模板和流程", "created_at": "2026-01-05", "freshness": "stale"},
+            {"content": "绩效评估标准", "created_at": "2026-01-10", "freshness": "stale"}
+          ],
+          "seasonal_relevance": "Q1 only"
+        },
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "knowledge_gap_analysis", "domain": "annual_review_process"},
+      "expected": {
+        "has_entries": true,
+        "all_stale": true,
+        "gap_type": "seasonal_staleness",
+        "next_relevant_period": "2027-01"
+      },
+      "difficulty": "hard",
+      "priority": "P2",
+      "tags": ["gap-detection", "seasonal", "temporal"]
+    },
+    {
+      "test_id": "kh_014",
+      "name": "知识缺口检测-跨项目缺口",
+      "description": "项目A有完善的部署文档，项目B完全没有。系统应识别跨项目的知识分布不均",
+      "setup": {
+        "cross_project_analysis": {
+          "project_a": {
+            "deployment_docs": 5,
+            "architecture_docs": 3,
+            "api_docs": 8
+          },
+          "project_b": {
+            "deployment_docs": 0,
+            "architecture_docs": 1,
+            "api_docs": 0
+          }
+        }
+      },
+      "query": {"type": "cross_project_gap_analysis"},
+      "expected": {
+        "project_b_gaps": ["deployment_docs", "api_docs"],
+        "project_b_shallow": ["architecture_docs"],
+        "distribution_inequality": true,
+        "highest_risk_project": "project_b"
+      },
+      "difficulty": "hard",
+      "priority": "P1",
+      "tags": ["gap-detection", "cross-project", "distribution"]
+    },
+    {
+      "test_id": "kh_015",
+      "name": "知识缺口检测-新人入职缺口",
+      "description": "新成员加入团队，但入门文档、环境搭建指南等onboarding知识缺失。系统应检测这类缺口",
+      "setup": {
+        "onboarding_checklist": {
+          "required_knowledge": [
+            "开发环境搭建指南",
+            "代码规范文档",
+            "Git工作流说明",
+            "部署流程文档",
+            "常见问题FAQ"
+          ],
+          "existing_knowledge": [
+            "代码规范文档"
+          ],
+          "new_member": "frank"
+        }
+      },
+      "query": {"type": "onboarding_gap_analysis", "member": "frank"},
+      "expected": {
+        "missing_knowledge": [
+          "开发环境搭建指南",
+          "Git工作流说明",
+          "部署流程文档",
+          "常见问题FAQ"
+        ],
+        "missing_count": 4,
+        "onboarding_readiness": "20%",
+        "risk": "high"
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["gap-detection", "onboarding", "new-member"]
+    },
+    {
+      "test_id": "kh_016",
+      "name": "单点故障识别-关键知识单人掌握",
+      "description": "数据库架构知识只有张三一人掌握。如果张三离职，团队将失去这些知识。系统应标记为单点故障",
+      "setup": {
+        "knowledge_ownership": {
+          "database_architecture": {
+            "contributors": ["zhang_san"],
+            "entry_count": 15,
+            "criticality": "high",
+            "last_updated": "2026-04-20"
+          },
+          "frontend_components": {
+            "contributors": ["li_si", "wang_wu", "zhao_liu"],
+            "entry_count": 30,
+            "criticality": "medium",
+            "last_updated": "2026-04-25"
+          }
+        }
+      },
+      "query": {"type": "single_point_of_failure_analysis"},
+      "expected": {
+        "spof_found": ["database_architecture"],
+        "spof_details": {
+          "domain": "database_architecture",
+          "sole_owner": "zhang_san",
+          "risk_level": "critical",
+          "mitigation": "knowledge_transfer_needed"
+        }
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["spof", "risk", "knowledge-ownership"]
+    },
+    {
+      "test_id": "kh_017",
+      "name": "单点故障识别-关键人物依赖",
+      "description": "团队中dave是唯一的DevOps专家，掌握了所有部署和基础设施知识。应识别dave为关键人物依赖",
+      "setup": {
+        "member_expertise": {
+          "dave": {
+            "domains": ["devops", "infrastructure", "monitoring", "security"],
+            "unique_domains": ["devops", "infrastructure"],
+            "knowledge_entries": 45
+          },
+          "alice": {"domains": ["frontend"], "knowledge_entries": 20},
+          "bob": {"domains": ["frontend", "design"], "knowledge_entries": 15},
+          "charlie": {"domains": ["backend"], "knowledge_entries": 18}
+        }
+      },
+      "query": {"type": "key_person_dependency_analysis"},
+      "expected": {
+        "key_persons": ["dave"],
+        "dave_risk": {
+          "unique_domains": ["devops", "infrastructure"],
+          "dependency_level": "critical",
+          "bus_factor": 1
+        },
+        "team_bus_factor": 1
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["spof", "key-person", "bus-factor"]
+    },
+    {
+      "test_id": "kh_018",
+      "name": "单点故障识别-临时人员风险",
+      "description": "外包人员掌握了部分核心API知识，但外包合同即将到期。系统应标记为高风险单点故障",
+      "setup": {
+        "knowledge_ownership": {
+          "core_api_design": {
+            "contributors": ["external_contractor_wang"],
+            "entry_count": 20,
+            "criticality": "high",
+            "contract_end_date": "2026-05-15",
+            "is_external": true
+          }
+        },
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "single_point_of_failure_analysis"},
+      "expected": {
+        "spof_found": ["core_api_design"],
+        "urgency": "critical",
+        "days_until_risk": 16,
+        "action_required": "knowledge_transfer_before_contract_end"
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["spof", "external", "contractor", "urgency"]
+    },
+    {
+      "test_id": "kh_019",
+      "name": "单点故障识别-系统组件依赖",
+      "description": "关于旧支付系统的集成知识只存在于2条记录中，且即将被替换。系统应标记为即将过时的单点知识",
+      "setup": {
+        "knowledge_ownership": {
+          "legacy_payment_integration": {
+            "contributors": ["eve"],
+            "entry_count": 2,
+            "criticality": "high",
+            "system_status": "being_deprecated",
+            "replacement": "new_payment_service"
+          }
+        }
+      },
+      "query": {"type": "single_point_of_failure_analysis"},
+      "expected": {
+        "spof_found": ["legacy_payment_integration"],
+        "spof_type": "deprecated_system",
+        "risk": "knowledge_loss_on_decommission",
+        "recommendation": "document_before_removal"
+      },
+      "difficulty": "hard",
+      "priority": "P1",
+      "tags": ["spof", "deprecated", "legacy"]
+    },
+    {
+      "test_id": "kh_020",
+      "name": "单点故障识别-无单点故障场景",
+      "description": "所有知识领域都有至少2人掌握，且文档完善。系统应报告无单点故障",
+      "setup": {
+        "knowledge_ownership": {
+          "frontend": {"contributors": ["alice", "bob", "frank"], "entry_count": 25},
+          "backend": {"contributors": ["charlie", "grace"], "entry_count": 20},
+          "devops": {"contributors": ["dave", "eve"], "entry_count": 18},
+          "database": {"contributors": ["charlie", "dave"], "entry_count": 12}
+        }
+      },
+      "query": {"type": "single_point_of_failure_analysis"},
+      "expected": {
+        "spof_found": [],
+        "team_resilience": "strong",
+        "minimum_bus_factor": 2
+      },
+      "difficulty": "easy",
+      "priority": "P1",
+      "tags": ["spof", "no-risk", "resilience"]
+    },
+    {
+      "test_id": "kh_021",
+      "name": "长时序遗忘预警-90天前知识",
+      "description": "90天前(2026-01-30)创建的'Q1规划文档'知识，当前(2026-04-29)应触发遗忘预警",
+      "setup": {
+        "knowledge_entry": {
+          "content": "Q1规划：完成用户系统重构，目标3月底上线",
+          "created_at": "2026-01-30",
+          "last_accessed": "2026-02-15",
+          "access_count": 3,
+          "reinforcements": 0
+        },
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "forgetting_alert", "entry_id": "kh_021"},
+      "expected": {
+        "alert_triggered": true,
+        "alert_level": "warning",
+        "retention_score": "< 0.3",
+        "days_since_last_access": 73,
+        "recommendation": "review_and_update_or_archive"
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["forgetting-alert", "90-day", "warning"]
+    },
+    {
+      "test_id": "kh_022",
+      "name": "长时序遗忘预警-60天前高频知识",
+      "description": "60天前创建但被频繁访问的知识（如API文档），虽已60天但不应触发预警，因为频繁访问证明了其持续价值",
+      "setup": {
+        "knowledge_entry": {
+          "content": "REST API v2接口文档",
+          "created_at": "2026-02-28",
+          "last_accessed": "2026-04-29",
+          "access_count": 90,
+          "reinforcements": 5
+        },
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "forgetting_alert", "entry_id": "kh_022"},
+      "expected": {
+        "alert_triggered": false,
+        "retention_score": ">= 0.85",
+        "reason": "frequent_access_maintains_memory"
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["forgetting-alert", "no-alert", "frequent-access"]
+    },
+    {
+      "test_id": "kh_023",
+      "name": "长时序遗忘预警-批量遗忘风险",
+      "description": "2026-01月创建的一批10条知识，到4月都未再访问。系统应批量预警而非逐条处理",
+      "setup": {
+        "knowledge_batch": [
+          {"id": "batch_001", "content": "旧服务器配置A", "created_at": "2026-01-15", "access_count": 1},
+          {"id": "batch_002", "content": "旧服务器配置B", "created_at": "2026-01-15", "access_count": 0},
+          {"id": "batch_003", "content": "旧服务器配置C", "created_at": "2026-01-20", "access_count": 1},
+          {"id": "batch_004", "content": "旧部署脚本", "created_at": "2026-01-18", "access_count": 0},
+          {"id": "batch_005", "content": "旧环境变量", "created_at": "2026-01-22", "access_count": 2}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "batch_forgetting_alert", "time_range": "2026-01-01 to 2026-01-31"},
+      "expected": {
+        "batch_alert": true,
+        "affected_entries": 5,
+        "alert_level": "critical",
+        "recommendation": "batch_review_and_archive"
+      },
+      "difficulty": "hard",
+      "priority": "P1",
+      "tags": ["forgetting-alert", "batch", "bulk-risk"]
+    },
+    {
+      "test_id": "kh_024",
+      "name": "长时序遗忘预警-即将过期的知识",
+      "description": "知识retention score正在接近遗忘阈值(0.3)，系统应在达到阈值前提前提醒",
+      "setup": {
+        "knowledge_entry": {
+          "content": "上次安全审计发现的3个漏洞",
+          "created_at": "2026-02-15",
+          "last_accessed": "2026-03-01",
+          "access_count": 2,
+          "current_retention": 0.35
+        },
+        "current_time": "2026-04-29",
+        "forgetting_threshold": 0.3
+      },
+      "query": {"type": "forgetting_alert", "entry_id": "kh_024"},
+      "expected": {
+        "alert_triggered": true,
+        "alert_level": "pre_warning",
+        "current_retention": 0.35,
+        "threshold": 0.3,
+        "estimated_days_to_forget": "< 10",
+        "recommendation": "reinforce_knowledge"
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["forgetting-alert", "pre-warning", "threshold"]
+    },
+    {
+      "test_id": "kh_025",
+      "name": "长时序遗忘预警-自然语言过期",
+      "description": "知识'下周五有产品发布会'是时效性信息，到了日期之后应自动标记为过期，无需等待遗忘曲线",
+      "setup": {
+        "knowledge_entry": {
+          "content": "下周五(2026-04-11)有产品发布会，需要提前准备demo",
+          "created_at": "2026-04-01",
+          "expiry_date": "2026-04-11",
+          "temporal": true
+        },
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "forgetting_alert", "entry_id": "kh_025"},
+      "expected": {
+        "alert_triggered": true,
+        "alert_type": "temporal_expiry",
+        "expired": true,
+        "days_past_expiry": 18,
+        "recommendation": "archive_as_history"
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["forgetting-alert", "temporal", "auto-expiry"]
+    },
+    {
+      "test_id": "kh_026",
+      "name": "知识版本管理-简单版本更新",
+      "description": "API端点从v1更新到v2，系统应保留v1记录但标记为旧版本，v2标记为当前版本",
+      "setup": {
+        "knowledge_versions": [
+          {
+            "version": 1,
+            "content": "API端点: https://api.example.com/v1",
+            "created_at": "2026-01-15",
+            "status": "superseded"
+          },
+          {
+            "version": 2,
+            "content": "API端点: https://api.example.com/v2",
+            "created_at": "2026-03-01",
+            "status": "current"
+          }
+        ]
+      },
+      "query": {"type": "get_knowledge", "topic": "API端点"},
+      "expected": {
+        "current_version": 2,
+        "current_content": "API端点: https://api.example.com/v2",
+        "old_version_accessible": true,
+        "old_version_content": "API端点: https://api.example.com/v1",
+        "version_chain_complete": true
+      },
+      "difficulty": "medium",
+      "priority": "P0",
+      "tags": ["versioning", "update", "superseded"]
+    },
+    {
+      "test_id": "kh_027",
+      "name": "知识版本管理-多版本演进",
+      "description": "数据库连接配置经历了3次变更。系统应保留完整的版本历史",
+      "setup": {
+        "knowledge_versions": [
+          {"version": 1, "content": "数据库: MySQL 5.7 @ localhost", "created_at": "2026-01-01", "status": "archived"},
+          {"version": 2, "content": "数据库: MySQL 8.0 @ db-staging.example.com", "created_at": "2026-02-15", "status": "superseded"},
+          {"version": 3, "content": "数据库: PostgreSQL 15 @ db-prod.example.com", "created_at": "2026-04-01", "status": "current"}
+        ]
+      },
+      "query": {"type": "knowledge_version_history", "topic": "数据库配置"},
+      "expected": {
+        "total_versions": 3,
+        "current_version": 3,
+        "chronological_order": true,
+        "technology_change": ["MySQL 5.7", "MySQL 8.0", "PostgreSQL 15"],
+        "all_versions_accessible": true
+      },
+      "difficulty": "hard",
+      "priority": "P1",
+      "tags": ["versioning", "multi-version", "history"]
+    },
+    {
+      "test_id": "kh_028",
+      "name": "知识版本管理-冲突版本",
+      "description": "两个人同时更新了同一条知识，产生版本冲突。系统应检测到冲突并需要人工合并",
+      "setup": {
+        "knowledge_conflict": {
+          "base_version": {
+            "content": "部署端口: 8080",
+            "version": 1
+          },
+          "conflicting_updates": [
+            {"author": "alice", "content": "部署端口: 3000", "timestamp": "2026-04-29T10:00:00"},
+            {"author": "bob", "content": "部署端口: 5000", "timestamp": "2026-04-29T10:01:00"}
+          ]
+        }
+      },
+      "query": {"type": "get_knowledge", "topic": "部署端口"},
+      "expected": {
+        "conflict_detected": true,
+        "conflicting_versions": 2,
+        "requires_merge": true,
+        "conflict_details": {
+          "alice_proposed": "3000",
+          "bob_proposed": "5000"
+        }
+      },
+      "difficulty": "hard",
+      "priority": "P0",
+      "tags": ["versioning", "conflict", "merge-required"]
+    },
+    {
+      "test_id": "kh_029",
+      "name": "知识版本管理-回滚",
+      "description": "发现v3的知识有误，需要回滚到v2。系统应支持版本回滚操作",
+      "setup": {
+        "knowledge_versions": [
+          {"version": 1, "content": "SSH端口: 22", "status": "archived"},
+          {"version": 2, "content": "SSH端口: 2222", "status": "superseded"},
+          {"version": 3, "content": "SSH端口: 22", "status": "current", "note": "错误回退到默认值"}
+        ],
+        "rollback_request": {"target_version": 2}
+      },
+      "query": {"type": "rollback_knowledge", "topic": "SSH端口", "target_version": 2},
+      "expected": {
+        "rollback_successful": true,
+        "current_content": "SSH端口: 2222",
+        "rollback_from": 3,
+        "rollback_to": 2,
+        "v3_marked_as": "erroneous"
+      },
+      "difficulty": "hard",
+      "priority": "P1",
+      "tags": ["versioning", "rollback", "error-correction"]
+    },
+    {
+      "test_id": "kh_030",
+      "name": "知识版本管理-版本注释",
+      "description": "每次版本更新都应附带变更原因。系统应支持查看每个版本的变更说明",
+      "setup": {
+        "knowledge_versions": [
+          {
+            "version": 1,
+            "content": "日志级别: INFO",
+            "created_at": "2026-01-01",
+            "changelog": "初始配置"
+          },
+          {
+            "version": 2,
+            "content": "日志级别: DEBUG",
+            "created_at": "2026-03-01",
+            "changelog": "排查线上问题临时开启DEBUG"
+          },
+          {
+            "version": 3,
+            "content": "日志级别: WARN",
+            "created_at": "2026-04-01",
+            "changelog": "问题已修复，降低日志级别减少噪音"
+          }
+        ]
+      },
+      "query": {"type": "knowledge_version_history", "topic": "日志级别"},
+      "expected": {
+        "all_versions_have_changelog": true,
+        "changelogs": ["初始配置", "排查线上问题临时开启DEBUG", "问题已修复，降低日志级别减少噪音"],
+        "story": "问题排查的完整时间线"
+      },
+      "difficulty": "medium",
+      "priority": "P1",
+      "tags": ["versioning", "changelog", "audit-trail"]
+    }
+  ]
+}

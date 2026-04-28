@@ -25,7 +25,7 @@ class TestCommandTracking:
     CATEGORY = "command_tracking"
 
     def test_command_tracking(self, store, data_gen, metrics, report_collector):
-        from direction_a.command_tracker import CommandTracker
+        from command_memory.command_tracker import CommandTracker
 
         tracker = CommandTracker(store)
         owner = "user_cmd_track"
@@ -126,7 +126,7 @@ class TestCommandRecommendation:
     CATEGORY = "command_recommendation"
 
     def test_command_recommendation(self, store, data_gen, metrics, report_collector):
-        from direction_a.command_tracker import CommandTracker
+        from command_memory.command_tracker import CommandTracker
 
         tracker = CommandTracker(store)
         owner = "user_cmd_rec"
@@ -220,7 +220,7 @@ class TestProjectContext:
     CATEGORY = "project_context"
 
     def test_project_context(self, store, data_gen, metrics, report_collector):
-        from direction_a.command_tracker import CommandTracker
+        from command_memory.command_tracker import CommandTracker
 
         tracker = CommandTracker(store)
         owner = "user_proj_ctx"
@@ -336,7 +336,7 @@ class TestContextAwareRecommendation:
     CATEGORY = "context_aware_recommendation"
 
     def test_context_aware_recommendation(self, store, data_gen, metrics, report_collector):
-        from direction_a.recommender import CommandRecommender
+        from command_memory.recommender import CommandRecommender
 
         recommender = CommandRecommender(store)
         owner = "user_ctx_rec"

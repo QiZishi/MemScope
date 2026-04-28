@@ -9,16 +9,16 @@ from datetime import datetime
 sys.path.insert(0, '/root/hermes-data/cron/output')
 
 from src.core.store import SqliteStore
-from src.direction_a.command_tracker import CommandTracker
-from src.direction_a.recommender import CommandRecommender
-from src.direction_b.decision_extractor import DecisionExtractor
-from src.direction_b.decision_card import DecisionCardManager
-from src.direction_c.preference_extractor import PreferenceExtractor
-from src.direction_c.preference_manager import PreferenceManager
-from src.direction_c.habit_inference import HabitInference
-from src.direction_d.ebbinghaus import EbbinghausModel
-from src.direction_d.freshness_monitor import FreshnessMonitor
-from src.direction_d.gap_detector import GapDetector
+from src.command_memory.command_tracker import CommandTracker
+from src.command_memory.recommender import CommandRecommender
+from src.decision_memory.decision_extractor import DecisionExtractor
+from src.decision_memory.decision_card import DecisionCardManager
+from src.preference_memory.preference_extractor import PreferenceExtractor
+from src.preference_memory.preference_manager import PreferenceManager
+from src.preference_memory.habit_inference import HabitInference
+from src.knowledge_health.ebbinghaus import EbbinghausModel
+from src.knowledge_health.freshness_monitor import FreshnessMonitor
+from src.knowledge_health.gap_detector import GapDetector
 
 logging.basicConfig(level=logging.WARNING)
 

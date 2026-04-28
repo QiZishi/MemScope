@@ -1,5 +1,5 @@
 """
-Direction C: Personal Work Habits & Preference Memory
+Preference Memory: Personal habits and preference management
 
 Modules:
   - PreferenceExtractor: Rule-based preference extraction from conversations
@@ -12,3 +12,8 @@ from .preference_manager import PreferenceManager
 from .habit_inference import HabitInference
 
 __all__ = ["PreferenceExtractor", "PreferenceManager", "HabitInference"]
+
+# Backward compatibility aliases (formerly Direction C)
+DirectionCExtractor = PreferenceExtractor
+DirectionCManager = PreferenceManager
+DirectionCHabit = HabitInference
