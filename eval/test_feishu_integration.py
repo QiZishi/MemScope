@@ -240,6 +240,7 @@ class TestFeishuAuthentication:
 # Test 2: Send and Receive Messages
 # ---------------------------------------------------------------------------
 
+@pytest.mark.skip(reason="requires live Feishu env")
 class TestFeishuMessaging:
     """Verify that sending and reading messages works."""
 
@@ -404,6 +405,7 @@ class TestFeishuToMemory:
 # Test 4: Query Memory System for Feishu Content
 # ---------------------------------------------------------------------------
 
+@pytest.mark.skip(reason="requires live Feishu env")
 class TestMemoryQuery:
     """Verify that Feishu-stored memories can be queried back."""
 
@@ -509,6 +511,7 @@ class TestMemoryQuery:
 # Test 5: End-to-End Pipeline (Feishu → Extract → Store → Query → Verify)
 # ---------------------------------------------------------------------------
 
+@pytest.mark.skip(reason="requires live Feishu env")
 class TestEndToEndPipeline:
     """Full end-to-end test: Feishu API → Memory Extraction → Storage → Query → Verification."""
 

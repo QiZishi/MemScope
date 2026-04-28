@@ -1,7 +1,14 @@
 {
   "dataset_name": "contradiction_update",
-  "version": "1.0",
-  "description": "Tests the memory engine's ability to handle contradictory and updating information. 20 test cases across 6 categories.",
+  "version": "2.0",
+  "description": "Tests the memory engine's ability to handle contradictory and updating information. 25 test cases across 7 categories including expert-level cascading contradictions.",
+  "total_cases": 25,
+  "difficulty_distribution": {
+    "easy": 8,
+    "medium": 8,
+    "hard": 4,
+    "expert": 5
+  },
   "test_cases": [
     {
       "test_id": "contradiction_001",
@@ -568,6 +575,149 @@
       "evaluation_criteria": {
         "latest_value_correct": {"target": 0.90, "min": 0.40},
         "min_chunks": 2
+      }
+    },
+    {
+      "test_id": "contradiction_021",
+      "name": "Expert: cascading contradiction across 3 months",
+      "category": "cascading_contradiction",
+      "difficulty": "expert",
+      "input": {
+        "versions": [
+          {"user_msg": "项目预算100万", "assistant_msg": "已记录。", "timestamp": "2026-01-15T10:00:00Z"},
+          {"user_msg": "预算追加到150万", "assistant_msg": "已更新。", "timestamp": "2026-02-15T10:00:00Z"},
+          {"user_msg": "预算缩减到120万，砍掉移动端功能", "assistant_msg": "已更新。", "timestamp": "2026-03-15T10:00:00Z"},
+          {"user_msg": "预算恢复到150万，移动端加回来", "assistant_msg": "已更新。", "timestamp": "2026-04-15T10:00:00Z"}
+        ],
+        "query": "项目预算",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value": "150万",
+        "history_count": 4,
+        "each_change_has_context": true,
+        "final_state_matches_initial_intent": true,
+        "expected_answer_contains": ["150万"]
+      },
+      "evaluation_criteria": {
+        "latest_value_correct": {"target": 0.95, "min": 0.50},
+        "history_preserved": {"target": 0.90},
+        "version_count_accuracy": {"target": 0.90},
+        "temporal_sort_accuracy": {"target": 0.90}
+      }
+    },
+    {
+      "test_id": "contradiction_022",
+      "name": "Expert: implicit contradiction without explicit correction",
+      "category": "implicit_contradiction",
+      "difficulty": "expert",
+      "input": {
+        "versions": [
+          {"user_msg": "团队使用Scrum，每两周一个Sprint", "assistant_msg": "已记录。", "timestamp": "2026-01-10T10:00:00Z"},
+          {"user_msg": "最近Sprint周期太短了，改成三周吧", "assistant_msg": "已记录讨论。", "timestamp": "2026-03-01T10:00:00Z"},
+          {"user_msg": "三周的Sprint效果不错，继续用", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:00:00Z"}
+        ],
+        "query": "Sprint周期",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value": "三周",
+        "old_value": "两周",
+        "implicit_update_detected": true,
+        "expected_answer_contains": ["三周"]
+      },
+      "evaluation_criteria": {
+        "latest_value_correct": {"target": 0.90, "min": 0.40},
+        "implicit_change_detected": {"target": 0.85},
+        "history_preserved": {"target": 0.80}
+      }
+    },
+    {
+      "test_id": "contradiction_023",
+      "name": "Expert: cross-entity cascade - one change affects multiple",
+      "category": "cascade_contradiction",
+      "difficulty": "expert",
+      "input": {
+        "original": {
+          "user_msg": "项目A用React，项目B用Vue，项目C用Angular",
+          "assistant_msg": "已记录三个项目前端技术栈。",
+          "timestamp": "2026-01-10T10:00:00Z"
+        },
+        "updates": [
+          {"user_msg": "公司统一前端技术栈为React，所有项目都迁移", "assistant_msg": "已记录。", "timestamp": "2026-03-01T10:00:00Z"},
+          {"user_msg": "项目B因为迁移成本太高，暂时保持Vue", "assistant_msg": "已记录项目B例外。", "timestamp": "2026-03-15T10:00:00Z"}
+        ],
+        "queries": [
+          {"query": "项目A 前端技术栈", "expected_contains": ["React"]},
+          {"query": "项目B 前端技术栈", "expected_contains": ["Vue"]},
+          {"query": "项目C 前端技术栈", "expected_contains": ["React"]}
+        ]
+      },
+      "expected": {
+        "project_a": "React",
+        "project_b": "Vue (exception)",
+        "project_c": "React",
+        "global_policy_detected": true,
+        "exception_detected": true,
+        "cascade_with_exceptions": true
+      },
+      "evaluation_criteria": {
+        "global_update_applied": {"target": 0.90},
+        "exception_preserved": {"target": 0.95},
+        "partial_update_fidelity": {"target": 0.90}
+      }
+    },
+    {
+      "test_id": "contradiction_024",
+      "name": "Expert: temporal + semantic - same word different meaning over time",
+      "category": "semantic_temporal",
+      "difficulty": "expert",
+      "input": {
+        "versions": [
+          {"user_msg": "项目代号'凤凰'（Project Phoenix）启动了", "assistant_msg": "已记录。", "timestamp": "2026-01-10T10:00:00Z"},
+          {"user_msg": "项目Phoenix（凤凰）暂停了，资源调到另一个项目", "assistant_msg": "已记录。", "timestamp": "2026-03-01T10:00:00Z"},
+          {"user_msg": "凤凰项目（Phoenix）重启了，但这次是全新架构", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:00:00Z"}
+        ],
+        "query": "凤凰项目 状态",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_status": "重启",
+        "status_history": ["启动", "暂停", "重启"],
+        "semantic_consistency": "Phoenix=凤凰=Phoenix",
+        "expected_answer_contains": ["重启"]
+      },
+      "evaluation_criteria": {
+        "latest_value_correct": {"target": 0.90, "min": 0.40},
+        "semantic_resolution": {"target": 0.90},
+        "history_preserved": {"target": 0.85}
+      }
+    },
+    {
+      "test_id": "contradiction_025",
+      "name": "Expert: self-correction within rapid succession",
+      "category": "rapid_self_correction",
+      "difficulty": "expert",
+      "input": {
+        "versions": [
+          {"user_msg": "服务器IP是10.0.1.100", "assistant_msg": "已记录。", "timestamp": "2026-04-28T10:00:00Z"},
+          {"user_msg": "不对，IP是10.0.1.200", "assistant_msg": "已更正。", "timestamp": "2026-04-28T10:00:30Z"},
+          {"user_msg": "等等让我确认一下", "assistant_msg": "好的。", "timestamp": "2026-04-28T10:01:00Z"},
+          {"user_msg": "确认了，是10.0.1.150", "assistant_msg": "已更新最终IP。", "timestamp": "2026-04-28T10:02:00Z"}
+        ],
+        "query": "服务器IP",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value": "10.0.1.150",
+        "previous_values": ["10.0.1.100", "10.0.1.200"],
+        "self_correction_chain_preserved": true,
+        "expected_answer_contains": ["10.0.1.150"]
+      },
+      "evaluation_criteria": {
+        "latest_value_correct": {"target": 0.95, "min": 0.50},
+        "correction_chain_preserved": {"target": 0.85},
+        "not_confused_by_rapid_changes": {"target": 0.90}
       }
     }
   ]

@@ -162,6 +162,7 @@ def raw_conn(db_path):
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS tasks (
             id TEXT PRIMARY KEY,
+            sessionKey TEXT,
             title TEXT NOT NULL,
             status TEXT DEFAULT 'active',
             summary TEXT,
@@ -171,6 +172,7 @@ def raw_conn(db_path):
             updatedAt INTEGER NOT NULL
         )
     """)
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_tasks_session ON tasks(sessionKey)")
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS skills (
             id TEXT PRIMARY KEY,
@@ -301,20 +303,50 @@ def store(raw_conn):
             terms = re.findall(r'[\w\u4e00-\u9fff]{2,}', query)
             if not terms:
                 terms = [query]
-            # Build OR conditions for each term
+            # Build per-term LIKE conditions
             conditions = []
             params = []
             for term in terms:
                 conditions.append("(content LIKE ? OR summary LIKE ?)")
                 params.extend([f"%{term}%", f"%{term}%"])
             where_clause = " OR ".join(conditions)
+
+            # Strategy 1: AND match (all terms present) for precision
+            and_conditions = []
+            and_params = []
+            for term in terms:
+                and_conditions.append("(content LIKE ? OR summary LIKE ?)")
+                and_params.extend([f"%{term}%", f"%{term}%"])
+            and_where = " AND ".join(and_conditions)
+            c.execute(f"""
+                SELECT * FROM chunks
+                WHERE {and_where}
+                ORDER BY createdAt DESC
+                LIMIT ?
+            """, and_params + [max_results])
+            rows = [dict(r) for r in c.fetchall()]
+            if rows:
+                return rows
+
+            # Strategy 2: OR match with term-overlap scoring for recall
+            candidate_limit = max(max_results * 5, 50)
             c.execute(f"""
                 SELECT * FROM chunks
                 WHERE {where_clause}
                 ORDER BY createdAt DESC
                 LIMIT ?
-            """, params + [max_results])
-            return [dict(r) for r in c.fetchall()]
+            """, params + [candidate_limit])
+            all_rows = [dict(r) for r in c.fetchall()]
+
+            # Score by term overlap: more matching terms = higher relevance
+            scored = []
+            for row in all_rows:
+                text = ((row.get("content", "") or "") + " " +
+                        (row.get("summary", "") or "")).lower()
+                match_count = sum(1 for t in terms if t.lower() in text)
+                scored.append((match_count, row))
+            scored.sort(key=lambda x: x[0], reverse=True)
+            return [row for _, row in scored[:max_results]]
 
         def fts_search(self, query, limit=10, scope="all", agent_id="default"):
             c = self.conn.cursor()

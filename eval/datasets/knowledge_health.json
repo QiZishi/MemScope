@@ -1,12 +1,13 @@
 {
   "dataset_name": "knowledge_health",
-  "version": "2.0",
-  "description": "知识健康度评测：测试系统对知识新鲜度、遗忘曲线、知识缺口、单点故障和版本管理的评估能力",
-  "total_cases": 30,
+  "version": "3.0",
+  "description": "知识健康度评测：测试系统对知识新鲜度、遗忘曲线、知识缺口、单点故障、版本管理、多跳推理和知识关联网络的评估能力",
+  "total_cases": 35,
   "difficulty_distribution": {
-    "easy": 5,
-    "medium": 15,
-    "hard": 10
+    "easy": 4,
+    "medium": 14,
+    "hard": 12,
+    "expert": 5
   },
   "test_cases": [
     {
@@ -808,6 +809,143 @@
       "difficulty": "medium",
       "priority": "P1",
       "tags": ["versioning", "changelog", "audit-trail"]
+    },
+    {
+      "test_id": "kh_031",
+      "name": "多跳推理-知识关联网络分析",
+      "description": "知识A(API设计)依赖知识B(数据库Schema)，知识B依赖知识C(业务需求文档)。当知识C过期时，系统应推理出A和B也可能需要更新",
+      "setup": {
+        "knowledge_graph": [
+          {"id": "k_c", "content": "用户需求：支持多租户SaaS模式", "created_at": "2026-01-15", "freshness": "stale", "type": "requirement"},
+          {"id": "k_b", "content": "数据库Schema：每个租户独立Schema", "created_at": "2026-02-01", "freshness": "aging", "depends_on": ["k_c"], "type": "design"},
+          {"id": "k_a", "content": "API设计：请求头X-Tenant-ID标识租户", "created_at": "2026-02-15", "freshness": "aging", "depends_on": ["k_b"], "type": "implementation"}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "knowledge_cascade_health", "trigger": "k_c"},
+      "expected": {
+        "stale_root": "k_c",
+        "cascade_affected": ["k_b", "k_a"],
+        "cascade_depth": 2,
+        "recommendation": "从需求文档开始逐层更新",
+        "multi_hop_reasoning_required": true,
+        "dependency_chain_health": "critical"
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["multi-hop", "knowledge-graph", "cascade", "dependency"]
+    },
+    {
+      "test_id": "kh_032",
+      "name": "实体追踪-团队知识演变图谱",
+      "description": "团队知识从1月集中于dave一人(devops)，到4月已扩展到3人掌握。系统应追踪知识分布的演变并评估团队韧性改善",
+      "setup": {
+        "knowledge_timeline": [
+          {"period": "2026-01", "devops_contributors": ["dave"], "bus_factor": 1, "entries": 5},
+          {"period": "2026-02", "devops_contributors": ["dave", "eve"], "bus_factor": 1, "entries": 8},
+          {"period": "2026-03", "devops_contributors": ["dave", "eve", "frank"], "bus_factor": 2, "entries": 15},
+          {"period": "2026-04", "devops_contributors": ["dave", "eve", "frank"], "bus_factor": 2, "entries": 20}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "knowledge_evolution_analysis", "domain": "devops"},
+      "expected": {
+        "initial_bus_factor": 1,
+        "current_bus_factor": 2,
+        "improvement_detected": true,
+        "contributor_growth": "1 → 3",
+        "knowledge_growth": "5 → 20 entries",
+        "still_risk": "frank是新人，知识深度不足",
+        "entity_tracking_across_time": true
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["entity-tracking", "evolution", "bus-factor", "temporal"]
+    },
+    {
+      "test_id": "kh_033",
+      "name": "时序推理-知识过期级联预警",
+      "description": "Q1规划文档已过期→影响依赖它的技术方案→进而影响依赖技术方案的API文档。系统应推理出过期级联并按影响范围排序预警",
+      "setup": {
+        "knowledge_dependencies": [
+          {"id": "plan_q1", "content": "Q1产品规划", "expired": true, "expiry_reason": "Q1已结束"},
+          {"id": "tech_design", "content": "技术方案设计", "depends_on": "plan_q1", "freshness": "aging"},
+          {"id": "api_doc", "content": "API接口文档", "depends_on": "tech_design", "freshness": "fresh"},
+          {"id": "test_plan", "content": "测试计划", "depends_on": "tech_design", "freshness": "fresh"}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "expiry_cascade_warning"},
+      "expected": {
+        "cascade_warnings": [
+          {"level": 1, "item": "plan_q1", "status": "expired", "impact": "直接过期"},
+          {"level": 2, "item": "tech_design", "status": "needs_review", "impact": "可能过期"},
+          {"level": 3, "item": "api_doc", "status": "potentially_affected", "impact": "间接影响"},
+          {"level": 3, "item": "test_plan", "status": "potentially_affected", "impact": "间接影响"}
+        ],
+        "priority_order": ["plan_q1", "tech_design", "api_doc", "test_plan"],
+        "temporal_reasoning_required": true
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["temporal-reasoning", "cascade", "expiry-warning", "priority"]
+    },
+    {
+      "test_id": "kh_034",
+      "name": "3个月跨度-知识生命周期完整性",
+      "description": "一条知识从创建(1月)→高频使用(2月)→老化(3月)→被新版本替代(4月)的完整生命周期。系统应正确追踪每个阶段",
+      "setup": {
+        "knowledge_lifecycle": {
+          "id": "api_v1",
+          "content": "REST API v1接口规范",
+          "timeline": [
+            {"date": "2026-01-15", "event": "created", "access_count": 0},
+            {"date": "2026-02-01", "event": "heavy_usage", "access_count": 50, "reinforcements": 5},
+            {"date": "2026-03-01", "event": "access_decline", "access_count": 10, "reinforcements": 0},
+            {"date": "2026-04-01", "event": "superseded", "replacement": "api_v2"}
+          ]
+        },
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "knowledge_lifecycle_report", "entry_id": "api_v1"},
+      "expected": {
+        "lifecycle_stages_detected": ["created", "peak_usage", "decline", "superseded"],
+        "current_status": "superseded",
+        "total_lifespan_days": 77,
+        "peak_period": "2026-02",
+        "replacement": "api_v2",
+        "historical_value_preserved": true
+      },
+      "difficulty": "expert",
+      "priority": "P1",
+      "tags": ["3-month", "lifecycle", "temporal", "versioning"]
+    },
+    {
+      "test_id": "kh_035",
+      "name": "多跳推理+抗干扰-知识可靠性评估",
+      "description": "同一主题('部署方案')有5条来自不同人的知识记录，但只有2条互相印证，其他3条互相矛盾。系统应评估知识可靠性并标记可信版本",
+      "setup": {
+        "knowledge_records": [
+          {"id": "k1", "content": "部署用Docker+K8s", "author": "dave", "timestamp": "2026-04-01", "confidence": 0.9},
+          {"id": "k2", "content": "部署用Docker+K8s", "author": "eve", "timestamp": "2026-04-02", "confidence": 0.85},
+          {"id": "k3", "content": "部署用Docker Compose", "author": "frank", "timestamp": "2026-04-03", "confidence": 0.6},
+          {"id": "k4", "content": "部署还是手动脚本吧", "author": "new_intern", "timestamp": "2026-04-05", "confidence": 0.3},
+          {"id": "k5", "content": "部署用阿里云SAE", "author": "external_consultant", "timestamp": "2026-04-10", "confidence": 0.5}
+        ]
+      },
+      "query": {"type": "knowledge_reliability_assessment", "topic": "部署方案"},
+      "expected": {
+        "consensus_found": true,
+        "consensus_content": "Docker+K8s",
+        "consensus_sources": ["dave", "eve"],
+        "reliability_score": ">= 0.85",
+        "outliers": ["Docker Compose", "手动脚本", "阿里云SAE"],
+        "anti_interference_from_noise": true,
+        "multi_hop_reasoning_required": true
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["multi-hop", "reliability", "anti-interference", "consensus"]
     }
   ]
 }

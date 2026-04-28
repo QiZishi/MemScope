@@ -1,7 +1,14 @@
 {
   "dataset_name": "anti_interference",
-  "version": "1.0",
-  "description": "Tests the memory engine's ability to recall target information despite various noise patterns. 20 test cases across 5 categories.",
+  "version": "2.0",
+  "description": "Tests the memory engine's ability to recall target information despite various noise patterns. 25 test cases across 6 categories including expert-level multi-hop and cross-type interference.",
+  "total_cases": 25,
+  "difficulty_distribution": {
+    "easy": 4,
+    "medium": 7,
+    "hard": 9,
+    "expert": 5
+  },
   "test_cases": [
     {
       "test_id": "anti_interference_001",
@@ -599,6 +606,168 @@
       "evaluation_criteria": {
         "recall": {"target": 0.80, "min": 0.40},
         "min_chunks": 1
+      }
+    },
+    {
+      "test_id": "anti_interference_021",
+      "name": "Expert: multi-hop noise - decision+command+preference interference",
+      "category": "cross_type_noise",
+      "difficulty": "expert",
+      "input": {
+        "target": {
+          "user_msg": "项目技术栈确定为Go+gRPC",
+          "assistant_msg": "已记录技术选型：Go+gRPC。",
+          "timestamp": "2026-04-01T10:00:00Z",
+          "owner": "local",
+          "memory_type": "decision"
+        },
+        "noise": [
+          {"user_msg": "我个人偏好Python，但项目用Go", "assistant_msg": "已记录偏好。", "timestamp": "2026-04-01T10:05:00Z", "memory_type": "preference"},
+          {"user_msg": "我昨天用了go build编译项目", "assistant_msg": "已记录命令。", "timestamp": "2026-04-02T10:00:00Z", "memory_type": "command"},
+          {"user_msg": "Python的FastAPI写API最快", "assistant_msg": "已记录。", "timestamp": "2026-04-03T10:00:00Z", "memory_type": "preference"},
+          {"user_msg": "项目技术栈再讨论一下？要不要换成Rust", "assistant_msg": "需要团队讨论。", "timestamp": "2026-04-04T10:00:00Z", "memory_type": "discussion"}
+        ],
+        "query": "项目技术栈决策",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer_contains": ["Go", "gRPC"],
+        "must_not_confuse_with": ["Python", "Rust"],
+        "memory_type_is": "decision"
+      },
+      "evaluation_criteria": {
+        "recall": {"target": 0.90, "min": 0.50},
+        "precision": {"target": 0.85, "min": 0.50},
+        "type_disambiguation": {"target": 1.0},
+        "multi_hop_filtering": {"target": 0.90}
+      }
+    },
+    {
+      "test_id": "anti_interference_022",
+      "name": "Expert: temporal noise - same fact different versions across 3 months",
+      "category": "temporal_version_noise",
+      "difficulty": "expert",
+      "input": {
+        "target": {
+          "user_msg": "生产数据库密码改成 Xk9#mP2$vL",
+          "assistant_msg": "已安全记录新密码。",
+          "timestamp": "2026-04-15T14:00:00Z",
+          "owner": "local"
+        },
+        "noise": [
+          {"user_msg": "数据库密码是 Abc123456", "assistant_msg": "已记录。", "timestamp": "2026-01-10T10:00:00Z"},
+          {"user_msg": "数据库密码改成 Test@2026", "assistant_msg": "已更新。", "timestamp": "2026-02-15T10:00:00Z"},
+          {"user_msg": "密码又改了 P@ssw0rd2026!", "assistant_msg": "已更新。", "timestamp": "2026-03-20T10:00:00Z"}
+        ],
+        "query": "生产数据库密码",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer": "Xk9#mP2$vL",
+        "must_not_return": ["Abc123456", "Test@2026", "P@ssw0rd2026!"],
+        "latest_version_only": true
+      },
+      "evaluation_criteria": {
+        "latest_value_accuracy": {"target": 0.95, "min": 0.50},
+        "old_values_excluded": {"target": 0.90},
+        "temporal_order_correct": {"target": 0.95}
+      }
+    },
+    {
+      "test_id": "anti_interference_023",
+      "name": "Expert: entity confusion - 10 projects with overlapping members",
+      "category": "entity_confusion",
+      "difficulty": "expert",
+      "input": {
+        "target": {
+          "user_msg": "Project Phoenix的PM是张三，deadline是6月30日",
+          "assistant_msg": "已记录：Project Phoenix PM张三，deadline 6/30。",
+          "timestamp": "2026-04-01T10:00:00Z",
+          "owner": "local"
+        },
+        "noise": [
+          {"user_msg": "Project Titan的PM是李四，deadline 7月15", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:05:00Z"},
+          {"user_msg": "Project Phoenix的tech lead是王五", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:10:00Z"},
+          {"user_msg": "Project Dragon的PM也是张三", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:15:00Z"},
+          {"user_msg": "Project Phoenix的budget是200万", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:20:00Z"}
+        ],
+        "query": "Project Phoenix deadline",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer": "6月30日",
+        "expected_answer_contains": ["Phoenix", "6月30"],
+        "must_not_confuse": ["Titan", "Dragon"],
+        "entity_disambiguation": true
+      },
+      "evaluation_criteria": {
+        "recall": {"target": 0.90, "min": 0.50},
+        "precision": {"target": 0.85, "min": 0.50},
+        "entity_accuracy": {"target": 0.95}
+      }
+    },
+    {
+      "test_id": "anti_interference_024",
+      "name": "Expert: semantic noise - similar meaning different facts",
+      "category": "semantic_noise",
+      "difficulty": "expert",
+      "input": {
+        "target": {
+          "user_msg": "我们的API限流是每分钟1000次",
+          "assistant_msg": "已记录：API限流 1000 req/min。",
+          "timestamp": "2026-04-01T10:00:00Z",
+          "owner": "local"
+        },
+        "noise": [
+          {"user_msg": "第三方API的限流是每分钟500次", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:05:00Z"},
+          {"user_msg": "消息队列的消费速率是每秒1000条", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:10:00Z"},
+          {"user_msg": "数据库连接池上限是1000", "assistant_msg": "已记录。", "timestamp": "2026-04-01T10:15:00Z"}
+        ],
+        "query": "API限流配置",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer": "每分钟1000次",
+        "must_not_confuse_with": ["每分钟500次(第三方)", "每秒1000条(消息队列)", "1000(连接池)"],
+        "semantic_disambiguation": true
+      },
+      "evaluation_criteria": {
+        "recall": {"target": 0.85, "min": 0.40},
+        "precision": {"target": 0.80, "min": 0.40},
+        "semantic_accuracy": {"target": 0.90}
+      }
+    },
+    {
+      "test_id": "anti_interference_025",
+      "name": "Expert: 3-month noise with 200 distractors and cross-type memories",
+      "category": "stress_noise",
+      "difficulty": "expert",
+      "input": {
+        "target": {
+          "user_msg": "重要：年度OKR中KR1的目标是用户量增长50%",
+          "assistant_msg": "已记录OKR KR1：用户量增长50%。",
+          "timestamp": "2026-01-15T10:00:00Z",
+          "owner": "local"
+        },
+        "noise_count": 200,
+        "noise_spread": {
+          "start": "2026-01-16T10:00:00Z",
+          "end": "2026-04-29T10:00:00Z",
+          "categories": ["daily_standup", "code_review", "random_chat", "other_projects", "personal"]
+        },
+        "query": "年度OKR KR1",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer_contains": ["用户量", "增长50%"],
+        "okr_preserved_after_3_months": true
+      },
+      "evaluation_criteria": {
+        "must_retrieve": {"target": 1.0},
+        "recall": {"target": 0.70, "min": 0.30},
+        "precision": {"target": 0.60, "min": 0.20},
+        "min_chunks": 1,
+        "noise_resilience_at_scale": true
       }
     }
   ]

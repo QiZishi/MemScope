@@ -209,11 +209,7 @@ class LLMCaller:
         prompts: List[str],
         prefer_level: str = "summarizer",
     ) -> List[str]:
-        """批量调用 LLM"""
-        results = []
-        
-        for prompt in prompts:
-            response = await self.call(prompt, prefer_level)
-            results.append(response)
-        
-        return results
+        """批量调用 LLM — parallel via asyncio.gather"""
+        import asyncio
+        tasks = [self.call(prompt, prefer_level) for prompt in prompts]
+        return await asyncio.gather(*tasks)

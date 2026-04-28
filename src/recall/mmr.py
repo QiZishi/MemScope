@@ -9,34 +9,8 @@ MMR = λ · sim(q, d) - (1-λ) · max(sim(d, d_selected))
 from typing import List, Dict, Any, Optional
 import numpy as np
 
-
-def cosine_similarity(vec_a: List[float], vec_b: List[float]) -> float:
-    """
-    计算两个向量的余弦相似度
-    
-    Args:
-        vec_a: 向量 A
-        vec_b: 向量 B
-        
-    Returns:
-        余弦相似度 [-1, 1]
-    """
-    if not vec_a or not vec_b:
-        return 0.0
-    
-    # 转换为 numpy 数组
-    a = np.array(vec_a)
-    b = np.array(vec_b)
-    
-    # 计算余弦相似度
-    dot_product = np.dot(a, b)
-    norm_a = np.linalg.norm(a)
-    norm_b = np.linalg.norm(b)
-    
-    if norm_a == 0 or norm_b == 0:
-        return 0.0
-    
-    return float(dot_product / (norm_a * norm_b))
+# Use shared cosine_similarity to avoid duplication (P1-2 fix)
+from ..shared.utils import cosine_similarity
 
 
 def mmr_rerank(

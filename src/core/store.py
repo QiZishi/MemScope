@@ -15,7 +15,21 @@ logger = logging.getLogger(__name__)
 
 
 class SqliteStore:
-    """SQLite-based storage for conversation memories."""
+    """SQLite-based storage for conversation memories.
+
+    # TODO(God Class): This class has grown to 2000+ lines covering too many concerns.
+    # Planned refactoring (Phase 2):
+    #   - ChunkStore: chunk CRUD, FTS, pattern search, embeddings, vector search
+    #   - TaskStore: task CRUD, task-skill linking
+    #   - SkillStore: skill CRUD, skill search
+    #   - CommandStore: command_history, command_patterns
+    #   - DecisionStore: decisions, decision_cards
+    #   - PreferenceStore: user_preferences, behavior_patterns
+    #   - KnowledgeHealthStore: knowledge_health, forgetting_schedule, team_knowledge_map
+    #   - SharedMemoryStore: visibility management, cross-agent sharing
+    # Each sub-store would receive a sqlite3.Connection and expose domain-specific methods.
+    # SqliteStore would become a facade delegating to sub-stores.
+    """
 
     def __init__(self, db_path: str):
         self.db_path = db_path
@@ -53,6 +67,7 @@ class SqliteStore:
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS tasks (
                 id TEXT PRIMARY KEY,
+                sessionKey TEXT,
                 title TEXT NOT NULL,
                 status TEXT DEFAULT 'active',
                 summary TEXT,
@@ -62,6 +77,7 @@ class SqliteStore:
                 updatedAt INTEGER NOT NULL
             )
         """)
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_tasks_session ON tasks(sessionKey)")
 
         # Skills table - stores learned skills (optional feature)
         cursor.execute("""
@@ -484,11 +500,12 @@ class SqliteStore:
 
         cursor = self.conn.cursor()
         cursor.execute("""
-            INSERT OR REPLACE INTO tasks 
-            (id, title, status, summary, owner, startedAt, endedAt, updatedAt)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT OR REPLACE INTO tasks
+            (id, sessionKey, title, status, summary, owner, startedAt, endedAt, updatedAt)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             task_id,
+            task.get("sessionKey", task.get("session_key")),
             task.get("title", ""),
             task.get("status", "active"),
             task.get("summary"),
@@ -779,7 +796,7 @@ class SqliteStore:
         scope: str = "private",
         agent_id: str = "default",
     ) -> List[Dict[str, Any]]:
-        """Vector similarity search."""
+        """Vector similarity search — numpy batch computation."""
         import numpy as np
         
         # Get all embeddings for the owner
@@ -788,39 +805,49 @@ class SqliteStore:
         if not all_embeddings:
             return []
         
-        query_vec = np.array(query_vec)
-        
-        # Calculate cosine similarity
-        results = []
+        # Build embedding matrix for batch computation
+        chunk_ids = []
+        valid_embeddings = []
         for item in all_embeddings:
-            chunk_id = item["id"]
-            embedding = item["embedding"]
-            
-            if not embedding or len(embedding) != len(query_vec):
-                continue
-            
-            vec = np.array(embedding)
-            
-            # Cosine similarity
-            dot_product = np.dot(query_vec, vec)
-            norm_q = np.linalg.norm(query_vec)
-            norm_v = np.linalg.norm(vec)
-            
-            if norm_q == 0 or norm_v == 0:
-                similarity = 0.0
-            else:
-                similarity = dot_product / (norm_q * norm_v)
-            
-            if similarity > 0.3:  # Minimum threshold
-                results.append({
-                    "id": chunk_id,
-                    "score": float(similarity),
-                })
+            emb = item["embedding"]
+            if emb and len(emb) == len(query_vec):
+                chunk_ids.append(item["id"])
+                valid_embeddings.append(emb)
         
-        # Sort by similarity
-        results.sort(key=lambda x: x["score"], reverse=True)
+        if not valid_embeddings:
+            return []
         
-        return results[:limit]
+        # Batch cosine similarity via matrix operations
+        emb_matrix = np.array(valid_embeddings)  # (N, D)
+        q = np.array(query_vec)  # (D,)
+        
+        # Normalize
+        q_norm = np.linalg.norm(q)
+        if q_norm == 0:
+            return []
+        q_unit = q / q_norm
+        
+        emb_norms = np.linalg.norm(emb_matrix, axis=1, keepdims=True)  # (N, 1)
+        # Avoid division by zero
+        emb_norms = np.where(emb_norms == 0, 1, emb_norms)
+        emb_unit = emb_matrix / emb_norms  # (N, D)
+        
+        similarities = emb_unit @ q_unit  # (N,)
+        
+        # Filter and sort
+        mask = similarities > 0.3
+        indices = np.where(mask)[0]
+        # Sort by similarity descending
+        sorted_indices = indices[np.argsort(similarities[indices])[::-1]]
+        
+        results = []
+        for idx in sorted_indices[:limit]:
+            results.append({
+                "id": chunk_ids[idx],
+                "score": float(similarities[idx]),
+            })
+        
+        return results
     
     # ========== Task Management (Enhanced) ==========
     
@@ -833,11 +860,12 @@ class SqliteStore:
         
         cursor = self.conn.cursor()
         cursor.execute("""
-            INSERT OR REPLACE INTO tasks 
-            (id, title, status, summary, owner, startedAt, updatedAt)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT OR REPLACE INTO tasks
+            (id, sessionKey, title, status, summary, owner, startedAt, updatedAt)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             task_id,
+            task.get("sessionKey", task.get("session_key")),
             task.get("title", task.get("goal", "")),
             task.get("status", "active"),
             task.get("summary", ""),
@@ -857,8 +885,9 @@ class SqliteStore:
         
         cursor = self.conn.cursor()
         cursor.execute("""
-            UPDATE tasks 
-            SET title = ?, status = ?, summary = ?, owner = ?, updatedAt = ?
+            UPDATE tasks
+            SET title = ?, status = ?, summary = ?, owner = ?, updatedAt = ?,
+                sessionKey = COALESCE(?, sessionKey)
             WHERE id = ?
         """, (
             task.get("title", task.get("goal", "")),
@@ -866,6 +895,7 @@ class SqliteStore:
             task.get("summary", ""),
             task.get("owner", "local"),
             now,
+            task.get("sessionKey", task.get("session_key")),
             task.get("id"),
         ))
         

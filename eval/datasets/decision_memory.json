@@ -1,12 +1,13 @@
 {
   "dataset_name": "decision_memory",
-  "version": "2.0",
-  "description": "决策记忆能力评测：测试系统对团队/用户决策的提取、存储、搜索和长时序回忆能力",
-  "total_cases": 30,
+  "version": "3.0",
+  "description": "决策记忆能力评测：测试系统对团队/用户决策的提取、存储、搜索、长时序回忆、多跳推理和实体追踪能力",
+  "total_cases": 35,
   "difficulty_distribution": {
-    "easy": 5,
+    "easy": 4,
     "medium": 15,
-    "hard": 10
+    "hard": 11,
+    "expert": 5
   },
   "test_cases": [
     {
@@ -655,6 +656,136 @@
       "difficulty": "medium",
       "priority": "P1",
       "tags": ["temporal", "historical-reference", "superseded"]
+    },
+    {
+      "test_id": "dec_031",
+      "name": "多跳推理-决策链因果推理",
+      "description": "1月决定用MongoDB→2月发现JSON查询性能差→3月决定迁移到PostgreSQL→4月因迁移成本高决定用JSONB扩展。系统应推理出完整的决策因果链",
+      "setup": {
+        "stored_decisions": [
+          {"content": "数据库选MongoDB，文档模型灵活", "keywords": ["数据库", "MongoDB"], "timestamp": "2026-01-15", "cause": null},
+          {"content": "MongoDB复杂JSON查询性能不达标，P95超过500ms", "keywords": ["性能", "MongoDB", "JSON"], "timestamp": "2026-02-20", "cause": "性能问题"},
+          {"content": "决定迁移到PostgreSQL，关系型数据库更成熟", "keywords": ["数据库", "PostgreSQL", "迁移"], "timestamp": "2026-03-10", "cause": "MongoDB性能问题"},
+          {"content": "迁移成本太高，改为MongoDB+JSONB索引优化", "keywords": ["数据库", "MongoDB", "优化"], "timestamp": "2026-04-05", "cause": "迁移成本"}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "search_decisions", "keyword": "数据库", "include_causal_chain": true},
+      "expected": {
+        "causal_chain_complete": true,
+        "chain": ["MongoDB选型", "性能问题发现", "迁移PostgreSQL决定", "回退优化方案"],
+        "current_decision": "MongoDB+JSONB索引优化",
+        "causal_links": 3,
+        "multi_hop_reasoning_required": true
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["multi-hop", "causal-chain", "decision-evolution"]
+    },
+    {
+      "test_id": "dec_032",
+      "name": "实体追踪-决策影响范围追踪",
+      "description": "决策'采用微服务架构'影响了多个后续决策：API网关选Kong、服务发现用Consul、监控用Prometheus。系统应追踪一个决策对其他决策的辐射影响",
+      "setup": {
+        "stored_decisions": [
+          {"content": "采用微服务架构", "keywords": ["架构", "微服务"], "timestamp": "2026-01-10", "impact_id": "arch_001"},
+          {"content": "API网关选用Kong", "keywords": ["API", "网关", "Kong"], "timestamp": "2026-02-01", "parent_id": "arch_001"},
+          {"content": "服务发现使用Consul", "keywords": ["服务发现", "Consul"], "timestamp": "2026-02-15", "parent_id": "arch_001"},
+          {"content": "监控系统采用Prometheus+Grafana", "keywords": ["监控", "Prometheus"], "timestamp": "2026-03-01", "parent_id": "arch_001"},
+          {"content": "日志收集用ELK", "keywords": ["日志", "ELK"], "timestamp": "2026-03-10", "parent_id": "arch_001"}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "decision_impact_analysis", "decision_id": "arch_001"},
+      "expected": {
+        "root_decision": "采用微服务架构",
+        "impacted_decisions": ["Kong", "Consul", "Prometheus+Grafana", "ELK"],
+        "impact_count": 4,
+        "entity_tracking_across_decisions": true,
+        "dependency_tree_depth": 2
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["entity-tracking", "impact-analysis", "dependency"]
+    },
+    {
+      "test_id": "dec_033",
+      "name": "时序推理-决策时间窗口约束",
+      "description": "决策A('5月底前完成迁移')和决策B('6月中旬新版本发布')之间存在时间约束：迁移必须在发布前完成。系统应推理出时间冲突风险",
+      "setup": {
+        "stored_decisions": [
+          {"content": "数据库迁移必须在5月底前完成", "keywords": ["迁移", "deadline"], "timestamp": "2026-04-01", "deadline": "2026-05-31"},
+          {"content": "新版本6月15日发布，不接受延期", "keywords": ["发布", "deadline"], "timestamp": "2026-04-05", "deadline": "2026-06-15"},
+          {"content": "发布前需要2周稳定性测试", "keywords": ["测试", "稳定性"], "timestamp": "2026-04-10", "constraint": "发布前14天"}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "temporal_conflict_analysis"},
+      "expected": {
+        "conflict_detected": true,
+        "conflict_description": "迁移5月31日完成+2周测试=6月14日，与6月15日发布几乎无缓冲",
+        "risk_level": "high",
+        "temporal_reasoning_chain": ["迁移deadline", "测试周期约束", "发布deadline"],
+        "recommendation": "迁移需提前到5月中旬"
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["temporal-reasoning", "constraint", "conflict-detection"]
+    },
+    {
+      "test_id": "dec_034",
+      "name": "3个月跨度+矛盾-反复决策",
+      "description": "API风格经历3个月4次变更：REST→GraphQL→REST+GraphQL混合→纯REST。系统应正确追踪最终决策并理解每次变更原因",
+      "setup": {
+        "stored_decisions": [
+          {"content": "API采用REST风格", "keywords": ["API", "REST"], "timestamp": "2026-01-20", "status": "superseded", "reason": "初始选型"},
+          {"content": "改用GraphQL，减少over-fetching", "keywords": ["API", "GraphQL"], "timestamp": "2026-02-15", "status": "superseded", "reason": "REST over-fetching"},
+          {"content": "GraphQL性能问题，改为REST+GraphQL混合", "keywords": ["API", "REST", "GraphQL", "混合"], "timestamp": "2026-03-20", "status": "superseded", "reason": "GraphQL N+1查询"},
+          {"content": "混合方案复杂度过高，回退纯REST+按需字段选择", "keywords": ["API", "REST"], "timestamp": "2026-04-10", "status": "active", "reason": "复杂度过高"}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "search_decisions", "keyword": "API"},
+      "expected": {
+        "current_decision": "REST+按需字段选择",
+        "decision_history_count": 4,
+        "each_change_has_reason": true,
+        "latest_is_active": true,
+        "all_superseded_marked": true,
+        "long_term_temporal_tracking": true
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["3-month", "temporal", "contradiction", "decision-churn"]
+    },
+    {
+      "test_id": "dec_035",
+      "name": "多跳推理+实体追踪-预算决策级联影响",
+      "description": "总预算缩减20%的决策影响了3个子项目预算，子项目预算变化又影响了技术选型决策。系统应追踪完整的决策级联",
+      "setup": {
+        "stored_decisions": [
+          {"content": "Q2总预算缩减20%，从500万降到400万", "keywords": ["预算", "缩减"], "timestamp": "2026-04-01", "level": "top"},
+          {"content": "项目A预算从200万降到160万", "keywords": ["项目A", "预算"], "timestamp": "2026-04-05", "parent": "总预算", "level": "sub"},
+          {"content": "项目A因预算缩减放弃微服务改造，保持单体架构", "keywords": ["项目A", "架构", "微服务"], "timestamp": "2026-04-10", "parent": "项目A预算", "level": "sub"},
+          {"content": "项目B预算从150万降到120万", "keywords": ["项目B", "预算"], "timestamp": "2026-04-05", "parent": "总预算", "level": "sub"}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "decision_cascade_analysis", "root": "总预算缩减"},
+      "expected": {
+        "root_cause": "总预算缩减20%",
+        "cascade_chain": [
+          "总预算500→400万",
+          "项目A 200→160万 → 放弃微服务",
+          "项目B 150→120万"
+        ],
+        "cascade_depth": 3,
+        "multi_hop_reasoning_required": true,
+        "entity_tracking_across_levels": true
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["multi-hop", "entity-tracking", "cascade", "budget"]
     }
   ]
 }

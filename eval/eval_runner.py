@@ -87,6 +87,14 @@ TEST_DIMENSION_MAP = {
     "efficiency_004": "efficiency",
     "efficiency_005": "efficiency",
     "efficiency_006": "efficiency",
+    "direction_a_001": "direction_a",
+    "direction_a_002": "direction_a",
+    "direction_a_003": "direction_a",
+    "direction_a_004": "direction_a",
+    "direction_b_001": "direction_b",
+    "direction_b_002": "direction_b",
+    "direction_b_003": "direction_b",
+    "direction_b_004": "direction_b",
     "direction_c_001": "direction_c",
     "direction_c_002": "direction_c",
     "direction_c_003": "direction_c",
@@ -96,6 +104,12 @@ TEST_DIMENSION_MAP = {
     "direction_d_003": "direction_d",
     "direction_d_004": "direction_d",
     "direction_d_005": "direction_d",
+    "feishu_integration_001": "feishu_integration",
+    "feishu_integration_002": "feishu_integration",
+    "feishu_integration_003": "feishu_integration",
+    "feishu_integration_004": "feishu_integration",
+    "feishu_integration_005": "feishu_integration",
+    "feishu_integration_006": "feishu_integration",
 }
 
 
@@ -237,12 +251,8 @@ def run_pytest_tests(output_path: str, verbose: bool = False) -> List[Dict[str, 
     """Run pytest tests and collect results via the report collector."""
     import pytest as _pytest
 
-    # Import conftest to get the report collector
+    # Add eval dir to path so conftest can be discovered
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    from conftest import _report_collector
-
-    # Clear any previous results
-    _report_collector.results.clear()
 
     # Run tests
     test_dir = os.path.dirname(os.path.abspath(__file__))
@@ -250,9 +260,14 @@ def run_pytest_tests(output_path: str, verbose: bool = False) -> List[Dict[str, 
         os.path.join(test_dir, "test_anti_interference.py"),
         os.path.join(test_dir, "test_contradiction_update.py"),
         os.path.join(test_dir, "test_efficiency.py"),
-        os.path.join(test_dir, "test_direction_c.py"),
-        os.path.join(test_dir, "test_direction_d.py"),
+        os.path.join(test_dir, "test_preference_memory.py"),
+        os.path.join(test_dir, "test_command_memory.py"),
+        os.path.join(test_dir, "test_decision_memory.py"),
+        os.path.join(test_dir, "test_knowledge_health.py"),
+        os.path.join(test_dir, "test_feishu_integration.py"),
     ]
+
+    all_results = []
 
     for test_file in test_files:
         if not os.path.exists(test_file):
@@ -265,13 +280,20 @@ def run_pytest_tests(output_path: str, verbose: bool = False) -> List[Dict[str, 
             args.append("-q")
 
         try:
-            exit_code = _pytest.main(args, plugins=[])
+            exit_code = _pytest.main(args)
         except SystemExit:
             pass
         except Exception as e:
             print(f"  Error running {test_file}: {e}")
 
-    return _report_collector.results
+        # pytest re-imports conftest.py each run, creating a new
+        # _report_collector instance.  Grab results from the latest one.
+        if "conftest" in sys.modules:
+            collector = sys.modules["conftest"]._report_collector
+            all_results.extend(collector.results)
+            collector.results.clear()
+
+    return all_results
 
 
 def run_direct_tests() -> List[Dict[str, Any]]:
@@ -285,8 +307,11 @@ def run_direct_tests() -> List[Dict[str, Any]]:
         os.path.join(test_dir, "test_anti_interference.py"),
         os.path.join(test_dir, "test_contradiction_update.py"),
         os.path.join(test_dir, "test_efficiency.py"),
-        os.path.join(test_dir, "test_direction_c.py"),
-        os.path.join(test_dir, "test_direction_d.py"),
+        os.path.join(test_dir, "test_preference_memory.py"),
+        os.path.join(test_dir, "test_command_memory.py"),
+        os.path.join(test_dir, "test_decision_memory.py"),
+        os.path.join(test_dir, "test_knowledge_health.py"),
+        os.path.join(test_dir, "test_feishu_integration.py"),
     ]
 
     all_results = []
@@ -299,14 +324,17 @@ def run_direct_tests() -> List[Dict[str, Any]]:
         try:
             exit_code = _pytest.main(
                 [test_file, "-v", "--tb=short", "--no-header", "-q"],
-                plugins=[],
             )
         except (SystemExit, Exception):
             pass
 
-    # Collect from the report collector
-    from conftest import _report_collector
-    return _report_collector.results
+        # Grab results from the latest conftest instance
+        if "conftest" in sys.modules:
+            collector = sys.modules["conftest"]._report_collector
+            all_results.extend(collector.results)
+            collector.results.clear()
+
+    return all_results
 
 
 def generate_report(

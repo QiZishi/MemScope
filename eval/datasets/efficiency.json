@@ -1,7 +1,14 @@
 {
   "dataset_name": "efficiency",
-  "version": "1.0",
-  "description": "Tests the memory engine's performance efficiency including write latency, query latency, memory usage, token consumption, concurrency, and stress resilience. 20 test cases across 6 categories.",
+  "version": "2.0",
+  "description": "Tests the memory engine's performance efficiency including write latency, query latency, memory usage, token consumption, concurrency, stress resilience, and coverage metrics. 25 test cases across 7 categories.",
+  "total_cases": 25,
+  "difficulty_distribution": {
+    "easy": 6,
+    "medium": 8,
+    "hard": 6,
+    "expert": 5
+  },
   "test_cases": [
     {
       "test_id": "efficiency_001",
@@ -455,6 +462,129 @@
         "p95_latency_stable": {"target": 0.90},
         "p95_latency_growth_factor": {"max": 1.5},
         "completion_time_s": {"target": 120, "max": 600}
+      }
+    },
+    {
+      "test_id": "efficiency_021",
+      "name": "Coverage: memory recall coverage across all types",
+      "category": "coverage",
+      "difficulty": "expert",
+      "input": {
+        "memory_types": ["command", "decision", "preference", "knowledge"],
+        "entries_per_type": 50,
+        "total_entries": 200,
+        "queries_per_type": 10,
+        "description": "Measure recall coverage across all memory types"
+      },
+      "expected": {
+        "operation": "coverage_analysis",
+        "total_entries": 200
+      },
+      "evaluation_criteria": {
+        "command_recall_coverage": {"target": 0.90, "min": 0.70},
+        "decision_recall_coverage": {"target": 0.90, "min": 0.70},
+        "preference_recall_coverage": {"target": 0.85, "min": 0.65},
+        "knowledge_recall_coverage": {"target": 0.85, "min": 0.65},
+        "overall_coverage": {"target": 0.87, "min": 0.67},
+        "no_type_bias": {"target": 0.90}
+      }
+    },
+    {
+      "test_id": "efficiency_022",
+      "name": "Expert: multi-hop query latency with 50000 memories",
+      "category": "query_latency",
+      "difficulty": "expert",
+      "input": {
+        "preloaded_memories": 50000,
+        "query": "项目Alpha的技术栈是什么，相关的部署方案和团队成员",
+        "query_type": "multi_hop_cross_type",
+        "description": "Multi-hop cross-type query at scale with 50000 memories"
+      },
+      "expected": {
+        "operation": "query",
+        "memory_count": 50000,
+        "query_type": "multi_hop_cross_type"
+      },
+      "evaluation_criteria": {
+        "p50_ms": {"target": 1000, "max": 3000},
+        "p95_ms": {"target": 3000, "max": 8000},
+        "answer_correctness": {"target": 0.85},
+        "cross_type_linking": {"target": 0.80},
+        "token_cost": {"target": 2000, "max": 5000}
+      }
+    },
+    {
+      "test_id": "efficiency_023",
+      "name": "Expert: F1 score under noise - precision/recall tradeoff",
+      "category": "f1_metrics",
+      "difficulty": "expert",
+      "input": {
+        "total_memories": 10000,
+        "target_memories": 50,
+        "noise_ratio": 0.95,
+        "queries": 20,
+        "description": "Measure F1 score when signal-to-noise ratio is very low"
+      },
+      "expected": {
+        "operation": "f1_evaluation",
+        "target_count": 50,
+        "noise_count": 9950
+      },
+      "evaluation_criteria": {
+        "precision": {"target": 0.70, "min": 0.40},
+        "recall": {"target": 0.80, "min": 0.50},
+        "f1_score": {"target": 0.75, "min": 0.45},
+        "noise_injection_rate": {"target": 0.05, "max": 0.15},
+        "answer_correctness": {"target": 0.85}
+      }
+    },
+    {
+      "test_id": "efficiency_024",
+      "name": "Expert: latency stability under sustained expert workload",
+      "category": "latency_stability",
+      "difficulty": "expert",
+      "input": {
+        "duration_minutes": 10,
+        "operations_per_second": 5,
+        "operation_mix": {"write": 0.3, "single_hop_query": 0.4, "multi_hop_query": 0.2, "temporal_query": 0.1},
+        "description": "Measure latency stability under mixed workload for 10 minutes"
+      },
+      "expected": {
+        "operation": "sustained_mixed_workload",
+        "total_operations": 3000
+      },
+      "evaluation_criteria": {
+        "p50_latency_stable": {"target": 0.95},
+        "p99_latency_stable": {"target": 0.90},
+        "no_memory_leak": {"target": 1.0},
+        "throughput_consistency": {"target": 0.90},
+        "error_rate": {"target": 0.0, "max": 0.01}
+      }
+    },
+    {
+      "test_id": "efficiency_025",
+      "name": "Expert: token cost efficiency for complex queries",
+      "category": "token_efficiency",
+      "difficulty": "expert",
+      "input": {
+        "query": "总结过去3个月的所有技术决策、预算变化和人员变动",
+        "query_type": "cross_type_temporal",
+        "memory_count": 10000,
+        "time_range": "3_months",
+        "iterations": 20,
+        "description": "Token cost for complex cross-type temporal queries"
+      },
+      "expected": {
+        "operation": "query",
+        "query_type": "cross_type_temporal",
+        "iterations": 20
+      },
+      "evaluation_criteria": {
+        "avg_tokens": {"target": 3000, "max": 8000},
+        "max_tokens": {"target": 5000, "max": 12000},
+        "completeness": {"target": 0.80},
+        "token_per_fact_ratio": {"target": 200, "max": 500},
+        "answer_correctness": {"target": 0.85}
       }
     }
   ]

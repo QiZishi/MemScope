@@ -1,12 +1,12 @@
 {
   "dataset_name": "long_term_memory",
-  "version": "2.0",
-  "description": "长时序记忆能力评测：专门测试3个月时间跨度下的记忆保持、信息覆盖废弃、重复强化和检索排序能力",
-  "total_cases": 20,
+  "version": "3.0",
+  "description": "长时序记忆能力评测：专门测试3个月时间跨度下的记忆保持、信息覆盖废弃、重复强化、检索排序、多跳推理和实体追踪能力",
+  "total_cases": 30,
   "difficulty_distribution": {
-    "easy": 3,
-    "medium": 10,
-    "hard": 7
+    "medium": 11,
+    "hard": 9,
+    "expert": 10
   },
   "test_cases": [
     {
@@ -560,6 +560,259 @@
       "difficulty": "medium",
       "priority": "P1",
       "tags": ["temporal", "filtering", "time-window"]
+    },
+    {
+      "test_id": "ltm_021",
+      "name": "多跳推理-3个月决策链重构",
+      "description": "1月决定用MySQL→2月性能问题→3月决定迁PG→4月迁移完成。跨3个月的4条记忆需要串联推理出完整迁移故事",
+      "setup": {
+        "conversations": [
+          {"date": "2026-01-15", "content": "数据库选MySQL 8.0，主从复制", "type": "decision"},
+          {"date": "2026-02-20", "content": "MySQL在高并发下锁表严重，P95超2秒", "type": "problem"},
+          {"date": "2026-03-10", "content": "决定迁移到PostgreSQL 15，支持MVCC", "type": "decision"},
+          {"date": "2026-04-05", "content": "PG迁移完成，P95降到200ms，性能提升10倍", "type": "outcome"}
+        ],
+        "query_time": "2026-04-29"
+      },
+      "query": {"type": "narrative_reconstruction", "keyword": "数据库迁移"},
+      "expected": {
+        "narrative_chain": ["MySQL选型", "性能问题", "PG迁移决策", "迁移成功"],
+        "cause_effect_links": 3,
+        "multi_hop_reasoning_required": true,
+        "time_span_days": 81,
+        "complete_story": true
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["multi-hop", "narrative", "3-month", "causal"]
+    },
+    {
+      "test_id": "ltm_022",
+      "name": "实体追踪-团队成员3个月变迁",
+      "description": "1月团队5人，2月2人离职3人入职，3月又1人转岗。系统应追踪完整的人员变动历史",
+      "setup": {
+        "conversations": [
+          {"date": "2026-01-10", "content": "团队成员：Alice,Bob,Charlie,Dave,Eve", "type": "roster"},
+          {"date": "2026-02-15", "content": "Bob和Dave离职了，新加入Frank,Grace,Henry", "type": "change"},
+          {"date": "2026-03-20", "content": "Charlie转到另一个团队了", "type": "change"}
+        ],
+        "query_time": "2026-04-29"
+      },
+      "query": {"type": "entity_tracking", "entity": "team_members"},
+      "expected": {
+        "current_members": ["Alice", "Eve", "Frank", "Grace", "Henry"],
+        "former_members": ["Bob", "Dave", "Charlie"],
+        "changes_tracked": 3,
+        "entity_tracking_complete": true,
+        "time_span_days": 99
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["entity-tracking", "3-month", "personnel"]
+    },
+    {
+      "test_id": "ltm_023",
+      "name": "时序推理-3个月预算演变",
+      "description": "1月预算500万，2月追加到600万，3月缩减到450万，4月追加项目C到520万。系统应追踪完整预算时间线",
+      "setup": {
+        "conversations": [
+          {"date": "2026-01-05", "content": "年度预算500万", "type": "budget"},
+          {"date": "2026-02-10", "content": "Q1表现好，追加到600万", "type": "update"},
+          {"date": "2026-03-15", "content": "市场不好，缩减到450万", "type": "update"},
+          {"date": "2026-04-01", "content": "项目C单独追加70万，总计520万", "type": "update"}
+        ],
+        "query_time": "2026-04-29"
+      },
+      "query": {"type": "temporal_tracking", "keyword": "预算"},
+      "expected": {
+        "current_budget": "520万",
+        "history": ["500万", "600万", "450万", "520万"],
+        "version_count": 4,
+        "each_change_reasoned": true,
+        "temporal_order_correct": true
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["temporal-reasoning", "3-month", "budget", "versioning"]
+    },
+    {
+      "test_id": "ltm_024",
+      "name": "多跳推理+抗干扰-跨月问题追踪",
+      "description": "1月报告了一个bug→2月修复但引入新bug→3月回滚→4月彻底重写修复。系统应跨4个月追踪完整问题解决链",
+      "setup": {
+        "conversations": [
+          {"date": "2026-01-20", "content": "登录接口偶发500错误，概率约5%", "type": "bug_report"},
+          {"date": "2026-02-10", "content": "修复了500错误，但用户反馈登录变慢了", "type": "fix_attempt"},
+          {"date": "2026-03-05", "content": "回滚到修复前版本，先保证速度", "type": "rollback"},
+          {"date": "2026-04-01", "content": "重写登录模块，彻底解决500错误且性能无损", "type": "final_fix"}
+        ],
+        "query_time": "2026-04-29"
+      },
+      "query": {"type": "issue_tracking", "keyword": "登录500错误"},
+      "expected": {
+        "issue_history": ["bug_report", "partial_fix", "rollback", "final_fix"],
+        "current_status": "resolved",
+        "resolution_method": "模块重写",
+        "chain_length": 4,
+        "multi_hop_reasoning_required": true,
+        "anti_interference": "多次修复尝试不应混淆最终状态"
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["multi-hop", "anti-interference", "issue-tracking", "3-month"]
+    },
+    {
+      "test_id": "ltm_025",
+      "name": "实体追踪-技术债务演变",
+      "description": "1月识别5个技术债务，2月修复2个新增1个，3月修复1个但发现2个新的。系统应追踪技术债务的动态变化",
+      "setup": {
+        "conversations": [
+          {"date": "2026-01-15", "content": "技术债务：1.无单元测试 2.硬编码配置 3.无API文档 4.重复代码 5.老旧依赖", "type": "tech_debt"},
+          {"date": "2026-02-20", "content": "已完成单元测试覆盖和硬编码配置修复。新增：无监控告警", "type": "progress"},
+          {"date": "2026-03-25", "content": "API文档补完了。发现：数据库连接池配置不当、缓存策略缺失", "type": "progress"}
+        ],
+        "query_time": "2026-04-29"
+      },
+      "query": {"type": "entity_tracking", "entity": "tech_debt"},
+      "expected": {
+        "current_debt_list": ["重复代码", "老旧依赖", "无监控告警", "数据库连接池配置不当", "缓存策略缺失"],
+        "resolved_debt": ["无单元测试", "硬编码配置", "无API文档"],
+        "new_debt_discovered": ["无监控告警", "数据库连接池配置不当", "缓存策略缺失"],
+        "net_change": "+1 new debt despite 3 resolved",
+        "entity_tracking_across_time": true
+      },
+      "difficulty": "expert",
+      "priority": "P1",
+      "tags": ["entity-tracking", "tech-debt", "3-month", "dynamics"]
+    },
+    {
+      "test_id": "ltm_026",
+      "name": "时序推理-事件顺序推理",
+      "description": "系统记录了'部署失败'和'回滚成功'两条事件，但没有记录它们之间的因果关系。系统应能推理出部署失败在先、回滚在后",
+      "setup": {
+        "conversations": [
+          {"date": "2026-03-01T10:00:00", "content": "v2.1部署到staging环境", "type": "deployment"},
+          {"date": "2026-03-01T10:30:00", "content": "健康检查失败，502错误", "type": "failure"},
+          {"date": "2026-03-01T10:35:00", "content": "紧急回滚到v2.0", "type": "rollback"},
+          {"date": "2026-03-01T10:40:00", "content": "回滚成功，服务恢复正常", "type": "recovery"}
+        ],
+        "query_time": "2026-04-29"
+      },
+      "query": {"type": "temporal_reasoning", "keyword": "3月部署事故"},
+      "expected": {
+        "event_sequence": ["部署v2.1", "健康检查失败", "回滚v2.0", "恢复"],
+        "causal_inference": "部署失败导致回滚",
+        "duration_minutes": 40,
+        "temporal_reasoning_correct": true
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["temporal-reasoning", "causal-inference", "incident"]
+    },
+    {
+      "test_id": "ltm_027",
+      "name": "多跳推理+实体追踪-项目里程碑链",
+      "description": "项目经历了需求→设计→开发→测试→上线5个阶段，每阶段跨越1-2个月。系统应追踪完整里程碑链",
+      "setup": {
+        "conversations": [
+          {"date": "2026-01-10", "content": "项目需求评审完成，20个用户故事", "type": "milestone"},
+          {"date": "2026-02-01", "content": "架构设计评审通过", "type": "milestone"},
+          {"date": "2026-03-01", "content": "核心功能开发完成", "type": "milestone"},
+          {"date": "2026-03-20", "content": "SIT测试完成，3个P1 bug", "type": "milestone"},
+          {"date": "2026-04-10", "content": "正式上线，灰度10%→50%→100%", "type": "milestone"}
+        ],
+        "query_time": "2026-04-29"
+      },
+      "query": {"type": "milestone_tracking", "project": "main"},
+      "expected": {
+        "milestone_chain": ["需求评审", "架构设计", "开发完成", "SIT测试", "上线"],
+        "total_duration_days": 91,
+        "each_milestone_dated": true,
+        "chain_complete": true,
+        "entity_tracking_across_phases": true
+      },
+      "difficulty": "expert",
+      "priority": "P1",
+      "tags": ["entity-tracking", "milestone", "3-month", "project-lifecycle"]
+    },
+    {
+      "test_id": "ltm_028",
+      "name": "3个月跨度-矛盾信息长期共存",
+      "description": "1月说'生产在AWS'，3月更正为'阿里云'，但4月仍有人引用AWS信息。系统应确保新信息优先但旧信息不丢失",
+      "setup": {
+        "conversations": [
+          {"date": "2026-01-15", "content": "生产环境在AWS us-east-1", "type": "config", "status": "original"},
+          {"date": "2026-03-10", "content": "更正：生产环境已迁移到阿里云华东2", "type": "correction", "status": "active"},
+          {"date": "2026-04-05", "content": "有人问：AWS上的数据备份方案是什么？（基于过时信息）", "type": "query_based_on_old_info"}
+        ],
+        "query_time": "2026-04-29"
+      },
+      "query": {"type": "search", "keyword": "生产环境位置"},
+      "expected": {
+        "current_answer": "阿里云华东2",
+        "old_answer": "AWS us-east-1",
+        "old_marked_superseded": true,
+        "stale_reference_detected": true,
+        "stale_reference_date": "2026-04-05",
+        "recommendation": "提醒用户基于最新信息提问"
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["3-month", "contradiction", "stale-reference", "temporal"]
+    },
+    {
+      "test_id": "ltm_029",
+      "name": "多跳推理-跨类型记忆关联",
+      "description": "决策记忆('用Docker')→命令记忆('docker build')→习惯记忆('喜欢用docker compose')→知识记忆('Docker镜像仓库地址')。跨4种记忆类型的关联推理",
+      "setup": {
+        "memories": [
+          {"type": "decision", "content": "容器化方案选定Docker", "date": "2026-01-10"},
+          {"type": "command", "content": "docker build -t app . (使用30次)", "date": "2026-02-01"},
+          {"type": "preference", "content": "偏好使用docker compose管理多容器", "date": "2026-03-01"},
+          {"type": "knowledge", "content": "Docker镜像仓库：registry.internal.com", "date": "2026-04-01"}
+        ],
+        "query_time": "2026-04-29"
+      },
+      "query": {"type": "cross_memory_type_search", "keyword": "Docker"},
+      "expected": {
+        "memory_types_found": ["decision", "command", "preference", "knowledge"],
+        "cross_type_linking": true,
+        "complete_docker_context": true,
+        "multi_hop_across_types": true,
+        "relevance_order": ["knowledge", "preference", "command", "decision"]
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["multi-hop", "cross-type", "3-month", "integration"]
+    },
+    {
+      "test_id": "ltm_030",
+      "name": "3个月+多跳+抗干扰-完整工作流回忆",
+      "description": "用户在3个月内完成了从技术选型→环境搭建→开发→测试→部署的完整流程，中间穿插了大量无关对话。系统应提取出完整的端到端工作流",
+      "setup": {
+        "target_conversations": [
+          {"date": "2026-01-10", "content": "技术选型：Go+gRPC+PostgreSQL", "type": "decision"},
+          {"date": "2026-01-25", "content": "开发环境搭建完成，使用Docker Compose", "type": "setup"},
+          {"date": "2026-02-15", "content": "核心API开发完成，32个端点", "type": "development"},
+          {"date": "2026-03-10", "content": "压力测试通过，QPS达到5000", "type": "testing"},
+          {"date": "2026-04-01", "content": "K8s部署完成，HPA自动扩缩容", "type": "deployment"}
+        ],
+        "noise_conversations": 100,
+        "noise_category": "general",
+        "query_time": "2026-04-29"
+      },
+      "query": {"type": "workflow_extraction", "keyword": "后端服务开发全流程"},
+      "expected": {
+        "workflow_extracted": true,
+        "workflow_steps": ["技术选型", "环境搭建", "开发", "测试", "部署"],
+        "each_step_details_accessible": true,
+        "noise_filtered": true,
+        "time_span_days": 82,
+        "multi_hop_reasoning_required": true
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["3-month", "multi-hop", "anti-interference", "workflow", "integration"]
     }
   ]
 }

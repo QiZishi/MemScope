@@ -1,12 +1,13 @@
 {
   "dataset_name": "preference_memory",
-  "version": "2.0",
-  "description": "偏好记忆能力评测：测试系统对用户偏好的提取、推断、冲突解决、衰减和演进能力",
-  "total_cases": 30,
+  "version": "3.0",
+  "description": "偏好记忆能力评测：测试系统对用户偏好的提取、推断、冲突解决、衰减、演进、多跳推理和跨维度关联能力",
+  "total_cases": 35,
   "difficulty_distribution": {
-    "easy": 5,
-    "medium": 15,
-    "hard": 10
+    "easy": 4,
+    "medium": 14,
+    "hard": 12,
+    "expert": 5
   },
   "test_cases": [
     {
@@ -698,6 +699,143 @@
       "difficulty": "medium",
       "priority": "P2",
       "tags": ["context-aware", "fallback", "popularity"]
+    },
+    {
+      "test_id": "pref_031",
+      "name": "多跳推理-偏好因果链",
+      "description": "用户偏好Python→因Python偏好选择Django框架→因Django选择PostgreSQL（ORM兼容性）→因PostgreSQL选择pgAdmin工具。系统应推理出偏好之间的因果链",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "后端语言我选Python，写起来最顺手", "timestamp": "2026-01-10T10:00:00"},
+          {"role": "user", "content": "Web框架用Django吧，Python生态里最成熟的", "timestamp": "2026-01-15T10:00:00"},
+          {"role": "user", "content": "数据库用PostgreSQL，Django的ORM对PG支持最好", "timestamp": "2026-01-20T10:00:00"},
+          {"role": "user", "content": "数据库管理工具就用pgAdmin吧，和PG配套", "timestamp": "2026-01-25T10:00:00"}
+        ]
+      },
+      "query": {"type": "preference_causal_chain", "user": "user_h", "start": "language"},
+      "expected": {
+        "causal_chain": [
+          {"category": "language", "value": "Python", "cause": "个人偏好"},
+          {"category": "framework", "value": "Django", "cause": "Python生态最成熟"},
+          {"category": "database", "value": "PostgreSQL", "cause": "Django ORM兼容"},
+          {"category": "db_tool", "value": "pgAdmin", "cause": "PostgreSQL配套"}
+        ],
+        "chain_length": 4,
+        "multi_hop_reasoning_required": true
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["multi-hop", "causal-chain", "preference-linking"]
+    },
+    {
+      "test_id": "pref_032",
+      "name": "实体追踪-3个月偏好漂移",
+      "description": "用户1月偏好保守技术栈(Java+Spring)，3月开始接受新潮(Rust+Axum)，4月完全转向新潮技术。系统应追踪偏好漂移的完整过程和速度",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "后端就用Java+Spring Boot，稳定最重要", "timestamp": "2026-01-10T10:00:00"},
+          {"role": "user", "content": "Rust性能确实好，可以试试Axum框架", "timestamp": "2026-02-20T10:00:00"},
+          {"role": "user", "content": "新项目全部用Rust+Axum，性能提升太明显了", "timestamp": "2026-03-15T10:00:00"},
+          {"role": "user", "content": "Java太臃肿了，以后都不用了", "timestamp": "2026-04-01T10:00:00"}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "preference_drift_analysis", "user": "user_i", "category": "backend"},
+      "expected": {
+        "current_preference": "Rust+Axum",
+        "previous_preference": "Java+Spring Boot",
+        "drift_detected": true,
+        "drift_direction": "conservative_to_progressive",
+        "drift_speed": "3_months",
+        "complete_reversal": true,
+        "entity_tracking_across_time": true
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["entity-tracking", "preference-drift", "3-month", "temporal"]
+    },
+    {
+      "test_id": "pref_033",
+      "name": "多跳推理+抗干扰-隐式偏好与显式矛盾",
+      "description": "用户使用模式显示偏好TypeScript(使用率80%)，但明确说'不喜欢类型系统'。隐式证据和显式声明矛盾时，显式应优先，但隐式不应完全丢弃",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "我不太喜欢TypeScript那套类型声明，太啰嗦了", "timestamp": "2026-04-01T10:00:00"}
+        ],
+        "usage_data": {
+          "TypeScript": {"usage_ratio": 0.8, "period": "2026-01 to 2026-04"},
+          "JavaScript": {"usage_ratio": 0.2, "period": "2026-01 to 2026-04"}
+        },
+        "context": "公司项目强制要求TypeScript"
+      },
+      "query": {"type": "get_preference", "user": "user_j", "category": "language"},
+      "expected": {
+        "explicit_preference": "JavaScript（不喜欢TypeScript）",
+        "implicit_evidence": "TypeScript使用率80%",
+        "conflict_detected": true,
+        "resolution": "explicit_overrides_with_context_note",
+        "context_considered": "公司强制要求",
+        "nuanced_result": "个人偏好JavaScript，但实际使用TypeScript（公司要求）"
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["multi-hop", "explicit-vs-implicit", "anti-interference", "context"]
+    },
+    {
+      "test_id": "pref_034",
+      "name": "时序推理-偏好触发条件推断",
+      "description": "用户在不同时间段的偏好变化有规律：工作日偏好CLI工具，周末偏好GUI工具；远程办公时偏好轻量编辑器，在办公室偏好全功能IDE。系统应推断出时间/场景触发条件",
+      "setup": {
+        "activity_logs": [
+          {"tool": "vim", "context": "remote_work", "day": "weekday", "count": 20},
+          {"tool": "IntelliJ", "context": "office", "day": "weekday", "count": 25},
+          {"tool": "VSCode", "context": "remote_work", "day": "weekend", "count": 10},
+          {"tool": "vim", "context": "remote_work", "day": "weekend", "count": 5}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "preference_trigger_analysis", "user": "user_k", "category": "editor"},
+      "expected": {
+        "conditional_preferences": [
+          {"condition": "office+weekday", "value": "IntelliJ"},
+          {"condition": "remote+weekday", "value": "vim"},
+          {"condition": "weekend", "value": "VSCode"}
+        ],
+        "trigger_conditions_found": true,
+        "temporal_pattern_detected": true,
+        "context_aware_recommendation": true
+      },
+      "difficulty": "expert",
+      "priority": "P1",
+      "tags": ["temporal-reasoning", "trigger-condition", "pattern-detection"]
+    },
+    {
+      "test_id": "pref_035",
+      "name": "3个月跨度+衰减-偏好生命周期管理",
+      "description": "用户1月强烈偏好Go(多次表达)，2月开始沉默，3月偶尔提及，4月转向Rust。系统应同时考虑衰减和新兴偏好，正确判断当前偏好状态",
+      "setup": {
+        "messages": [
+          {"role": "user", "content": "Go语言太棒了，并发处理无敌", "timestamp": "2026-01-10T10:00:00"},
+          {"role": "user", "content": "Go的goroutine和channel简直是神器", "timestamp": "2026-01-20T10:00:00"},
+          {"role": "user", "content": "最近在看Rust，所有权模型很有意思", "timestamp": "2026-03-15T10:00:00"},
+          {"role": "user", "content": "Rust的性能和安全性真的无可挑剔", "timestamp": "2026-04-10T10:00:00"},
+          {"role": "user", "content": "新项目准备全面切换到Rust", "timestamp": "2026-04-20T10:00:00"}
+        ],
+        "current_time": "2026-04-29"
+      },
+      "query": {"type": "get_preference", "user": "user_l", "category": "language"},
+      "expected": {
+        "current_primary": "Rust",
+        "previous_primary": "Go",
+        "go_confidence_decayed": true,
+        "rust_confidence_rising": true,
+        "transition_detected": true,
+        "lifecycle_stage": "replacement_in_progress",
+        "old_preference_not_forgotten": "Go仍保留在记忆中但已非首选"
+      },
+      "difficulty": "expert",
+      "priority": "P0",
+      "tags": ["3-month", "lifecycle", "decay", "emerging-preference"]
     }
   ]
 }
