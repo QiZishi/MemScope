@@ -10,3 +10,4 @@ build/
 *.sqlite
 *.log
 /tmp/
+progress_save.md
