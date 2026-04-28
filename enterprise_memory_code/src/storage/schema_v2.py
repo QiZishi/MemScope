@@ -53,6 +53,9 @@ def apply_v2_schema(conn: sqlite3.Connection) -> None:
     cursor.execute("SELECT version FROM schema_version WHERE version = ?", (_SCHEMA_VERSION,))
     if cursor.fetchone():
         logger.debug("enterprise-memory: schema v2 already applied")
+        # Ensure unique index exists for behavior_patterns (migration for existing tables)
+        cursor.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_bp_owner_type_unique ON behavior_patterns(owner, pattern_type)")
+        conn.commit()
         return
 
     now_ms = int(time.time() * 1000)
@@ -93,7 +96,8 @@ def apply_v2_schema(conn: sqlite3.Connection) -> None:
             confidence REAL DEFAULT 0.5,
             sample_count INTEGER DEFAULT 0,
             createdAt INTEGER NOT NULL,
-            updatedAt INTEGER NOT NULL
+            updatedAt INTEGER NOT NULL,
+            UNIQUE(owner, pattern_type)
         )
     """)
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_bp_owner ON behavior_patterns(owner)")
@@ -302,9 +306,15 @@ def insert_behavior_pattern(
 
     cursor = conn.cursor()
     cursor.execute("""
-        INSERT OR REPLACE INTO behavior_patterns
+        INSERT INTO behavior_patterns
         (id, owner, pattern_type, description, data, confidence, sample_count, createdAt, updatedAt)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(owner, pattern_type) DO UPDATE SET
+            description = excluded.description,
+            data = excluded.data,
+            confidence = excluded.confidence,
+            sample_count = excluded.sample_count,
+            updatedAt = excluded.updatedAt
     """, (
         pattern_id, owner, pattern_type, description,
         json.dumps(data) if data else None,

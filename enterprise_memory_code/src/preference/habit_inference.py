@@ -76,6 +76,43 @@ class HabitInference:
         logger.info(f"habit_inference: inferred {len(patterns)} patterns for owner={owner}")
         return patterns
 
+    def _upsert_pattern(
+        self,
+        owner: str,
+        pattern_type: str,
+        description: str,
+        data: Optional[Dict[str, Any]],
+        confidence: float,
+        sample_count: int,
+    ) -> str:
+        """Insert or update a behavior pattern, preventing duplicates.
+
+        Checks for existing patterns of the same type for this owner
+        and updates them instead of creating new records.
+        """
+        existing = self._store.get_behavior_patterns(
+            owner=owner, pattern_type=pattern_type, limit=1
+        )
+        if existing:
+            pattern_id = existing[0]["id"]
+            self._store.update_behavior_pattern(
+                pattern_id,
+                description=description,
+                data=data,
+                confidence=confidence,
+                sample_count=sample_count,
+            )
+            return pattern_id
+        else:
+            return self._store.insert_behavior_pattern(
+                owner=owner,
+                pattern_type=pattern_type,
+                description=description,
+                data=data,
+                confidence=confidence,
+                sample_count=sample_count,
+            )
+
     # ------------------------------------------------------------------
     # Time-of-day patterns
     # ------------------------------------------------------------------
@@ -121,7 +158,7 @@ class HabitInference:
             }
             confidence = min(0.5 + (total / 200) * 0.4, 0.95)
 
-            pattern_id = self._store.insert_behavior_pattern(
+            pattern_id = self._upsert_pattern(
                 owner=owner,
                 pattern_type="time_pattern",
                 description=description,
@@ -171,7 +208,7 @@ class HabitInference:
                 }
                 confidence = min(0.4 + (total / 100) * 0.3, 0.85)
 
-                pattern_id = self._store.insert_behavior_pattern(
+                pattern_id = self._upsert_pattern(
                     owner=owner,
                     pattern_type="time_pattern",
                     description=description,
@@ -221,7 +258,7 @@ class HabitInference:
 
         confidence = min(0.5 + (total / 100) * 0.4, 0.95)
 
-        pattern_id = self._store.insert_behavior_pattern(
+        pattern_id = self._upsert_pattern(
             owner=owner,
             pattern_type="tool_frequency",
             description=description,
@@ -290,7 +327,7 @@ class HabitInference:
             }
             confidence = min(0.4 + len(chunk_ids) / 20, 0.9)
 
-            pattern_id = self._store.insert_behavior_pattern(
+            pattern_id = self._upsert_pattern(
                 owner=owner,
                 pattern_type="topic_cluster",
                 description=description,
@@ -351,7 +388,7 @@ class HabitInference:
             }
             confidence = min(0.5 + count / 20, 0.95)
 
-            pattern_id = self._store.insert_behavior_pattern(
+            pattern_id = self._upsert_pattern(
                 owner=owner,
                 pattern_type="workflow",
                 description=description,

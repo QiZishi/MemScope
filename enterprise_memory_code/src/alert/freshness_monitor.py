@@ -269,17 +269,17 @@ class FreshnessMonitor:
         """, (aging_cutoff,))
         updated += cursor.rowcount
 
-        # Entries with no access records — use creation time
+        # Entries with no access records — use last_verified_at as creation proxy
         cursor.execute("""
             UPDATE knowledge_health
             SET freshness_status = CASE
-                WHEN ? < ? THEN 'forgotten'
-                WHEN ? < ? THEN 'stale'
-                WHEN ? < ? THEN 'aging'
+                WHEN last_verified_at < ? THEN 'forgotten'
+                WHEN last_verified_at < ? THEN 'stale'
+                WHEN last_verified_at < ? THEN 'aging'
                 ELSE 'fresh'
             END
             WHERE last_accessed_at IS NULL
-        """, (created_at, forgotten_cutoff, created_at, stale_cutoff, created_at, aging_cutoff))
+        """, (forgotten_cutoff, stale_cutoff, aging_cutoff))
         updated += cursor.rowcount
 
         self._store.conn.commit()

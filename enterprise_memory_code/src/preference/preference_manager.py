@@ -216,7 +216,31 @@ class PreferenceManager:
         Returns:
             The winning value.
         """
-        # Explicit always wins
+        existing = self._store.get_user_preference(owner, category, key)
+
+        # Rule 1: Explicit always wins over inferred
+        if existing and existing.get("source") == "user_explicit":
+            return explicit_value
+
+        # Rules 2 & 3: For inferred vs inferred, compare confidence then recency
+        if existing:
+            existing_confidence = existing.get("confidence", 0)
+            existing_source = existing.get("source", "")
+
+            # If existing is also inferred, apply rules 2 and 3
+            if existing_source != "user_explicit":
+                # Rule 2: Higher confidence wins
+                if inferred_confidence > existing_confidence:
+                    return inferred_value
+                elif inferred_confidence < existing_confidence:
+                    return explicit_value
+                else:
+                    # Rule 3: Recency wins
+                    existing_updated = existing.get("updatedAt", 0)
+                    now = int(time.time() * 1000)
+                    return inferred_value if now >= existing_updated else explicit_value
+
+        # Default: explicit wins
         return explicit_value
 
     # ------------------------------------------------------------------

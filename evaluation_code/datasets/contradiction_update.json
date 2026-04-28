@@ -1,0 +1,574 @@
+{
+  "dataset_name": "contradiction_update",
+  "version": "1.0",
+  "description": "Tests the memory engine's ability to handle contradictory and updating information. 20 test cases across 6 categories.",
+  "test_cases": [
+    {
+      "test_id": "contradiction_001",
+      "name": "Direct override: workspace number change",
+      "category": "direct_override",
+      "difficulty": "easy",
+      "input": {
+        "old": {
+          "user_msg": "我的工位号是 A-305",
+          "assistant_msg": "已记录，工位号：A-305。",
+          "timestamp": "2026-04-01T10:00:00Z"
+        },
+        "new": {
+          "user_msg": "我搬到新工位了，现在是 B-201",
+          "assistant_msg": "已更新，工位号：B-201。旧工位 A-305 已归档。",
+          "timestamp": "2026-05-01T10:00:00Z"
+        },
+        "query": "工位号",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value": "B-201",
+        "old_value": "A-305",
+        "expected_answer_contains": ["B-201", "A-305"]
+      },
+      "evaluation_criteria": {
+        "latest_value_accuracy": {"target": 0.95, "min": 0.50},
+        "history_preserved": {"target": 0.90},
+        "min_chunks": 2
+      }
+    },
+    {
+      "test_id": "contradiction_002",
+      "name": "Direct override: phone number update",
+      "category": "direct_override",
+      "difficulty": "easy",
+      "input": {
+        "old": {
+          "user_msg": "我的手机号是 13800001111",
+          "assistant_msg": "已记录。",
+          "timestamp": "2026-03-01T10:00:00Z"
+        },
+        "new": {
+          "user_msg": "我换号了，新号码是 13900002222",
+          "assistant_msg": "已更新手机号。",
+          "timestamp": "2026-05-01T10:00:00Z"
+        },
+        "query": "我 手机号",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value": "13900002222",
+        "old_value": "13800001111",
+        "expected_answer_contains": ["13900002222"]
+      },
+      "evaluation_criteria": {
+        "latest_value_accuracy": {"target": 0.95, "min": 0.50},
+        "history_preserved": {"target": 0.85},
+        "min_chunks": 2
+      }
+    },
+    {
+      "test_id": "contradiction_003",
+      "name": "Direct override: address change",
+      "category": "direct_override",
+      "difficulty": "medium",
+      "input": {
+        "old": {
+          "user_msg": "我们团队的办公地点在望京SOHO T2 12层",
+          "assistant_msg": "已记录。",
+          "timestamp": "2026-01-15T10:00:00Z"
+        },
+        "new": {
+          "user_msg": "团队搬到中关村软件园二期了，3号楼5层",
+          "assistant_msg": "已更新办公地点。",
+          "timestamp": "2026-04-15T10:00:00Z"
+        },
+        "query": "团队 办公地点",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value": "中关村软件园二期 3号楼5层",
+        "old_value": "望京SOHO",
+        "expected_answer_contains": ["中关村", "3号楼"]
+      },
+      "evaluation_criteria": {
+        "latest_value_accuracy": {"target": 0.95, "min": 0.50},
+        "history_preserved": {"target": 0.80},
+        "min_chunks": 2
+      }
+    },
+    {
+      "test_id": "contradiction_004",
+      "name": "Direct override: emergency contact change",
+      "category": "direct_override",
+      "difficulty": "easy",
+      "input": {
+        "old": {
+          "user_msg": "紧急联系人是张三，电话13800003333",
+          "assistant_msg": "已记录紧急联系人信息。",
+          "timestamp": "2026-02-01T10:00:00Z"
+        },
+        "new": {
+          "user_msg": "紧急联系人改成李四了，电话13900004444",
+          "assistant_msg": "已更新紧急联系人。",
+          "timestamp": "2026-05-01T10:00:00Z"
+        },
+        "query": "紧急联系人",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value": "李四",
+        "old_value": "张三",
+        "expected_answer_contains": ["李四"]
+      },
+      "evaluation_criteria": {
+        "latest_value_accuracy": {"target": 0.95, "min": 0.50},
+        "history_preserved": {"target": 0.80},
+        "min_chunks": 2
+      }
+    },
+    {
+      "test_id": "contradiction_005",
+      "name": "Partial update: team member change",
+      "category": "partial_update",
+      "difficulty": "easy",
+      "input": {
+        "old": {
+          "user_msg": "项目G的成员有张三、李四、王五",
+          "assistant_msg": "已记录项目G成员：张三、李四、王五。",
+          "timestamp": "2026-04-01T10:00:00Z"
+        },
+        "new": {
+          "user_msg": "王五退出项目G了，赵六加入了",
+          "assistant_msg": "已更新，项目G成员变更为：张三、李四、赵六。",
+          "timestamp": "2026-04-15T10:00:00Z"
+        },
+        "query": "项目G 成员",
+        "max_results": 10
+      },
+      "expected": {
+        "current_members": ["张三", "李四", "赵六"],
+        "removed_members": ["王五"],
+        "expected_answer_contains": ["张三", "李四", "赵六"]
+      },
+      "evaluation_criteria": {
+        "correct_members_recall": {"target": 0.95, "min": 0.50},
+        "removed_member_not_in_latest": {"target": 1.0},
+        "history_preserved": {"target": 0.80}
+      }
+    },
+    {
+      "test_id": "contradiction_006",
+      "name": "Partial update: project scope expansion",
+      "category": "partial_update",
+      "difficulty": "medium",
+      "input": {
+        "old": {
+          "user_msg": "项目H只做前端页面，预算30万",
+          "assistant_msg": "已记录：项目H前端页面，预算30万。",
+          "timestamp": "2026-03-01T10:00:00Z"
+        },
+        "new": {
+          "user_msg": "项目H范围扩大了，现在也要做后端API，预算追加到50万",
+          "assistant_msg": "已更新：项目H扩展到前后端，预算50万。",
+          "timestamp": "2026-04-15T10:00:00Z"
+        },
+        "query": "项目H 范围 预算",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer_contains": ["50万", "前后端"],
+        "old_scope": "前端页面",
+        "old_budget": "30万"
+      },
+      "evaluation_criteria": {
+        "latest_scope_correct": {"target": 0.95, "min": 0.50},
+        "history_preserved": {"target": 0.80},
+        "min_chunks": 2
+      }
+    },
+    {
+      "test_id": "contradiction_007",
+      "name": "Partial update: requirement change",
+      "category": "partial_update",
+      "difficulty": "medium",
+      "input": {
+        "old": {
+          "user_msg": "项目I的登录方式只支持手机号验证码",
+          "assistant_msg": "已记录：项目I登录方式——手机验证码。",
+          "timestamp": "2026-03-01T10:00:00Z"
+        },
+        "new": {
+          "user_msg": "项目I登录要增加微信扫码和邮箱登录",
+          "assistant_msg": "已更新：项目I登录方式增加微信扫码和邮箱。",
+          "timestamp": "2026-04-15T10:00:00Z"
+        },
+        "query": "项目I 登录方式",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer_contains": ["微信扫码", "邮箱"],
+        "original_method": "手机验证码"
+      },
+      "evaluation_criteria": {
+        "latest_correct": {"target": 0.95, "min": 0.50},
+        "history_preserved": {"target": 0.80},
+        "min_chunks": 2
+      }
+    },
+    {
+      "test_id": "contradiction_008",
+      "name": "Partial update: budget reallocation",
+      "category": "partial_update",
+      "difficulty": "easy",
+      "input": {
+        "old": {
+          "user_msg": "Q2市场推广预算200万，其中线上100万，线下100万",
+          "assistant_msg": "已记录。",
+          "timestamp": "2026-03-01T10:00:00Z"
+        },
+        "new": {
+          "user_msg": "市场推广预算调整：线上增加到150万，线下缩减到50万",
+          "assistant_msg": "已更新。",
+          "timestamp": "2026-04-15T10:00:00Z"
+        },
+        "query": "Q2 市场推广 预算 分配",
+        "max_results": 10
+      },
+      "expected": {
+        "expected_answer_contains": ["150万", "50万"],
+        "old_values": ["100万", "100万"]
+      },
+      "evaluation_criteria": {
+        "latest_correct": {"target": 0.95, "min": 0.50},
+        "history_preserved": {"target": 0.80},
+        "min_chunks": 2
+      }
+    },
+    {
+      "test_id": "contradiction_009",
+      "name": "Temporal contradiction: meeting time 3 changes",
+      "category": "temporal_contradiction",
+      "difficulty": "easy",
+      "input": {
+        "versions": [
+          {"user_msg": "每周二下午3点我们团队有周会", "assistant_msg": "已记录：团队周会，每周二 15:00。", "timestamp": "2026-03-01T10:00:00Z"},
+          {"user_msg": "周会改到每周四上午10点了", "assistant_msg": "已更新：团队周会改为每周四 10:00。", "timestamp": "2026-04-01T10:00:00Z"},
+          {"user_msg": "周会又改回周二下午了，但是改到4点", "assistant_msg": "已更新：团队周会改为每周二 16:00。", "timestamp": "2026-04-15T10:00:00Z"}
+        ],
+        "query": "团队周会 时间",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value_contains": ["16:00", "4点"],
+        "history_contains": ["15:00", "10:00"],
+        "expected_answer_contains": ["周二", "16"]
+      },
+      "evaluation_criteria": {
+        "latest_value_correct": {"target": 0.95, "min": 0.50},
+        "history_preserved": {"target": 0.90},
+        "version_count_accuracy": {"target": 0.90},
+        "temporal_sort_accuracy": {"target": 0.90}
+      }
+    },
+    {
+      "test_id": "contradiction_010",
+      "name": "Temporal contradiction: project deadline changes",
+      "category": "temporal_contradiction",
+      "difficulty": "medium",
+      "input": {
+        "versions": [
+          {"user_msg": "项目J预计6月底上线", "assistant_msg": "已记录：项目J上线时间6月底。", "timestamp": "2026-02-01T10:00:00Z"},
+          {"user_msg": "项目J延期到8月底了", "assistant_msg": "已更新：项目J上线时间8月底。", "timestamp": "2026-04-01T10:00:00Z"},
+          {"user_msg": "项目J最终定在7月15号上线", "assistant_msg": "已更新：项目J上线时间7月15日。", "timestamp": "2026-04-20T10:00:00Z"}
+        ],
+        "query": "项目J 上线时间",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value_contains": ["7月15"],
+        "history_contains": ["6月底", "8月底"],
+        "expected_answer_contains": ["7月15"]
+      },
+      "evaluation_criteria": {
+        "latest_value_correct": {"target": 0.95, "min": 0.50},
+        "history_preserved": {"target": 0.80},
+        "min_chunks": 3
+      }
+    },
+    {
+      "test_id": "contradiction_011",
+      "name": "Temporal contradiction: tech stack evolution",
+      "category": "temporal_contradiction",
+      "difficulty": "hard",
+      "input": {
+        "versions": [
+          {"user_msg": "项目K用的是jQuery + Bootstrap", "assistant_msg": "已记录。", "timestamp": "2025-06-01T10:00:00Z"},
+          {"user_msg": "项目K前端迁移到Vue 2了", "assistant_msg": "已更新。", "timestamp": "2025-12-01T10:00:00Z"},
+          {"user_msg": "项目K又升级到Vue 3了", "assistant_msg": "已更新。", "timestamp": "2026-03-01T10:00:00Z"},
+          {"user_msg": "项目K现在用React 18重写了", "assistant_msg": "已更新。", "timestamp": "2026-04-28T10:00:00Z"}
+        ],
+        "query": "项目K 前端 技术栈",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value_contains": ["React 18"],
+        "history_contains": ["jQuery", "Vue 2", "Vue 3"],
+        "expected_answer_contains": ["React"]
+      },
+      "evaluation_criteria": {
+        "latest_value_correct": {"target": 0.95, "min": 0.50},
+        "history_preserved": {"target": 0.70},
+        "min_chunks": 3
+      }
+    },
+    {
+      "test_id": "contradiction_012",
+      "name": "Temporal contradiction: policy updates",
+      "category": "temporal_contradiction",
+      "difficulty": "medium",
+      "input": {
+        "versions": [
+          {"user_msg": "报销制度：差旅住宿标准500元/晚", "assistant_msg": "已记录。", "timestamp": "2026-01-01T10:00:00Z"},
+          {"user_msg": "报销制度更新：住宿标准提高到800元/晚", "assistant_msg": "已更新。", "timestamp": "2026-03-01T10:00:00Z"},
+          {"user_msg": "报销住宿标准又改回500了，但是餐补增加到200/天", "assistant_msg": "已更新。", "timestamp": "2026-04-15T10:00:00Z"}
+        ],
+        "query": "报销制度 住宿标准",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value_contains": ["500"],
+        "history_contains": ["800"],
+        "expected_answer_contains": ["500"]
+      },
+      "evaluation_criteria": {
+        "latest_value_correct": {"target": 0.90, "min": 0.40},
+        "history_preserved": {"target": 0.70},
+        "min_chunks": 2
+      }
+    },
+    {
+      "test_id": "contradiction_013",
+      "name": "Multi-entity: update one project, preserve another",
+      "category": "multi_entity",
+      "difficulty": "easy",
+      "input": {
+        "original": {
+          "user_msg": "项目H预算50万，项目I预算30万",
+          "assistant_msg": "已记录：项目H预算50万，项目I预算30万。",
+          "timestamp": "2026-04-01T10:00:00Z"
+        },
+        "update": {
+          "user_msg": "项目H的预算追加到70万了",
+          "assistant_msg": "已更新项目H预算为70万。项目I预算不变。",
+          "timestamp": "2026-04-10T10:00:00Z"
+        },
+        "queries": [
+          {"query": "项目H 预算", "expected_contains": ["70万"]},
+          {"query": "项目I 预算", "expected_contains": ["30万"]}
+        ]
+      },
+      "expected": {
+        "project_h_latest": "70万",
+        "project_i_preserved": "30万"
+      },
+      "evaluation_criteria": {
+        "project_h_updated": {"target": 0.95},
+        "project_i_preserved": {"target": 0.95},
+        "partial_update_fidelity": {"target": 0.95}
+      }
+    },
+    {
+      "test_id": "contradiction_014",
+      "name": "Multi-entity: update schedule for one team only",
+      "category": "multi_entity",
+      "difficulty": "medium",
+      "input": {
+        "original": {
+          "user_msg": "前端团队周一10点站会，后端团队周一2点站会",
+          "assistant_msg": "已记录。",
+          "timestamp": "2026-04-01T10:00:00Z"
+        },
+        "update": {
+          "user_msg": "前端团队站会改到周三10点了",
+          "assistant_msg": "已更新前端站会时间。",
+          "timestamp": "2026-04-15T10:00:00Z"
+        },
+        "queries": [
+          {"query": "前端团队 站会", "expected_contains": ["周三"]},
+          {"query": "后端团队 站会", "expected_contains": ["周一", "2点"]}
+        ]
+      },
+      "expected": {
+        "frontend_schedule": "周三 10:00",
+        "backend_preserved": "周一 14:00"
+      },
+      "evaluation_criteria": {
+        "frontend_updated": {"target": 0.95},
+        "backend_preserved": {"target": 0.95},
+        "partial_update_fidelity": {"target": 0.95}
+      }
+    },
+    {
+      "test_id": "contradiction_015",
+      "name": "Multi-entity: 3 projects with independent budgets",
+      "category": "multi_entity",
+      "difficulty": "hard",
+      "input": {
+        "original": {
+          "user_msg": "项目A预算100万，项目B预算200万，项目C预算50万",
+          "assistant_msg": "已记录三个项目预算。",
+          "timestamp": "2026-03-01T10:00:00Z"
+        },
+        "updates": [
+          {"user_msg": "项目A追加到150万", "assistant_msg": "已更新项目A预算。", "timestamp": "2026-04-01T10:00:00Z"},
+          {"user_msg": "项目B缩减到150万", "assistant_msg": "已更新项目B预算。", "timestamp": "2026-04-15T10:00:00Z"}
+        ],
+        "queries": [
+          {"query": "项目A 预算", "expected_contains": ["150万"]},
+          {"query": "项目B 预算", "expected_contains": ["150万"]},
+          {"query": "项目C 预算", "expected_contains": ["50万"]}
+        ]
+      },
+      "expected": {
+        "project_a_latest": "150万",
+        "project_b_latest": "150万",
+        "project_c_preserved": "50万"
+      },
+      "evaluation_criteria": {
+        "project_a_updated": {"target": 0.95},
+        "project_b_updated": {"target": 0.95},
+        "project_c_preserved": {"target": 0.95},
+        "partial_update_fidelity": {"target": 0.90}
+      }
+    },
+    {
+      "test_id": "contradiction_016",
+      "name": "Cancel/retract: meeting cancellation",
+      "category": "cancel_retraction",
+      "difficulty": "easy",
+      "input": {
+        "create": {
+          "user_msg": "帮我约下周一和客户A的会议",
+          "assistant_msg": "已记录，下周一与客户A的会议。",
+          "timestamp": "2026-04-28T10:00:00Z"
+        },
+        "cancel": {
+          "user_msg": "下周一和客户A的会议取消了",
+          "assistant_msg": "已取消该会议记录。",
+          "timestamp": "2026-04-29T10:00:00Z"
+        },
+        "query": "下周一 安排 会议",
+        "max_results": 10
+      },
+      "expected": {
+        "cancellation_detected": true,
+        "original_event_in_history": true,
+        "expected_answer_contains": ["取消"]
+      },
+      "evaluation_criteria": {
+        "cancellation_detected": {"target": 0.90},
+        "cancellation_in_latest": {"target": 0.90},
+        "original_event_preserved": {"target": 0.85}
+      }
+    },
+    {
+      "test_id": "contradiction_017",
+      "name": "Cancel/retract: task retraction",
+      "category": "cancel_retraction",
+      "difficulty": "medium",
+      "input": {
+        "create": {
+          "user_msg": "安排一下周三和设计团队的评审会",
+          "assistant_msg": "已记录，周三设计评审会。",
+          "timestamp": "2026-04-28T10:00:00Z"
+        },
+        "cancel": {
+          "user_msg": "周三的评审会推迟了，先不开了",
+          "assistant_msg": "已取消该评审会安排。",
+          "timestamp": "2026-04-29T10:00:00Z"
+        },
+        "query": "周三 设计 评审会",
+        "max_results": 10
+      },
+      "expected": {
+        "cancellation_detected": true,
+        "expected_answer_contains": ["取消", "推迟"]
+      },
+      "evaluation_criteria": {
+        "cancellation_detected": {"target": 0.90},
+        "original_event_preserved": {"target": 0.80}
+      }
+    },
+    {
+      "test_id": "contradiction_018",
+      "name": "Cancel/retract: travel plan cancellation",
+      "category": "cancel_retraction",
+      "difficulty": "medium",
+      "input": {
+        "create": {
+          "user_msg": "下周去深圳出差三天",
+          "assistant_msg": "已记录出差计划。",
+          "timestamp": "2026-04-28T10:00:00Z"
+        },
+        "cancel": {
+          "user_msg": "深圳出差取消了，改成线上会议",
+          "assistant_msg": "已取消出差，更新为线上会议。",
+          "timestamp": "2026-04-29T10:00:00Z"
+        },
+        "query": "下周 出差 安排",
+        "max_results": 10
+      },
+      "expected": {
+        "cancellation_detected": true,
+        "expected_answer_contains": ["取消", "线上会议"]
+      },
+      "evaluation_criteria": {
+        "cancellation_detected": {"target": 0.90},
+        "original_event_preserved": {"target": 0.80}
+      }
+    },
+    {
+      "test_id": "contradiction_019",
+      "name": "Edge: rapid successive updates within minutes",
+      "category": "edge_case",
+      "difficulty": "hard",
+      "input": {
+        "versions": [
+          {"user_msg": "密码改成P@ssw0rd1", "assistant_msg": "已记录。", "timestamp": "2026-04-28T10:00:00Z"},
+          {"user_msg": "不对，改成P@ssw0rd2", "assistant_msg": "已更新。", "timestamp": "2026-04-28T10:01:00Z"},
+          {"user_msg": "等等，还是用P@ssw0rd3", "assistant_msg": "已更新。", "timestamp": "2026-04-28T10:02:00Z"},
+          {"user_msg": "最终用P@ssw0rd4", "assistant_msg": "已更新最终密码。", "timestamp": "2026-04-28T10:03:00Z"}
+        ],
+        "query": "密码",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value": "P@ssw0rd4",
+        "expected_answer_contains": ["P@ssw0rd4"]
+      },
+      "evaluation_criteria": {
+        "latest_value_correct": {"target": 0.95, "min": 0.50},
+        "min_chunks": 3
+      }
+    },
+    {
+      "test_id": "contradiction_020",
+      "name": "Edge: contradictory statements in same message",
+      "category": "edge_case",
+      "difficulty": "hard",
+      "input": {
+        "versions": [
+          {"user_msg": "预算批了，100万", "assistant_msg": "已记录预算100万。", "timestamp": "2026-04-28T10:00:00Z"},
+          {"user_msg": "预算其实没批，还在审批中，之前我说错了", "assistant_msg": "已更正，预算尚未批准。", "timestamp": "2026-04-28T10:30:00Z"}
+        ],
+        "query": "预算 状态",
+        "max_results": 10
+      },
+      "expected": {
+        "latest_value": "审批中",
+        "expected_answer_contains": ["审批", "未批准"]
+      },
+      "evaluation_criteria": {
+        "latest_value_correct": {"target": 0.90, "min": 0.40},
+        "min_chunks": 2
+      }
+    }
+  ]
+}

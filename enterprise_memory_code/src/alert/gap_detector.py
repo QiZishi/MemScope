@@ -171,20 +171,24 @@ class GapDetector:
         cursor = self._store.conn.cursor()
         cursor.execute("""
             SELECT c.* FROM chunks c
-            WHERE c.visibility IN ('shared', 'public')
+            INNER JOIN knowledge_health kh ON c.id = kh.chunk_id
+            WHERE kh.team_id = ?
+            AND c.visibility IN ('shared', 'public')
             ORDER BY c.createdAt DESC
             LIMIT 2000
-        """)
+        """, (team_id,))
         return [dict(row) for row in cursor.fetchall()]
 
     def _get_team_members(self, team_id: str) -> List[str]:
         """Get unique agent IDs in the team (from shared chunks)."""
         cursor = self._store.conn.cursor()
         cursor.execute("""
-            SELECT DISTINCT owner FROM chunks
-            WHERE visibility IN ('shared', 'public')
-            AND owner IS NOT NULL
-        """)
+            SELECT DISTINCT c.owner FROM chunks c
+            INNER JOIN knowledge_health kh ON c.id = kh.chunk_id
+            WHERE kh.team_id = ?
+            AND c.visibility IN ('shared', 'public')
+            AND c.owner IS NOT NULL
+        """, (team_id,))
         return [row[0] for row in cursor.fetchall() if row[0]]
 
     # ------------------------------------------------------------------
