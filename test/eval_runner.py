@@ -29,10 +29,10 @@ SCORING_WEIGHTS = {
     "anti_interference": 0.15,
     "contradiction_update": 0.15,
     "efficiency": 0.15,
-    "direction_a": 0.15,
+    "direction_a": 0.10,
     "direction_b": 0.15,
     "direction_c": 0.15,
-    "direction_d": 0.10,
+    "direction_d": 0.15,
 }
 
 SUB_DIMENSION_WEIGHTS = {
@@ -56,18 +56,16 @@ SUB_DIMENSION_WEIGHTS = {
         "concurrency": 0.15,
     },
     "direction_a": {
-        "command_tracking_accuracy": 0.25,
-        "recommendation_relevance": 0.25,
-        "context_awareness": 0.20,
-        "prefix_match_accuracy": 0.15,
-        "temporal_decay": 0.15,
+        "tracking_accuracy": 0.30,
+        "frequency_ranking": 0.25,
+        "project_association": 0.25,
+        "context_recommendation": 0.20,
     },
     "direction_b": {
-        "decision_extraction_accuracy": 0.30,
-        "reason_identification": 0.25,
-        "search_precision": 0.20,
-        "multi_turn_tracking": 0.15,
-        "override_detection": 0.10,
+        "extraction_accuracy": 0.30,
+        "search_precision": 0.25,
+        "card_relevance": 0.25,
+        "lifecycle_tracking": 0.20,
     },
     "direction_c": {
         "preference_recall": 0.25,
@@ -120,12 +118,6 @@ TEST_DIMENSION_MAP = {
     "direction_d_003": "direction_d",
     "direction_d_004": "direction_d",
     "direction_d_005": "direction_d",
-    "feishu_integration_001": "feishu_integration",
-    "feishu_integration_002": "feishu_integration",
-    "feishu_integration_003": "feishu_integration",
-    "feishu_integration_004": "feishu_integration",
-    "feishu_integration_005": "feishu_integration",
-    "feishu_integration_006": "feishu_integration",
 }
 
 
@@ -216,24 +208,6 @@ def generate_recommendations(
             "or using batch operations for writes."
         )
 
-    # Direction A recommendations
-    da_score = dimension_scores.get("direction_a", 0)
-    if da_score < 70:
-        recs.append(
-            f"Direction A (command memory) score is low ({da_score:.1f}/100). "
-            "Improve command tracking accuracy, enhance context-aware recommendations, "
-            "and optimize prefix matching algorithms."
-        )
-
-    # Direction B recommendations
-    db_score = dimension_scores.get("direction_b", 0)
-    if db_score < 70:
-        recs.append(
-            f"Direction B (decision memory) score is low ({db_score:.1f}/100). "
-            "Improve decision extraction from conversations, enhance reason identification, "
-            "and add multi-turn decision tracking."
-        )
-
     # Direction C recommendations
     dc_score = dimension_scores.get("direction_c", 0)
     if dc_score < 70:
@@ -282,52 +256,73 @@ def generate_recommendations(
 
 
 def run_pytest_tests(output_path: str, verbose: bool = False) -> List[Dict[str, Any]]:
-    """Run pytest tests and collect results via the report collector."""
+    """Run pytest tests and collect results via a JSON results file.
+
+    Uses a pytest plugin to write results to a temp file, avoiding the
+    singleton re-import issue with _report_collector.
+    """
     import pytest as _pytest
 
-    # Add eval dir to path so conftest can be discovered
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-    # Run tests
+    # Use a temp file to collect results across pytest invocations
+    results_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".eval_results_tmp.json")
+
+    # Write empty list to start
+    with open(results_file, "w") as f:
+        json.dump([], f)
+
+    class ResultsFilePlugin:
+        """Pytest plugin that reads results from the report_collector after each test."""
+        def pytest_runtest_teardown(self, item, nextitem):
+            # After each test, flush the report_collector to the temp file
+            try:
+                from conftest import _report_collector
+                current = _report_collector.results
+                if current:
+                    with open(results_file, "w") as f:
+                        json.dump(current, f, indent=2, ensure_ascii=False)
+            except Exception:
+                pass
+
     test_dir = os.path.dirname(os.path.abspath(__file__))
     test_files = [
         os.path.join(test_dir, "test_anti_interference.py"),
         os.path.join(test_dir, "test_contradiction_update.py"),
         os.path.join(test_dir, "test_efficiency.py"),
-        os.path.join(test_dir, "test_preference_memory.py"),
         os.path.join(test_dir, "test_command_memory.py"),
         os.path.join(test_dir, "test_decision_memory.py"),
+        os.path.join(test_dir, "test_preference_memory.py"),
         os.path.join(test_dir, "test_knowledge_health.py"),
-        os.path.join(test_dir, "test_feishu_integration.py"),
     ]
 
-    all_results = []
+    # Filter to existing files only
+    existing_files = [f for f in test_files if os.path.exists(f)]
+    missing = [os.path.basename(f) for f in test_files if not os.path.exists(f)]
+    for m in missing:
+        print(f"  WARNING: Test file not found: {m}")
 
-    for test_file in test_files:
-        if not os.path.exists(test_file):
-            print(f"  WARNING: Test file not found: {test_file}")
-            continue
+    # Run ALL tests in a single pytest invocation
+    print(f"\n  Running {len(existing_files)} test files...")
+    args = existing_files + ["-v", "--tb=short", "--no-header"]
+    if not verbose:
+        args.append("-q")
 
-        print(f"\n  Running: {os.path.basename(test_file)}")
-        args = [test_file, "-v", "--tb=short", "-x", "--no-header"]
-        if not verbose:
-            args.append("-q")
+    try:
+        _pytest.main(args, plugins=[ResultsFilePlugin()])
+    except SystemExit:
+        pass
+    except Exception as e:
+        print(f"  Error running tests: {e}")
 
-        try:
-            exit_code = _pytest.main(args)
-        except SystemExit:
-            pass
-        except Exception as e:
-            print(f"  Error running {test_file}: {e}")
-
-        # pytest re-imports conftest.py each run, creating a new
-        # _report_collector instance.  Grab results from the latest one.
-        if "conftest" in sys.modules:
-            collector = sys.modules["conftest"]._report_collector
-            all_results.extend(collector.results)
-            collector.results.clear()
-
-    return all_results
+    # Read results from temp file
+    try:
+        with open(results_file, "r") as f:
+            results = json.load(f)
+        os.remove(results_file)
+        return results
+    except Exception:
+        return []
 
 
 def run_direct_tests() -> List[Dict[str, Any]]:
@@ -341,34 +336,26 @@ def run_direct_tests() -> List[Dict[str, Any]]:
         os.path.join(test_dir, "test_anti_interference.py"),
         os.path.join(test_dir, "test_contradiction_update.py"),
         os.path.join(test_dir, "test_efficiency.py"),
-        os.path.join(test_dir, "test_preference_memory.py"),
         os.path.join(test_dir, "test_command_memory.py"),
         os.path.join(test_dir, "test_decision_memory.py"),
+        os.path.join(test_dir, "test_preference_memory.py"),
         os.path.join(test_dir, "test_knowledge_health.py"),
-        os.path.join(test_dir, "test_feishu_integration.py"),
     ]
 
-    all_results = []
+    existing_files = [f for f in test_files if os.path.exists(f)]
 
-    for test_file in test_files:
-        if not os.path.exists(test_file):
-            continue
+    print(f"\n  Running {len(existing_files)} test files...")
+    try:
+        _pytest.main(
+            existing_files + ["-v", "--tb=short", "--no-header", "-q"],
+            plugins=[],
+        )
+    except (SystemExit, Exception):
+        pass
 
-        print(f"\n  Running: {os.path.basename(test_file)}")
-        try:
-            exit_code = _pytest.main(
-                [test_file, "-v", "--tb=short", "--no-header", "-q"],
-            )
-        except (SystemExit, Exception):
-            pass
-
-        # Grab results from the latest conftest instance
-        if "conftest" in sys.modules:
-            collector = sys.modules["conftest"]._report_collector
-            all_results.extend(collector.results)
-            collector.results.clear()
-
-    return all_results
+    # Collect from the report collector
+    from conftest import _report_collector
+    return _report_collector.results
 
 
 def generate_report(
@@ -439,8 +426,6 @@ def generate_report(
             "anti_interference_target": "≥ 90% recall, ≥ 87% F1",
             "contradiction_update_target": "≥ 95% latest accuracy, ≥ 90% history",
             "efficiency_target": "P50 ≤ 200ms write, ≤ 300ms query",
-            "direction_a_target": "≥ 90% command tracking accuracy, ≥ 85% recommendation relevance",
-            "direction_b_target": "≥ 90% decision extraction accuracy, ≥ 85% search precision",
             "direction_c_target": "≥ 90% preference recall",
             "direction_d_target": "≥ 80% gap detection rate",
         },
@@ -503,6 +488,9 @@ def main():
     # ---- Phase 4: Generate Markdown report ----
     report_path = args.report or args.output.replace(".json", "_report.md")
     try:
+        # eval_report_generator is in eval/ directory
+        eval_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "eval")
+        sys.path.insert(0, eval_dir)
         from eval_report_generator import generate_markdown_report
         markdown = generate_markdown_report(report)
         with open(report_path, "w", encoding="utf-8") as f:

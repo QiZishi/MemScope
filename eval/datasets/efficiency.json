@@ -1,590 +1,833 @@
 {
   "dataset_name": "efficiency",
   "version": "2.0",
-  "description": "Tests the memory engine's performance efficiency including write latency, query latency, memory usage, token consumption, concurrency, stress resilience, and coverage metrics. 25 test cases across 7 categories.",
-  "total_cases": 25,
+  "description": "效率指标评测：测试记忆引擎的写入延迟、查询延迟、内存占用、Token消耗效率和并发性能",
+  "total_cases": 30,
   "difficulty_distribution": {
-    "easy": 6,
-    "medium": 8,
-    "hard": 6,
-    "expert": 5
+    "easy": 9,
+    "medium": 15,
+    "hard": 6
   },
   "test_cases": [
     {
       "test_id": "efficiency_001",
-      "name": "Write latency: short conversation (50 chars)",
-      "category": "write_latency",
+      "name": "写入延迟-极短对话(50字符)",
+      "description": "测试一条50字符以内的极短对话的写入延迟",
       "difficulty": "easy",
-      "input": {
+      "category": "write_latency",
+      "setup": {
+        "context": "用户在日常工作中快速记录一条简短信息",
         "conversation": {
-          "user_msg": "项目X的deadline是5月15日",
-          "assistant_msg": "已记录。",
+          "user_msg": "项目Eagle的deadline是5月20日",
+          "assistant_msg": "已记录，项目Eagle截止日期5月20日",
           "timestamp": "2026-04-28T09:00:00Z"
         },
         "iterations": 10,
-        "description": "Measure write latency for a 50-char conversation"
+        "content_length_chars": 50
+      },
+      "query": {
+        "text": "写入性能测量",
+        "type": "write_benchmark"
       },
       "expected": {
         "operation": "write",
-        "content_length_chars": 50,
-        "metric": "write_latency_p50_p95_p99_ms"
-      },
-      "evaluation_criteria": {
-        "p50_ms": {"target": 200, "max": 500},
-        "p95_ms": {"target": 500, "max": 1000},
-        "p99_ms": {"target": 1000, "max": 2000},
-        "consistency": {"target": 0.95}
+        "metric": "write_latency_p50_p95_p99_ms",
+        "metric_targets": {
+          "p50_ms": 200,
+          "p95_ms": 500,
+          "p99_ms": 1000
+        }
       }
     },
     {
       "test_id": "efficiency_002",
-      "name": "Write latency: medium conversation (200 chars)",
-      "category": "write_latency",
+      "name": "写入延迟-中等对话(200字符)",
+      "description": "测试一条200字符左右的中等长度对话的写入延迟",
       "difficulty": "easy",
-      "input": {
+      "category": "write_latency",
+      "setup": {
+        "context": "用户在讨论技术方案，涉及多个技术要点",
         "conversation": {
-          "user_msg": "本周三下午2点我们有一个重要的技术评审会，需要准备架构设计文档、数据库ER图、API接口文档以及部署方案。参会人员包括架构师、后端开发、前端开发和测试团队。",
-          "assistant_msg": "已记录技术评审会安排：周三14:00，需准备架构文档、ER图、API文档和部署方案，参会团队已确认。",
-          "timestamp": "2026-04-28T09:00:00Z"
+          "user_msg": "本周三下午2点有一个重要的技术评审会，需要准备架构设计文档、数据库ER图、API接口文档以及部署方案。参会人员包括架构师、后端开发和测试团队",
+          "assistant_msg": "已记录技术评审会安排：周三14:00，需准备架构文档、ER图、API文档和部署方案",
+          "timestamp": "2026-04-28T09:10:00Z"
         },
         "iterations": 10,
-        "description": "Measure write latency for a 200-char conversation"
+        "content_length_chars": 200
+      },
+      "query": {
+        "text": "写入性能测量",
+        "type": "write_benchmark"
       },
       "expected": {
         "operation": "write",
-        "content_length_chars": 200,
-        "metric": "write_latency_p50_p95_p99_ms"
-      },
-      "evaluation_criteria": {
-        "p50_ms": {"target": 200, "max": 500},
-        "p95_ms": {"target": 500, "max": 1200},
-        "p99_ms": {"target": 1000, "max": 2500},
-        "consistency": {"target": 0.95}
+        "metric": "write_latency_p50_p95_p99_ms",
+        "metric_targets": {
+          "p50_ms": 200,
+          "p95_ms": 500,
+          "p99_ms": 1000
+        }
       }
     },
     {
       "test_id": "efficiency_003",
-      "name": "Write latency: long conversation (1000 chars)",
-      "category": "write_latency",
+      "name": "写入延迟-长对话(1000字符)",
+      "description": "测试一条1000字符的较长对话的写入延迟",
       "difficulty": "medium",
-      "input": {
+      "category": "write_latency",
+      "setup": {
+        "context": "用户在记录详细的项目会议纪要",
         "conversation": {
-          "user_msg": "项目会议纪要如下：1. 技术选型确定使用React 18 + Go 1.22 + PostgreSQL 16，前端状态管理用Zustand；2. 数据库设计完成评审，需要修改用户表和订单表的外键关系；3. API设计采用RESTful规范，认证使用JWT，token有效期7天；4. 部署方案确定使用Kubernetes + ArgoCD实现GitOps，CI/CD流水线用GitHub Actions；5. 安全要求：所有API必须支持HTTPS，敏感数据加密存储，日志脱敏处理；6. 性能要求：API响应时间P95 < 200ms，并发支持1000 QPS；7. 监控方案使用Prometheus + Grafana；8. 文档要求：API文档用Swagger，架构文档用C4模型。",
-          "assistant_msg": "已完整记录会议纪要：技术栈React 18 + Go + PG16，GitOps部署，JWT认证，HTTPS必选，P95<200ms目标。需跟进：用户/订单表外键修改。监控Prometheus+Grafana，文档Swagger+C4。",
-          "timestamp": "2026-04-28T09:00:00Z"
+          "user_msg": "项目Falcon会议纪要：1. 技术选型确定使用React 18 + Go 1.22 + PostgreSQL 16，前端状态管理用Zustand；2. 数据库设计完成评审，需修改用户表和订单表外键关系；3. API设计采用RESTful规范，认证用JWT，token有效期7天；4. 部署方案确定Kubernetes + ArgoCD实现GitOps，CI/CD用GitHub Actions；5. 安全要求：所有API必须HTTPS，敏感数据加密存储，日志脱敏；6. 性能要求：API响应P95<200ms，并发1000 QPS",
+          "assistant_msg": "已完整记录：技术栈React18+Go+PG16，GitOps部署，JWT认证，HTTPS必选，P95<200ms目标",
+          "timestamp": "2026-04-28T09:20:00Z"
         },
         "iterations": 10,
-        "description": "Measure write latency for a 1000-char conversation"
+        "content_length_chars": 1000
+      },
+      "query": {
+        "text": "写入性能测量",
+        "type": "write_benchmark"
       },
       "expected": {
         "operation": "write",
-        "content_length_chars": 1000,
-        "metric": "write_latency_p50_p95_p99_ms"
-      },
-      "evaluation_criteria": {
-        "p50_ms": {"target": 300, "max": 800},
-        "p95_ms": {"target": 800, "max": 2000},
-        "p99_ms": {"target": 1500, "max": 3000},
-        "consistency": {"target": 0.90}
+        "metric": "write_latency_p50_p95_p99_ms",
+        "metric_targets": {
+          "p50_ms": 300,
+          "p95_ms": 800,
+          "p99_ms": 1500
+        }
       }
     },
     {
       "test_id": "efficiency_004",
-      "name": "Write latency: very long conversation (5000 chars)",
-      "category": "write_latency",
+      "name": "写入延迟-超长对话(5000字符)",
+      "description": "测试一条5000字符的超长对话的写入延迟",
       "difficulty": "medium",
-      "input": {
+      "category": "write_latency",
+      "setup": {
+        "context": "用户在录入完整的项目规划文档",
         "conversation": {
-          "user_msg": "详细项目规划文档：项目名称：智能客服系统V2.0；项目周期：2026年4月至2026年9月；团队规模：12人（4后端、3前端、2测试、1产品、1设计、1项目经理）；技术架构：微服务架构，Spring Cloud Alibaba + React + Redis + Kafka + Elasticsearch + MongoDB；核心功能模块包括：1)智能对话引擎（基于大模型的多轮对话）2)知识库管理（支持多格式文档导入和向量化检索）3)工单系统（自动分配、SLA跟踪、升级机制）4)数据分析看板（实时会话统计、满意度分析、常见问题TOP10）5)多渠道接入（飞书、微信、电话、Web）；性能指标：日活10万用户，并发2000会话，响应时间<3秒；预算：人力成本120万，云服务30万，第三方API 20万，总计170万；里程碑：M1需求冻结（5月15日）→M2核心功能完成（6月30日）→M3全功能测试（7月31日）→M4灰度发布（8月15日）→M5正式上线（9月1日）",
-          "assistant_msg": "已完整记录项目规划：智能客服V2.0，4月至9月，12人团队。技术栈Spring Cloud + React + ES + Kafka。五大模块：对话引擎、知识库、工单、看板、多渠道。预算170万，9月上线。",
-          "timestamp": "2026-04-28T09:00:00Z"
+          "user_msg": "详细项目规划：项目名称：智能客服系统V3.0；项目周期：2026年4月至2026年10月；团队规模：15人（5后端、4前端、3测试、1产品、1设计、1项目经理）；技术架构：微服务架构，Spring Cloud Alibaba + React 18 + Redis 7 + Kafka + Elasticsearch 8 + MongoDB 7；核心功能模块：1)智能对话引擎（大模型多轮对话）2)知识库管理（多格式文档导入和向量检索）3)工单系统（自动分配、SLA跟踪、升级机制）4)数据分析看板（实时会话统计、满意度分析、TOP10问题）5)多渠道接入（飞书、微信、电话、Web、钉钉）6)语音识别模块（ASR+TTS双通道）；性能指标：日活15万用户，并发3000会话，响应<2秒；预算：人力成本180万，云服务45万，第三方API 30万，总计255万；里程碑：M1需求冻结5/15→M2核心功能6/30→M3全功能测试8/15→M4灰度发布9/15→M5正式上线10/1",
+          "assistant_msg": "已完整记录项目规划：智能客服V3.0，4月至10月，15人团队。技术栈Spring Cloud + React18 + ES8 + Kafka。六大模块。预算255万，10月上线",
+          "timestamp": "2026-04-28T09:30:00Z"
         },
         "iterations": 10,
-        "description": "Measure write latency for a 5000-char conversation"
+        "content_length_chars": 5000
+      },
+      "query": {
+        "text": "写入性能测量",
+        "type": "write_benchmark"
       },
       "expected": {
         "operation": "write",
-        "content_length_chars": 5000,
-        "metric": "write_latency_p50_p95_p99_ms"
-      },
-      "evaluation_criteria": {
-        "p50_ms": {"target": 500, "max": 1500},
-        "p95_ms": {"target": 1500, "max": 4000},
-        "p99_ms": {"target": 3000, "max": 6000},
-        "consistency": {"target": 0.85}
+        "metric": "write_latency_p50_p95_p99_ms",
+        "metric_targets": {
+          "p50_ms": 500,
+          "p95_ms": 1500,
+          "p99_ms": 3000
+        }
       }
     },
     {
       "test_id": "efficiency_005",
-      "name": "Write latency: batch write 100 entries",
-      "category": "write_latency",
+      "name": "写入延迟-批量写入100条",
+      "description": "测试连续写入100条对话的批量写入性能",
       "difficulty": "hard",
-      "input": {
+      "category": "write_latency",
+      "setup": {
+        "context": "模拟一天内频繁对话的批量写入场景",
         "batch_size": 100,
         "avg_conversation_length_chars": 200,
         "description": "Measure batch write latency for 100 consecutive entries"
       },
+      "query": {
+        "text": "批量写入性能测量",
+        "type": "batch_write_benchmark"
+      },
       "expected": {
         "operation": "batch_write",
         "entry_count": 100,
-        "metric": "total_time_ms_and_throughput"
-      },
-      "evaluation_criteria": {
-        "total_time_s": {"target": 20, "max": 60},
-        "throughput_per_sec": {"target": 5, "min": 1},
-        "no_data_loss": {"target": 1.0},
-        "no_crash": {"target": 1.0}
+        "metric_targets": {
+          "total_time_s": 20,
+          "throughput_per_sec": 5,
+          "no_data_loss": 1.0,
+          "no_crash": 1.0
+        }
       }
     },
     {
       "test_id": "efficiency_006",
-      "name": "Query latency: single-hop query with 100 memories",
-      "category": "query_latency",
+      "name": "写入延迟-带时间戳的多轮对话",
+      "description": "测试包含5轮对话且每轮都有独立时间戳的写入延迟",
       "difficulty": "easy",
-      "input": {
-        "preloaded_memories": 100,
-        "query": "项目X的deadline是什么时候",
-        "query_type": "single_hop",
-        "description": "Query latency with 100 memories loaded"
+      "category": "write_latency",
+      "setup": {
+        "context": "用户和AI在讨论一个紧急Bug修复",
+        "conversation": {
+          "messages": [
+            {"role": "user", "content": "线上数据库连接池满了", "timestamp": "2026-04-28T14:00:00Z"},
+            {"role": "assistant", "content": "建议先检查活跃连接数", "timestamp": "2026-04-28T14:00:05Z"},
+            {"role": "user", "content": "活跃连接500，上限也是500", "timestamp": "2026-04-28T14:01:00Z"},
+            {"role": "assistant", "content": "可能是连接泄漏，检查是否有未关闭的连接", "timestamp": "2026-04-28T14:01:10Z"},
+            {"role": "user", "content": "找到原因了，是定时任务没释放连接", "timestamp": "2026-04-28T14:15:00Z"}
+          ]
+        },
+        "content_length_chars": 250,
+        "iterations": 10
+      },
+      "query": {
+        "text": "写入性能测量",
+        "type": "write_benchmark"
       },
       "expected": {
-        "operation": "query",
-        "memory_count": 100,
-        "query_type": "single_hop"
-      },
-      "evaluation_criteria": {
-        "p50_ms": {"target": 300, "max": 800},
-        "p95_ms": {"target": 800, "max": 2000},
-        "answer_correctness": {"target": 1.0}
+        "operation": "write",
+        "metric": "write_latency_p50_p95_p99_ms",
+        "metric_targets": {
+          "p50_ms": 250,
+          "p95_ms": 600,
+          "p99_ms": 1200
+        }
       }
     },
     {
       "test_id": "efficiency_007",
-      "name": "Query latency: single-hop query with 1000 memories",
+      "name": "查询延迟-100条记忆单跳查询",
+      "description": "在100条预加载记忆中执行单跳查询的延迟",
+      "difficulty": "easy",
       "category": "query_latency",
-      "difficulty": "medium",
-      "input": {
-        "preloaded_memories": 1000,
-        "query": "项目X的deadline是什么时候",
-        "query_type": "single_hop",
-        "description": "Query latency with 1000 memories loaded"
+      "setup": {
+        "context": "预加载100条不同业务场景的记忆，执行简单事实查询",
+        "preloaded_memories": 100,
+        "query": "项目Hawk的deadline是什么时候",
+        "query_type": "single_hop"
+      },
+      "query": {
+        "text": "项目Hawk的deadline是什么时候",
+        "type": "search"
       },
       "expected": {
         "operation": "query",
-        "memory_count": 1000,
-        "query_type": "single_hop"
-      },
-      "evaluation_criteria": {
-        "p50_ms": {"target": 300, "max": 1000},
-        "p95_ms": {"target": 800, "max": 2500},
-        "answer_correctness": {"target": 1.0}
+        "memory_count": 100,
+        "query_type": "single_hop",
+        "metric_targets": {
+          "p50_ms": 300,
+          "p95_ms": 800,
+          "answer_correctness": 1.0
+        }
       }
     },
     {
       "test_id": "efficiency_008",
-      "name": "Query latency: multi-hop query with 5000 memories",
-      "category": "query_latency",
+      "name": "查询延迟-1000条记忆单跳查询",
+      "description": "在1000条预加载记忆中执行单跳查询的延迟",
       "difficulty": "medium",
-      "input": {
-        "preloaded_memories": 5000,
-        "query": "项目Alpha的技术负责人是谁，他之前负责过什么项目",
-        "query_type": "multi_hop",
-        "description": "Multi-hop query requiring connection of two memories"
+      "category": "query_latency",
+      "setup": {
+        "context": "预加载1000条记忆，模拟中等规模记忆库的查询",
+        "preloaded_memories": 1000,
+        "query": "项目Tiger的技术负责人是谁",
+        "query_type": "single_hop"
+      },
+      "query": {
+        "text": "项目Tiger的技术负责人是谁",
+        "type": "search"
       },
       "expected": {
         "operation": "query",
-        "memory_count": 5000,
-        "query_type": "multi_hop"
-      },
-      "evaluation_criteria": {
-        "p50_ms": {"target": 500, "max": 1500},
-        "p95_ms": {"target": 1500, "max": 4000},
-        "answer_correctness": {"target": 0.90}
+        "memory_count": 1000,
+        "query_type": "single_hop",
+        "metric_targets": {
+          "p50_ms": 300,
+          "p95_ms": 1000,
+          "answer_correctness": 1.0
+        }
       }
     },
     {
       "test_id": "efficiency_009",
-      "name": "Query latency: temporal query with 5000 memories",
-      "category": "query_latency",
+      "name": "查询延迟-5000条记忆多跳查询",
+      "description": "在5000条记忆中执行需要连接两条记忆的多跳查询",
       "difficulty": "medium",
-      "input": {
+      "category": "query_latency",
+      "setup": {
+        "context": "预加载5000条记忆，执行需要多步推理的查询",
         "preloaded_memories": 5000,
-        "query": "上周我做了哪些重要的技术决策",
-        "query_type": "temporal",
-        "description": "Temporal query requiring time-based filtering across 5000 memories"
+        "query": "项目Phoenix的技术负责人是谁，他之前负责过什么项目",
+        "query_type": "multi_hop"
+      },
+      "query": {
+        "text": "项目Phoenix的技术负责人是谁，他之前负责过什么项目",
+        "type": "search"
       },
       "expected": {
         "operation": "query",
         "memory_count": 5000,
-        "query_type": "temporal"
-      },
-      "evaluation_criteria": {
-        "p50_ms": {"target": 500, "max": 1500},
-        "p95_ms": {"target": 1500, "max": 3500},
-        "time_filtering_accuracy": {"target": 0.90}
+        "query_type": "multi_hop",
+        "metric_targets": {
+          "p50_ms": 500,
+          "p95_ms": 1500,
+          "answer_correctness": 0.90
+        }
       }
     },
     {
       "test_id": "efficiency_010",
-      "name": "Query latency: open-domain query with 10000 memories",
+      "name": "查询延迟-5000条记忆时间查询",
+      "description": "在5000条记忆中执行需要时间过滤的查询",
+      "difficulty": "medium",
       "category": "query_latency",
-      "difficulty": "hard",
-      "input": {
-        "preloaded_memories": 10000,
-        "query": "我们团队在数据库方面做了哪些优化",
-        "query_type": "open_domain",
-        "description": "Open-domain query across 10000 memories"
+      "setup": {
+        "context": "预加载5000条记忆，执行需要时间范围过滤的查询",
+        "preloaded_memories": 5000,
+        "query": "上周做了哪些重要的技术决策",
+        "query_type": "temporal"
+      },
+      "query": {
+        "text": "上周做了哪些重要的技术决策",
+        "type": "search"
       },
       "expected": {
         "operation": "query",
-        "memory_count": 10000,
-        "query_type": "open_domain"
-      },
-      "evaluation_criteria": {
-        "p50_ms": {"target": 800, "max": 2000},
-        "p95_ms": {"target": 2000, "max": 5000},
-        "relevance_score": {"target": 0.80}
+        "memory_count": 5000,
+        "query_type": "temporal",
+        "metric_targets": {
+          "p50_ms": 500,
+          "p95_ms": 1500,
+          "time_filtering_accuracy": 0.90
+        }
       }
     },
     {
       "test_id": "efficiency_011",
-      "name": "Memory usage: 100 entries baseline",
-      "category": "memory_usage",
-      "difficulty": "easy",
-      "input": {
-        "memory_size": 100,
-        "avg_entry_size_chars": 200,
-        "description": "Measure memory footprint for 100 entries"
+      "name": "查询延迟-10000条记忆开放域查询",
+      "description": "在10000条记忆中执行开放域查询的延迟",
+      "difficulty": "hard",
+      "category": "query_latency",
+      "setup": {
+        "context": "预加载10000条记忆，模拟大规模记忆库的查询",
+        "preloaded_memories": 10000,
+        "query": "团队在数据库优化方面做了哪些工作",
+        "query_type": "open_domain"
+      },
+      "query": {
+        "text": "团队在数据库优化方面做了哪些工作",
+        "type": "search"
       },
       "expected": {
-        "operation": "measure_memory",
-        "entry_count": 100
-      },
-      "evaluation_criteria": {
-        "total_memory_mb": {"target": 10, "max": 50},
-        "per_entry_kb": {"target": 50, "max": 200},
-        "no_memory_leak": {"target": 1.0}
+        "operation": "query",
+        "memory_count": 10000,
+        "query_type": "open_domain",
+        "metric_targets": {
+          "p50_ms": 800,
+          "p95_ms": 2000,
+          "relevance_score": 0.80
+        }
       }
     },
     {
       "test_id": "efficiency_012",
-      "name": "Memory usage: 1000 entries",
-      "category": "memory_usage",
-      "difficulty": "easy",
-      "input": {
-        "memory_size": 1000,
-        "avg_entry_size_chars": 200,
-        "description": "Measure memory footprint for 1000 entries"
+      "name": "查询延迟-模糊语义查询",
+      "description": "测试语义相似但关键词不同的模糊查询的延迟和准确率",
+      "difficulty": "hard",
+      "category": "query_latency",
+      "setup": {
+        "context": "预加载1000条记忆，用户使用口语化表达查询",
+        "preloaded_memories": 1000,
+        "query": "之前说的那个登录贼慢的问题咋整的",
+        "query_type": "semantic_fuzzy",
+        "original_memory": "登录页面FCP超过3秒，优化方案：代码分割+图片懒加载+CDN加速"
+      },
+      "query": {
+        "text": "之前说的那个登录贼慢的问题咋整的",
+        "type": "search"
       },
       "expected": {
-        "operation": "measure_memory",
-        "entry_count": 1000
-      },
-      "evaluation_criteria": {
-        "total_memory_mb": {"target": 50, "max": 200},
-        "per_entry_kb": {"target": 50, "max": 200},
-        "memory_growth_linear": {"target": 0.90}
+        "operation": "query",
+        "memory_count": 1000,
+        "query_type": "semantic_fuzzy",
+        "metric_targets": {
+          "p50_ms": 500,
+          "p95_ms": 1500,
+          "semantic_match_accuracy": 0.85
+        }
       }
     },
     {
       "test_id": "efficiency_013",
-      "name": "Memory usage: 5000 entries",
+      "name": "内存占用-100条记忆基线",
+      "description": "测量100条记忆的内存占用基线",
+      "difficulty": "easy",
       "category": "memory_usage",
-      "difficulty": "medium",
-      "input": {
-        "memory_size": 5000,
-        "avg_entry_size_chars": 200,
-        "description": "Measure memory footprint for 5000 entries"
+      "setup": {
+        "context": "加载100条平均200字符的记忆条目",
+        "memory_size": 100,
+        "avg_entry_size_chars": 200
+      },
+      "query": {
+        "text": "内存测量",
+        "type": "memory_benchmark"
       },
       "expected": {
         "operation": "measure_memory",
-        "entry_count": 5000
-      },
-      "evaluation_criteria": {
-        "total_memory_mb": {"target": 200, "max": 500},
-        "per_entry_kb": {"target": 50, "max": 200},
-        "memory_growth_linear": {"target": 0.85}
+        "entry_count": 100,
+        "metric_targets": {
+          "total_memory_mb": 10,
+          "per_entry_kb": 50,
+          "no_memory_leak": 1.0
+        }
       }
     },
     {
       "test_id": "efficiency_014",
-      "name": "Memory usage: 10000 entries",
+      "name": "内存占用-1000条记忆",
+      "description": "测量1000条记忆的内存占用，验证线性增长",
+      "difficulty": "easy",
       "category": "memory_usage",
-      "difficulty": "hard",
-      "input": {
-        "memory_size": 10000,
-        "avg_entry_size_chars": 200,
-        "description": "Measure memory footprint for 10000 entries"
+      "setup": {
+        "context": "加载1000条平均200字符的记忆条目",
+        "memory_size": 1000,
+        "avg_entry_size_chars": 200
+      },
+      "query": {
+        "text": "内存测量",
+        "type": "memory_benchmark"
       },
       "expected": {
         "operation": "measure_memory",
-        "entry_count": 10000
-      },
-      "evaluation_criteria": {
-        "total_memory_mb": {"target": 500, "max": 1000},
-        "per_entry_kb": {"target": 50, "max": 200},
-        "memory_growth_linear": {"target": 0.80}
+        "entry_count": 1000,
+        "metric_targets": {
+          "total_memory_mb": 50,
+          "per_entry_kb": 50,
+          "memory_growth_linear": 0.90
+        }
       }
     },
     {
       "test_id": "efficiency_015",
-      "name": "Token efficiency: simple fact query",
-      "category": "token_efficiency",
-      "difficulty": "easy",
-      "input": {
-        "query": "项目X的deadline",
-        "query_type": "simple",
-        "iterations": 50,
-        "description": "Measure token consumption for simple single-fact queries"
+      "name": "内存占用-5000条记忆",
+      "description": "测量5000条记忆的内存占用",
+      "difficulty": "medium",
+      "category": "memory_usage",
+      "setup": {
+        "context": "加载5000条平均200字符的记忆条目",
+        "memory_size": 5000,
+        "avg_entry_size_chars": 200
+      },
+      "query": {
+        "text": "内存测量",
+        "type": "memory_benchmark"
       },
       "expected": {
-        "operation": "query",
-        "query_type": "simple",
-        "iterations": 50
-      },
-      "evaluation_criteria": {
-        "avg_tokens": {"target": 300, "max": 500},
-        "max_tokens": {"target": 500, "max": 1000},
-        "answer_correctness": {"target": 0.95}
+        "operation": "measure_memory",
+        "entry_count": 5000,
+        "metric_targets": {
+          "total_memory_mb": 200,
+          "per_entry_kb": 50,
+          "memory_growth_linear": 0.85
+        }
       }
     },
     {
       "test_id": "efficiency_016",
-      "name": "Token efficiency: complex multi-entity query",
-      "category": "token_efficiency",
-      "difficulty": "medium",
-      "input": {
-        "query": "帮我总结一下所有项目的技术栈选择、负责人、预算和当前进度",
-        "query_type": "complex",
-        "iterations": 50,
-        "description": "Measure token consumption for complex multi-entity queries"
+      "name": "内存占用-10000条记忆",
+      "description": "测量10000条记忆的内存占用，验证大规模下无严重膨胀",
+      "difficulty": "hard",
+      "category": "memory_usage",
+      "setup": {
+        "context": "加载10000条平均200字符的记忆条目",
+        "memory_size": 10000,
+        "avg_entry_size_chars": 200
+      },
+      "query": {
+        "text": "内存测量",
+        "type": "memory_benchmark"
       },
       "expected": {
-        "operation": "query",
-        "query_type": "complex",
-        "iterations": 50
-      },
-      "evaluation_criteria": {
-        "avg_tokens": {"target": 1000, "max": 2000},
-        "max_tokens": {"target": 2000, "max": 4000},
-        "completeness": {"target": 0.85}
+        "operation": "measure_memory",
+        "entry_count": 10000,
+        "metric_targets": {
+          "total_memory_mb": 500,
+          "per_entry_kb": 50,
+          "memory_growth_linear": 0.80
+        }
       }
     },
     {
       "test_id": "efficiency_017",
-      "name": "Concurrency: 5 concurrent users reading",
-      "category": "concurrency",
+      "name": "内存占用-写入后内存释放",
+      "description": "删除50%记忆后，验证内存是否正确释放",
       "difficulty": "medium",
-      "input": {
-        "concurrent_users": 5,
-        "operations_per_user": 10,
-        "operation_type": "read",
-        "description": "Measure throughput and latency under 5 concurrent read users"
+      "category": "memory_usage",
+      "setup": {
+        "context": "先加载1000条记忆，再删除500条，检查内存变化",
+        "initial_memory_size": 1000,
+        "delete_count": 500,
+        "remaining": 500
+      },
+      "query": {
+        "text": "内存释放测量",
+        "type": "memory_release_benchmark"
       },
       "expected": {
-        "operation": "concurrent_read",
-        "users": 5,
-        "ops_per_user": 10
-      },
-      "evaluation_criteria": {
-        "throughput_ops_per_sec": {"target": 10, "min": 5},
-        "max_latency_ms": {"target": 2000, "max": 5000},
-        "latency_degradation_factor": {"target": 1.5, "max": 2.0},
-        "no_errors": {"target": 1.0}
+        "operation": "measure_memory_after_delete",
+        "metric_targets": {
+          "memory_freed_ratio": 0.40,
+          "no_memory_leak": 1.0,
+          "remaining_memory_proportional": true
+        }
       }
     },
     {
       "test_id": "efficiency_018",
-      "name": "Concurrency: 10 mixed read/write users",
-      "category": "concurrency",
-      "difficulty": "hard",
-      "input": {
-        "concurrent_users": 10,
-        "operations_per_user": 10,
-        "operation_type": "mixed",
-        "read_write_ratio": 0.7,
-        "description": "Measure throughput and latency under 10 mixed read/write users"
+      "name": "内存占用-大条目单条内存",
+      "description": "测试单条超长记忆(10000字符)的内存占用是否合理",
+      "difficulty": "medium",
+      "category": "memory_usage",
+      "setup": {
+        "context": "存储一条包含完整项目文档的超长记忆",
+        "memory_size": 1,
+        "entry_size_chars": 10000
+      },
+      "query": {
+        "text": "大条目内存测量",
+        "type": "memory_benchmark"
       },
       "expected": {
-        "operation": "concurrent_mixed",
-        "users": 10,
-        "ops_per_user": 10
-      },
-      "evaluation_criteria": {
-        "throughput_ops_per_sec": {"target": 10, "min": 3},
-        "max_latency_ms": {"target": 3000, "max": 8000},
-        "latency_degradation_factor": {"target": 2.0, "max": 3.0},
-        "data_integrity": {"target": 1.0},
-        "no_errors": {"target": 0.99}
+        "operation": "measure_memory",
+        "entry_count": 1,
+        "metric_targets": {
+          "per_entry_kb": 200,
+          "max_per_entry_kb": 500,
+          "no_excessive_overhead": true
+        }
       }
     },
     {
       "test_id": "efficiency_019",
-      "name": "Stress test: 1000 rapid sequential writes",
-      "category": "stress_test",
-      "difficulty": "hard",
-      "input": {
-        "total_entries": 1000,
-        "batch_write_size": 100,
-        "query_after_each_batch": true,
-        "description": "Stress test: write 1000 entries in batches of 100, querying after each batch"
+      "name": "Token效率-简单事实查询",
+      "description": "测试简单单事实查询的Token消耗",
+      "difficulty": "easy",
+      "category": "token_efficiency",
+      "setup": {
+        "context": "用户查询一个简单的事实性信息",
+        "query": "项目Bobcat的deadline",
+        "query_type": "simple",
+        "iterations": 50
+      },
+      "query": {
+        "text": "项目Bobcat的deadline",
+        "type": "search"
       },
       "expected": {
-        "operation": "stress_write",
-        "total_entries": 1000,
-        "batch_size": 100
-      },
-      "evaluation_criteria": {
-        "no_crash": {"target": 1.0},
-        "data_integrity": {"target": 1.0},
-        "p95_latency_growth": {"max": "linear"},
-        "completion_time_s": {"target": 60, "max": 300}
+        "operation": "query",
+        "query_type": "simple",
+        "metric_targets": {
+          "avg_tokens": 300,
+          "max_tokens": 500,
+          "answer_correctness": 0.95
+        }
       }
     },
     {
       "test_id": "efficiency_020",
-      "name": "Stress test: sustained load over time",
-      "category": "stress_test",
-      "difficulty": "hard",
-      "input": {
-        "total_entries": 5000,
-        "write_interval_ms": 100,
-        "query_every_n_writes": 50,
-        "description": "Sustained load: write 5000 entries at steady pace, query periodically to verify stability"
+      "name": "Token效率-复杂多实体查询",
+      "description": "测试涉及多个实体的复杂查询的Token消耗",
+      "difficulty": "medium",
+      "category": "token_efficiency",
+      "setup": {
+        "context": "用户要求汇总多个项目的信息",
+        "query": "帮我总结所有项目的技术栈、负责人、预算和当前进度",
+        "query_type": "complex",
+        "iterations": 50
+      },
+      "query": {
+        "text": "帮我总结所有项目的技术栈、负责人、预算和当前进度",
+        "type": "search"
       },
       "expected": {
-        "operation": "sustained_load",
-        "total_entries": 5000
-      },
-      "evaluation_criteria": {
-        "no_crash": {"target": 1.0},
-        "data_integrity": {"target": 1.0},
-        "p95_latency_stable": {"target": 0.90},
-        "p95_latency_growth_factor": {"max": 1.5},
-        "completion_time_s": {"target": 120, "max": 600}
+        "operation": "query",
+        "query_type": "complex",
+        "metric_targets": {
+          "avg_tokens": 1000,
+          "max_tokens": 2000,
+          "completeness": 0.85
+        }
       }
     },
     {
       "test_id": "efficiency_021",
-      "name": "Coverage: memory recall coverage across all types",
-      "category": "coverage",
-      "difficulty": "expert",
-      "input": {
-        "memory_types": ["command", "decision", "preference", "knowledge"],
-        "entries_per_type": 50,
-        "total_entries": 200,
-        "queries_per_type": 10,
-        "description": "Measure recall coverage across all memory types"
+      "name": "Token效率-记忆增强对话vs无记忆对比",
+      "description": "对比有记忆系统和无记忆系统完成同一任务的Token消耗差异",
+      "difficulty": "medium",
+      "category": "token_efficiency",
+      "setup": {
+        "context": "任务：回答'上次部署用的什么版本？'",
+        "task_description": "回答上次部署版本",
+        "with_memory_tokens": 500,
+        "without_memory_tokens": 2000,
+        "without_memory_requires": "用户重新描述上下文+搜索历史记录"
+      },
+      "query": {
+        "text": "上次部署用的什么版本",
+        "type": "search"
       },
       "expected": {
-        "operation": "coverage_analysis",
-        "total_entries": 200
-      },
-      "evaluation_criteria": {
-        "command_recall_coverage": {"target": 0.90, "min": 0.70},
-        "decision_recall_coverage": {"target": 0.90, "min": 0.70},
-        "preference_recall_coverage": {"target": 0.85, "min": 0.65},
-        "knowledge_recall_coverage": {"target": 0.85, "min": 0.65},
-        "overall_coverage": {"target": 0.87, "min": 0.67},
-        "no_type_bias": {"target": 0.90}
+        "operation": "token_comparison",
+        "metric_targets": {
+          "token_saving_rate": 0.60,
+          "with_memory_faster": true
+        }
       }
     },
     {
       "test_id": "efficiency_022",
-      "name": "Expert: multi-hop query latency with 50000 memories",
-      "category": "query_latency",
-      "difficulty": "expert",
-      "input": {
-        "preloaded_memories": 50000,
-        "query": "项目Alpha的技术栈是什么，相关的部署方案和团队成员",
-        "query_type": "multi_hop_cross_type",
-        "description": "Multi-hop cross-type query at scale with 50000 memories"
+      "name": "Token效率-上下文窗口压缩",
+      "description": "测试系统在记忆数量很多时是否能有效压缩上下文窗口",
+      "difficulty": "hard",
+      "category": "token_efficiency",
+      "setup": {
+        "context": "预加载10000条记忆，执行查询时不应将全部记忆放入上下文",
+        "preloaded_memories": 10000,
+        "query": "最近的部署记录",
+        "expected_top_k": 5
+      },
+      "query": {
+        "text": "最近的部署记录",
+        "type": "search"
       },
       "expected": {
-        "operation": "query",
-        "memory_count": 50000,
-        "query_type": "multi_hop_cross_type"
-      },
-      "evaluation_criteria": {
-        "p50_ms": {"target": 1000, "max": 3000},
-        "p95_ms": {"target": 3000, "max": 8000},
-        "answer_correctness": {"target": 0.85},
-        "cross_type_linking": {"target": 0.80},
-        "token_cost": {"target": 2000, "max": 5000}
+        "operation": "context_compression",
+        "metric_targets": {
+          "tokens_used_ratio_to_full": 0.05,
+          "relevant_recall_maintained": 0.90,
+          "no_hallucination": true
+        }
       }
     },
     {
       "test_id": "efficiency_023",
-      "name": "Expert: F1 score under noise - precision/recall tradeoff",
-      "category": "f1_metrics",
-      "difficulty": "expert",
-      "input": {
-        "total_memories": 10000,
-        "target_memories": 50,
-        "noise_ratio": 0.95,
-        "queries": 20,
-        "description": "Measure F1 score when signal-to-noise ratio is very low"
+      "name": "Token效率-多轮对话累积",
+      "description": "测试连续10轮对话中Token消耗是否稳定，不应逐轮膨胀",
+      "difficulty": "medium",
+      "category": "token_efficiency",
+      "setup": {
+        "context": "用户连续进行10轮相关查询",
+        "rounds": 10,
+        "topic": "项目Coyote的进度追踪",
+        "queries": [
+          "项目Coyote的总体进度？",
+          "Coyote后端完成情况？",
+          "Coyote前端完成情况？",
+          "Coyote测试进度？",
+          "Coyote有什么风险？"
+        ]
+      },
+      "query": {
+        "text": "项目Coyote进度追踪多轮查询",
+        "type": "multi_turn_benchmark"
       },
       "expected": {
-        "operation": "f1_evaluation",
-        "target_count": 50,
-        "noise_count": 9950
-      },
-      "evaluation_criteria": {
-        "precision": {"target": 0.70, "min": 0.40},
-        "recall": {"target": 0.80, "min": 0.50},
-        "f1_score": {"target": 0.75, "min": 0.45},
-        "noise_injection_rate": {"target": 0.05, "max": 0.15},
-        "answer_correctness": {"target": 0.85}
+        "operation": "multi_turn_token",
+        "metric_targets": {
+          "token_growth_rate": 0.10,
+          "max_round_tokens_stable": true,
+          "avg_tokens_per_round": 400
+        }
       }
     },
     {
       "test_id": "efficiency_024",
-      "name": "Expert: latency stability under sustained expert workload",
-      "category": "latency_stability",
-      "difficulty": "expert",
-      "input": {
-        "duration_minutes": 10,
-        "operations_per_second": 5,
-        "operation_mix": {"write": 0.3, "single_hop_query": 0.4, "multi_hop_query": 0.2, "temporal_query": 0.1},
-        "description": "Measure latency stability under mixed workload for 10 minutes"
+      "name": "Token效率-英文混合查询",
+      "description": "测试中英文混合的查询的Token效率",
+      "difficulty": "easy",
+      "category": "token_efficiency",
+      "setup": {
+        "context": "技术场景中常见的中英文混合表达",
+        "query": "项目Falcon的CI/CD pipeline用的什么，Jenkins还是GitHub Actions",
+        "query_type": "mixed_language"
+      },
+      "query": {
+        "text": "项目Falcon的CI/CD pipeline用的什么，Jenkins还是GitHub Actions",
+        "type": "search"
       },
       "expected": {
-        "operation": "sustained_mixed_workload",
-        "total_operations": 3000
-      },
-      "evaluation_criteria": {
-        "p50_latency_stable": {"target": 0.95},
-        "p99_latency_stable": {"target": 0.90},
-        "no_memory_leak": {"target": 1.0},
-        "throughput_consistency": {"target": 0.90},
-        "error_rate": {"target": 0.0, "max": 0.01}
+        "operation": "query",
+        "metric_targets": {
+          "avg_tokens": 400,
+          "answer_correctness": 0.95,
+          "proper_term_handling": true
+        }
       }
     },
     {
       "test_id": "efficiency_025",
-      "name": "Expert: token cost efficiency for complex queries",
-      "category": "token_efficiency",
-      "difficulty": "expert",
-      "input": {
-        "query": "总结过去3个月的所有技术决策、预算变化和人员变动",
-        "query_type": "cross_type_temporal",
-        "memory_count": 10000,
-        "time_range": "3_months",
-        "iterations": 20,
-        "description": "Token cost for complex cross-type temporal queries"
+      "name": "并发性能-5用户并发读取",
+      "description": "5个用户同时执行读取操作的并发性能",
+      "difficulty": "medium",
+      "category": "concurrency",
+      "setup": {
+        "context": "模拟团队中5人同时查询记忆系统",
+        "concurrent_users": 5,
+        "operations_per_user": 10,
+        "operation_type": "read"
+      },
+      "query": {
+        "text": "并发读取性能测量",
+        "type": "concurrent_benchmark"
       },
       "expected": {
-        "operation": "query",
-        "query_type": "cross_type_temporal",
-        "iterations": 20
+        "operation": "concurrent_read",
+        "users": 5,
+        "ops_per_user": 10,
+        "metric_targets": {
+          "throughput_ops_per_sec": 10,
+          "max_latency_ms": 2000,
+          "latency_degradation_factor": 1.5,
+          "no_errors": 1.0
+        }
+      }
+    },
+    {
+      "test_id": "efficiency_026",
+      "name": "并发性能-10用户混合读写",
+      "description": "10个用户同时执行读写混合操作的并发性能",
+      "difficulty": "hard",
+      "category": "concurrency",
+      "setup": {
+        "context": "模拟10人团队在忙碌时段同时读写记忆系统",
+        "concurrent_users": 10,
+        "operations_per_user": 10,
+        "operation_type": "mixed",
+        "read_write_ratio": 0.7
       },
-      "evaluation_criteria": {
-        "avg_tokens": {"target": 3000, "max": 8000},
-        "max_tokens": {"target": 5000, "max": 12000},
-        "completeness": {"target": 0.80},
-        "token_per_fact_ratio": {"target": 200, "max": 500},
-        "answer_correctness": {"target": 0.85}
+      "query": {
+        "text": "并发混合读写性能测量",
+        "type": "concurrent_benchmark"
+      },
+      "expected": {
+        "operation": "concurrent_mixed",
+        "users": 10,
+        "ops_per_user": 10,
+        "metric_targets": {
+          "throughput_ops_per_sec": 10,
+          "max_latency_ms": 3000,
+          "latency_degradation_factor": 2.0,
+          "data_integrity": 1.0,
+          "no_errors": 0.99
+        }
+      }
+    },
+    {
+      "test_id": "efficiency_027",
+      "name": "并发性能-读写冲突检测",
+      "description": "两个用户同时更新同一条记忆时的数据一致性",
+      "difficulty": "hard",
+      "category": "concurrency",
+      "setup": {
+        "context": "两个开发者同时更新同一条部署配置记录",
+        "concurrent_users": 2,
+        "operation_type": "write_conflict",
+        "shared_memory": "部署配置：当前版本v2.1",
+        "user_a_update": "部署配置：更新为v2.2",
+        "user_b_update": "部署配置：更新为v2.3"
+      },
+      "query": {
+        "text": "读写冲突检测",
+        "type": "conflict_benchmark"
+      },
+      "expected": {
+        "operation": "write_conflict",
+        "metric_targets": {
+          "no_data_corruption": 1.0,
+          "conflict_detected": true,
+          "last_write_wins_or_merge": true
+        }
+      }
+    },
+    {
+      "test_id": "efficiency_028",
+      "name": "压力测试-1000条快速顺序写入",
+      "description": "快速连续写入1000条记录的稳定性测试",
+      "difficulty": "hard",
+      "category": "stress_test",
+      "setup": {
+        "context": "模拟历史数据迁移场景，批量写入大量记忆",
+        "total_entries": 1000,
+        "batch_write_size": 100,
+        "query_after_each_batch": true
+      },
+      "query": {
+        "text": "压力测试-快速写入",
+        "type": "stress_benchmark"
+      },
+      "expected": {
+        "operation": "stress_write",
+        "total_entries": 1000,
+        "metric_targets": {
+          "no_crash": 1.0,
+          "data_integrity": 1.0,
+          "completion_time_s": 60
+        }
+      }
+    },
+    {
+      "test_id": "efficiency_029",
+      "name": "压力测试-持续负载5000条",
+      "description": "以稳定节奏写入5000条记录，验证长时间运行稳定性",
+      "difficulty": "hard",
+      "category": "stress_test",
+      "setup": {
+        "context": "模拟全天持续使用场景",
+        "total_entries": 5000,
+        "write_interval_ms": 100,
+        "query_every_n_writes": 50
+      },
+      "query": {
+        "text": "压力测试-持续负载",
+        "type": "stress_benchmark"
+      },
+      "expected": {
+        "operation": "sustained_load",
+        "total_entries": 5000,
+        "metric_targets": {
+          "no_crash": 1.0,
+          "data_integrity": 1.0,
+          "p95_latency_stable": 0.90,
+          "p95_latency_growth_factor": 1.5,
+          "completion_time_s": 120
+        }
+      }
+    },
+    {
+      "test_id": "efficiency_030",
+      "name": "端到端延迟-完整记忆生命周期",
+      "description": "从写入→存储→索引→查询的完整链路延迟测量",
+      "difficulty": "medium",
+      "category": "end_to_end",
+      "setup": {
+        "context": "模拟真实使用场景：对话结束后立即查询刚写入的记忆",
+        "scenario": "write_then_immediate_query",
+        "conversation": {
+          "user_msg": "项目Moose的微服务拆分方案已确定：用户服务、订单服务、支付服务、通知服务四个独立服务",
+          "timestamp": "2026-04-28T16:00:00Z"
+        },
+        "query_after_ms": 1000,
+        "query_text": "项目Moose的微服务拆分方案"
+      },
+      "query": {
+        "text": "项目Moose的微服务拆分方案",
+        "type": "search"
+      },
+      "expected": {
+        "operation": "end_to_end",
+        "metric_targets": {
+          "total_latency_ms": 1000,
+          "write_latency_ms": 300,
+          "index_latency_ms": 200,
+          "query_latency_ms": 500,
+          "answer_correctness": 1.0
+        }
       }
     }
   ]

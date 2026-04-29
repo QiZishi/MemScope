@@ -1,1460 +1,1556 @@
 {
   "dataset_name": "anti_interference",
   "version": "2.0",
-  "description": "Tests the memory engine's ability to recall target information despite various noise patterns. 25 test cases across 6 categories including expert-level multi-hop and cross-type interference.",
-  "total_cases": 27,
-  "difficulty_distribution": {
-    "easy": 4,
-    "medium": 7,
-    "hard": 9,
-    "expert": 7
-  },
+  "description": "抗干扰能力评测数据集 - 30条样本",
   "test_cases": [
     {
       "test_id": "anti_interference_001",
-      "name": "Single-round noise with 4 distractors",
-      "category": "single_round_noise",
+      "name": "抗干扰测试_1",
       "difficulty": "easy",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "我下周三要去客户A公司做技术方案汇报",
-          "assistant_msg": "好的，已记录。下周三（5月6日）客户A技术方案汇报。",
-          "timestamp": "2026-05-01T10:00:00Z",
-          "owner": "local"
+          "user_msg": "我们技术部下周三要做API网关的性能压测",
+          "assistant_msg": "好的，已记录。技术部下周三进行API网关性能压测。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "今天天气不错",
-            "assistant_msg": "是的，天气很好。",
-            "timestamp": "2026-05-01T10:05:00Z"
+            "user_msg": "今天食堂的菜不错",
+            "assistant_msg": "是的，今天有红烧肉。",
+            "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "帮我订一杯拿铁咖啡",
-            "assistant_msg": "已为您下单。",
-            "timestamp": "2026-05-01T10:10:00Z"
+            "user_msg": "帮我订明天的会议室",
+            "assistant_msg": "已预订3楼A会议室。",
+            "timestamp": "2026-04-01T10:10:00Z"
           },
           {
-            "user_msg": "最近有部新电影上映",
-            "assistant_msg": "是的，您可以看看评分。",
-            "timestamp": "2026-05-01T10:15:00Z"
+            "user_msg": "最近有什么好看的电影",
+            "assistant_msg": "听说流浪地球3不错。",
+            "timestamp": "2026-04-01T10:15:00Z"
           },
           {
-            "user_msg": "明天要开会吗",
-            "assistant_msg": "您明天上午10点有周会。",
-            "timestamp": "2026-05-01T10:20:00Z"
+            "user_msg": "帮我查下快递到哪了",
+            "assistant_msg": "快递预计明天到达。",
+            "timestamp": "2026-04-01T10:20:00Z"
           }
         ],
-        "query": "客户A 技术方案汇报",
-        "max_results": 10
+        "query": "技术部下周三有什么安排"
       },
       "expected": {
         "expected_keywords": [
-          "客户A",
-          "技术方案汇报",
+          "API网关",
+          "性能压测",
           "下周三"
         ],
         "noise_keywords": [
-          "天气",
-          "拿铁",
-          "电影"
+          "食堂",
+          "电影",
+          "快递"
         ],
         "expected_answer_contains": [
-          "客户A"
+          "API网关"
         ]
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.9,
-          "min": 0.5
-        },
-        "precision": {
-          "target": 0.85,
-          "min": 0.5
-        },
-        "noise_injection_rate": {
-          "target": 0.05,
-          "max": 0.1
-        },
-        "f1_score": {
-          "target": 0.87,
-          "min": 0.5
-        },
-        "min_chunks": 1
       }
     },
     {
       "test_id": "anti_interference_002",
-      "name": "Multi-round noise with 10 distractors",
-      "category": "multi_round_noise",
+      "name": "抗干扰测试_2",
       "difficulty": "easy",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "项目B的预算已经批下来了，总共80万",
-          "assistant_msg": "收到，已记录项目B预算：80万元。",
-          "timestamp": "2026-04-28T09:00:00Z",
-          "owner": "local"
+          "user_msg": "产品部的Q3营收目标定在850万",
+          "assistant_msg": "收到，已记录产品部Q3营收目标：850万。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
-        "noise_count": 10,
-        "noise_category": "general",
-        "query": "项目B 预算",
-        "max_results": 10
+        "noise": [
+          {
+            "user_msg": "帮我点杯咖啡",
+            "assistant_msg": "已下单美式咖啡。",
+            "timestamp": "2026-04-01T10:05:00Z"
+          },
+          {
+            "user_msg": "今天天气怎么样",
+            "assistant_msg": "今天晴天，最高温度28度。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          },
+          {
+            "user_msg": "明天有会议吗",
+            "assistant_msg": "明天上午10点有周会。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          },
+          {
+            "user_msg": "帮我查下竞品的价格",
+            "assistant_msg": "竞品A定价199元。",
+            "timestamp": "2026-04-01T10:20:00Z"
+          }
+        ],
+        "query": "产品部Q3营收目标是多少"
       },
       "expected": {
         "expected_keywords": [
-          "80万",
-          "项目B"
+          "850万",
+          "Q3"
         ],
-        "allowed_variants": [
-          "80万",
-          "80万元",
-          "八十万元"
+        "noise_keywords": [
+          "咖啡",
+          "天气"
         ],
         "expected_answer_contains": [
-          "80万"
+          "850万"
         ]
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.9,
-          "min": 0.3
-        },
-        "numeric_accuracy": {
-          "target": 1.0
-        },
-        "min_chunks": 1
       }
     },
     {
       "test_id": "anti_interference_003",
-      "name": "Multi-round noise with 20 distractors",
-      "category": "multi_round_noise",
-      "difficulty": "medium",
+      "name": "抗干扰测试_3",
+      "difficulty": "easy",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "项目B的预算已经批下来了，总共80万",
-          "assistant_msg": "收到，已记录项目B预算：80万元。",
-          "timestamp": "2026-04-28T09:00:00Z",
-          "owner": "local"
+          "user_msg": "运维组的K8s集群迁移定在6月15号",
+          "assistant_msg": "好的，已记录K8s集群迁移日期：6月15号。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
-        "noise_count": 20,
-        "noise_category": "general",
-        "query": "项目B 预算",
-        "max_results": 10
+        "noise": [
+          {
+            "user_msg": "帮我发个快递",
+            "assistant_msg": "快递已下单。",
+            "timestamp": "2026-04-01T10:05:00Z"
+          },
+          {
+            "user_msg": "最近有什么技术分享",
+            "assistant_msg": "下周四有Go语言分享。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          },
+          {
+            "user_msg": "帮我查下服务器状态",
+            "assistant_msg": "服务器CPU使用率正常。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          },
+          {
+            "user_msg": "今天有什么新闻",
+            "assistant_msg": "今天有Apple发布会。",
+            "timestamp": "2026-04-01T10:20:00Z"
+          }
+        ],
+        "query": "K8s集群迁移是什么时候"
       },
       "expected": {
         "expected_keywords": [
-          "80万",
-          "项目B"
+          "K8s",
+          "迁移",
+          "6月15"
         ],
-        "allowed_variants": [
-          "80万",
-          "80万元",
-          "八十万元"
+        "noise_keywords": [
+          "快递",
+          "新闻"
         ],
         "expected_answer_contains": [
-          "80万"
+          "K8s"
         ]
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.8,
-          "min": 0.3
-        },
-        "numeric_accuracy": {
-          "target": 1.0
-        },
-        "min_chunks": 1
       }
     },
     {
       "test_id": "anti_interference_004",
-      "name": "Multi-round noise with 50 distractors",
-      "category": "multi_round_noise",
-      "difficulty": "hard",
+      "name": "抗干扰测试_4",
+      "difficulty": "medium",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "项目B的预算已经批下来了，总共80万",
-          "assistant_msg": "收到，已记录项目B预算：80万元。",
-          "timestamp": "2026-04-28T09:00:00Z",
-          "owner": "local"
+          "user_msg": "客户B的项目验收标准是响应时间小于200ms",
+          "assistant_msg": "已记录客户B验收标准：响应时间<200ms。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
-        "noise_count": 50,
-        "noise_category": "general",
-        "query": "项目B 预算",
-        "max_results": 10
+        "noise": [
+          {
+            "user_msg": "帮我订午餐",
+            "assistant_msg": "已下单。",
+            "timestamp": "2026-04-01T10:05:00Z"
+          },
+          {
+            "user_msg": "今天有快递吗",
+            "assistant_msg": "有3个快递待取。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          },
+          {
+            "user_msg": "帮我查下代码覆盖率",
+            "assistant_msg": "当前覆盖率78%。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          }
+        ],
+        "query": "客户B的验收标准是什么"
       },
       "expected": {
         "expected_keywords": [
-          "80万",
-          "项目B"
+          "响应时间",
+          "200ms"
         ],
-        "allowed_variants": [
-          "80万",
-          "80万元",
-          "八十万元"
+        "noise_keywords": [
+          "午餐",
+          "快递"
         ],
         "expected_answer_contains": [
-          "80万"
+          "响应时间"
         ]
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.7,
-          "min": 0.2
-        },
-        "numeric_accuracy": {
-          "target": 1.0
-        },
-        "min_chunks": 1
       }
     },
     {
       "test_id": "anti_interference_005",
-      "name": "Multi-round noise with 100 distractors",
-      "category": "multi_round_noise",
-      "difficulty": "hard",
+      "name": "抗干扰测试_5",
+      "difficulty": "medium",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "项目B的预算已经批下来了，总共80万",
-          "assistant_msg": "收到，已记录项目B预算：80万元。",
-          "timestamp": "2026-04-28T09:00:00Z",
-          "owner": "local"
+          "user_msg": "安全组发现了一个高危漏洞CVE-2026-1234",
+          "assistant_msg": "已记录安全漏洞CVE-2026-1234，高危级别。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
-        "noise_count": 100,
-        "noise_category": "general",
-        "query": "项目B 预算",
-        "max_results": 10
+        "noise": [
+          {
+            "user_msg": "帮我查下版本号",
+            "assistant_msg": "当前版本v2.3.1。",
+            "timestamp": "2026-04-01T10:05:00Z"
+          },
+          {
+            "user_msg": "今天有什么安排",
+            "assistant_msg": "下午2点有代码评审。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          },
+          {
+            "user_msg": "帮我发个通知",
+            "assistant_msg": "通知已发送。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          }
+        ],
+        "query": "安全组最近发现了什么漏洞"
       },
       "expected": {
         "expected_keywords": [
-          "80万",
-          "项目B"
+          "CVE-2026-1234",
+          "高危"
         ],
-        "allowed_variants": [
-          "80万",
-          "80万元",
-          "八十万元"
+        "noise_keywords": [
+          "版本号"
         ],
         "expected_answer_contains": [
-          "80万"
+          "CVE-2026-1234"
         ]
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.5,
-          "min": 0.1
-        },
-        "numeric_accuracy": {
-          "target": 1.0
-        },
-        "min_chunks": 1
       }
     },
     {
       "test_id": "anti_interference_006",
-      "name": "Similar-topic noise: disambiguate project C from D",
-      "category": "similar_topic_noise",
-      "difficulty": "easy",
+      "name": "抗干扰测试_6",
+      "difficulty": "hard",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "项目C的技术负责人是张三",
-          "assistant_msg": "已记录，项目C技术负责人：张三。",
-          "timestamp": "2026-04-28T09:00:00Z",
-          "owner": "local"
+          "user_msg": "数据库主从切换演练定在本周日凌晨2点",
+          "assistant_msg": "好的，已记录数据库主从切换演练：本周日凌晨2点。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
-        "noise": [
-          {
-            "user_msg": "项目D的负责人是谁",
-            "assistant_msg": "项目D负责人是李四。",
-            "timestamp": "2026-04-28T09:10:00Z"
-          },
-          {
-            "user_msg": "项目E的技术负责人是王五吗",
-            "assistant_msg": "是的，项目E技术负责人是王五。",
-            "timestamp": "2026-04-28T09:20:00Z"
-          },
-          {
-            "user_msg": "项目F的测试负责人换成赵六了",
-            "assistant_msg": "已更新，项目F测试负责人：赵六。",
-            "timestamp": "2026-04-28T09:30:00Z"
-          }
-        ],
-        "query": "项目C 技术负责人",
-        "max_results": 10
+        "noise": [],
+        "query": "数据库演练是什么时候"
       },
       "expected": {
-        "expected_answer": "张三",
-        "distractor_answers": [
-          "李四",
-          "王五",
-          "赵六"
+        "expected_keywords": [
+          "主从切换",
+          "周日",
+          "凌晨2点"
         ],
+        "noise_keywords": [],
         "expected_answer_contains": [
-          "项目C",
-          "张三"
+          "主从切换"
         ]
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.9,
-          "min": 0.5
-        },
-        "precision": {
-          "target": 0.85,
-          "min": 0.5
-        },
-        "max_distractors": 1,
-        "target_found": {
-          "target": 1.0
-        }
       }
     },
     {
       "test_id": "anti_interference_007",
-      "name": "Similar-topic noise: project members across 5 projects",
-      "category": "similar_topic_noise",
-      "difficulty": "medium",
+      "name": "抗干扰测试_7",
+      "difficulty": "easy",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "项目Alpha的后端开发由陈七负责",
-          "assistant_msg": "已记录，项目Alpha后端开发：陈七。",
-          "timestamp": "2026-04-28T09:00:00Z",
-          "owner": "local"
+          "user_msg": "前端组决定用Vue3重构管理后台",
+          "assistant_msg": "收到，已记录前端技术选型：Vue3重构管理后台。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "项目Beta的后端开发是孙八",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:05:00Z"
+            "user_msg": "今天天气不错",
+            "assistant_msg": "是的，适合户外活动。",
+            "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "项目Gamma前端由周九负责",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:10:00Z"
+            "user_msg": "帮我订杯奶茶",
+            "assistant_msg": "已下单珍珠奶茶。",
+            "timestamp": "2026-04-01T10:10:00Z"
           },
           {
-            "user_msg": "项目Delta的后端架构师是吴十",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:15:00Z"
+            "user_msg": "最近有什么新歌",
+            "assistant_msg": "周杰伦发了新专辑。",
+            "timestamp": "2026-04-01T10:15:00Z"
           },
           {
-            "user_msg": "项目Epsilon的全栈开发是郑十一",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:20:00Z"
+            "user_msg": "帮我查下工资条",
+            "assistant_msg": "工资已发放。",
+            "timestamp": "2026-04-01T10:20:00Z"
+          },
+          {
+            "user_msg": "明天要加班吗",
+            "assistant_msg": "明天不需要加班。",
+            "timestamp": "2026-04-01T10:25:00Z"
+          },
+          {
+            "user_msg": "帮我叫个车",
+            "assistant_msg": "已叫车，预计5分钟到达。",
+            "timestamp": "2026-04-01T10:30:00Z"
+          },
+          {
+            "user_msg": "今天食堂有什么",
+            "assistant_msg": "今天有麻辣烫。",
+            "timestamp": "2026-04-01T10:35:00Z"
+          },
+          {
+            "user_msg": "帮我查下快递",
+            "assistant_msg": "快递在路上。",
+            "timestamp": "2026-04-01T10:40:00Z"
+          },
+          {
+            "user_msg": "最近有什么好看的剧",
+            "assistant_msg": "推荐《三体》。",
+            "timestamp": "2026-04-01T10:45:00Z"
+          },
+          {
+            "user_msg": "帮我订个酒店",
+            "assistant_msg": "已预订如家酒店。",
+            "timestamp": "2026-04-01T10:50:00Z"
           }
         ],
-        "query": "项目Alpha 后端开发",
-        "max_results": 10
+        "query": "前端组用什么重构管理后台"
       },
       "expected": {
-        "expected_answer": "陈七",
-        "distractor_answers": [
-          "孙八",
-          "周九",
-          "吴十",
-          "郑十一"
+        "expected_keywords": [
+          "Vue3",
+          "重构"
+        ],
+        "noise_keywords": [
+          "天气",
+          "奶茶",
+          "新歌"
         ],
         "expected_answer_contains": [
-          "项目Alpha",
-          "陈七"
+          "Vue3"
         ]
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.9,
-          "min": 0.5
-        },
-        "precision": {
-          "target": 0.85,
-          "min": 0.5
-        },
-        "max_distractors": 1,
-        "target_found": {
-          "target": 1.0
-        }
       }
     },
     {
       "test_id": "anti_interference_008",
-      "name": "Similar-topic noise: team member roles in parallel teams",
-      "category": "similar_topic_noise",
-      "difficulty": "medium",
+      "name": "抗干扰测试_8",
+      "difficulty": "easy",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "前端组的周报由刘一提交，截止每周五下午4点",
-          "assistant_msg": "已记录：前端组周报由刘一提交，截止每周五16:00。",
-          "timestamp": "2026-04-28T09:00:00Z",
-          "owner": "local"
+          "user_msg": "测试环境的数据库密码改成了Test@2026!",
+          "assistant_msg": "已安全记录测试环境数据库密码。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "后端组的周报由王二提交",
-            "assistant_msg": "已记录后端组周报安排。",
-            "timestamp": "2026-04-28T09:10:00Z"
+            "user_msg": "帮我查下日志",
+            "assistant_msg": "日志显示正常。",
+            "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "测试组的周报由赵三提交",
-            "assistant_msg": "已记录测试组周报安排。",
-            "timestamp": "2026-04-28T09:20:00Z"
+            "user_msg": "今天有什么会",
+            "assistant_msg": "下午3点有需求评审。",
+            "timestamp": "2026-04-01T10:10:00Z"
           },
           {
-            "user_msg": "运维组的周报由钱四提交",
-            "assistant_msg": "已记录运维组周报安排。",
-            "timestamp": "2026-04-28T09:30:00Z"
+            "user_msg": "帮我发个邮件",
+            "assistant_msg": "邮件已发送。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          },
+          {
+            "user_msg": "帮我查下监控",
+            "assistant_msg": "监控显示正常。",
+            "timestamp": "2026-04-01T10:20:00Z"
+          },
+          {
+            "user_msg": "帮我订个会议室",
+            "assistant_msg": "已预订。",
+            "timestamp": "2026-04-01T10:25:00Z"
+          },
+          {
+            "user_msg": "帮我查下代码",
+            "assistant_msg": "代码已提交。",
+            "timestamp": "2026-04-01T10:30:00Z"
+          },
+          {
+            "user_msg": "帮我发个通知",
+            "assistant_msg": "通知已发送。",
+            "timestamp": "2026-04-01T10:35:00Z"
+          },
+          {
+            "user_msg": "帮我查下文档",
+            "assistant_msg": "文档已更新。",
+            "timestamp": "2026-04-01T10:40:00Z"
+          },
+          {
+            "user_msg": "帮我查下进度",
+            "assistant_msg": "进度正常。",
+            "timestamp": "2026-04-01T10:45:00Z"
+          },
+          {
+            "user_msg": "帮我查下预算",
+            "assistant_msg": "预算充足。",
+            "timestamp": "2026-04-01T10:50:00Z"
           }
         ],
-        "query": "前端组 周报 提交人 截止时间",
-        "max_results": 10
+        "query": "测试环境数据库密码是什么"
       },
       "expected": {
-        "expected_answer": "刘一",
-        "distractor_answers": [
-          "王二",
-          "赵三",
-          "钱四"
+        "expected_keywords": [
+          "Test@2026!"
+        ],
+        "noise_keywords": [
+          "日志",
+          "监控"
         ],
         "expected_answer_contains": [
-          "前端组",
-          "刘一",
-          "4点"
+          "Test@2026!"
         ]
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.9,
-          "min": 0.5
-        },
-        "precision": {
-          "target": 0.85,
-          "min": 0.5
-        },
-        "max_distractors": 1,
-        "target_found": {
-          "target": 1.0
-        }
       }
     },
     {
       "test_id": "anti_interference_009",
-      "name": "Similar-topic noise: multiple salary updates for different people",
-      "category": "similar_topic_noise",
-      "difficulty": "hard",
+      "name": "抗干扰测试_9",
+      "difficulty": "medium",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "我的薪资调整为每月25000元",
-          "assistant_msg": "已记录，薪资调整为25000元/月。",
-          "timestamp": "2026-04-28T09:00:00Z",
-          "owner": "local"
+          "user_msg": "项目E的负责人从张三换成了李四",
+          "assistant_msg": "已更新项目E负责人：李四（原张三）。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "张三的薪资是每月22000元",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:10:00Z"
+            "user_msg": "帮我查下项目F进度",
+            "assistant_msg": "项目F进度60%。",
+            "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "李四薪资涨到30000了",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:20:00Z"
+            "user_msg": "帮我查下项目G预算",
+            "assistant_msg": "项目G预算50万。",
+            "timestamp": "2026-04-01T10:10:00Z"
           },
           {
-            "user_msg": "王五的薪资调整为18000",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:30:00Z"
+            "user_msg": "帮我订下周的机票",
+            "assistant_msg": "已预订机票。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          },
+          {
+            "user_msg": "帮我查下竞品分析",
+            "assistant_msg": "竞品分析已完成。",
+            "timestamp": "2026-04-01T10:20:00Z"
+          },
+          {
+            "user_msg": "帮我发个周报",
+            "assistant_msg": "周报已发送。",
+            "timestamp": "2026-04-01T10:25:00Z"
+          },
+          {
+            "user_msg": "帮我查下客户反馈",
+            "assistant_msg": "客户反馈良好。",
+            "timestamp": "2026-04-01T10:30:00Z"
+          },
+          {
+            "user_msg": "帮我订个餐",
+            "assistant_msg": "已订餐。",
+            "timestamp": "2026-04-01T10:35:00Z"
+          },
+          {
+            "user_msg": "帮我查下服务器",
+            "assistant_msg": "服务器正常。",
+            "timestamp": "2026-04-01T10:40:00Z"
           }
         ],
-        "query": "我 薪资 调整",
-        "max_results": 10
+        "query": "项目E现在的负责人是谁"
       },
       "expected": {
-        "expected_answer": "25000",
-        "distractor_answers": [
-          "22000",
-          "30000",
-          "18000"
+        "expected_keywords": [
+          "李四",
+          "项目E"
+        ],
+        "noise_keywords": [
+          "项目F",
+          "项目G"
         ],
         "expected_answer_contains": [
-          "25000"
+          "李四"
         ]
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.9,
-          "min": 0.5
-        },
-        "precision": {
-          "target": 0.85,
-          "min": 0.5
-        },
-        "max_distractors": 1,
-        "target_found": {
-          "target": 1.0
-        }
       }
     },
     {
       "test_id": "anti_interference_010",
-      "name": "Similar-topic noise: client meeting schedules",
-      "category": "similar_topic_noise",
-      "difficulty": "hard",
+      "name": "抗干扰测试_10",
+      "difficulty": "medium",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "和客户XYZ的会议定在周三上午9点",
-          "assistant_msg": "已记录，周三9:00与客户XYZ会议。",
-          "timestamp": "2026-04-28T09:00:00Z",
-          "owner": "local"
+          "user_msg": "CI/CD流水线从Jenkins迁移到GitLab CI",
+          "assistant_msg": "已记录CI/CD迁移：Jenkins→GitLab CI。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "和客户ABC的会议是周二下午",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:10:00Z"
+            "user_msg": "帮我查下构建状态",
+            "assistant_msg": "构建成功。",
+            "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "和客户DEF的电话会议周四",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:20:00Z"
+            "user_msg": "帮我查下测试结果",
+            "assistant_msg": "测试全部通过。",
+            "timestamp": "2026-04-01T10:10:00Z"
           },
           {
-            "user_msg": "客户GHI要周五来公司参观",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:30:00Z"
+            "user_msg": "帮我发个通知",
+            "assistant_msg": "通知已发送。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          },
+          {
+            "user_msg": "帮我查下代码评审",
+            "assistant_msg": "评审已完成。",
+            "timestamp": "2026-04-01T10:20:00Z"
+          },
+          {
+            "user_msg": "帮我查下部署状态",
+            "assistant_msg": "部署成功。",
+            "timestamp": "2026-04-01T10:25:00Z"
+          },
+          {
+            "user_msg": "帮我查下监控",
+            "assistant_msg": "监控正常。",
+            "timestamp": "2026-04-01T10:30:00Z"
+          },
+          {
+            "user_msg": "帮我查下日志",
+            "assistant_msg": "日志无异常。",
+            "timestamp": "2026-04-01T10:35:00Z"
+          },
+          {
+            "user_msg": "帮我查下性能",
+            "assistant_msg": "性能正常。",
+            "timestamp": "2026-04-01T10:40:00Z"
+          },
+          {
+            "user_msg": "帮我查下安全扫描",
+            "assistant_msg": "扫描无漏洞。",
+            "timestamp": "2026-04-01T10:45:00Z"
+          },
+          {
+            "user_msg": "帮我查下覆盖率",
+            "assistant_msg": "覆盖率85%。",
+            "timestamp": "2026-04-01T10:50:00Z"
           }
         ],
-        "query": "客户XYZ 会议 时间",
-        "max_results": 10
+        "query": "CI/CD流水线从什么迁移到什么"
       },
       "expected": {
-        "expected_answer": "周三上午9点",
-        "distractor_answers": [
-          "周二",
-          "周四",
-          "周五"
+        "expected_keywords": [
+          "Jenkins",
+          "GitLab CI"
+        ],
+        "noise_keywords": [
+          "构建",
+          "测试"
         ],
         "expected_answer_contains": [
-          "客户XYZ",
-          "周三",
-          "9"
+          "Jenkins"
         ]
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.9,
-          "min": 0.5
-        },
-        "precision": {
-          "target": 0.85,
-          "min": 0.5
-        },
-        "max_distractors": 1,
-        "target_found": {
-          "target": 1.0
-        }
       }
     },
     {
       "test_id": "anti_interference_011",
-      "name": "Temporal spread: fact from 3 months ago with 20 scattered entries",
-      "category": "temporal_spread",
+      "name": "抗干扰测试_11",
       "difficulty": "medium",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "我的飞书文档密码改成了 Herme$2026!",
-          "assistant_msg": "已安全记录（加密存储）。",
-          "timestamp": "2026-01-15T14:00:00Z",
-          "owner": "local"
+          "user_msg": "微服务A的超时时间从30秒改成了5秒",
+          "assistant_msg": "已更新微服务A超时时间：5秒。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
-        "noise_count": 20,
-        "noise_spread": {
-          "start": "2026-01-16T10:00:00Z",
-          "interval_days": 4,
-          "category": "general"
-        },
-        "query": "飞书文档密码",
-        "max_results": 10
+        "noise": [
+          {
+            "user_msg": "帮我查下服务状态",
+            "assistant_msg": "服务正常。",
+            "timestamp": "2026-04-01T10:05:00Z"
+          },
+          {
+            "user_msg": "帮我查下告警",
+            "assistant_msg": "无告警。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          },
+          {
+            "user_msg": "帮我查下日志",
+            "assistant_msg": "日志正常。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          },
+          {
+            "user_msg": "帮我查下性能",
+            "assistant_msg": "性能良好。",
+            "timestamp": "2026-04-01T10:20:00Z"
+          },
+          {
+            "user_msg": "帮我查下版本",
+            "assistant_msg": "版本v1.2.3。",
+            "timestamp": "2026-04-01T10:25:00Z"
+          },
+          {
+            "user_msg": "帮我查下配置",
+            "assistant_msg": "配置正确。",
+            "timestamp": "2026-04-01T10:30:00Z"
+          },
+          {
+            "user_msg": "帮我查下依赖",
+            "assistant_msg": "依赖正常。",
+            "timestamp": "2026-04-01T10:35:00Z"
+          },
+          {
+            "user_msg": "帮我查下接口",
+            "assistant_msg": "接口正常。",
+            "timestamp": "2026-04-01T10:40:00Z"
+          },
+          {
+            "user_msg": "帮我查下数据库",
+            "assistant_msg": "数据库正常。",
+            "timestamp": "2026-04-01T10:45:00Z"
+          },
+          {
+            "user_msg": "帮我查下缓存",
+            "assistant_msg": "缓存命中率95%。",
+            "timestamp": "2026-04-01T10:50:00Z"
+          }
+        ],
+        "query": "微服务A的超时时间现在是多少"
       },
       "expected": {
-        "expected_answer": "Herme$2026!",
+        "expected_keywords": [
+          "5秒",
+          "超时"
+        ],
+        "noise_keywords": [
+          "服务状态",
+          "告警"
+        ],
         "expected_answer_contains": [
-          "Herme$2026!"
+          "5秒"
         ]
-      },
-      "evaluation_criteria": {
-        "must_retrieve": {
-          "target": 1.0
-        },
-        "min_chunks": 1
       }
     },
     {
       "test_id": "anti_interference_012",
-      "name": "Temporal spread: password with 30 entries over 4 months",
-      "category": "temporal_spread",
-      "difficulty": "medium",
+      "name": "抗干扰测试_12",
+      "difficulty": "hard",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "我的飞书文档密码改成了 Herme$2026!",
-          "assistant_msg": "已安全记录（加密存储）。",
-          "timestamp": "2026-01-15T14:00:00Z",
-          "owner": "local"
+          "user_msg": "客户C要求增加数据导出功能支持CSV和Excel格式",
+          "assistant_msg": "已记录客户C需求：数据导出支持CSV和Excel。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
-        "noise_count": 30,
-        "noise_spread": {
-          "start": "2026-01-16T10:00:00Z",
-          "interval_days": 3,
-          "category": "general"
-        },
-        "query": "飞书文档密码",
-        "max_results": 10
+        "noise": [
+          {
+            "user_msg": "帮我查下需求列表",
+            "assistant_msg": "需求列表已更新。",
+            "timestamp": "2026-04-01T10:05:00Z"
+          },
+          {
+            "user_msg": "帮我查下排期",
+            "assistant_msg": "排期已确定。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          },
+          {
+            "user_msg": "帮我查下资源",
+            "assistant_msg": "资源充足。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          },
+          {
+            "user_msg": "帮我查下风险",
+            "assistant_msg": "风险可控。",
+            "timestamp": "2026-04-01T10:20:00Z"
+          },
+          {
+            "user_msg": "帮我查下里程碑",
+            "assistant_msg": "里程碑正常。",
+            "timestamp": "2026-04-01T10:25:00Z"
+          },
+          {
+            "user_msg": "帮我查下依赖",
+            "assistant_msg": "依赖已满足。",
+            "timestamp": "2026-04-01T10:30:00Z"
+          },
+          {
+            "user_msg": "帮我查下测试",
+            "assistant_msg": "测试通过。",
+            "timestamp": "2026-04-01T10:35:00Z"
+          },
+          {
+            "user_msg": "帮我查下文档",
+            "assistant_msg": "文档已更新。",
+            "timestamp": "2026-04-01T10:40:00Z"
+          },
+          {
+            "user_msg": "帮我查下评审",
+            "assistant_msg": "评审通过。",
+            "timestamp": "2026-04-01T10:45:00Z"
+          },
+          {
+            "user_msg": "帮我查下发布",
+            "assistant_msg": "发布成功。",
+            "timestamp": "2026-04-01T10:50:00Z"
+          }
+        ],
+        "query": "客户C要求支持什么数据导出格式"
       },
       "expected": {
-        "expected_answer": "Herme$2026!",
+        "expected_keywords": [
+          "CSV",
+          "Excel",
+          "客户C"
+        ],
+        "noise_keywords": [
+          "需求列表",
+          "排期"
+        ],
         "expected_answer_contains": [
-          "Herme$2026!"
+          "CSV"
         ]
-      },
-      "evaluation_criteria": {
-        "must_retrieve": {
-          "target": 1.0
-        },
-        "min_chunks": 1
       }
     },
     {
       "test_id": "anti_interference_013",
-      "name": "Temporal spread: server config from 6 months ago",
-      "category": "temporal_spread",
-      "difficulty": "hard",
+      "name": "抗干扰测试_13",
+      "difficulty": "easy",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "生产环境数据库连接串是 postgres://admin:P@ssw0rd@db.internal:5432/prod",
-          "assistant_msg": "已安全记录。",
-          "timestamp": "2025-10-01T10:00:00Z",
-          "owner": "local"
+          "user_msg": "项目Alpha用React框架开发",
+          "assistant_msg": "已记录项目Alpha技术栈：React。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
-        "noise_count": 50,
-        "noise_spread": {
-          "start": "2025-10-02T10:00:00Z",
-          "interval_days": 3,
-          "category": "general"
-        },
-        "query": "数据库连接串 生产环境",
-        "max_results": 10
+        "noise": [
+          {
+            "user_msg": "项目Beta用Vue框架",
+            "assistant_msg": "已记录项目Beta：Vue。",
+            "timestamp": "2026-04-01T10:05:00Z"
+          },
+          {
+            "user_msg": "项目Gamma用Angular",
+            "assistant_msg": "已记录项目Gamma：Angular。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          },
+          {
+            "user_msg": "项目Delta用Svelte",
+            "assistant_msg": "已记录项目Delta：Svelte。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          }
+        ],
+        "query": "项目Alpha用什么框架"
       },
       "expected": {
-        "expected_answer": "P@ssw0rd",
+        "expected_keywords": [
+          "React",
+          "Alpha"
+        ],
+        "noise_keywords": [
+          "Vue",
+          "Angular",
+          "Svelte"
+        ],
         "expected_answer_contains": [
-          "db.internal",
-          "5432",
-          "prod"
+          "React"
         ]
-      },
-      "evaluation_criteria": {
-        "must_retrieve": {
-          "target": 1.0
-        },
-        "min_chunks": 1
       }
     },
     {
       "test_id": "anti_interference_014",
-      "name": "Role confusion: self vs colleague with same activity",
-      "category": "role_confusion",
+      "name": "抗干扰测试_14",
       "difficulty": "easy",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "我下周三去拜访客户A",
-          "assistant_msg": "好的，已记录。",
-          "timestamp": "2026-05-01T10:00:00Z",
-          "owner": "user_self"
+          "user_msg": "市场部的月度预算15万",
+          "assistant_msg": "已记录市场部月度预算：15万。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "张三下周三也要去拜访客户A",
-            "assistant_msg": "已记录张三的行程。",
-            "timestamp": "2026-05-01T10:05:00Z",
-            "owner": "user_zhangsan"
+            "user_msg": "销售部的月度预算20万",
+            "assistant_msg": "已记录销售部：20万。",
+            "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "李四下周三去客户B",
-            "assistant_msg": "已记录李四的行程。",
-            "timestamp": "2026-05-01T10:10:00Z",
-            "owner": "user_lisi"
+            "user_msg": "技术部的月度预算30万",
+            "assistant_msg": "已记录技术部：30万。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          },
+          {
+            "user_msg": "人事部的月度预算10万",
+            "assistant_msg": "已记录人事部：10万。",
+            "timestamp": "2026-04-01T10:15:00Z"
           }
         ],
-        "query": "我 客户A",
-        "max_results": 10
+        "query": "市场部月度预算是多少"
       },
       "expected": {
-        "self_owner": "user_self",
-        "noise_owners": [
-          "user_zhangsan",
-          "user_lisi"
+        "expected_keywords": [
+          "15万",
+          "市场部"
+        ],
+        "noise_keywords": [
+          "20万",
+          "30万",
+          "10万"
         ],
         "expected_answer_contains": [
-          "我",
-          "客户A"
+          "15万"
         ]
-      },
-      "evaluation_criteria": {
-        "self_identified": {
-          "target": 1.0
-        },
-        "not_confused": {
-          "target": 1.0
-        },
-        "role_accuracy": {
-          "target": 0.95
-        }
       }
     },
     {
       "test_id": "anti_interference_015",
-      "name": "Role confusion: 5 people with similar tasks",
-      "category": "role_confusion",
+      "name": "抗干扰测试_15",
       "difficulty": "medium",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "我负责项目Alpha的前端开发",
-          "assistant_msg": "已记录。",
-          "timestamp": "2026-05-01T10:00:00Z",
-          "owner": "user_self"
+          "user_msg": "后端接口/api/v2/users的超时设置为3秒",
+          "assistant_msg": "已记录/api/v2/users超时：3秒。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "张三负责项目Beta的前端开发",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-05-01T10:05:00Z",
-            "owner": "user_zhangsan"
+            "user_msg": "/api/v2/orders的超时设置为5秒",
+            "assistant_msg": "已记录/api/v2/orders超时：5秒。",
+            "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "李四负责项目Gamma的前端开发",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-05-01T10:10:00Z",
-            "owner": "user_lisi"
+            "user_msg": "/api/v1/users的超时设置为10秒",
+            "assistant_msg": "已记录/api/v1/users超时：10秒。",
+            "timestamp": "2026-04-01T10:10:00Z"
           },
           {
-            "user_msg": "王五负责项目Delta的前端开发",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-05-01T10:15:00Z",
-            "owner": "user_wangwu"
-          },
-          {
-            "user_msg": "赵六负责项目Epsilon的前端开发",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-05-01T10:20:00Z",
-            "owner": "user_zhaoliu"
+            "user_msg": "/api/v2/products的超时设置为2秒",
+            "assistant_msg": "已记录/api/v2/products超时：2秒。",
+            "timestamp": "2026-04-01T10:15:00Z"
           }
         ],
-        "query": "我 前端开发 负责项目",
-        "max_results": 10
+        "query": "/api/v2/users的超时是多少"
       },
       "expected": {
-        "self_owner": "user_self",
+        "expected_keywords": [
+          "3秒",
+          "/api/v2/users"
+        ],
+        "noise_keywords": [
+          "5秒",
+          "10秒",
+          "2秒"
+        ],
         "expected_answer_contains": [
-          "我",
-          "项目Alpha",
-          "前端开发"
+          "3秒"
         ]
-      },
-      "evaluation_criteria": {
-        "self_identified": {
-          "target": 1.0
-        },
-        "not_confused": {
-          "target": 1.0
-        },
-        "role_accuracy": {
-          "target": 0.95
-        }
       }
     },
     {
       "test_id": "anti_interference_016",
-      "name": "Role confusion: multiple people sharing the same meeting room",
-      "category": "role_confusion",
-      "difficulty": "hard",
+      "name": "抗干扰测试_16",
+      "difficulty": "medium",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "我周一上午在A301会议室面试候选人",
-          "assistant_msg": "已记录：周一上午A301面试。",
-          "timestamp": "2026-05-01T10:00:00Z",
-          "owner": "user_self"
+          "user_msg": "张经理负责的客户是华为",
+          "assistant_msg": "已记录张经理客户：华为。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "张三周一上午在A301开项目评审会",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-05-01T10:05:00Z",
-            "owner": "user_zhangsan"
+            "user_msg": "李经理负责的客户是腾讯",
+            "assistant_msg": "已记录李经理客户：腾讯。",
+            "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "李四周一上午在A302培训新人",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-05-01T10:10:00Z",
-            "owner": "user_lisi"
+            "user_msg": "王经理负责的客户是阿里",
+            "assistant_msg": "已记录王经理客户：阿里。",
+            "timestamp": "2026-04-01T10:10:00Z"
           },
           {
-            "user_msg": "王五周一在A301下午有面试",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-05-01T10:15:00Z",
-            "owner": "user_wangwu"
+            "user_msg": "赵经理负责的客户是字节",
+            "assistant_msg": "已记录赵经理客户：字节。",
+            "timestamp": "2026-04-01T10:15:00Z"
           }
         ],
-        "query": "我 周一 会议室 安排",
-        "max_results": 10
+        "query": "张经理负责哪个客户"
       },
       "expected": {
-        "self_owner": "user_self",
+        "expected_keywords": [
+          "华为",
+          "张经理"
+        ],
+        "noise_keywords": [
+          "腾讯",
+          "阿里",
+          "字节"
+        ],
         "expected_answer_contains": [
-          "我",
-          "A301",
-          "面试"
+          "华为"
         ]
-      },
-      "evaluation_criteria": {
-        "self_identified": {
-          "target": 1.0
-        },
-        "not_confused": {
-          "target": 1.0
-        },
-        "role_accuracy": {
-          "target": 0.9
-        }
       }
     },
     {
       "test_id": "anti_interference_017",
-      "name": "Edge case: very long conversation history",
-      "category": "edge_case",
+      "name": "抗干扰测试_17",
       "difficulty": "hard",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "最终决策：项目采用React + Go技术栈",
-          "assistant_msg": "已记录技术选型决策。",
-          "timestamp": "2026-03-01T10:00:00Z",
-          "owner": "local"
+          "user_msg": "生产环境Redis集群地址是10.0.1.100:6379",
+          "assistant_msg": "已记录生产Redis：10.0.1.100:6379。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
-        "noise_count": 80,
-        "noise_category": "project",
-        "extra_long_content": true,
-        "query": "技术选型 决策 最终",
-        "max_results": 10
+        "noise": [
+          {
+            "user_msg": "测试环境Redis地址是10.0.2.100:6379",
+            "assistant_msg": "已记录测试Redis：10.0.2.100:6379。",
+            "timestamp": "2026-04-01T10:05:00Z"
+          },
+          {
+            "user_msg": "预发布环境Redis地址是10.0.3.100:6379",
+            "assistant_msg": "已记录预发布Redis：10.0.3.100:6379。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          },
+          {
+            "user_msg": "开发环境Redis地址是10.0.4.100:6379",
+            "assistant_msg": "已记录开发Redis：10.0.4.100:6379。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          }
+        ],
+        "query": "生产环境Redis地址是什么"
       },
       "expected": {
+        "expected_keywords": [
+          "10.0.1.100",
+          "6379"
+        ],
+        "noise_keywords": [
+          "10.0.2",
+          "10.0.3",
+          "10.0.4"
+        ],
         "expected_answer_contains": [
-          "React",
-          "Go",
-          "技术栈"
+          "10.0.1.100"
         ]
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.7,
-          "min": 0.3
-        },
-        "min_chunks": 1
       }
     },
     {
       "test_id": "anti_interference_018",
-      "name": "Edge case: mixed Chinese-English content",
-      "category": "edge_case",
-      "difficulty": "medium",
+      "name": "抗干扰测试_18",
+      "difficulty": "hard",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "Our API gateway uses Kong 3.0 with rate limiting configured at 1000 req/min",
-          "assistant_msg": "Noted: Kong 3.0 API gateway, rate limit 1000 req/min.",
-          "timestamp": "2026-04-28T09:00:00Z",
-          "owner": "local"
+          "user_msg": "数据库连接池最大连接数设为200",
+          "assistant_msg": "已记录数据库连接池最大连接数：200。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "今天数据库做了主从切换",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:05:00Z"
+            "user_msg": "Redis连接池最大连接数设为100",
+            "assistant_msg": "已记录Redis连接池：100。",
+            "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "The frontend deployment is using Vercel now",
-            "assistant_msg": "Noted.",
-            "timestamp": "2026-04-28T09:10:00Z"
+            "user_msg": "MongoDB连接池最大连接数设为50",
+            "assistant_msg": "已记录MongoDB连接池：50。",
+            "timestamp": "2026-04-01T10:10:00Z"
           },
           {
-            "user_msg": "Redis集群扩容到16个节点了",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:15:00Z"
+            "user_msg": "ES连接池最大连接数设为30",
+            "assistant_msg": "已记录ES连接池：30。",
+            "timestamp": "2026-04-01T10:15:00Z"
           }
         ],
-        "query": "API gateway Kong configuration",
-        "max_results": 10
+        "query": "数据库连接池最大连接数是多少"
       },
       "expected": {
+        "expected_keywords": [
+          "200",
+          "数据库"
+        ],
+        "noise_keywords": [
+          "Redis",
+          "MongoDB",
+          "ES"
+        ],
         "expected_answer_contains": [
-          "Kong",
-          "3.0",
-          "rate limit",
-          "1000"
+          "200"
         ]
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.8,
-          "min": 0.5
-        },
-        "min_chunks": 1
       }
     },
     {
       "test_id": "anti_interference_019",
-      "name": "Edge case: technical jargon with similar acronyms",
-      "category": "edge_case",
-      "difficulty": "hard",
+      "name": "抗干扰测试_19",
+      "difficulty": "easy",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "CI/CD pipeline使用GitLab CI，部署目标是K8s集群的staging环境",
-          "assistant_msg": "已记录：CI/CD用GitLab CI，目标K8s staging。",
-          "timestamp": "2026-04-28T09:00:00Z",
-          "owner": "local"
+          "user_msg": "1月份制定的年度OKR目标是营收增长30%",
+          "assistant_msg": "已记录年度OKR：营收增长30%。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "CDN配置更新了，现在用CloudFlare",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:05:00Z"
+            "user_msg": "2月份招了3个新员工",
+            "assistant_msg": "已记录2月招聘。",
+            "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "CRS测试发现3个高危漏洞",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:10:00Z"
+            "user_msg": "3月份做了架构调整",
+            "assistant_msg": "已记录3月架构调整。",
+            "timestamp": "2026-04-01T10:10:00Z"
           },
           {
-            "user_msg": "CRM系统升级到v5.2了",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:15:00Z"
+            "user_msg": "4月份发布了新版本",
+            "assistant_msg": "已记录4月版本发布。",
+            "timestamp": "2026-04-01T10:15:00Z"
           }
         ],
-        "query": "CI/CD pipeline 部署 K8s",
-        "max_results": 10
+        "query": "年初制定的OKR目标是什么"
       },
       "expected": {
+        "expected_keywords": [
+          "营收增长30%",
+          "OKR"
+        ],
+        "noise_keywords": [
+          "招聘",
+          "架构"
+        ],
         "expected_answer_contains": [
-          "GitLab CI",
-          "K8s",
-          "staging"
+          "营收增长30%"
         ]
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.8,
-          "min": 0.4
-        },
-        "min_chunks": 1
       }
     },
     {
       "test_id": "anti_interference_020",
-      "name": "Edge case: extremely long single message with target buried",
-      "category": "edge_case",
-      "difficulty": "hard",
+      "name": "抗干扰测试_20",
+      "difficulty": "easy",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "会议纪要：本次会议讨论了以下内容...项目进展、人员安排、预算调整...其中关键决策是：数据库从MySQL迁移到PostgreSQL，预计在Q3完成。",
-          "assistant_msg": "已记录会议纪要，关键决策：MySQL→PostgreSQL迁移，Q3完成。",
-          "timestamp": "2026-04-28T09:00:00Z",
-          "owner": "local"
+          "user_msg": "去年12月客户D签了年度框架协议价值500万",
+          "assistant_msg": "已记录客户D年度框架协议：500万。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "数据库备份脚本改了一下",
-            "assistant_msg": "好的。",
-            "timestamp": "2026-04-28T09:10:00Z"
+            "user_msg": "今年1月做了技术评审",
+            "assistant_msg": "已完成。",
+            "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "PostgreSQL 16的新特性调研",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:20:00Z"
+            "user_msg": "今年2月做了安全审计",
+            "assistant_msg": "已通过。",
+            "timestamp": "2026-04-01T10:10:00Z"
           },
           {
-            "user_msg": "MySQL性能调优方案",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-28T09:30:00Z"
+            "user_msg": "今年3月做了性能优化",
+            "assistant_msg": "已完成。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          },
+          {
+            "user_msg": "今年4月做了版本发布",
+            "assistant_msg": "已发布。",
+            "timestamp": "2026-04-01T10:20:00Z"
           }
         ],
-        "query": "数据库迁移 PostgreSQL 决策",
-        "max_results": 10
+        "query": "客户D签了什么框架协议"
       },
       "expected": {
+        "expected_keywords": [
+          "500万",
+          "客户D",
+          "年度框架"
+        ],
+        "noise_keywords": [
+          "技术评审",
+          "安全审计"
+        ],
         "expected_answer_contains": [
-          "MySQL",
-          "PostgreSQL",
-          "迁移",
-          "Q3"
+          "500万"
         ]
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.8,
-          "min": 0.4
-        },
-        "min_chunks": 1
       }
     },
     {
       "test_id": "anti_interference_021",
-      "name": "Expert: multi-hop noise - decision+command+preference interference",
-      "category": "cross_type_noise",
-      "difficulty": "expert",
+      "name": "抗干扰测试_21",
+      "difficulty": "medium",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "项目技术栈确定为Go+gRPC",
-          "assistant_msg": "已记录技术选型：Go+gRPC。",
-          "timestamp": "2026-04-01T10:00:00Z",
-          "owner": "local",
-          "memory_type": "decision"
+          "user_msg": "去年Q3确定的技术架构是微服务+K8s",
+          "assistant_msg": "已记录Q3技术架构：微服务+K8s。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "我个人偏好Python，但项目用Go",
-            "assistant_msg": "已记录偏好。",
-            "timestamp": "2026-04-01T10:05:00Z",
-            "memory_type": "preference"
+            "user_msg": "Q4做了性能测试",
+            "assistant_msg": "性能达标。",
+            "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "我昨天用了go build编译项目",
-            "assistant_msg": "已记录命令。",
-            "timestamp": "2026-04-02T10:00:00Z",
-            "memory_type": "command"
+            "user_msg": "今年Q1做了安全加固",
+            "assistant_msg": "安全加固完成。",
+            "timestamp": "2026-04-01T10:10:00Z"
           },
           {
-            "user_msg": "Python的FastAPI写API最快",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-03T10:00:00Z",
-            "memory_type": "preference"
-          },
-          {
-            "user_msg": "项目技术栈再讨论一下？要不要换成Rust",
-            "assistant_msg": "需要团队讨论。",
-            "timestamp": "2026-04-04T10:00:00Z",
-            "memory_type": "discussion"
+            "user_msg": "今年Q2计划做容器化",
+            "assistant_msg": "容器化方案已定。",
+            "timestamp": "2026-04-01T10:15:00Z"
           }
         ],
-        "query": "项目技术栈决策",
-        "max_results": 10
+        "query": "去年Q3确定的技术架构是什么"
       },
       "expected": {
+        "expected_keywords": [
+          "微服务",
+          "K8s"
+        ],
+        "noise_keywords": [
+          "性能测试",
+          "安全加固"
+        ],
         "expected_answer_contains": [
-          "Go",
-          "gRPC"
-        ],
-        "must_not_confuse_with": [
-          "Python",
-          "Rust"
-        ],
-        "memory_type_is": "decision"
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.9,
-          "min": 0.5
-        },
-        "precision": {
-          "target": 0.85,
-          "min": 0.5
-        },
-        "type_disambiguation": {
-          "target": 1.0
-        },
-        "multi_hop_filtering": {
-          "target": 0.9
-        }
+          "微服务"
+        ]
       }
     },
     {
       "test_id": "anti_interference_022",
-      "name": "Expert: temporal noise - same fact different versions across 3 months",
-      "category": "temporal_version_noise",
-      "difficulty": "expert",
+      "name": "抗干扰测试_22",
+      "difficulty": "medium",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "生产数据库密码改成 Xk9#mP2$vL",
-          "assistant_msg": "已安全记录新密码。",
-          "timestamp": "2026-04-15T14:00:00Z",
-          "owner": "local"
+          "user_msg": "2025年3月数据库从MySQL迁移到PostgreSQL",
+          "assistant_msg": "已记录数据库迁移：MySQL→PostgreSQL（2025年3月）。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "数据库密码是 Abc123456",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-01-10T10:00:00Z"
+            "user_msg": "2025年6月做了缓存优化",
+            "assistant_msg": "缓存优化完成。",
+            "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "数据库密码改成 Test@2026",
-            "assistant_msg": "已更新。",
-            "timestamp": "2026-02-15T10:00:00Z"
+            "user_msg": "2025年9月做了读写分离",
+            "assistant_msg": "读写分离已配置。",
+            "timestamp": "2026-04-01T10:10:00Z"
           },
           {
-            "user_msg": "密码又改了 P@ssw0rd2026!",
-            "assistant_msg": "已更新。",
-            "timestamp": "2026-03-20T10:00:00Z"
+            "user_msg": "2025年12月做了分库分表",
+            "assistant_msg": "分库分表已完成。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          },
+          {
+            "user_msg": "2026年3月做了数据归档",
+            "assistant_msg": "数据归档完成。",
+            "timestamp": "2026-04-01T10:20:00Z"
           }
         ],
-        "query": "生产数据库密码",
-        "max_results": 10
+        "query": "数据库从什么迁移到什么"
       },
       "expected": {
-        "expected_answer": "Xk9#mP2$vL",
-        "must_not_return": [
-          "Abc123456",
-          "Test@2026",
-          "P@ssw0rd2026!"
+        "expected_keywords": [
+          "MySQL",
+          "PostgreSQL"
         ],
-        "latest_version_only": true
-      },
-      "evaluation_criteria": {
-        "latest_value_accuracy": {
-          "target": 0.95,
-          "min": 0.5
-        },
-        "old_values_excluded": {
-          "target": 0.9
-        },
-        "temporal_order_correct": {
-          "target": 0.95
-        }
+        "noise_keywords": [
+          "缓存",
+          "读写分离"
+        ],
+        "expected_answer_contains": [
+          "MySQL"
+        ]
       }
     },
     {
       "test_id": "anti_interference_023",
-      "name": "Expert: entity confusion - 10 projects with overlapping members",
-      "category": "entity_confusion",
-      "difficulty": "expert",
+      "name": "抗干扰测试_23",
+      "difficulty": "hard",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "Project Phoenix的PM是张三，deadline是6月30日",
-          "assistant_msg": "已记录：Project Phoenix PM张三，deadline 6/30。",
-          "timestamp": "2026-04-01T10:00:00Z",
-          "owner": "local"
+          "user_msg": "2024年6月核心服务从Java重写为Go",
+          "assistant_msg": "已记录核心服务重写：Java→Go（2024年6月）。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "Project Titan的PM是李四，deadline 7月15",
-            "assistant_msg": "已记录。",
+            "user_msg": "2024年9月做了性能优化",
+            "assistant_msg": "性能提升50%。",
             "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "Project Phoenix的tech lead是王五",
-            "assistant_msg": "已记录。",
+            "user_msg": "2025年1月做了架构评审",
+            "assistant_msg": "架构评审通过。",
             "timestamp": "2026-04-01T10:10:00Z"
           },
           {
-            "user_msg": "Project Dragon的PM也是张三",
-            "assistant_msg": "已记录。",
+            "user_msg": "2025年6月做了容器化",
+            "assistant_msg": "容器化完成。",
             "timestamp": "2026-04-01T10:15:00Z"
           },
           {
-            "user_msg": "Project Phoenix的budget是200万",
-            "assistant_msg": "已记录。",
+            "user_msg": "2025年12月做了服务网格",
+            "assistant_msg": "服务网格已部署。",
             "timestamp": "2026-04-01T10:20:00Z"
+          },
+          {
+            "user_msg": "2026年3月做了可观测性改造",
+            "assistant_msg": "可观测性已完善。",
+            "timestamp": "2026-04-01T10:25:00Z"
           }
         ],
-        "query": "Project Phoenix deadline",
-        "max_results": 10
+        "query": "核心服务是从什么重写为什么的"
       },
       "expected": {
-        "expected_answer": "6月30日",
+        "expected_keywords": [
+          "Java",
+          "Go",
+          "核心服务"
+        ],
+        "noise_keywords": [
+          "性能优化",
+          "容器化"
+        ],
         "expected_answer_contains": [
-          "Phoenix",
-          "6月30"
-        ],
-        "must_not_confuse": [
-          "Titan",
-          "Dragon"
-        ],
-        "entity_disambiguation": true
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.9,
-          "min": 0.5
-        },
-        "precision": {
-          "target": 0.85,
-          "min": 0.5
-        },
-        "entity_accuracy": {
-          "target": 0.95
-        }
+          "Java"
+        ]
       }
     },
     {
       "test_id": "anti_interference_024",
-      "name": "Expert: semantic noise - similar meaning different facts",
-      "category": "semantic_noise",
-      "difficulty": "expert",
+      "name": "抗干扰测试_24",
+      "difficulty": "hard",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "我们的API限流是每分钟1000次",
-          "assistant_msg": "已记录：API限流 1000 req/min。",
-          "timestamp": "2026-04-01T10:00:00Z",
-          "owner": "local"
+          "user_msg": "2024年8月安全团队制定了零信任架构方案",
+          "assistant_msg": "已记录零信任架构方案（2024年8月）。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "第三方API的限流是每分钟500次",
-            "assistant_msg": "已记录。",
+            "user_msg": "2024年11月做了渗透测试",
+            "assistant_msg": "渗透测试通过。",
             "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "消息队列的消费速率是每秒1000条",
-            "assistant_msg": "已记录。",
+            "user_msg": "2025年2月部署了WAF",
+            "assistant_msg": "WAF已部署。",
             "timestamp": "2026-04-01T10:10:00Z"
           },
           {
-            "user_msg": "数据库连接池上限是1000",
-            "assistant_msg": "已记录。",
+            "user_msg": "2025年5月实施了mTLS",
+            "assistant_msg": "mTLS已实施。",
             "timestamp": "2026-04-01T10:15:00Z"
+          },
+          {
+            "user_msg": "2025年8月做了安全审计",
+            "assistant_msg": "安全审计通过。",
+            "timestamp": "2026-04-01T10:20:00Z"
+          },
+          {
+            "user_msg": "2025年11月更新了安全策略",
+            "assistant_msg": "安全策略已更新。",
+            "timestamp": "2026-04-01T10:25:00Z"
           }
         ],
-        "query": "API限流配置",
-        "max_results": 10
+        "query": "零信任架构方案是什么时候制定的"
       },
       "expected": {
-        "expected_answer": "每分钟1000次",
-        "must_not_confuse_with": [
-          "每分钟500次(第三方)",
-          "每秒1000条(消息队列)",
-          "1000(连接池)"
+        "expected_keywords": [
+          "零信任",
+          "2024年8月"
         ],
-        "semantic_disambiguation": true
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.85,
-          "min": 0.4
-        },
-        "precision": {
-          "target": 0.8,
-          "min": 0.4
-        },
-        "semantic_accuracy": {
-          "target": 0.9
-        }
+        "noise_keywords": [
+          "渗透测试",
+          "WAF"
+        ],
+        "expected_answer_contains": [
+          "零信任"
+        ]
       }
     },
     {
       "test_id": "anti_interference_025",
-      "name": "Expert: 3-month noise with 200 distractors and cross-type memories",
-      "category": "stress_noise",
-      "difficulty": "expert",
+      "name": "抗干扰测试_25",
+      "difficulty": "easy",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "重要：年度OKR中KR1的目标是用户量增长50%",
-          "assistant_msg": "已记录OKR KR1：用户量增长50%。",
-          "timestamp": "2026-01-15T10:00:00Z",
-          "owner": "local"
+          "user_msg": "我下周要去深圳拜访客户E",
+          "assistant_msg": "好的，已记录您下周深圳拜访客户E。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
-        "noise_count": 200,
-        "noise_spread": {
-          "start": "2026-01-16T10:00:00Z",
-          "end": "2026-04-29T10:00:00Z",
-          "categories": [
-            "daily_standup",
-            "code_review",
-            "random_chat",
-            "other_projects",
-            "personal"
-          ]
-        },
-        "query": "年度OKR KR1",
-        "max_results": 10
+        "noise": [
+          {
+            "user_msg": "张三下周也要去深圳拜访客户F",
+            "assistant_msg": "已记录张三行程。",
+            "timestamp": "2026-04-01T10:05:00Z"
+          },
+          {
+            "user_msg": "李四下周去北京出差",
+            "assistant_msg": "已记录李四行程。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          }
+        ],
+        "query": "我下周去哪里拜访客户"
       },
       "expected": {
-        "expected_answer_contains": [
-          "用户量",
-          "增长50%"
+        "expected_keywords": [
+          "深圳",
+          "客户E"
         ],
-        "okr_preserved_after_3_months": true
-      },
-      "evaluation_criteria": {
-        "must_retrieve": {
-          "target": 1.0
-        },
-        "recall": {
-          "target": 0.7,
-          "min": 0.3
-        },
-        "precision": {
-          "target": 0.6,
-          "min": 0.2
-        },
-        "min_chunks": 1,
-        "noise_resilience_at_scale": true
+        "noise_keywords": [
+          "张三",
+          "客户F"
+        ],
+        "expected_answer_contains": [
+          "深圳"
+        ]
       }
     },
     {
       "test_id": "anti_interference_026",
-      "name": "Expert: cross-type interference - command, decision, and preference noise",
-      "category": "cross_type_noise",
-      "difficulty": "expert",
+      "name": "抗干扰测试_26",
+      "difficulty": "easy",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "项目Beta的技术负责人是陈七",
-          "assistant_msg": "已记录，项目Beta技术负责人：陈七。",
-          "timestamp": "2026-04-01T10:00:00Z",
-          "owner": "local"
+          "user_msg": "我的工位在A栋3楼305",
+          "assistant_msg": "已记录您的工位：A栋3楼305。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "git push origin main",
-            "assistant_msg": "命令已执行。",
-            "timestamp": "2026-04-01T10:05:00Z",
-            "type": "command"
+            "user_msg": "张三的工位在B栋2楼201",
+            "assistant_msg": "已记录张三工位。",
+            "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "决定用React Native做移动端",
-            "assistant_msg": "已记录决策。",
-            "timestamp": "2026-04-01T10:10:00Z",
-            "type": "decision"
-          },
-          {
-            "user_msg": "我喜欢用Vim写代码",
-            "assistant_msg": "已记录偏好。",
-            "timestamp": "2026-04-01T10:15:00Z",
-            "type": "preference"
-          },
-          {
-            "user_msg": "项目Beta的测试负责人是王五",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-01T10:20:00Z",
-            "type": "knowledge"
-          },
-          {
-            "user_msg": "npm install --save lodash",
-            "assistant_msg": "命令已执行。",
-            "timestamp": "2026-04-01T10:25:00Z",
-            "type": "command"
-          },
-          {
-            "user_msg": "缓存方案确认用Redis",
-            "assistant_msg": "已记录决策。",
-            "timestamp": "2026-04-01T10:30:00Z",
-            "type": "decision"
-          },
-          {
-            "user_msg": "项目Beta的后端用Go语言",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-01T10:35:00Z",
-            "type": "knowledge"
+            "user_msg": "李四的工位在A栋4楼401",
+            "assistant_msg": "已记录李四工位。",
+            "timestamp": "2026-04-01T10:10:00Z"
           }
         ],
-        "query": "项目Beta 技术负责人",
-        "max_results": 10
+        "query": "我的工位在哪里"
       },
       "expected": {
-        "expected_answer": "陈七",
-        "distractor_answers": [
-          "王五"
+        "expected_keywords": [
+          "A栋",
+          "305"
+        ],
+        "noise_keywords": [
+          "B栋",
+          "张三"
         ],
         "expected_answer_contains": [
-          "项目Beta",
-          "陈七"
-        ],
-        "cross_type_noise_filtered": true,
-        "must_not_contain": [
-          "git",
-          "React Native",
-          "Vim",
-          "Redis"
+          "A栋"
         ]
-      },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.85,
-          "min": 0.4
-        },
-        "precision": {
-          "target": 0.8,
-          "min": 0.4
-        },
-        "cross_type_isolation": {
-          "target": 0.9
-        },
-        "target_found": {
-          "target": 1.0
-        }
       }
     },
     {
       "test_id": "anti_interference_027",
-      "name": "Expert: adversarial near-duplicate - 95% similar but incorrect noise",
-      "category": "adversarial_near_duplicate",
-      "difficulty": "expert",
+      "name": "抗干扰测试_27",
+      "difficulty": "medium",
+      "category": "mixed",
       "input": {
         "target": {
-          "user_msg": "生产环境API的超时时间设为30秒",
-          "assistant_msg": "已记录：生产API超时 30s。",
-          "timestamp": "2026-04-01T10:00:00Z",
-          "owner": "local"
+          "user_msg": "我负责的项目是Project-X",
+          "assistant_msg": "已记录您负责Project-X。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
         "noise": [
           {
-            "user_msg": "生产环境API的超时时间设为3秒",
+            "user_msg": "张三负责Project-Y",
             "assistant_msg": "已记录。",
             "timestamp": "2026-04-01T10:05:00Z"
           },
           {
-            "user_msg": "测试环境API的超时时间设为30秒",
+            "user_msg": "李四负责Project-Z",
             "assistant_msg": "已记录。",
             "timestamp": "2026-04-01T10:10:00Z"
           },
           {
-            "user_msg": "生产环境API的超时时间设为300秒",
+            "user_msg": "王五负责Project-W",
             "assistant_msg": "已记录。",
             "timestamp": "2026-04-01T10:15:00Z"
-          },
-          {
-            "user_msg": "生产环境API的重试超时设为30秒",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-01T10:20:00Z"
-          },
-          {
-            "user_msg": "生产环境gRPC的超时时间设为30秒",
-            "assistant_msg": "已记录。",
-            "timestamp": "2026-04-01T10:25:00Z"
           }
         ],
-        "query": "生产环境API超时时间",
-        "max_results": 10
+        "query": "我负责哪个项目"
       },
       "expected": {
-        "expected_answer": "30秒",
-        "must_not_confuse_with": [
-          "3秒",
-          "300秒",
-          "30秒(重试)",
-          "30秒(gRPC)"
+        "expected_keywords": [
+          "Project-X"
         ],
-        "exact_match_required": true,
-        "environment_isolation": "production",
-        "entity_isolation": "API (not gRPC)"
+        "noise_keywords": [
+          "Project-Y",
+          "Project-Z"
+        ],
+        "expected_answer_contains": [
+          "Project-X"
+        ]
+      }
+    },
+    {
+      "test_id": "anti_interference_028",
+      "name": "抗干扰测试_28",
+      "difficulty": "medium",
+      "category": "mixed",
+      "input": {
+        "target": {
+          "user_msg": "我习惯用VSCode写Python代码",
+          "assistant_msg": "已记录您的编辑器偏好：VSCode + Python。",
+          "timestamp": "2026-04-01T10:00:00Z"
+        },
+        "noise": [
+          {
+            "user_msg": "张三习惯用IntelliJ写Java",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:05:00Z"
+          },
+          {
+            "user_msg": "李四习惯用Vim写Go",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          },
+          {
+            "user_msg": "王五习惯用PyCharm写Python",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          }
+        ],
+        "query": "我习惯用什么写代码"
       },
-      "evaluation_criteria": {
-        "recall": {
-          "target": 0.85,
-          "min": 0.3
+      "expected": {
+        "expected_keywords": [
+          "VSCode",
+          "Python"
+        ],
+        "noise_keywords": [
+          "IntelliJ",
+          "Java",
+          "Vim"
+        ],
+        "expected_answer_contains": [
+          "VSCode"
+        ]
+      }
+    },
+    {
+      "test_id": "anti_interference_029",
+      "name": "抗干扰测试_29",
+      "difficulty": "hard",
+      "category": "mixed",
+      "input": {
+        "target": {
+          "user_msg": "我的飞书文档权限密码是Doc@2026",
+          "assistant_msg": "已安全记录您的飞书文档密码。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
-        "precision": {
-          "target": 0.75,
-          "min": 0.3
+        "noise": [
+          {
+            "user_msg": "张三的GitLab密码改了",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:05:00Z"
+          },
+          {
+            "user_msg": "李四的VPN密码重置了",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          },
+          {
+            "user_msg": "王五的Jira密码过期了",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          }
+        ],
+        "query": "我的飞书文档密码是什么"
+      },
+      "expected": {
+        "expected_keywords": [
+          "Doc@2026"
+        ],
+        "noise_keywords": [
+          "GitLab",
+          "VPN",
+          "Jira"
+        ],
+        "expected_answer_contains": [
+          "Doc@2026"
+        ]
+      }
+    },
+    {
+      "test_id": "anti_interference_030",
+      "name": "抗干扰测试_30",
+      "difficulty": "hard",
+      "category": "mixed",
+      "input": {
+        "target": {
+          "user_msg": "我每周五下午4点要开项目复盘会",
+          "assistant_msg": "已记录：每周五16:00项目复盘会。",
+          "timestamp": "2026-04-01T10:00:00Z"
         },
-        "near_duplicate_disambiguation": {
-          "target": 0.9
-        },
-        "numeric_accuracy": {
-          "target": 1.0
-        },
-        "min_chunks": 1
+        "noise": [
+          {
+            "user_msg": "张三每周三上午开技术评审会",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:05:00Z"
+          },
+          {
+            "user_msg": "李四每周一上午开站会",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:10:00Z"
+          },
+          {
+            "user_msg": "王五每周四下午开需求评审会",
+            "assistant_msg": "已记录。",
+            "timestamp": "2026-04-01T10:15:00Z"
+          }
+        ],
+        "query": "我每周五有什么会"
+      },
+      "expected": {
+        "expected_keywords": [
+          "复盘会",
+          "周五",
+          "4点"
+        ],
+        "noise_keywords": [
+          "技术评审",
+          "站会",
+          "需求评审"
+        ],
+        "expected_answer_contains": [
+          "复盘会"
+        ]
       }
     }
   ]

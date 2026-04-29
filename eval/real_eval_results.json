@@ -1,0 +1,3422 @@
+{
+  "evaluation_id": "real-eval-619e13d8b1b4",
+  "timestamp": "2026-04-29T17:05:33.743717",
+  "system": "MemScope v2.0.0 — 真实系统评估（非mock）",
+  "total_cases": 240,
+  "passed": 161,
+  "failed": 48,
+  "errors": 31,
+  "dataset_results": {
+    "anti_interference": {
+      "total": 30,
+      "passed": 30,
+      "failed": 0,
+      "errors": 0,
+      "pass_rate": 100.0,
+      "cases": [
+        {
+          "test_id": "anti_interference_001",
+          "name": "抗干扰测试_1",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.92,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 31.27
+        },
+        {
+          "test_id": "anti_interference_002",
+          "name": "抗干扰测试_2",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.17,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 27.91
+        },
+        {
+          "test_id": "anti_interference_003",
+          "name": "抗干扰测试_3",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.16,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 26.82
+        },
+        {
+          "test_id": "anti_interference_004",
+          "name": "抗干扰测试_4",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.16,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 24.95
+        },
+        {
+          "test_id": "anti_interference_005",
+          "name": "抗干扰测试_5",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.23,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 33.55
+        },
+        {
+          "test_id": "anti_interference_006",
+          "name": "抗干扰测试_6",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.22,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 6.62
+        },
+        {
+          "test_id": "anti_interference_007",
+          "name": "抗干扰测试_7",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.26,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 125.56
+        },
+        {
+          "test_id": "anti_interference_008",
+          "name": "抗干扰测试_8",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.24,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 67.77
+        },
+        {
+          "test_id": "anti_interference_009",
+          "name": "抗干扰测试_9",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.23,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 56.29
+        },
+        {
+          "test_id": "anti_interference_010",
+          "name": "抗干扰测试_10",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "recall": 1.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 1.0,
+            "latency_ms": 0.33,
+            "chunks_found": 2,
+            "content_preview": "已记录CI/CD迁移：Jenkins→GitLab CI。 CI/CD流水线从Jenkins迁移到GitLab CI"
+          },
+          "elapsed_ms": 74.49
+        },
+        {
+          "test_id": "anti_interference_011",
+          "name": "抗干扰测试_11",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.16,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 60.45
+        },
+        {
+          "test_id": "anti_interference_012",
+          "name": "抗干扰测试_12",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.16,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 62.12
+        },
+        {
+          "test_id": "anti_interference_013",
+          "name": "抗干扰测试_13",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.15,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 22.74
+        },
+        {
+          "test_id": "anti_interference_014",
+          "name": "抗干扰测试_14",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.16,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 22.23
+        },
+        {
+          "test_id": "anti_interference_015",
+          "name": "抗干扰测试_15",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.0,
+            "noise_injection_rate": 1.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.22,
+            "chunks_found": 8,
+            "content_preview": "已记录/api/v2/products超时：2秒。 /api/v2/products的超时设置为2秒 已记录/api/v1/users超时：10秒。 /api/v1/users的超时设置为10秒 已记录/api/v2/orders超时：5秒。 /api/v2/orders的超时设置为5秒 已记录/api/v2/users超时：3秒。 后端接口/api/v2/users的超时设置为3秒"
+          },
+          "elapsed_ms": 22.48
+        },
+        {
+          "test_id": "anti_interference_016",
+          "name": "抗干扰测试_16",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 23.47
+        },
+        {
+          "test_id": "anti_interference_017",
+          "name": "抗干扰测试_17",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 22.51
+        },
+        {
+          "test_id": "anti_interference_018",
+          "name": "抗干扰测试_18",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.17,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 23.55
+        },
+        {
+          "test_id": "anti_interference_019",
+          "name": "抗干扰测试_19",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.16,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 22.68
+        },
+        {
+          "test_id": "anti_interference_020",
+          "name": "抗干扰测试_20",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.16,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 28.53
+        },
+        {
+          "test_id": "anti_interference_021",
+          "name": "抗干扰测试_21",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.24,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 37.74
+        },
+        {
+          "test_id": "anti_interference_022",
+          "name": "抗干扰测试_22",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.17,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 28.16
+        },
+        {
+          "test_id": "anti_interference_023",
+          "name": "抗干扰测试_23",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.16,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 34.5
+        },
+        {
+          "test_id": "anti_interference_024",
+          "name": "抗干扰测试_24",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.28,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 36.47
+        },
+        {
+          "test_id": "anti_interference_025",
+          "name": "抗干扰测试_25",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.16,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 17.65
+        },
+        {
+          "test_id": "anti_interference_026",
+          "name": "抗干扰测试_26",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.13,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 16.17
+        },
+        {
+          "test_id": "anti_interference_027",
+          "name": "抗干扰测试_27",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.15,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 25.06
+        },
+        {
+          "test_id": "anti_interference_028",
+          "name": "抗干扰测试_28",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.17,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 22.59
+        },
+        {
+          "test_id": "anti_interference_029",
+          "name": "抗干扰测试_29",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.15,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 22.54
+        },
+        {
+          "test_id": "anti_interference_030",
+          "name": "抗干扰测试_30",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "recall": 0.0,
+            "precision": 1.0,
+            "noise_injection_rate": 0.0,
+            "f1_score": 0.0,
+            "latency_ms": 0.16,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 23.25
+        }
+      ]
+    },
+    "command_memory": {
+      "total": 30,
+      "passed": 26,
+      "failed": 4,
+      "errors": 0,
+      "pass_rate": 86.7,
+      "cases": [
+        {
+          "test_id": "cmd_001",
+          "name": "高频命令识别-多用户交叉",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [
+              "top_command=git",
+              "not_contain=npm",
+              "not_contain=node"
+            ],
+            "failed_checks": [
+              "min_freq=8"
+            ],
+            "results": {
+              "top_commands": [
+                "git",
+                "git commit",
+                "git status",
+                "docker build",
+                "docker"
+              ]
+            }
+          },
+          "elapsed_ms": 83.32
+        },
+        {
+          "test_id": "cmd_002",
+          "name": "高频命令识别-均匀分布",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {
+              "top_commands": []
+            }
+          },
+          "elapsed_ms": 0.11
+        },
+        {
+          "test_id": "cmd_003",
+          "name": "高频命令识别-极端偏斜分布",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {
+              "top_commands": []
+            }
+          },
+          "elapsed_ms": 0.12
+        },
+        {
+          "test_id": "cmd_004",
+          "name": "高频命令识别-时间衰减",
+          "difficulty": "hard",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [
+              "top_command=git"
+            ],
+            "results": {
+              "top_commands": []
+            }
+          },
+          "elapsed_ms": 0.1
+        },
+        {
+          "test_id": "cmd_005",
+          "name": "高频命令识别-新用户无历史",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "not_contain=git status"
+            ],
+            "failed_checks": [],
+            "results": {
+              "top_commands": []
+            }
+          },
+          "elapsed_ms": 0.11
+        },
+        {
+          "test_id": "cmd_006",
+          "name": "高频命令识别-含特殊字符命令",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [
+              "top_command=cat log.txt | grep ERROR | wc -l"
+            ],
+            "results": {
+              "top_commands": []
+            }
+          },
+          "elapsed_ms": 0.12
+        },
+        {
+          "test_id": "cmd_007",
+          "name": "项目路径关联-同用户多项目",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "not_contain=pip install django",
+              "not_contain=python manage.py runserver"
+            ],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_008",
+          "name": "项目路径关联-嵌套项目",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "not_contain=docker compose up",
+              "not_contain=make deploy"
+            ],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.03
+        },
+        {
+          "test_id": "cmd_009",
+          "name": "项目路径关联-跨项目相同命令",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_010",
+          "name": "项目路径关联-路径相似但不同",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "not_contain=go test ./..."
+            ],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_011",
+          "name": "项目路径关联-项目合并统计",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [
+              "top_command=git status"
+            ],
+            "results": {
+              "top_commands": []
+            }
+          },
+          "elapsed_ms": 0.11
+        },
+        {
+          "test_id": "cmd_012",
+          "name": "项目路径关联-空项目",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_013",
+          "name": "前缀匹配推荐-单字符前缀",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "not_contain=npm install"
+            ],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_014",
+          "name": "前缀匹配推荐-长前缀精确匹配",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "not_contain=git push origin main",
+              "not_contain=docker compose up"
+            ],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_015",
+          "name": "前缀匹配推荐-无匹配",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_016",
+          "name": "前缀匹配推荐-频率排序",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_017",
+          "name": "前缀匹配推荐-大小写不敏感",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_018",
+          "name": "前缀匹配推荐-限制返回数量",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_019",
+          "name": "上下文感知推荐-连续命令序列",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_020",
+          "name": "上下文感知推荐-测试后修复模式",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_021",
+          "name": "上下文感知推荐-部署序列",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_022",
+          "name": "上下文感知推荐-无明显模式",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_023",
+          "name": "上下文感知推荐-错误恢复模式",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_024",
+          "name": "上下文感知推荐-空历史回退",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_025",
+          "name": "子命令区分-git commit vs git push",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_026",
+          "name": "子命令区分-docker复合命令",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_027",
+          "name": "子命令区分-npm run自定义脚本",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_028",
+          "name": "子命令区分-kubectl资源操作",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_029",
+          "name": "子命令区分-跨基础命令比较",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "cmd_030",
+          "name": "子命令区分-同名子命令跨工具",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [],
+            "results": {}
+          },
+          "elapsed_ms": 0.02
+        }
+      ]
+    },
+    "contradiction_update": {
+      "total": 30,
+      "passed": 30,
+      "failed": 0,
+      "errors": 0,
+      "pass_rate": 100.0,
+      "cases": [
+        {
+          "test_id": "contradiction_001",
+          "name": "矛盾更新测试_1",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 11.68
+        },
+        {
+          "test_id": "contradiction_002",
+          "name": "矛盾更新测试_2",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 10.94
+        },
+        {
+          "test_id": "contradiction_003",
+          "name": "矛盾更新测试_3",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.13,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 10.87
+        },
+        {
+          "test_id": "contradiction_004",
+          "name": "矛盾更新测试_4",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 11.29
+        },
+        {
+          "test_id": "contradiction_005",
+          "name": "矛盾更新测试_5",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 11.35
+        },
+        {
+          "test_id": "contradiction_006",
+          "name": "矛盾更新测试_6",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.13,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 11.12
+        },
+        {
+          "test_id": "contradiction_007",
+          "name": "矛盾更新测试_7",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.15,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 11.95
+        },
+        {
+          "test_id": "contradiction_008",
+          "name": "矛盾更新测试_8",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 11.87
+        },
+        {
+          "test_id": "contradiction_009",
+          "name": "矛盾更新测试_9",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 12.54
+        },
+        {
+          "test_id": "contradiction_010",
+          "name": "矛盾更新测试_10",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": true,
+            "old_value_preserved": true,
+            "answer_contains_found": true,
+            "latency_ms": 0.18,
+            "chunks_found": 4,
+            "content_preview": "已更新：GitLab CI+Docker+K8s。 Jenkins换成GitLab CI了 已记录CI/CD技术栈。 CI/CD用Jenkins+Docker+K8s"
+          },
+          "elapsed_ms": 11.96
+        },
+        {
+          "test_id": "contradiction_011",
+          "name": "矛盾更新测试_11",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 11.81
+        },
+        {
+          "test_id": "contradiction_012",
+          "name": "矛盾更新测试_12",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.13,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 11.4
+        },
+        {
+          "test_id": "contradiction_013",
+          "name": "矛盾更新测试_13",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.13,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 18.46
+        },
+        {
+          "test_id": "contradiction_014",
+          "name": "矛盾更新测试_14",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.13,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 11.13
+        },
+        {
+          "test_id": "contradiction_015",
+          "name": "矛盾更新测试_15",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.13,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 16.93
+        },
+        {
+          "test_id": "contradiction_016",
+          "name": "矛盾更新测试_16",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.13,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 16.73
+        },
+        {
+          "test_id": "contradiction_017",
+          "name": "矛盾更新测试_17",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 17.02
+        },
+        {
+          "test_id": "contradiction_018",
+          "name": "矛盾更新测试_18",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.16,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 19.28
+        },
+        {
+          "test_id": "contradiction_019",
+          "name": "矛盾更新测试_19",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.15,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 10.82
+        },
+        {
+          "test_id": "contradiction_020",
+          "name": "矛盾更新测试_20",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 11.56
+        },
+        {
+          "test_id": "contradiction_021",
+          "name": "矛盾更新测试_21",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 11.9
+        },
+        {
+          "test_id": "contradiction_022",
+          "name": "矛盾更新测试_22",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 10.99
+        },
+        {
+          "test_id": "contradiction_023",
+          "name": "矛盾更新测试_23",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 12.23
+        },
+        {
+          "test_id": "contradiction_024",
+          "name": "矛盾更新测试_24",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 10.72
+        },
+        {
+          "test_id": "contradiction_025",
+          "name": "矛盾更新测试_25",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 10.95
+        },
+        {
+          "test_id": "contradiction_026",
+          "name": "矛盾更新测试_26",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.18,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 11.07
+        },
+        {
+          "test_id": "contradiction_027",
+          "name": "矛盾更新测试_27",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 11.23
+        },
+        {
+          "test_id": "contradiction_028",
+          "name": "矛盾更新测试_28",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.26,
+            "chunks_found": 1,
+            "content_preview": "帮我预订去上海的高铁票"
+          },
+          "elapsed_ms": 12.69
+        },
+        {
+          "test_id": "contradiction_029",
+          "name": "矛盾更新测试_29",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 11.16
+        },
+        {
+          "test_id": "contradiction_030",
+          "name": "矛盾更新测试_30",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": false,
+            "old_value_preserved": false,
+            "answer_contains_found": false,
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 11.21
+        }
+      ]
+    },
+    "decision_memory": {
+      "total": 30,
+      "passed": 16,
+      "failed": 14,
+      "errors": 0,
+      "pass_rate": 53.3,
+      "cases": [
+        {
+          "test_id": "dec_001",
+          "name": "中文决策提取-定下来",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 1,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [
+              "decision_found=PostgreSQL"
+            ],
+            "failed_checks": [
+              "reason=['JSON支持']"
+            ]
+          },
+          "elapsed_ms": 9.52
+        },
+        {
+          "test_id": "dec_002",
+          "name": "中文决策提取-敲定",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "decision_found=方案A"
+            ]
+          },
+          "elapsed_ms": 0.36
+        },
+        {
+          "test_id": "dec_003",
+          "name": "中文决策提取-确认",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "decision_found=React Native"
+            ]
+          },
+          "elapsed_ms": 0.36
+        },
+        {
+          "test_id": "dec_004",
+          "name": "中文决策提取-采用",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "decision_found=GitHub Actions"
+            ]
+          },
+          "elapsed_ms": 0.37
+        },
+        {
+          "test_id": "dec_005",
+          "name": "中文决策提取-选定",
+          "difficulty": "easy",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "decision_found=Python 3.11"
+            ]
+          },
+          "elapsed_ms": 0.34
+        },
+        {
+          "test_id": "dec_006",
+          "name": "英文决策提取-decided",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 1,
+            "search_results": 0,
+            "decision_search_results": 1,
+            "passed_checks": [
+              "decision_found=Kubernetes"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 2.41
+        },
+        {
+          "test_id": "dec_007",
+          "name": "英文决策提取-confirmed",
+          "difficulty": "easy",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "decision_found=Stripe"
+            ]
+          },
+          "elapsed_ms": 0.33
+        },
+        {
+          "test_id": "dec_008",
+          "name": "英文决策提取-agreed",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 1,
+            "search_results": 0,
+            "decision_search_results": 1,
+            "passed_checks": [
+              "decision_found=2-week sprints"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 2.03
+        },
+        {
+          "test_id": "dec_009",
+          "name": "英文决策提取-approved",
+          "difficulty": "hard",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "decision_found=microservices migration plan"
+            ]
+          },
+          "elapsed_ms": 0.36
+        },
+        {
+          "test_id": "dec_010",
+          "name": "英文决策提取-finalized",
+          "difficulty": "hard",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "decision_found=v2 endpoints"
+            ]
+          },
+          "elapsed_ms": 0.38
+        },
+        {
+          "test_id": "dec_011",
+          "name": "理由/否决识别-因为",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "decision_found=MongoDB"
+            ]
+          },
+          "elapsed_ms": 0.34
+        },
+        {
+          "test_id": "dec_012",
+          "name": "理由/否决识别-考虑到",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "decision_found=单体架构"
+            ]
+          },
+          "elapsed_ms": 0.29
+        },
+        {
+          "test_id": "dec_013",
+          "name": "理由/否决识别-优点是",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "decision_found=TypeScript"
+            ]
+          },
+          "elapsed_ms": 0.37
+        },
+        {
+          "test_id": "dec_014",
+          "name": "理由/否决识别-不做X",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [
+              "decision_found="
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.32
+        },
+        {
+          "test_id": "dec_015",
+          "name": "理由/否决识别-放弃Y",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 1,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [
+              "decision_found="
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 2.4
+        },
+        {
+          "test_id": "dec_016",
+          "name": "多轮对话决策-5轮讨论后决策",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 1,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [
+              "decision_found=Redis Stream"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 2.04
+        },
+        {
+          "test_id": "dec_017",
+          "name": "多轮对话决策-3轮争论后达成共识",
+          "difficulty": "hard",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "decision_found=Terraform"
+            ]
+          },
+          "elapsed_ms": 0.39
+        },
+        {
+          "test_id": "dec_018",
+          "name": "多轮对话决策-决策修改",
+          "difficulty": "hard",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "decision_found=Loki+Grafana"
+            ]
+          },
+          "elapsed_ms": 0.34
+        },
+        {
+          "test_id": "dec_019",
+          "name": "多轮对话决策-隐式决策",
+          "difficulty": "hard",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "decision_found=Redis"
+            ]
+          },
+          "elapsed_ms": 0.35
+        },
+        {
+          "test_id": "dec_020",
+          "name": "多轮对话决策-条件决策",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [
+              "decision_found="
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.3
+        },
+        {
+          "test_id": "dec_021",
+          "name": "决策搜索准确性-精确命中",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.27
+        },
+        {
+          "test_id": "dec_022",
+          "name": "决策搜索准确性-语义搜索",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.27
+        },
+        {
+          "test_id": "dec_023",
+          "name": "决策搜索准确性-不命中",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.28
+        },
+        {
+          "test_id": "dec_024",
+          "name": "决策搜索准确性-模糊匹配",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.25
+        },
+        {
+          "test_id": "dec_025",
+          "name": "决策搜索准确性-时间排序",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.28
+        },
+        {
+          "test_id": "dec_026",
+          "name": "长时序决策回忆-90天前决策",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.31
+        },
+        {
+          "test_id": "dec_027",
+          "name": "长时序决策回忆-被覆盖的旧决策",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.25
+        },
+        {
+          "test_id": "dec_028",
+          "name": "长时序决策回忆-渐进式决策链",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.27
+        },
+        {
+          "test_id": "dec_029",
+          "name": "长时序决策回忆-跨月决策对比",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.27
+        },
+        {
+          "test_id": "dec_030",
+          "name": "长时序决策回忆-过期但仍需引用",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "search_results": 0,
+            "decision_search_results": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.27
+        }
+      ]
+    },
+    "efficiency": {
+      "total": 30,
+      "passed": 0,
+      "failed": 0,
+      "errors": 30,
+      "pass_rate": 0.0,
+      "cases": [
+        {
+          "test_id": "efficiency_001",
+          "name": "写入延迟-极短对话(50字符)",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_002",
+          "name": "写入延迟-中等对话(200字符)",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_003",
+          "name": "写入延迟-长对话(1000字符)",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_004",
+          "name": "写入延迟-超长对话(5000字符)",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_005",
+          "name": "写入延迟-批量写入100条",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_006",
+          "name": "写入延迟-带时间戳的多轮对话",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_007",
+          "name": "查询延迟-100条记忆单跳查询",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_008",
+          "name": "查询延迟-1000条记忆单跳查询",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_009",
+          "name": "查询延迟-5000条记忆多跳查询",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_010",
+          "name": "查询延迟-5000条记忆时间查询",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_011",
+          "name": "查询延迟-10000条记忆开放域查询",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_012",
+          "name": "查询延迟-模糊语义查询",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_013",
+          "name": "内存占用-100条记忆基线",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_014",
+          "name": "内存占用-1000条记忆",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_015",
+          "name": "内存占用-5000条记忆",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_016",
+          "name": "内存占用-10000条记忆",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_017",
+          "name": "内存占用-写入后内存释放",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_018",
+          "name": "内存占用-大条目单条内存",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_019",
+          "name": "Token效率-简单事实查询",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_020",
+          "name": "Token效率-复杂多实体查询",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_021",
+          "name": "Token效率-记忆增强对话vs无记忆对比",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_022",
+          "name": "Token效率-上下文窗口压缩",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_023",
+          "name": "Token效率-多轮对话累积",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_024",
+          "name": "Token效率-英文混合查询",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_025",
+          "name": "并发性能-5用户并发读取",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_026",
+          "name": "并发性能-10用户混合读写",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_027",
+          "name": "并发性能-读写冲突检测",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_028",
+          "name": "压力测试-1000条快速顺序写入",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_029",
+          "name": "压力测试-持续负载5000条",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        },
+        {
+          "test_id": "efficiency_030",
+          "name": "端到端延迟-完整记忆生命周期",
+          "status": "error",
+          "error": "'input'",
+          "traceback": "Traceback (most recent call last):\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 550, in run_evaluation\n    metrics = evaluator(store, case)\n              ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/real_evaluation.py\", line 223, in eval_efficiency\n    inp = case[\"input\"]\n          ~~~~^^^^^^^^^\nKeyError: 'input'\n"
+        }
+      ]
+    },
+    "knowledge_health": {
+      "total": 30,
+      "passed": 30,
+      "failed": 0,
+      "errors": 0,
+      "pass_rate": 100.0,
+      "cases": [
+        {
+          "test_id": "kh_001",
+          "name": "知识新鲜度-刚创建的知识(fresh)",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "knowledge_registered",
+              "health_record_exists"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 7.41
+        },
+        {
+          "test_id": "kh_002",
+          "name": "知识新鲜度-开始老化的知识(aging)",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "knowledge_registered",
+              "health_record_exists"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 5.82
+        },
+        {
+          "test_id": "kh_003",
+          "name": "知识新鲜度-过时的知识(stale)",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "knowledge_registered",
+              "health_record_exists"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 10.96
+        },
+        {
+          "test_id": "kh_004",
+          "name": "知识新鲜度-已被遗忘的知识(forgotten)",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "knowledge_registered",
+              "health_record_exists"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 5.66
+        },
+        {
+          "test_id": "kh_005",
+          "name": "知识新鲜度-频繁访问保持新鲜",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "knowledge_registered",
+              "health_record_exists"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 6.31
+        },
+        {
+          "test_id": "kh_006",
+          "name": "知识新鲜度-时效性知识自动过期",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "knowledge_registered",
+              "health_record_exists"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 6.01
+        },
+        {
+          "test_id": "kh_007",
+          "name": "遗忘曲线-1天后回忆",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_008",
+          "name": "遗忘曲线-7天后回忆",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.03
+        },
+        {
+          "test_id": "kh_009",
+          "name": "遗忘曲线-30天后回忆",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_010",
+          "name": "遗忘曲线-90天后回忆",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_011",
+          "name": "遗忘曲线-重复强化效果验证",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 11.61
+        },
+        {
+          "test_id": "kh_012",
+          "name": "知识缺口检测-全团队覆盖分析",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_013",
+          "name": "知识缺口检测-深度不足",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_014",
+          "name": "知识缺口检测-跨项目分布不均",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_015",
+          "name": "知识缺口检测-新人入职缺口",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_016",
+          "name": "知识缺口检测-季节性知识过期",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_017",
+          "name": "团队知识同步-信息更新后团队通知",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_018",
+          "name": "团队知识同步-全员已同步",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_019",
+          "name": "团队知识同步-部分同步检测",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_020",
+          "name": "团队知识同步-紧急知识强制同步",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_021",
+          "name": "关键知识遗忘-高重要性知识超期",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_022",
+          "name": "关键知识遗忘-频繁访问防止遗忘",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_023",
+          "name": "关键知识遗忘-批量遗忘风险",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_024",
+          "name": "关键知识遗忘-即将达到遗忘阈值",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_025",
+          "name": "关键知识遗忘-无风险的长期知识",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.03
+        },
+        {
+          "test_id": "kh_026",
+          "name": "知识版本管理-简单版本更新",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.03
+        },
+        {
+          "test_id": "kh_027",
+          "name": "知识版本管理-多版本演进",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_028",
+          "name": "知识版本管理-冲突版本检测",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_029",
+          "name": "知识版本管理-版本回滚",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        },
+        {
+          "test_id": "kh_030",
+          "name": "知识版本管理-版本变更日志",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "generic_setup_done"
+            ],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.02
+        }
+      ]
+    },
+    "long_term_memory": {
+      "total": 30,
+      "passed": 15,
+      "failed": 15,
+      "errors": 0,
+      "pass_rate": 50.0,
+      "cases": [
+        {
+          "test_id": "ltm_001",
+          "name": "3-6月记忆_1",
+          "difficulty": "easy",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [
+              "not_found: keywords=['Go', '重写']",
+              "still_accessible"
+            ],
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 5.6
+        },
+        {
+          "test_id": "ltm_002",
+          "name": "3-6月记忆_2",
+          "difficulty": "easy",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [
+              "not_found: keywords=['800万', '客户甲']",
+              "still_accessible"
+            ],
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 5.66
+        },
+        {
+          "test_id": "ltm_003",
+          "name": "3-6月记忆_3",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [
+              "not_found: keywords=['MySQL', 'PostgreSQL']",
+              "still_accessible"
+            ],
+            "latency_ms": 0.16,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 5.67
+        },
+        {
+          "test_id": "ltm_004",
+          "name": "3-6月记忆_4",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "found",
+              "still_accessible"
+            ],
+            "failed_checks": [],
+            "latency_ms": 0.15,
+            "chunks_found": 1,
+            "content_preview": "安全审计发现3个高危漏洞需要在Q1修复"
+          },
+          "elapsed_ms": 5.86
+        },
+        {
+          "test_id": "ltm_005",
+          "name": "3-6月记忆_5",
+          "difficulty": "easy",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [
+              "not_found: keywords=['5个', '后端']",
+              "still_accessible"
+            ],
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 6.13
+        },
+        {
+          "test_id": "ltm_006",
+          "name": "3-6月记忆_6",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "found",
+              "still_accessible"
+            ],
+            "failed_checks": [],
+            "latency_ms": 0.16,
+            "chunks_found": 1,
+            "content_preview": "微服务架构评审确定使用Spring Cloud方案"
+          },
+          "elapsed_ms": 5.95
+        },
+        {
+          "test_id": "ltm_007",
+          "name": "6-12月记忆_7",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "found",
+              "still_accessible"
+            ],
+            "failed_checks": [],
+            "latency_ms": 0.17,
+            "chunks_found": 1,
+            "content_preview": "产品2.0版本的PRD评审通过了"
+          },
+          "elapsed_ms": 5.63
+        },
+        {
+          "test_id": "ltm_008",
+          "name": "6-12月记忆_8",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "found",
+              "still_accessible"
+            ],
+            "failed_checks": [],
+            "latency_ms": 0.15,
+            "chunks_found": 1,
+            "content_preview": "技术债务清理计划确定，目标是减少30%的遗留代码"
+          },
+          "elapsed_ms": 5.53
+        },
+        {
+          "test_id": "ltm_009",
+          "name": "6-12月记忆_9",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "found",
+              "still_accessible"
+            ],
+            "failed_checks": [],
+            "latency_ms": 0.16,
+            "chunks_found": 1,
+            "content_preview": "CI/CD流水线从Jenkins迁移到GitLab CI"
+          },
+          "elapsed_ms": 5.72
+        },
+        {
+          "test_id": "ltm_010",
+          "name": "6-12月记忆_10",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "found",
+              "still_accessible"
+            ],
+            "failed_checks": [],
+            "latency_ms": 0.16,
+            "chunks_found": 1,
+            "content_preview": "性能优化项目启动，目标是API响应时间降低50%"
+          },
+          "elapsed_ms": 6.19
+        },
+        {
+          "test_id": "ltm_011",
+          "name": "6-12月记忆_11",
+          "difficulty": "easy",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [
+              "not_found: keywords=['供应商B', '托管']",
+              "still_accessible"
+            ],
+            "latency_ms": 0.16,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 6.22
+        },
+        {
+          "test_id": "ltm_012",
+          "name": "6-12月记忆_12",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [
+              "not_found: keywords=['Kanban', 'Scrum']",
+              "still_accessible"
+            ],
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 6.01
+        },
+        {
+          "test_id": "ltm_013",
+          "name": "6-12月记忆_13",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "found",
+              "still_accessible"
+            ],
+            "failed_checks": [],
+            "latency_ms": 0.15,
+            "chunks_found": 1,
+            "content_preview": "API版本从v1升级到v2，v1保留兼容6个月"
+          },
+          "elapsed_ms": 5.71
+        },
+        {
+          "test_id": "ltm_014",
+          "name": "6-12月记忆_14",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "found",
+              "still_accessible"
+            ],
+            "failed_checks": [],
+            "latency_ms": 0.15,
+            "chunks_found": 1,
+            "content_preview": "年度技术峰会确定主题为'云原生与AI'"
+          },
+          "elapsed_ms": 5.97
+        },
+        {
+          "test_id": "ltm_015",
+          "name": "1-2年记忆_15",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "found",
+              "still_accessible"
+            ],
+            "failed_checks": [],
+            "latency_ms": 0.15,
+            "chunks_found": 1,
+            "content_preview": "公司确定了三年技术路线图"
+          },
+          "elapsed_ms": 6.23
+        },
+        {
+          "test_id": "ltm_016",
+          "name": "1-2年记忆_16",
+          "difficulty": "easy",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [
+              "not_found: keywords=['微服务', '单体']",
+              "still_accessible"
+            ],
+            "latency_ms": 0.16,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 5.94
+        },
+        {
+          "test_id": "ltm_017",
+          "name": "1-2年记忆_17",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "found",
+              "still_accessible"
+            ],
+            "failed_checks": [],
+            "latency_ms": 0.17,
+            "chunks_found": 1,
+            "content_preview": "安全团队制定了零信任架构方案"
+          },
+          "elapsed_ms": 5.83
+        },
+        {
+          "test_id": "ltm_018",
+          "name": "1-2年记忆_18",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "found",
+              "still_accessible"
+            ],
+            "failed_checks": [],
+            "latency_ms": 0.15,
+            "chunks_found": 1,
+            "content_preview": "数据湖项目启动，选用Apache Iceberg"
+          },
+          "elapsed_ms": 5.96
+        },
+        {
+          "test_id": "ltm_019",
+          "name": "1-2年记忆_19",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "found",
+              "still_accessible"
+            ],
+            "failed_checks": [],
+            "latency_ms": 0.17,
+            "chunks_found": 1,
+            "content_preview": "完成了ISO 27001信息安全认证"
+          },
+          "elapsed_ms": 6.11
+        },
+        {
+          "test_id": "ltm_020",
+          "name": "1-2年记忆_20",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "found",
+              "still_accessible"
+            ],
+            "failed_checks": [],
+            "latency_ms": 0.16,
+            "chunks_found": 1,
+            "content_preview": "年度预算审批通过，技术投入增加40%"
+          },
+          "elapsed_ms": 6.74
+        },
+        {
+          "test_id": "ltm_021",
+          "name": "1-2年记忆_21",
+          "difficulty": "easy",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [
+              "not_found: keywords=['AI代码助手']",
+              "still_accessible"
+            ],
+            "latency_ms": 0.13,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 6.82
+        },
+        {
+          "test_id": "ltm_022",
+          "name": "1-2年记忆_22",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "found",
+              "still_accessible"
+            ],
+            "failed_checks": [],
+            "latency_ms": 0.15,
+            "chunks_found": 1,
+            "content_preview": "容器化改造完成，全部服务迁移到K8s"
+          },
+          "elapsed_ms": 5.64
+        },
+        {
+          "test_id": "ltm_023",
+          "name": "跨年更新_23",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [
+              "not_found: keywords=['AWS东京']",
+              "still_accessible"
+            ],
+            "latency_ms": 0.14,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 5.6
+        },
+        {
+          "test_id": "ltm_024",
+          "name": "跨年更新_24",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [
+              "still_accessible"
+            ],
+            "failed_checks": [
+              "not_found: keywords=['500次']"
+            ],
+            "latency_ms": 0.15,
+            "chunks_found": 1,
+            "content_preview": "API限流设为100次/分钟"
+          },
+          "elapsed_ms": 5.47
+        },
+        {
+          "test_id": "ltm_025",
+          "name": "跨年更新_25",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "passed_checks": [
+              "found",
+              "still_accessible"
+            ],
+            "failed_checks": [],
+            "latency_ms": 0.14,
+            "chunks_found": 1,
+            "content_preview": "监控方案是Prometheus+Grafana"
+          },
+          "elapsed_ms": 5.79
+        },
+        {
+          "test_id": "ltm_026",
+          "name": "跨年更新_26",
+          "difficulty": "easy",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [
+              "not_found: keywords=['25人']",
+              "still_accessible"
+            ],
+            "latency_ms": 0.15,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 5.69
+        },
+        {
+          "test_id": "ltm_027",
+          "name": "跨年更新_27",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [
+              "still_accessible"
+            ],
+            "failed_checks": [
+              "not_found: keywords=['90天']"
+            ],
+            "latency_ms": 0.18,
+            "chunks_found": 1,
+            "content_preview": "日志保留策略是30天"
+          },
+          "elapsed_ms": 5.75
+        },
+        {
+          "test_id": "ltm_028",
+          "name": "跨年更新_28",
+          "difficulty": "hard",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [
+              "still_accessible"
+            ],
+            "failed_checks": [
+              "not_found: keywords=['3人']"
+            ],
+            "latency_ms": 0.14,
+            "chunks_found": 1,
+            "content_preview": "代码评审要求2人通过"
+          },
+          "elapsed_ms": 6.57
+        },
+        {
+          "test_id": "ltm_029",
+          "name": "跨年更新_29",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [
+              "still_accessible"
+            ],
+            "failed_checks": [
+              "not_found: keywords=['79元']"
+            ],
+            "latency_ms": 0.14,
+            "chunks_found": 1,
+            "content_preview": "产品定价基础版99元/月"
+          },
+          "elapsed_ms": 5.91
+        },
+        {
+          "test_id": "ltm_030",
+          "name": "跨年更新_30",
+          "difficulty": "hard",
+          "status": "fail",
+          "metrics": {
+            "passed_checks": [],
+            "failed_checks": [
+              "not_found: keywords=['24小时', '热点']",
+              "still_accessible"
+            ],
+            "latency_ms": 0.13,
+            "chunks_found": 0,
+            "content_preview": ""
+          },
+          "elapsed_ms": 5.96
+        }
+      ]
+    },
+    "preference_memory": {
+      "total": 30,
+      "passed": 14,
+      "failed": 15,
+      "errors": 1,
+      "pass_rate": 46.7,
+      "cases": [
+        {
+          "test_id": "pref_001",
+          "name": "显式偏好-我喜欢X",
+          "difficulty": "easy",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 1,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "pref_found=Vim",
+              "category=editor"
+            ]
+          },
+          "elapsed_ms": 7.86
+        },
+        {
+          "test_id": "pref_002",
+          "name": "显式偏好-我偏好Y",
+          "difficulty": "easy",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "pref_found=Tab",
+              "category=indentation"
+            ]
+          },
+          "elapsed_ms": 0.33
+        },
+        {
+          "test_id": "pref_003",
+          "name": "显式偏好-以后用Z",
+          "difficulty": "easy",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "pref_found=Dark Mode",
+              "category=theme"
+            ]
+          },
+          "elapsed_ms": 0.35
+        },
+        {
+          "test_id": "pref_004",
+          "name": "显式偏好-否定表达",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "pref_found=Java",
+              "category=language"
+            ]
+          },
+          "elapsed_ms": 0.33
+        },
+        {
+          "test_id": "pref_005",
+          "name": "显式偏好-多条件偏好",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "pref_found=",
+              "category=web_server"
+            ]
+          },
+          "elapsed_ms": 0.38
+        },
+        {
+          "test_id": "pref_006",
+          "name": "隐式偏好推断-高频工具使用",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "pref_found=curl"
+            ]
+          },
+          "elapsed_ms": 0.23
+        },
+        {
+          "test_id": "pref_007",
+          "name": "隐式偏好推断-代码风格推断",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "pref_found=single_quotes"
+            ]
+          },
+          "elapsed_ms": 0.23
+        },
+        {
+          "test_id": "pref_008",
+          "name": "隐式偏好推断-时间模式",
+          "difficulty": "hard",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "pref_found=night_coding"
+            ]
+          },
+          "elapsed_ms": 0.27
+        },
+        {
+          "test_id": "pref_009",
+          "name": "隐式偏好推断-工具链偏好",
+          "status": "error",
+          "error": "expected string or bytes-like object, got 'list'",
+          "traceback": "value, max_results=5))\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/hermes-data/cron/output/eval/ministore.py\", line 63, in search_chunks\n    terms = re.findall(r'[\\w\\u4e00-\\u9fff]{2,}', query)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.11/re/__init__.py\", line 216, in findall\n    return _compile(pattern, flags).findall(string)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: expected string or bytes-like object, got 'list'\n"
+        },
+        {
+          "test_id": "pref_010",
+          "name": "隐式偏好推断-无足够数据",
+          "difficulty": "easy",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.11
+        },
+        {
+          "test_id": "pref_011",
+          "name": "偏好冲突解决-时间优先",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "pref_found=Vue"
+            ]
+          },
+          "elapsed_ms": 0.38
+        },
+        {
+          "test_id": "pref_012",
+          "name": "偏好冲突解决-显式覆盖隐式",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 1,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "pref_found=JavaScript"
+            ]
+          },
+          "elapsed_ms": 1.96
+        },
+        {
+          "test_id": "pref_013",
+          "name": "偏好冲突解决-强度区分",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 1,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 1.74
+        },
+        {
+          "test_id": "pref_014",
+          "name": "偏好冲突解决-领域分离",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 2,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 3.09
+        },
+        {
+          "test_id": "pref_015",
+          "name": "偏好冲突解决-撤回偏好",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 1,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "pref_found=VSCode"
+            ]
+          },
+          "elapsed_ms": 1.85
+        },
+        {
+          "test_id": "pref_016",
+          "name": "偏好衰减-长期未提及",
+          "difficulty": "hard",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 1,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "pref_found=Markdown"
+            ]
+          },
+          "elapsed_ms": 1.78
+        },
+        {
+          "test_id": "pref_017",
+          "name": "偏好衰减-频繁提及保持",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "pref_found=Docker"
+            ]
+          },
+          "elapsed_ms": 0.43
+        },
+        {
+          "test_id": "pref_018",
+          "name": "偏好衰减-衰减速率区分",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 1,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 1.88
+        },
+        {
+          "test_id": "pref_019",
+          "name": "偏好衰减-行业知识保底",
+          "difficulty": "hard",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "pref_found=Git"
+            ]
+          },
+          "elapsed_ms": 0.27
+        },
+        {
+          "test_id": "pref_020",
+          "name": "偏好衰减-被强化的偏好",
+          "difficulty": "medium",
+          "status": "fail",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": [
+              "pref_found=Python"
+            ]
+          },
+          "elapsed_ms": 0.39
+        },
+        {
+          "test_id": "pref_021",
+          "name": "偏好演进-VSCode到Cursor",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 1,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 1.83
+        },
+        {
+          "test_id": "pref_022",
+          "name": "偏好演进-框架升级路径",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.28
+        },
+        {
+          "test_id": "pref_023",
+          "name": "偏好演进-回退",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.34
+        },
+        {
+          "test_id": "pref_024",
+          "name": "偏好演进-并行偏好",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.24
+        },
+        {
+          "test_id": "pref_025",
+          "name": "偏好演进-渐进式采纳",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.26
+        },
+        {
+          "test_id": "pref_026",
+          "name": "上下文感知推荐-调试场景",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.1
+        },
+        {
+          "test_id": "pref_027",
+          "name": "上下文感知推荐-新项目初始化",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.1
+        },
+        {
+          "test_id": "pref_028",
+          "name": "上下文感知推荐-冲突规避",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.15
+        },
+        {
+          "test_id": "pref_029",
+          "name": "上下文感知推荐-跨领域关联",
+          "difficulty": "hard",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.11
+        },
+        {
+          "test_id": "pref_030",
+          "name": "上下文感知推荐-无相关偏好时回退",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "extracted_count": 0,
+            "stored_count": 0,
+            "passed_checks": [],
+            "failed_checks": []
+          },
+          "elapsed_ms": 0.11
+        }
+      ]
+    }
+  },
+  "pass_rate": 67.1
+}

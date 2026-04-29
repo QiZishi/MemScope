@@ -1,0 +1,1161 @@
+{
+  "report_id": "eval-79a0e019d8bf",
+  "run_timestamp": "2026-04-29T09:33:18.485531",
+  "system_version": "enterprise-memory v2.0.0",
+  "elapsed_seconds": 10.04,
+  "summary": {
+    "total_tests": 33,
+    "passed": 32,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 0,
+    "pass_rate": 97.0,
+    "overall_score": 98.5,
+    "grade": "Excellent"
+  },
+  "dimension_scores": {
+    "anti_interference": {
+      "score": 90.0,
+      "weight": 0.15,
+      "weighted_score": 13.5,
+      "test_count": 5,
+      "passed_count": 4
+    },
+    "contradiction_update": {
+      "score": 100.0,
+      "weight": 0.15,
+      "weighted_score": 15.0,
+      "test_count": 5,
+      "passed_count": 5
+    },
+    "efficiency": {
+      "score": 100.0,
+      "weight": 0.15,
+      "weighted_score": 15.0,
+      "test_count": 6,
+      "passed_count": 6
+    },
+    "direction_a": {
+      "score": 100.0,
+      "weight": 0.1,
+      "weighted_score": 10.0,
+      "test_count": 4,
+      "passed_count": 4
+    },
+    "direction_b": {
+      "score": 100.0,
+      "weight": 0.15,
+      "weighted_score": 15.0,
+      "test_count": 4,
+      "passed_count": 4
+    },
+    "direction_c": {
+      "score": 100.0,
+      "weight": 0.15,
+      "weighted_score": 15.0,
+      "test_count": 4,
+      "passed_count": 4
+    },
+    "direction_d": {
+      "score": 100.0,
+      "weight": 0.15,
+      "weighted_score": 15.0,
+      "test_count": 5,
+      "passed_count": 5
+    }
+  },
+  "detailed_results": [
+    {
+      "test_id": "anti_interference_001",
+      "test_name": "test_single_round_noise (single_round_noise)",
+      "timestamp": "2026-04-29T09:33:09.697503",
+      "status": "pass",
+      "metrics": {
+        "recall": {
+          "value": 1.0,
+          "target": 0.9,
+          "passed": true
+        },
+        "precision": {
+          "value": 1.0,
+          "target": 0.85,
+          "passed": true
+        },
+        "noise_injection_rate": {
+          "value": 0.0,
+          "target": 0.05,
+          "passed": true
+        },
+        "f1_score": {
+          "value": 1.0,
+          "target": 0.87,
+          "passed": true
+        },
+        "chunks_found": {
+          "value": 2,
+          "target": 1,
+          "passed": true
+        }
+      },
+      "latency_ms": 1.08,
+      "token_count": 0,
+      "details": "Query results: 2 chunks. Content preview: 好的，已记录。下周三（5月6日）客户A技术方案汇报。 我下周三要去客户A公司做技术方案汇报",
+      "error_message": ""
+    },
+    {
+      "test_id": "anti_interference_002",
+      "test_name": "test_multi_round_noise (multi_round_noise)",
+      "timestamp": "2026-04-29T09:33:09.891998",
+      "status": "pass",
+      "metrics": {
+        "recall": {
+          "value": 1.0,
+          "target": 0.9,
+          "passed": true
+        },
+        "numeric_accuracy": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "chunks_found": {
+          "value": 2,
+          "target": 1,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.28,
+      "token_count": 0,
+      "details": "After 20 noise rounds. Found 2 chunks.",
+      "error_message": ""
+    },
+    {
+      "test_id": "anti_interference_003",
+      "test_name": "test_similar_topic_noise (similar_topic_noise)",
+      "timestamp": "2026-04-29T09:33:09.979305",
+      "status": "fail",
+      "metrics": {
+        "recall": {
+          "value": 1.0,
+          "target": 0.9,
+          "passed": true
+        },
+        "precision": {
+          "value": 0.6667,
+          "target": 0.85,
+          "passed": false
+        },
+        "distractor_avoidance": {
+          "value": 0.6667,
+          "target": 0.95,
+          "passed": false
+        },
+        "target_found": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.24,
+      "token_count": 0,
+      "details": "Target '张三' found=True. Distractors found: 1/3.",
+      "error_message": ""
+    },
+    {
+      "test_id": "anti_interference_004",
+      "test_name": "test_temporal_spread_noise (temporal_spread_noise)",
+      "timestamp": "2026-04-29T09:33:10.225288",
+      "status": "pass",
+      "metrics": {
+        "must_retrieve": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "chunks_found": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.21,
+      "token_count": 0,
+      "details": "Password 'Herme$2026!' found=True across 30 noise entries.",
+      "error_message": ""
+    },
+    {
+      "test_id": "anti_interference_005",
+      "test_name": "test_role_confusion_noise (role_confusion_noise)",
+      "timestamp": "2026-04-29T09:33:10.339645",
+      "status": "pass",
+      "metrics": {
+        "self_identified": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "not_confused_with_others": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "role_accuracy": {
+          "value": 1.0,
+          "target": 0.95,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.18,
+      "token_count": 0,
+      "details": "Self-identified=True, Confused with 张三=False",
+      "error_message": ""
+    },
+    {
+      "test_id": "contradiction_001",
+      "test_name": "test_direct_override (direct_override)",
+      "timestamp": "2026-04-29T09:33:10.421871",
+      "status": "pass",
+      "metrics": {
+        "latest_value_accuracy": {
+          "value": 1.0,
+          "target": 0.95,
+          "passed": true
+        },
+        "history_preserved": {
+          "value": 1.0,
+          "target": 0.9,
+          "passed": true
+        },
+        "chunks_found": {
+          "value": 3,
+          "target": 2,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.19,
+      "token_count": 0,
+      "details": "New value B-201 found=True, Old value A-305 preserved=True",
+      "error_message": ""
+    },
+    {
+      "test_id": "contradiction_002",
+      "test_name": "test_partial_update (partial_update)",
+      "timestamp": "2026-04-29T09:33:10.499035",
+      "status": "pass",
+      "metrics": {
+        "correct_members_recall": {
+          "value": 1.0,
+          "target": 0.95,
+          "passed": true
+        },
+        "removed_member_not_in_latest": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "history_preserved": {
+          "value": 1.0,
+          "target": 0.9,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.22,
+      "token_count": 0,
+      "details": "Members recall=100%, removed-leaked=False",
+      "error_message": ""
+    },
+    {
+      "test_id": "contradiction_003",
+      "test_name": "test_temporal_contradiction (temporal_contradiction)",
+      "timestamp": "2026-04-29T09:33:10.579713",
+      "status": "pass",
+      "metrics": {
+        "latest_value_correct": {
+          "value": 1.0,
+          "target": 0.95,
+          "passed": true
+        },
+        "history_preserved": {
+          "value": 1.0,
+          "target": 0.9,
+          "passed": true
+        },
+        "version_count_accuracy": {
+          "value": 1.0,
+          "target": 0.9,
+          "passed": true
+        },
+        "temporal_sort_accuracy": {
+          "value": 1.0,
+          "target": 0.9,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.19,
+      "token_count": 0,
+      "details": "Versions found: 3/3. Latest correct: True",
+      "error_message": ""
+    },
+    {
+      "test_id": "contradiction_004",
+      "test_name": "test_multi_entity_contradiction (multi_entity_contradiction)",
+      "timestamp": "2026-04-29T09:33:10.656698",
+      "status": "pass",
+      "metrics": {
+        "project_h_updated": {
+          "value": 1.0,
+          "target": 0.95,
+          "passed": true
+        },
+        "project_i_preserved": {
+          "value": 1.0,
+          "target": 0.95,
+          "passed": true
+        },
+        "partial_update_fidelity": {
+          "value": 1.0,
+          "target": 0.95,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.44,
+      "token_count": 0,
+      "details": "Project H correct=True, Project I preserved=True",
+      "error_message": ""
+    },
+    {
+      "test_id": "contradiction_005",
+      "test_name": "test_cancellation (cancel_retraction)",
+      "timestamp": "2026-04-29T09:33:10.730305",
+      "status": "pass",
+      "metrics": {
+        "cancellation_detected": {
+          "value": 1.0,
+          "target": 0.9,
+          "passed": true
+        },
+        "cancellation_in_latest": {
+          "value": 1.0,
+          "target": 0.9,
+          "passed": true
+        },
+        "original_event_preserved": {
+          "value": 1.0,
+          "target": 0.85,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.2,
+      "token_count": 0,
+      "details": "Cancel detected=True, latest_cancel=True",
+      "error_message": ""
+    },
+    {
+      "test_id": "efficiency_001",
+      "test_name": "test_write_latency (write_latency)",
+      "timestamp": "2026-04-29T09:33:11.113246",
+      "status": "pass",
+      "metrics": {
+        "p50_ms": {
+          "value": 6.04,
+          "target": 200,
+          "passed": true
+        },
+        "p95_ms": {
+          "value": 9.24,
+          "target": 500,
+          "passed": true
+        },
+        "p99_ms": {
+          "value": 11.37,
+          "target": 1000,
+          "passed": true
+        },
+        "mean_ms": {
+          "value": 6.36,
+          "target": 300,
+          "passed": true
+        },
+        "total_writes": {
+          "value": 50,
+          "target": 50,
+          "passed": true
+        }
+      },
+      "latency_ms": 6.36,
+      "token_count": 0,
+      "details": "Wrote 50 entries. P50=6.04ms, P95=9.24ms, P99=11.37ms",
+      "error_message": ""
+    },
+    {
+      "test_id": "efficiency_002",
+      "test_name": "test_query_latency (query_latency)",
+      "timestamp": "2026-04-29T09:33:11.814252",
+      "status": "pass",
+      "metrics": {
+        "p50_ms": {
+          "value": 0.23,
+          "target": 300,
+          "passed": true
+        },
+        "p95_ms": {
+          "value": 0.3,
+          "target": 800,
+          "passed": true
+        },
+        "mean_ms": {
+          "value": 0.21,
+          "target": 400,
+          "passed": true
+        },
+        "total_queries": {
+          "value": 80,
+          "target": 80,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.21,
+      "token_count": 0,
+      "details": "Ran 80 queries on 200 entries. P50=0.23ms, P95=0.30ms",
+      "error_message": ""
+    },
+    {
+      "test_id": "efficiency_003",
+      "test_name": "test_memory_usage (memory_usage)",
+      "timestamp": "2026-04-29T09:33:13.021534",
+      "status": "pass",
+      "metrics": {
+        "memory_200_entries": {
+          "value": 0.0147,
+          "target": 50,
+          "passed": true
+        },
+        "per_entry_kb": {
+          "value": 0.0754,
+          "target": 51200,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "Sizes tested: [50, 100, 200]. Largest: 0.01MB (0.08KB/entry)",
+      "error_message": ""
+    },
+    {
+      "test_id": "efficiency_004",
+      "test_name": "test_token_efficiency (token_efficiency)",
+      "timestamp": "2026-04-29T09:33:13.245437",
+      "status": "pass",
+      "metrics": {
+        "simple_avg_tokens": {
+          "value": 9,
+          "target": 500,
+          "passed": true
+        },
+        "complex_avg_tokens": {
+          "value": 1,
+          "target": 2000,
+          "passed": true
+        },
+        "total_llm_calls": {
+          "value": 6,
+          "target": 6,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 30,
+      "details": "Simple avg: 9 tokens, Complex avg: 1 tokens",
+      "error_message": ""
+    },
+    {
+      "test_id": "efficiency_005",
+      "test_name": "test_concurrency (concurrency)",
+      "timestamp": "2026-04-29T09:33:13.641223",
+      "status": "pass",
+      "metrics": {
+        "throughput_ops_per_sec": {
+          "value": 1286.12,
+          "target": 10,
+          "passed": true
+        },
+        "p95_latency_ms": {
+          "value": 9.08,
+          "target": 1000,
+          "passed": true
+        },
+        "total_operations": {
+          "value": 17,
+          "target": 50,
+          "passed": true
+        },
+        "latency_degradation": {
+          "value": 20.54,
+          "target": 5.0,
+          "passed": false
+        }
+      },
+      "latency_ms": 0.44,
+      "token_count": 0,
+      "details": "Throughput: 1286.12 ops/sec. P50=0.44ms, P95=9.08ms",
+      "error_message": ""
+    },
+    {
+      "test_id": "efficiency_006",
+      "test_name": "test_stress (stress_test)",
+      "timestamp": "2026-04-29T09:33:16.904081",
+      "status": "pass",
+      "metrics": {
+        "no_crash": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "data_integrity": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "p95_growth_ratio": {
+          "value": 1.17,
+          "target": 3.0,
+          "passed": true
+        },
+        "error_rate": {
+          "value": 0.0,
+          "target": 0.01,
+          "passed": true
+        },
+        "total_entries_written": {
+          "value": 1000,
+          "target": 1000,
+          "passed": true
+        }
+      },
+      "latency_ms": 3.09,
+      "token_count": 0,
+      "details": "Wrote 1000 entries (0 errors). Integrity: 1000/1000. Growth ratio: 1.17",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_a_001",
+      "test_name": "test_command_tracking (command_tracking)",
+      "timestamp": "2026-04-29T09:33:17.011511",
+      "status": "pass",
+      "metrics": {
+        "commands_logged": {
+          "value": 10,
+          "target": 10,
+          "passed": true
+        },
+        "patterns_created": {
+          "value": 9,
+          "target": 3,
+          "passed": true
+        },
+        "git_frequency_correct": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "failure_recorded": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "Logged 10 commands, found 9 patterns. Git status freq=8",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_a_002",
+      "test_name": "test_command_recommendation (command_recommendation)",
+      "timestamp": "2026-04-29T09:33:17.123493",
+      "status": "pass",
+      "metrics": {
+        "git_recommendations": {
+          "value": 5,
+          "target": 3,
+          "passed": true
+        },
+        "docker_recommendations": {
+          "value": 3,
+          "target": 1,
+          "passed": true
+        },
+        "npm_recommendations": {
+          "value": 3,
+          "target": 1,
+          "passed": true
+        },
+        "prefix_filter_correct": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "frequency_ordering": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "git=5, docker=3, npm=3. Prefix OK=True, Top is git=True",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_a_003",
+      "test_name": "test_project_context (project_context)",
+      "timestamp": "2026-04-29T09:33:17.227173",
+      "status": "pass",
+      "metrics": {
+        "project_a_has_npm": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "project_b_has_cargo": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "git_shared_across_projects": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "project_a_recommendations": {
+          "value": 5,
+          "target": 2,
+          "passed": true
+        },
+        "project_b_recommendations": {
+          "value": 5,
+          "target": 2,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "ProjA cmds={'git', 'npm', 'npm test', 'git push', 'git status', 'npm run'}, ProjB cmds={'git', 'cargo build', 'cargo run', 'git push', 'cargo test', 'cargo'}. RecsA has npm=True, RecsB has cargo=True",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_a_004",
+      "test_name": "test_context_aware_recommendation (context_aware_recommendation)",
+      "timestamp": "2026-04-29T09:33:17.325414",
+      "status": "pass",
+      "metrics": {
+        "analysis_top_commands": {
+          "value": 4,
+          "target": 5,
+          "passed": true
+        },
+        "total_commands_tracked": {
+          "value": 12,
+          "target": 12,
+          "passed": true
+        },
+        "unique_commands": {
+          "value": 4,
+          "target": 5,
+          "passed": true
+        },
+        "success_rate": {
+          "value": 1.0,
+          "target": 0.8,
+          "passed": true
+        },
+        "context_recommendations": {
+          "value": 4,
+          "target": 3,
+          "passed": true
+        },
+        "scores_present": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "top_score_nonzero": {
+          "value": 1.0,
+          "target": 0.3,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "Analysis: total=12, unique=4, success=1.0. Context recs=4, top_score=1.0000",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_b_001",
+      "test_name": "test_decision_extraction (decision_extraction)",
+      "timestamp": "2026-04-29T09:33:17.397233",
+      "status": "pass",
+      "metrics": {
+        "extraction_rate": {
+          "value": 1.0,
+          "target": 0.75,
+          "passed": true
+        },
+        "extraction_accuracy": {
+          "value": 1.0,
+          "target": 0.7,
+          "passed": true
+        },
+        "rationale_recall": {
+          "value": 1.0,
+          "target": 0.6,
+          "passed": true
+        },
+        "conversation_extraction": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "Extracted 4/4 decisions, correct=4, rationale=4, conv_decisions=1",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_b_002",
+      "test_name": "test_decision_search (decision_search)",
+      "timestamp": "2026-04-29T09:33:17.469568",
+      "status": "pass",
+      "metrics": {
+        "decisions_saved": {
+          "value": 4,
+          "target": 4,
+          "passed": true
+        },
+        "search_pass_rate": {
+          "value": 1.0,
+          "target": 0.8,
+          "passed": true
+        },
+        "project_frontend_found": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        },
+        "project_backend_found": {
+          "value": 2,
+          "target": 2,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "Saved 4 decisions. Search results: {'React': 1, 'PostgreSQL': 1, 'Kubernetes': 1, '部署': 1, 'API': 1}. Frontend=1, Backend=2",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_b_003",
+      "test_name": "test_decision_cards (decision_cards)",
+      "timestamp": "2026-04-29T09:33:17.542908",
+      "status": "pass",
+      "metrics": {
+        "decisions_recorded": {
+          "value": 3,
+          "target": 3,
+          "passed": true
+        },
+        "related_cards_pushed": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        },
+        "unrelated_no_cards": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "markdown_formatted": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "decision_history": {
+          "value": 3,
+          "target": 3,
+          "passed": true
+        },
+        "decision_overturn": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "Recorded 3, cards=1, no_cards_for_unrelated=True, markdown=True, history=3, overturn=True",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_b_004",
+      "test_name": "test_decision_lifecycle (decision_lifecycle)",
+      "timestamp": "2026-04-29T09:33:17.613945",
+      "status": "pass",
+      "metrics": {
+        "extraction_from_conversation": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        },
+        "decisions_saved": {
+          "value": 2,
+          "target": 2,
+          "passed": true
+        },
+        "search_restful": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        },
+        "search_jwt": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        },
+        "card_push_on_topic": {
+          "value": 2,
+          "target": 1,
+          "passed": true
+        },
+        "decision_overturned": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "status_updated": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "Extracted=1, saved=2, search_RESTful=1, search_JWT=1, cards=2, overturned=True, status=True",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_c_001",
+      "test_name": "test_habit_recognition (work_habit_recognition)",
+      "timestamp": "2026-04-29T09:33:17.763652",
+      "status": "pass",
+      "metrics": {
+        "preference_recall": {
+          "value": 1.0,
+          "target": 0.9,
+          "passed": true
+        },
+        "morning_routine_stored": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "work_method_stored": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "lunch_schedule_stored": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "total_preferences": {
+          "value": 3,
+          "target": 3,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "Found 3 preferences. Morning=先处理邮件，再写代码, Method=番茄工作法，25分钟一个周期, Lunch=午休时间 12:00-13:30",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_c_002",
+      "test_name": "test_preference_management (communication_preference)",
+      "timestamp": "2026-04-29T09:33:17.849387",
+      "status": "pass",
+      "metrics": {
+        "total_preferences_stored": {
+          "value": 3,
+          "target": 3,
+          "passed": true
+        },
+        "communication_style_correct": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "report_style_correct": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "meeting_preference_correct": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "category_separation": {
+          "value": 1.0,
+          "target": 0.9,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "Total=3. Style=2, Work=1. Comm=结论先行, Report=数据驱动",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_c_003",
+      "test_name": "test_preference_update (preference_update)",
+      "timestamp": "2026-04-29T09:33:17.943991",
+      "status": "pass",
+      "metrics": {
+        "latest_tool_correct": {
+          "value": 1.0,
+          "target": 0.95,
+          "passed": true
+        },
+        "latest_method_correct": {
+          "value": 1.0,
+          "target": 0.95,
+          "passed": true
+        },
+        "history_traceable": {
+          "value": 1.0,
+          "target": 0.85,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "Tool: 旧工具→Notion. Method: →时间块管理. History preserved: True",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_c_004",
+      "test_name": "test_context_aware_recommendation (context_aware_recommendation)",
+      "timestamp": "2026-04-29T09:33:18.036267",
+      "status": "pass",
+      "metrics": {
+        "context_awareness_score": {
+          "value": 1.0,
+          "target": 0.8,
+          "passed": true
+        },
+        "wednesday_recommendation": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "friday_recommendation": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "review_style_recommendation": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "Wed=True, Fri=True, Review=True",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_d_001",
+      "test_name": "test_knowledge_gap_detection (knowledge_gap_detection)",
+      "timestamp": "2026-04-29T09:33:18.125324",
+      "status": "pass",
+      "metrics": {
+        "gap_detected": {
+          "value": 1.0,
+          "target": 0.8,
+          "passed": true
+        },
+        "conflict_identified": {
+          "value": 1.0,
+          "target": 0.85,
+          "passed": true
+        },
+        "team_map_created": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "domains_analyzed": {
+          "value": 10,
+          "target": 5,
+          "passed": true
+        },
+        "spof_detected": {
+          "value": 2,
+          "target": 0,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "Domains=10, Gaps=10, SPOFs=2, Frontend holders=2",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_d_002",
+      "test_name": "test_forgetting_alert (forgetting_alert)",
+      "timestamp": "2026-04-29T09:33:18.205703",
+      "status": "pass",
+      "metrics": {
+        "stale_alerts_generated": {
+          "value": 1.0,
+          "target": 0.9,
+          "passed": true
+        },
+        "aging_detected": {
+          "value": 1.0,
+          "target": 0.85,
+          "passed": true
+        },
+        "entries_tracked": {
+          "value": 2,
+          "target": 2,
+          "passed": true
+        },
+        "freshness_changes_detected": {
+          "value": 2,
+          "target": 1,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "Changes=2, Status counts={'fresh': 0, 'aging': 1, 'stale': 1, 'forgotten': 0}",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_d_003",
+      "test_name": "test_team_knowledge_sync (team_knowledge_sync)",
+      "timestamp": "2026-04-29T09:33:18.278484",
+      "status": "pass",
+      "metrics": {
+        "new_location_found": {
+          "value": 1.0,
+          "target": 0.9,
+          "passed": true
+        },
+        "old_location_preserved": {
+          "value": 1.0,
+          "target": 0.85,
+          "passed": true
+        },
+        "both_locations_accessible": {
+          "value": 1.0,
+          "target": 0.85,
+          "passed": true
+        },
+        "team_map_updated": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "New=True, Old=True, Both=True",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_d_004",
+      "test_name": "test_critical_knowledge_forgetting (critical_knowledge_forgetting)",
+      "timestamp": "2026-04-29T09:33:18.350262",
+      "status": "pass",
+      "metrics": {
+        "status_correctly_forgotten": {
+          "value": 1.0,
+          "target": 0.9,
+          "passed": true
+        },
+        "high_risk_detected": {
+          "value": 1.0,
+          "target": 0.85,
+          "passed": true
+        },
+        "freshness_changes_detected": {
+          "value": 1,
+          "target": 1,
+          "passed": true
+        },
+        "knowledge_recorded": {
+          "value": 1.0,
+          "target": 1.0,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "Status counts={'fresh': 0, 'aging': 0, 'stale': 0, 'forgotten': 1}, High risk=1, Changes=1",
+      "error_message": ""
+    },
+    {
+      "test_id": "direction_d_005",
+      "test_name": "test_team_knowledge_coverage (team_knowledge_coverage)",
+      "timestamp": "2026-04-29T09:33:18.444329",
+      "status": "pass",
+      "metrics": {
+        "gaps_detected": {
+          "value": 1.0,
+          "target": 0.8,
+          "passed": true
+        },
+        "security_gap_detected": {
+          "value": 1.0,
+          "target": 0.8,
+          "passed": true
+        },
+        "business_gap_detected": {
+          "value": 1.0,
+          "target": 0.8,
+          "passed": true
+        },
+        "team_map_created": {
+          "value": 0.0,
+          "target": 1.0,
+          "passed": true
+        },
+        "coverage_calculated": {
+          "value": 10,
+          "target": 5,
+          "passed": true
+        }
+      },
+      "latency_ms": 0.0,
+      "token_count": 0,
+      "details": "Domains=10, Gaps=10, Zero-coverage=5, Security gap=True, Business gap=True",
+      "error_message": ""
+    }
+  ],
+  "recommendations": [
+    "Overall score (98.5/100) is excellent! Focus on edge cases and robustness improvements.",
+    "1 test(s) failed. Review individual test details for specific failure modes."
+  ],
+  "benchmark_comparison": {
+    "anti_interference_target": "≥ 90% recall, ≥ 87% F1",
+    "contradiction_update_target": "≥ 95% latest accuracy, ≥ 90% history",
+    "efficiency_target": "P50 ≤ 200ms write, ≤ 300ms query",
+    "direction_c_target": "≥ 90% preference recall",
+    "direction_d_target": "≥ 80% gap detection rate"
+  }
+}

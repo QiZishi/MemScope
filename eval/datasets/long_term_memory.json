@@ -1,895 +1,1017 @@
 {
   "dataset_name": "long_term_memory",
-  "version": "3.0",
-  "description": "长时序记忆能力评测：专门测试3个月时间跨度下的记忆保持、信息覆盖废弃、重复强化、检索排序、多跳推理和实体追踪能力",
-  "total_cases": 33,
-  "difficulty_distribution": {
-    "medium": 11,
-    "hard": 9,
-    "expert": 13
-  },
+  "version": "2.0",
+  "description": "长时序记忆评测数据集 - 30条样本，覆盖2年时间跨度(2024-05到2026-04)",
   "test_cases": [
     {
       "test_id": "ltm_001",
-      "name": "3个月对话回忆-团队决策",
-      "description": "2026-01-15团队决定'使用Go重写核心服务'。到2026-04-29，搜索'核心服务重写'应仍能找到这条记录",
+      "name": "3-6月记忆_1",
+      "difficulty": "easy",
+      "category": "3month",
+      "description": "测试2025-11-15的信息在3-6个月后能否回忆",
       "setup": {
         "conversation": {
-          "date": "2026-01-15",
+          "date": "2025-11-15",
           "messages": [
-            {"role": "user", "content": "核心服务用什么语言重写？Go还是Rust？", "timestamp": "2026-01-15T10:00:00"},
-            {"role": "user", "content": "最终决定用Go，学习曲线更平缓，团队上手快", "timestamp": "2026-01-15T10:15:00"}
+            {
+              "role": "user",
+              "content": "核心服务从Java重写为Go的方案确定了",
+              "timestamp": "2025-11-15T10:00:00Z"
+            }
           ]
-        },
-        "query_time": "2026-04-29"
+        }
       },
-      "query": {"type": "search", "keyword": "核心服务重写"},
+      "query": {
+        "type": "search",
+        "keyword": "核心服务重写"
+      },
       "expected": {
         "found": true,
-        "content_keywords": ["Go", "重写", "核心服务"],
-        "age_days": 104,
+        "content_keywords": [
+          "Go",
+          "重写"
+        ],
         "still_accessible": true
-      },
-      "difficulty": "medium",
-      "priority": "P0",
-      "tags": ["3-month", "recall", "decision"]
+      }
     },
     {
       "test_id": "ltm_002",
-      "name": "3个月对话回忆-技术问题",
-      "description": "2026-01-20用户解决了'Docker构建时的网络超时问题'。3个月后搜索相关问题应能找到当时的解决方案",
+      "name": "3-6月记忆_2",
+      "difficulty": "easy",
+      "category": "3month",
+      "description": "测试2025-12-01的信息在3-6个月后能否回忆",
       "setup": {
         "conversation": {
-          "date": "2026-01-20",
+          "date": "2025-12-01",
           "messages": [
-            {"role": "user", "content": "Docker build总是超时，pull镜像太慢了", "timestamp": "2026-01-20T14:00:00"},
-            {"role": "assistant", "content": "可以配置国内镜像源，或者使用代理", "timestamp": "2026-01-20T14:01:00"},
-            {"role": "user", "content": "配置了阿里云镜像源后解决了，记录一下：registry mirror设为mirror.ccs.aliyun.com", "timestamp": "2026-01-20T14:30:00"}
+            {
+              "role": "user",
+              "content": "和客户甲签了年度合同价值800万",
+              "timestamp": "2025-12-01T10:00:00Z"
+            }
           ]
-        },
-        "query_time": "2026-04-29"
+        }
       },
-      "query": {"type": "search", "keyword": "Docker构建超时"},
+      "query": {
+        "type": "search",
+        "keyword": "客户甲合同"
+      },
       "expected": {
         "found": true,
-        "solution_found": true,
-        "solution_keywords": ["阿里云镜像源", "mirror.ccs.aliyun.com"],
-        "age_days": 99
-      },
-      "difficulty": "medium",
-      "priority": "P0",
-      "tags": ["3-month", "recall", "troubleshooting"]
+        "content_keywords": [
+          "800万",
+          "客户甲"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_003",
-      "name": "3个月对话回忆-人员信息",
-      "description": "2026-01-10记录了'新同事刘伟的工号是EMP2026001，负责后端开发'。3个月后应仍能回忆起",
+      "name": "3-6月记忆_3",
+      "difficulty": "medium",
+      "category": "3month",
+      "description": "测试2025-12-20的信息在3-6个月后能否回忆",
       "setup": {
         "conversation": {
-          "date": "2026-01-10",
+          "date": "2025-12-20",
           "messages": [
-            {"role": "user", "content": "新同事刘伟今天入职了，工号EMP2026001，分配到后端组", "timestamp": "2026-01-10T09:00:00"}
+            {
+              "role": "user",
+              "content": "数据库从MySQL迁移到PostgreSQL的计划定了",
+              "timestamp": "2025-12-20T10:00:00Z"
+            }
           ]
-        },
-        "query_time": "2026-04-29"
+        }
       },
-      "query": {"type": "search", "keyword": "刘伟"},
+      "query": {
+        "type": "search",
+        "keyword": "数据库迁移"
+      },
       "expected": {
         "found": true,
-        "details": {
-          "name": "刘伟",
-          "employee_id": "EMP2026001",
-          "department": "后端组"
-        },
-        "age_days": 109
-      },
-      "difficulty": "medium",
-      "priority": "P0",
-      "tags": ["3-month", "recall", "personnel"]
+        "content_keywords": [
+          "MySQL",
+          "PostgreSQL"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_004",
-      "name": "3个月对话回忆-配置信息",
-      "description": "2026-01-05记录了生产环境的详细配置。到2026-04-29应仍能检索到这些配置细节",
+      "name": "3-6月记忆_4",
+      "difficulty": "medium",
+      "category": "3month",
+      "description": "测试2026-01-05的信息在3-6个月后能否回忆",
       "setup": {
         "conversation": {
           "date": "2026-01-05",
           "messages": [
-            {"role": "user", "content": "生产环境配置记录：EKS集群1.28，节点4台c5.2xlarge，RDS PostgreSQL 15，Redis 7.0集群模式", "timestamp": "2026-01-05T16:00:00"}
+            {
+              "role": "user",
+              "content": "安全审计发现3个高危漏洞需要在Q1修复",
+              "timestamp": "2026-01-05T10:00:00Z"
+            }
           ]
-        },
-        "query_time": "2026-04-29"
+        }
       },
-      "query": {"type": "search", "keyword": "生产环境配置"},
+      "query": {
+        "type": "search",
+        "keyword": "安全审计"
+      },
       "expected": {
         "found": true,
-        "config_details": {
-          "eks_version": "1.28",
-          "nodes": "4台c5.2xlarge",
-          "database": "RDS PostgreSQL 15",
-          "cache": "Redis 7.0集群模式"
-        },
-        "age_days": 114
-      },
-      "difficulty": "medium",
-      "priority": "P0",
-      "tags": ["3-month", "recall", "configuration"]
+        "content_keywords": [
+          "高危漏洞",
+          "Q1"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_005",
-      "name": "3个月对话回忆-模糊搜索",
-      "description": "2026-01-25讨论过'用户反馈登录页加载太慢'的优化。3个月后搜索'登录慢'应能找到",
+      "name": "3-6月记忆_5",
+      "difficulty": "easy",
+      "category": "3month",
+      "description": "测试2026-01-10的信息在3-6个月后能否回忆",
       "setup": {
         "conversation": {
-          "date": "2026-01-25",
+          "date": "2026-01-10",
           "messages": [
-            {"role": "user", "content": "用户反馈登录页加载太慢，FCP超过3秒", "timestamp": "2026-01-25T11:00:00"},
-            {"role": "user", "content": "优化方案：1.代码分割 2.图片懒加载 3.CDN加速静态资源", "timestamp": "2026-01-25T11:30:00"}
+            {
+              "role": "user",
+              "content": "新入职了5个后端开发工程师",
+              "timestamp": "2026-01-10T10:00:00Z"
+            }
           ]
-        },
-        "query_time": "2026-04-29"
+        }
       },
-      "query": {"type": "search", "keyword": "登录慢"},
+      "query": {
+        "type": "search",
+        "keyword": "团队扩张"
+      },
       "expected": {
         "found": true,
-        "semantic_match": true,
-        "original_topic": "登录页加载太慢",
-        "solution_accessible": true,
-        "age_days": 94
-      },
-      "difficulty": "hard",
-      "priority": "P0",
-      "tags": ["3-month", "recall", "fuzzy-search"]
+        "content_keywords": [
+          "5个",
+          "后端"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_006",
-      "name": "信息覆盖后旧信息废弃-技术栈变更",
-      "description": "2026-01-15记录'用MongoDB'，2026-03-01更新为'改用PostgreSQL'。旧信息应标记为已废弃但仍可查",
-      "setup": {
-        "conversations": [
-          {
-            "date": "2026-01-15",
-            "content": "项目数据库用MongoDB，文档模型灵活",
-            "status": "original"
-          },
-          {
-            "date": "2026-03-01",
-            "content": "数据库换成了PostgreSQL，JSONB支持够用且事务更可靠",
-            "status": "update"
-          }
-        ],
-        "query_time": "2026-04-29"
-      },
-      "query": {"type": "search", "keyword": "项目数据库"},
-      "expected": {
-        "current_info": "PostgreSQL",
-        "old_info": "MongoDB",
-        "old_info_marked_superseded": true,
-        "both_accessible": true,
-        "current_info_ranked_higher": true
-      },
+      "name": "3-6月记忆_6",
       "difficulty": "medium",
-      "priority": "P0",
-      "tags": ["override", "superseded", "versioning"]
+      "category": "3month",
+      "description": "测试2026-01-20的信息在3-6个月后能否回忆",
+      "setup": {
+        "conversation": {
+          "date": "2026-01-20",
+          "messages": [
+            {
+              "role": "user",
+              "content": "微服务架构评审确定使用Spring Cloud方案",
+              "timestamp": "2026-01-20T10:00:00Z"
+            }
+          ]
+        }
+      },
+      "query": {
+        "type": "search",
+        "keyword": "架构评审"
+      },
+      "expected": {
+        "found": true,
+        "content_keywords": [
+          "Spring Cloud",
+          "微服务"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_007",
-      "name": "信息覆盖后旧信息废弃-人员变动",
-      "description": "2026-01-10记录'项目经理是张三'，2026-02-15更新为'项目经理换成李四'。旧信息应废弃",
+      "name": "6-12月记忆_7",
+      "difficulty": "easy",
+      "category": "6month",
+      "description": "测试2025-04-10的信息在6-12个月后能否回忆",
       "setup": {
-        "conversations": [
-          {
-            "date": "2026-01-10",
-            "content": "当前项目经理是张三",
-            "status": "original"
-          },
-          {
-            "date": "2026-02-15",
-            "content": "项目经理换成李四了，张三调到另一个项目",
-            "status": "update"
-          }
-        ],
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2025-04-10",
+          "messages": [
+            {
+              "role": "user",
+              "content": "产品2.0版本的PRD评审通过了",
+              "timestamp": "2025-04-10T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "search", "keyword": "项目经理"},
+      "query": {
+        "type": "search",
+        "keyword": "PRD评审"
+      },
       "expected": {
-        "current_info": "李四",
-        "old_info": "张三",
-        "old_info_superseded": true,
-        "change_context": "张三调到另一个项目"
-      },
-      "difficulty": "medium",
-      "priority": "P0",
-      "tags": ["override", "personnel", "update"]
+        "found": true,
+        "content_keywords": [
+          "2.0",
+          "PRD"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_008",
-      "name": "信息覆盖后旧信息废弃-API端点变更",
-      "description": "API端点从v1变到v2再变到v3。只有v3是有效的，v1和v2都应标记为废弃",
+      "name": "6-12月记忆_8",
+      "difficulty": "easy",
+      "category": "6month",
+      "description": "测试2025-05-20的信息在6-12个月后能否回忆",
       "setup": {
-        "conversations": [
-          {"date": "2026-01-01", "content": "API端点: /api/v1/users", "status": "archived"},
-          {"date": "2026-02-01", "content": "API升级到v2: /api/v2/users，新增分页参数", "status": "superseded"},
-          {"date": "2026-04-01", "content": "API升级到v3: /api/v3/users，重构了认证机制", "status": "current"}
-        ],
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2025-05-20",
+          "messages": [
+            {
+              "role": "user",
+              "content": "技术债务清理计划确定，目标是减少30%的遗留代码",
+              "timestamp": "2025-05-20T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "search", "keyword": "API端点"},
+      "query": {
+        "type": "search",
+        "keyword": "技术债务"
+      },
       "expected": {
-        "current_info": "/api/v3/users",
-        "superseded_versions": ["/api/v1/users", "/api/v2/users"],
-        "version_chain": ["v1", "v2", "v3"],
-        "only_current_is_active": true
-      },
-      "difficulty": "hard",
-      "priority": "P0",
-      "tags": ["override", "api", "multi-version"]
+        "found": true,
+        "content_keywords": [
+          "30%",
+          "遗留代码"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_009",
-      "name": "信息覆盖后旧信息废弃-矛盾信息处理",
-      "description": "先说'部署在AWS'，后说'实际上在阿里云'。应正确标记哪个是正确信息",
+      "name": "6-12月记忆_9",
+      "difficulty": "medium",
+      "category": "6month",
+      "description": "测试2025-06-15的信息在6-12个月后能否回忆",
       "setup": {
-        "conversations": [
-          {"date": "2026-01-15", "content": "部署在AWS us-east-1", "status": "original_incorrect"},
-          {"date": "2026-02-20", "content": "更正：实际上部署在阿里云华东2区，之前说错了", "status": "correction"}
-        ],
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2025-06-15",
+          "messages": [
+            {
+              "role": "user",
+              "content": "CI/CD流水线从Jenkins迁移到GitLab CI",
+              "timestamp": "2025-06-15T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "search", "keyword": "部署区域"},
+      "query": {
+        "type": "search",
+        "keyword": "CI/CD迁移"
+      },
       "expected": {
-        "correct_info": "阿里云华东2区",
-        "incorrect_info": "AWS us-east-1",
-        "correction_detected": true,
-        "incorrect_marked": true
-      },
-      "difficulty": "hard",
-      "priority": "P0",
-      "tags": ["override", "correction", "factual"]
+        "found": true,
+        "content_keywords": [
+          "Jenkins",
+          "GitLab CI"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_010",
-      "name": "信息覆盖后旧信息废弃-部分更新",
-      "description": "原信息'后端用Python+Django，前端用React'，更新为'后端改用Go，前端不变'。只有后端部分被覆盖",
+      "name": "6-12月记忆_10",
+      "difficulty": "medium",
+      "category": "6month",
+      "description": "测试2025-07-01的信息在6-12个月后能否回忆",
       "setup": {
-        "conversations": [
-          {"date": "2026-01-20", "content": "技术栈：后端Python+Django，前端React", "status": "original"},
-          {"date": "2026-03-10", "content": "后端改用Go了，前端还是React不变", "status": "partial_update"}
-        ],
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2025-07-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "性能优化项目启动，目标是API响应时间降低50%",
+              "timestamp": "2025-07-01T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "search", "keyword": "技术栈"},
+      "query": {
+        "type": "search",
+        "keyword": "性能优化"
+      },
       "expected": {
-        "backend_current": "Go",
-        "backend_old": "Python+Django",
-        "frontend_current": "React",
-        "frontend_unchanged": true,
-        "partial_update_detected": true
-      },
-      "difficulty": "hard",
-      "priority": "P1",
-      "tags": ["override", "partial-update", "selective"]
+        "found": true,
+        "content_keywords": [
+          "响应时间",
+          "50%"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_011",
-      "name": "多次提及更持久-3次提及的信息",
-      "description": "'使用Docker部署'在1月、2月、3月各被提及1次（共3次）。其retention score应高于只被提及1次的信息",
+      "name": "6-12月记忆_11",
+      "difficulty": "easy",
+      "category": "6month",
+      "description": "测试2025-08-10的信息在6-12个月后能否回忆",
       "setup": {
-        "knowledge_a": {
-          "content": "使用Docker部署",
-          "mentions": [
-            {"date": "2026-01-15"},
-            {"date": "2026-02-20"},
-            {"date": "2026-03-25"}
-          ],
-          "mention_count": 3
-        },
-        "knowledge_b": {
-          "content": "使用Ansible配置",
-          "mentions": [
-            {"date": "2026-01-15"}
-          ],
-          "mention_count": 1
-        },
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2025-08-10",
+          "messages": [
+            {
+              "role": "user",
+              "content": "和供应商B签订了服务器托管协议",
+              "timestamp": "2025-08-10T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "retention_comparison", "entries": ["knowledge_a", "knowledge_b"]},
+      "query": {
+        "type": "search",
+        "keyword": "供应商协议"
+      },
       "expected": {
-        "knowledge_a_retention": ">= 0.7",
-        "knowledge_b_retention": "< 0.5",
-        "a_higher_than_b": true,
-        "reinforcement_effect": true
-      },
-      "difficulty": "medium",
-      "priority": "P0",
-      "tags": ["repetition", "retention", "reinforcement"]
+        "found": true,
+        "content_keywords": [
+          "供应商B",
+          "托管"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_012",
-      "name": "多次提及更持久-密集提及vs分散提及",
-      "description": "信息A在1周内被提及5次，信息B在3个月内被提及5次。总次数相同但时间分布不同，比较记忆持久性",
+      "name": "6-12月记忆_12",
+      "difficulty": "medium",
+      "category": "6month",
+      "description": "测试2025-09-01的信息在6-12个月后能否回忆",
       "setup": {
-        "knowledge_a": {
-          "content": "API认证使用JWT",
-          "mentions": [
-            {"date": "2026-04-20"},
-            {"date": "2026-04-21"},
-            {"date": "2026-04-22"},
-            {"date": "2026-04-23"},
-            {"date": "2026-04-24"}
-          ],
-          "pattern": "密集"
-        },
-        "knowledge_b": {
-          "content": "监控使用Prometheus",
-          "mentions": [
-            {"date": "2026-01-15"},
-            {"date": "2026-02-10"},
-            {"date": "2026-03-05"},
-            {"date": "2026-03-25"},
-            {"date": "2026-04-20"}
-          ],
-          "pattern": "分散"
-        },
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2025-09-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "团队从Scrum切换到Kanban工作流",
+              "timestamp": "2025-09-01T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "retention_comparison", "entries": ["knowledge_a", "knowledge_b"]},
+      "query": {
+        "type": "search",
+        "keyword": "工作流变更"
+      },
       "expected": {
-        "knowledge_a_retention": ">= 0.95",
-        "knowledge_b_retention": ">= 0.7",
-        "both_high": true,
-        "a_slightly_higher": true,
-        "spacing_effect_observed": true
-      },
-      "difficulty": "hard",
-      "priority": "P1",
-      "tags": ["repetition", "spacing-effect", "distribution"]
+        "found": true,
+        "content_keywords": [
+          "Kanban",
+          "Scrum"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_013",
-      "name": "多次提及更持久-提及时长影响",
-      "description": "信息C被提及6个月（2025-11到2026-04），信息D被提及1个月。虽然D近期更活跃，但C的长期记忆更稳固",
-      "setup": {
-        "knowledge_c": {
-          "content": "团队每周二下午有code review",
-          "first_mention": "2025-11-01",
-          "last_mention": "2026-04-25",
-          "total_mentions": 24,
-          "duration_months": 6
-        },
-        "knowledge_d": {
-          "content": "新引入的代码质量工具SonarQube",
-          "first_mention": "2026-04-01",
-          "last_mention": "2026-04-25",
-          "total_mentions": 8,
-          "duration_months": 1
-        },
-        "query_time": "2026-04-29"
-      },
-      "query": {"type": "retention_comparison", "entries": ["knowledge_c", "knowledge_d"]},
-      "expected": {
-        "knowledge_c_retention": ">= 0.9",
-        "knowledge_d_retention": ">= 0.85",
-        "long_term_more_robust": true,
-        "c_long_term_advantage": true
-      },
+      "name": "6-12月记忆_13",
       "difficulty": "hard",
-      "priority": "P1",
-      "tags": ["repetition", "long-term", "robustness"]
+      "category": "6month",
+      "description": "测试2025-09-20的信息在6-12个月后能否回忆",
+      "setup": {
+        "conversation": {
+          "date": "2025-09-20",
+          "messages": [
+            {
+              "role": "user",
+              "content": "API版本从v1升级到v2，v1保留兼容6个月",
+              "timestamp": "2025-09-20T10:00:00Z"
+            }
+          ]
+        }
+      },
+      "query": {
+        "type": "search",
+        "keyword": "API版本"
+      },
+      "expected": {
+        "found": true,
+        "content_keywords": [
+          "v2",
+          "v1兼容"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_014",
-      "name": "多次提及更持久-情感强化",
-      "description": "带有情感色彩的信息（'那次线上事故太惊险了！'）比中性信息更容易记住，即使提及次数相同",
+      "name": "6-12月记忆_14",
+      "difficulty": "easy",
+      "category": "6month",
+      "description": "测试2025-10-15的信息在6-12个月后能否回忆",
       "setup": {
-        "knowledge_emotional": {
-          "content": "2026-02-14凌晨的P0线上事故，数据库连接池耗尽导致全站不可用，修了3小时",
-          "mentions": [{"date": "2026-02-14"}],
-          "emotional_intensity": "high",
-          "mention_count": 1
-        },
-        "knowledge_neutral": {
-          "content": "更新了README.md中的安装步骤",
-          "mentions": [{"date": "2026-02-14"}],
-          "emotional_intensity": "low",
-          "mention_count": 1
-        },
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2025-10-15",
+          "messages": [
+            {
+              "role": "user",
+              "content": "年度技术峰会确定主题为'云原生与AI'",
+              "timestamp": "2025-10-15T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "retention_comparison", "entries": ["knowledge_emotional", "knowledge_neutral"]},
+      "query": {
+        "type": "search",
+        "keyword": "技术峰会"
+      },
       "expected": {
-        "emotional_retention": ">= 0.7",
-        "neutral_retention": "< 0.5",
-        "emotional_advantage": true
-      },
-      "difficulty": "hard",
-      "priority": "P2",
-      "tags": ["repetition", "emotional", "memory-bias"]
+        "found": true,
+        "content_keywords": [
+          "云原生",
+          "AI"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_015",
-      "name": "多次提及更持久-空提及无效果",
-      "description": "信息被'提及'但没有实质内容变化（重复完全相同的信息），不应额外增强记忆",
+      "name": "1-2年记忆_15",
+      "difficulty": "easy",
+      "category": "1year",
+      "description": "测试2024-05-10的信息在1-2年后能否回忆",
       "setup": {
-        "knowledge_a": {
-          "content": "服务器IP: 10.0.1.100",
-          "mentions": [
-            {"date": "2026-01-15", "context": "首次记录"},
-            {"date": "2026-02-01", "context": "重复查询，无新信息"},
-            {"date": "2026-03-01", "context": "重复查询，无新信息"}
-          ],
-          "mention_count": 3,
-          "substantive_updates": 1
-        },
-        "knowledge_b": {
-          "content": "服务器IP: 10.0.1.200",
-          "mentions": [
-            {"date": "2026-01-15", "context": "首次记录"}
-          ],
-          "mention_count": 1,
-          "substantive_updates": 1
-        },
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2024-05-10",
+          "messages": [
+            {
+              "role": "user",
+              "content": "公司确定了三年技术路线图",
+              "timestamp": "2024-05-10T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "retention_comparison", "entries": ["knowledge_a", "knowledge_b"]},
+      "query": {
+        "type": "search",
+        "keyword": "技术路线图"
+      },
       "expected": {
-        "a_retention_boost_marginal": true,
-        "a_not_significantly_higher_than_b": true,
-        "empty_repetition_ineffective": true
-      },
-      "difficulty": "hard",
-      "priority": "P2",
-      "tags": ["repetition", "empty-repetition", "marginal-effect"]
+        "found": true,
+        "content_keywords": [
+          "三年",
+          "路线图"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_016",
-      "name": "时间衰减后检索排序-新信息优先",
-      "description": "搜索'部署'时，有3条相关记录分别来自1月、2月、4月。按相关性+时间综合排序，4月的应排最前",
+      "name": "1-2年记忆_16",
+      "difficulty": "easy",
+      "category": "1year",
+      "description": "测试2024-06-20的信息在1-2年后能否回忆",
       "setup": {
-        "search_candidates": [
-          {"content": "部署方案讨论(初步方案)", "date": "2026-01-10", "relevance_score": 0.85},
-          {"content": "部署方案确定(Docker+K8s)", "date": "2026-02-15", "relevance_score": 0.90},
-          {"content": "部署方案执行完成", "date": "2026-04-20", "relevance_score": 0.80}
-        ],
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2024-06-20",
+          "messages": [
+            {
+              "role": "user",
+              "content": "第一个微服务从单体架构中拆分出来",
+              "timestamp": "2024-06-20T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "search", "keyword": "部署方案", "sort": "relevance_with_recency"},
+      "query": {
+        "type": "search",
+        "keyword": "微服务拆分"
+      },
       "expected": {
-        "rank_1": "部署方案执行完成",
-        "rank_2": "部署方案确定(Docker+K8s)",
-        "rank_3": "部署方案讨论(初步方案)",
-        "recency_factor_applied": true
-      },
-      "difficulty": "medium",
-      "priority": "P0",
-      "tags": ["temporal", "ranking", "recency"]
+        "found": true,
+        "content_keywords": [
+          "微服务",
+          "单体"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_017",
-      "name": "时间衰减后检索排序-相关性保持",
-      "description": "1月记录的'数据库迁移方案'虽然较旧但高度相关。2月的'服务器采购'虽较新但不相关。搜索'数据库'时旧记录应排在前面",
-      "setup": {
-        "search_candidates": [
-          {"content": "数据库从MySQL迁移到PostgreSQL的详细方案", "date": "2026-01-20", "relevance_score": 0.95},
-          {"content": "新服务器采购清单", "date": "2026-02-15", "relevance_score": 0.10}
-        ],
-        "query_time": "2026-04-29"
-      },
-      "query": {"type": "search", "keyword": "数据库迁移"},
-      "expected": {
-        "rank_1": "数据库从MySQL迁移到PostgreSQL的详细方案",
-        "relevance_dominates_recency": true,
-        "old_but_relevant_ranked_higher": true
-      },
+      "name": "1-2年记忆_17",
       "difficulty": "medium",
-      "priority": "P0",
-      "tags": ["temporal", "ranking", "relevance"]
+      "category": "1year",
+      "description": "测试2024-08-01的信息在1-2年后能否回忆",
+      "setup": {
+        "conversation": {
+          "date": "2024-08-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "安全团队制定了零信任架构方案",
+              "timestamp": "2024-08-01T10:00:00Z"
+            }
+          ]
+        }
+      },
+      "query": {
+        "type": "search",
+        "keyword": "零信任架构"
+      },
+      "expected": {
+        "found": true,
+        "content_keywords": [
+          "零信任",
+          "安全"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_018",
-      "name": "时间衰减后检索排序-等时间不同质量",
-      "description": "同一天(3月1日)有两条关于API的记录，一条是详细设计文档，另一条是简短提及。详细文档应排在前面",
-      "setup": {
-        "search_candidates": [
-          {"content": "API设计文档：详细的RESTful API规范，包含所有端点定义、请求响应格式、错误码等", "date": "2026-03-01", "detail_level": "high", "relevance_score": 0.95},
-          {"content": "顺便提一下API要用JSON格式", "date": "2026-03-01", "detail_level": "low", "relevance_score": 0.40}
-        ],
-        "query_time": "2026-04-29"
-      },
-      "query": {"type": "search", "keyword": "API规范"},
-      "expected": {
-        "rank_1": "API设计文档",
-        "quality_dominates": true,
-        "detail_level_considered": true
-      },
+      "name": "1-2年记忆_18",
       "difficulty": "medium",
-      "priority": "P1",
-      "tags": ["temporal", "ranking", "quality"]
+      "category": "1year",
+      "description": "测试2024-09-15的信息在1-2年后能否回忆",
+      "setup": {
+        "conversation": {
+          "date": "2024-09-15",
+          "messages": [
+            {
+              "role": "user",
+              "content": "数据湖项目启动，选用Apache Iceberg",
+              "timestamp": "2024-09-15T10:00:00Z"
+            }
+          ]
+        }
+      },
+      "query": {
+        "type": "search",
+        "keyword": "数据湖"
+      },
+      "expected": {
+        "found": true,
+        "content_keywords": [
+          "Iceberg",
+          "数据湖"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_019",
-      "name": "时间衰减后检索排序-混合排序压力测试",
-      "description": "搜索返回10条结果，时间跨度3个月，相关性各异。验证排序算法在复杂场景下的合理性",
+      "name": "1-2年记忆_19",
+      "difficulty": "easy",
+      "category": "1year",
+      "description": "测试2024-11-01的信息在1-2年后能否回忆",
       "setup": {
-        "search_candidates": [
-          {"id": 1, "content": "最新但不太相关", "date": "2026-04-25", "relevance": 0.3},
-          {"id": 2, "content": "较新且高度相关", "date": "2026-04-10", "relevance": 0.95},
-          {"id": 3, "content": "一个月前中等相关", "date": "2026-03-20", "relevance": 0.6},
-          {"id": 4, "content": "两个月前高度相关", "date": "2026-02-15", "relevance": 0.90},
-          {"id": 5, "content": "三个月前极度相关", "date": "2026-01-20", "relevance": 0.99},
-          {"id": 6, "content": "最新中等相关", "date": "2026-04-28", "relevance": 0.5},
-          {"id": 7, "content": "一个月前低相关", "date": "2026-03-15", "relevance": 0.2},
-          {"id": 8, "content": "两个月前中等相关", "date": "2026-02-20", "relevance": 0.55},
-          {"id": 9, "content": "三个月前低相关", "date": "2026-01-25", "relevance": 0.15},
-          {"id": 10, "content": "最新高度相关", "date": "2026-04-27", "relevance": 0.92}
-        ],
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2024-11-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "完成了ISO 27001信息安全认证",
+              "timestamp": "2024-11-01T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "search", "keyword": "test_keyword", "sort": "relevance_with_recency"},
+      "query": {
+        "type": "search",
+        "keyword": "安全认证"
+      },
       "expected": {
-        "top_3_ids": [10, 2, 5],
-        "bottom_3_ids": [9, 7, 1],
-        "recency_and_relevance_balanced": true,
-        "no_purely_time_based_ranking": true
-      },
-      "difficulty": "hard",
-      "priority": "P1",
-      "tags": ["temporal", "ranking", "stress-test"]
+        "found": true,
+        "content_keywords": [
+          "ISO 27001"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_020",
-      "name": "时间衰减后检索排序-时间窗口过滤",
-      "description": "用户只想看最近30天的记录。搜索应支持时间窗口过滤，排除30天前的结果",
-      "setup": {
-        "search_candidates": [
-          {"content": "30天内的记录A", "date": "2026-04-15", "relevance": 0.8},
-          {"content": "30天内的记录B", "date": "2026-04-01", "relevance": 0.7},
-          {"content": "31天前的记录C", "date": "2026-03-28", "relevance": 0.95},
-          {"content": "60天前的记录D", "date": "2026-02-28", "relevance": 0.99}
-        ],
-        "query_time": "2026-04-29",
-        "filter": {"time_window": "30d"}
-      },
-      "query": {"type": "search", "keyword": "record", "time_filter": "last_30_days"},
-      "expected": {
-        "results_count": 2,
-        "included": ["30天内的记录A", "30天内的记录B"],
-        "excluded": ["31天前的记录C", "60天前的记录D"],
-        "time_filter_respected": true
-      },
+      "name": "1-2年记忆_20",
       "difficulty": "medium",
-      "priority": "P1",
-      "tags": ["temporal", "filtering", "time-window"]
+      "category": "1year",
+      "description": "测试2025-01-10的信息在1-2年后能否回忆",
+      "setup": {
+        "conversation": {
+          "date": "2025-01-10",
+          "messages": [
+            {
+              "role": "user",
+              "content": "年度预算审批通过，技术投入增加40%",
+              "timestamp": "2025-01-10T10:00:00Z"
+            }
+          ]
+        }
+      },
+      "query": {
+        "type": "search",
+        "keyword": "年度预算"
+      },
+      "expected": {
+        "found": true,
+        "content_keywords": [
+          "40%",
+          "技术投入"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_021",
-      "name": "多跳推理-3个月决策链重构",
-      "description": "1月决定用MySQL→2月性能问题→3月决定迁PG→4月迁移完成。跨3个月的4条记忆需要串联推理出完整迁移故事",
+      "name": "1-2年记忆_21",
+      "difficulty": "easy",
+      "category": "1year",
+      "description": "测试2025-02-15的信息在1-2年后能否回忆",
       "setup": {
-        "conversations": [
-          {"date": "2026-01-15", "content": "数据库选MySQL 8.0，主从复制", "type": "decision"},
-          {"date": "2026-02-20", "content": "MySQL在高并发下锁表严重，P95超2秒", "type": "problem"},
-          {"date": "2026-03-10", "content": "决定迁移到PostgreSQL 15，支持MVCC", "type": "decision"},
-          {"date": "2026-04-05", "content": "PG迁移完成，P95降到200ms，性能提升10倍", "type": "outcome"}
-        ],
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2025-02-15",
+          "messages": [
+            {
+              "role": "user",
+              "content": "引入了AI代码助手工具",
+              "timestamp": "2025-02-15T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "narrative_reconstruction", "keyword": "数据库迁移"},
+      "query": {
+        "type": "search",
+        "keyword": "AI工具"
+      },
       "expected": {
-        "narrative_chain": ["MySQL选型", "性能问题", "PG迁移决策", "迁移成功"],
-        "cause_effect_links": 3,
-        "multi_hop_reasoning_required": true,
-        "time_span_days": 81,
-        "complete_story": true
-      },
-      "difficulty": "expert",
-      "priority": "P0",
-      "tags": ["multi-hop", "narrative", "3-month", "causal"]
+        "found": true,
+        "content_keywords": [
+          "AI代码助手"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_022",
-      "name": "实体追踪-团队成员3个月变迁",
-      "description": "1月团队5人，2月2人离职3人入职，3月又1人转岗。系统应追踪完整的人员变动历史",
+      "name": "1-2年记忆_22",
+      "difficulty": "medium",
+      "category": "1year",
+      "description": "测试2025-03-01的信息在1-2年后能否回忆",
       "setup": {
-        "conversations": [
-          {"date": "2026-01-10", "content": "团队成员：Alice,Bob,Charlie,Dave,Eve", "type": "roster"},
-          {"date": "2026-02-15", "content": "Bob和Dave离职了，新加入Frank,Grace,Henry", "type": "change"},
-          {"date": "2026-03-20", "content": "Charlie转到另一个团队了", "type": "change"}
-        ],
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2025-03-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "容器化改造完成，全部服务迁移到K8s",
+              "timestamp": "2025-03-01T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "entity_tracking", "entity": "team_members"},
+      "query": {
+        "type": "search",
+        "keyword": "容器化"
+      },
       "expected": {
-        "current_members": ["Alice", "Eve", "Frank", "Grace", "Henry"],
-        "former_members": ["Bob", "Dave", "Charlie"],
-        "changes_tracked": 3,
-        "entity_tracking_complete": true,
-        "time_span_days": 99
-      },
-      "difficulty": "expert",
-      "priority": "P0",
-      "tags": ["entity-tracking", "3-month", "personnel"]
+        "found": true,
+        "content_keywords": [
+          "K8s",
+          "容器化"
+        ],
+        "still_accessible": true
+      }
     },
     {
       "test_id": "ltm_023",
-      "name": "时序推理-3个月预算演变",
-      "description": "1月预算500万，2月追加到600万，3月缩减到450万，4月追加项目C到520万。系统应追踪完整预算时间线",
+      "name": "跨年更新_23",
+      "difficulty": "medium",
+      "category": "cross_year_update",
+      "description": "测试2024-07-01的信息在2025-06-01更新后能否返回最新值",
       "setup": {
-        "conversations": [
-          {"date": "2026-01-05", "content": "年度预算500万", "type": "budget"},
-          {"date": "2026-02-10", "content": "Q1表现好，追加到600万", "type": "update"},
-          {"date": "2026-03-15", "content": "市场不好，缩减到450万", "type": "update"},
-          {"date": "2026-04-01", "content": "项目C单独追加70万，总计520万", "type": "update"}
-        ],
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2024-07-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "生产环境部署在阿里云华东1区",
+              "timestamp": "2024-07-01T10:00:00Z"
+            }
+          ]
+        },
+        "update": {
+          "date": "2025-06-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "生产环境迁移到AWS东京区",
+              "timestamp": "2025-06-01T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "temporal_tracking", "keyword": "预算"},
+      "query": {
+        "type": "search",
+        "keyword": "部署区域"
+      },
       "expected": {
-        "current_budget": "520万",
-        "history": ["500万", "600万", "450万", "520万"],
-        "version_count": 4,
-        "each_change_reasoned": true,
-        "temporal_order_correct": true
-      },
-      "difficulty": "expert",
-      "priority": "P0",
-      "tags": ["temporal-reasoning", "3-month", "budget", "versioning"]
+        "found": true,
+        "content_keywords": [
+          "AWS东京"
+        ],
+        "still_accessible": true,
+        "latest_value": true
+      }
     },
     {
       "test_id": "ltm_024",
-      "name": "多跳推理+抗干扰-跨月问题追踪",
-      "description": "1月报告了一个bug→2月修复但引入新bug→3月回滚→4月彻底重写修复。系统应跨4个月追踪完整问题解决链",
+      "name": "跨年更新_24",
+      "difficulty": "medium",
+      "category": "cross_year_update",
+      "description": "测试2024-09-01的信息在2025-03-01更新后能否返回最新值",
       "setup": {
-        "conversations": [
-          {"date": "2026-01-20", "content": "登录接口偶发500错误，概率约5%", "type": "bug_report"},
-          {"date": "2026-02-10", "content": "修复了500错误，但用户反馈登录变慢了", "type": "fix_attempt"},
-          {"date": "2026-03-05", "content": "回滚到修复前版本，先保证速度", "type": "rollback"},
-          {"date": "2026-04-01", "content": "重写登录模块，彻底解决500错误且性能无损", "type": "final_fix"}
-        ],
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2024-09-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "API限流设为100次/分钟",
+              "timestamp": "2024-09-01T10:00:00Z"
+            }
+          ]
+        },
+        "update": {
+          "date": "2025-03-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "限流改成500次/分钟",
+              "timestamp": "2025-03-01T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "issue_tracking", "keyword": "登录500错误"},
+      "query": {
+        "type": "search",
+        "keyword": "API限流"
+      },
       "expected": {
-        "issue_history": ["bug_report", "partial_fix", "rollback", "final_fix"],
-        "current_status": "resolved",
-        "resolution_method": "模块重写",
-        "chain_length": 4,
-        "multi_hop_reasoning_required": true,
-        "anti_interference": "多次修复尝试不应混淆最终状态"
-      },
-      "difficulty": "expert",
-      "priority": "P0",
-      "tags": ["multi-hop", "anti-interference", "issue-tracking", "3-month"]
+        "found": true,
+        "content_keywords": [
+          "500次"
+        ],
+        "still_accessible": true,
+        "latest_value": true
+      }
     },
     {
       "test_id": "ltm_025",
-      "name": "实体追踪-技术债务演变",
-      "description": "1月识别5个技术债务，2月修复2个新增1个，3月修复1个但发现2个新的。系统应追踪技术债务的动态变化",
+      "name": "跨年更新_25",
+      "difficulty": "hard",
+      "category": "cross_year_update",
+      "description": "测试2024-10-01的信息在2025-08-01更新后能否返回最新值",
       "setup": {
-        "conversations": [
-          {"date": "2026-01-15", "content": "技术债务：1.无单元测试 2.硬编码配置 3.无API文档 4.重复代码 5.老旧依赖", "type": "tech_debt"},
-          {"date": "2026-02-20", "content": "已完成单元测试覆盖和硬编码配置修复。新增：无监控告警", "type": "progress"},
-          {"date": "2026-03-25", "content": "API文档补完了。发现：数据库连接池配置不当、缓存策略缺失", "type": "progress"}
-        ],
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2024-10-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "监控方案是Prometheus+Grafana",
+              "timestamp": "2024-10-01T10:00:00Z"
+            }
+          ]
+        },
+        "update": {
+          "date": "2025-08-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Grafana换成Datadog",
+              "timestamp": "2025-08-01T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "entity_tracking", "entity": "tech_debt"},
+      "query": {
+        "type": "search",
+        "keyword": "监控方案"
+      },
       "expected": {
-        "current_debt_list": ["重复代码", "老旧依赖", "无监控告警", "数据库连接池配置不当", "缓存策略缺失"],
-        "resolved_debt": ["无单元测试", "硬编码配置", "无API文档"],
-        "new_debt_discovered": ["无监控告警", "数据库连接池配置不当", "缓存策略缺失"],
-        "net_change": "+1 new debt despite 3 resolved",
-        "entity_tracking_across_time": true
-      },
-      "difficulty": "expert",
-      "priority": "P1",
-      "tags": ["entity-tracking", "tech-debt", "3-month", "dynamics"]
+        "found": true,
+        "content_keywords": [
+          "Datadog",
+          "Prometheus"
+        ],
+        "still_accessible": true,
+        "latest_value": true
+      }
     },
     {
       "test_id": "ltm_026",
-      "name": "时序推理-事件顺序推理",
-      "description": "系统记录了'部署失败'和'回滚成功'两条事件，但没有记录它们之间的因果关系。系统应能推理出部署失败在先、回滚在后",
+      "name": "跨年更新_26",
+      "difficulty": "easy",
+      "category": "cross_year_update",
+      "description": "测试2024-11-15的信息在2025-11-01更新后能否返回最新值",
       "setup": {
-        "conversations": [
-          {"date": "2026-03-01T10:00:00", "content": "v2.1部署到staging环境", "type": "deployment"},
-          {"date": "2026-03-01T10:30:00", "content": "健康检查失败，502错误", "type": "failure"},
-          {"date": "2026-03-01T10:35:00", "content": "紧急回滚到v2.0", "type": "rollback"},
-          {"date": "2026-03-01T10:40:00", "content": "回滚成功，服务恢复正常", "type": "recovery"}
-        ],
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2024-11-15",
+          "messages": [
+            {
+              "role": "user",
+              "content": "团队有10个人",
+              "timestamp": "2024-11-15T10:00:00Z"
+            }
+          ]
+        },
+        "update": {
+          "date": "2025-11-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "团队扩展到25人",
+              "timestamp": "2025-11-01T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "temporal_reasoning", "keyword": "3月部署事故"},
+      "query": {
+        "type": "search",
+        "keyword": "团队规模"
+      },
       "expected": {
-        "event_sequence": ["部署v2.1", "健康检查失败", "回滚v2.0", "恢复"],
-        "causal_inference": "部署失败导致回滚",
-        "duration_minutes": 40,
-        "temporal_reasoning_correct": true
-      },
-      "difficulty": "expert",
-      "priority": "P0",
-      "tags": ["temporal-reasoning", "causal-inference", "incident"]
+        "found": true,
+        "content_keywords": [
+          "25人"
+        ],
+        "still_accessible": true,
+        "latest_value": true
+      }
     },
     {
       "test_id": "ltm_027",
-      "name": "多跳推理+实体追踪-项目里程碑链",
-      "description": "项目经历了需求→设计→开发→测试→上线5个阶段，每阶段跨越1-2个月。系统应追踪完整里程碑链",
+      "name": "跨年更新_27",
+      "difficulty": "medium",
+      "category": "cross_year_update",
+      "description": "测试2025-01-15的信息在2025-09-01更新后能否返回最新值",
       "setup": {
-        "conversations": [
-          {"date": "2026-01-10", "content": "项目需求评审完成，20个用户故事", "type": "milestone"},
-          {"date": "2026-02-01", "content": "架构设计评审通过", "type": "milestone"},
-          {"date": "2026-03-01", "content": "核心功能开发完成", "type": "milestone"},
-          {"date": "2026-03-20", "content": "SIT测试完成，3个P1 bug", "type": "milestone"},
-          {"date": "2026-04-10", "content": "正式上线，灰度10%→50%→100%", "type": "milestone"}
-        ],
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2025-01-15",
+          "messages": [
+            {
+              "role": "user",
+              "content": "日志保留策略是30天",
+              "timestamp": "2025-01-15T10:00:00Z"
+            }
+          ]
+        },
+        "update": {
+          "date": "2025-09-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "日志保留改成90天",
+              "timestamp": "2025-09-01T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "milestone_tracking", "project": "main"},
+      "query": {
+        "type": "search",
+        "keyword": "日志保留"
+      },
       "expected": {
-        "milestone_chain": ["需求评审", "架构设计", "开发完成", "SIT测试", "上线"],
-        "total_duration_days": 91,
-        "each_milestone_dated": true,
-        "chain_complete": true,
-        "entity_tracking_across_phases": true
-      },
-      "difficulty": "expert",
-      "priority": "P1",
-      "tags": ["entity-tracking", "milestone", "3-month", "project-lifecycle"]
+        "found": true,
+        "content_keywords": [
+          "90天"
+        ],
+        "still_accessible": true,
+        "latest_value": true
+      }
     },
     {
       "test_id": "ltm_028",
-      "name": "3个月跨度-矛盾信息长期共存",
-      "description": "1月说'生产在AWS'，3月更正为'阿里云'，但4月仍有人引用AWS信息。系统应确保新信息优先但旧信息不丢失",
+      "name": "跨年更新_28",
+      "difficulty": "hard",
+      "category": "cross_year_update",
+      "description": "测试2024-08-15的信息在2025-04-01更新后能否返回最新值",
       "setup": {
-        "conversations": [
-          {"date": "2026-01-15", "content": "生产环境在AWS us-east-1", "type": "config", "status": "original"},
-          {"date": "2026-03-10", "content": "更正：生产环境已迁移到阿里云华东2", "type": "correction", "status": "active"},
-          {"date": "2026-04-05", "content": "有人问：AWS上的数据备份方案是什么？（基于过时信息）", "type": "query_based_on_old_info"}
-        ],
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2024-08-15",
+          "messages": [
+            {
+              "role": "user",
+              "content": "代码评审要求2人通过",
+              "timestamp": "2024-08-15T10:00:00Z"
+            }
+          ]
+        },
+        "update": {
+          "date": "2025-04-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "评审改成3人通过",
+              "timestamp": "2025-04-01T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "search", "keyword": "生产环境位置"},
+      "query": {
+        "type": "search",
+        "keyword": "代码评审"
+      },
       "expected": {
-        "current_answer": "阿里云华东2",
-        "old_answer": "AWS us-east-1",
-        "old_marked_superseded": true,
-        "stale_reference_detected": true,
-        "stale_reference_date": "2026-04-05",
-        "recommendation": "提醒用户基于最新信息提问"
-      },
-      "difficulty": "expert",
-      "priority": "P0",
-      "tags": ["3-month", "contradiction", "stale-reference", "temporal"]
+        "found": true,
+        "content_keywords": [
+          "3人"
+        ],
+        "still_accessible": true,
+        "latest_value": true
+      }
     },
     {
       "test_id": "ltm_029",
-      "name": "多跳推理-跨类型记忆关联",
-      "description": "决策记忆('用Docker')→命令记忆('docker build')→习惯记忆('喜欢用docker compose')→知识记忆('Docker镜像仓库地址')。跨4种记忆类型的关联推理",
+      "name": "跨年更新_29",
+      "difficulty": "medium",
+      "category": "cross_year_update",
+      "description": "测试2024-12-01的信息在2025-10-01更新后能否返回最新值",
       "setup": {
-        "memories": [
-          {"type": "decision", "content": "容器化方案选定Docker", "date": "2026-01-10"},
-          {"type": "command", "content": "docker build -t app . (使用30次)", "date": "2026-02-01"},
-          {"type": "preference", "content": "偏好使用docker compose管理多容器", "date": "2026-03-01"},
-          {"type": "knowledge", "content": "Docker镜像仓库：registry.internal.com", "date": "2026-04-01"}
-        ],
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2024-12-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "产品定价基础版99元/月",
+              "timestamp": "2024-12-01T10:00:00Z"
+            }
+          ]
+        },
+        "update": {
+          "date": "2025-10-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "基础版调价到79元/月",
+              "timestamp": "2025-10-01T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "cross_memory_type_search", "keyword": "Docker"},
+      "query": {
+        "type": "search",
+        "keyword": "产品定价"
+      },
       "expected": {
-        "memory_types_found": ["decision", "command", "preference", "knowledge"],
-        "cross_type_linking": true,
-        "complete_docker_context": true,
-        "multi_hop_across_types": true,
-        "relevance_order": ["knowledge", "preference", "command", "decision"]
-      },
-      "difficulty": "expert",
-      "priority": "P0",
-      "tags": ["multi-hop", "cross-type", "3-month", "integration"]
+        "found": true,
+        "content_keywords": [
+          "79元"
+        ],
+        "still_accessible": true,
+        "latest_value": true
+      }
     },
     {
       "test_id": "ltm_030",
-      "name": "3个月+多跳+抗干扰-完整工作流回忆",
-      "description": "用户在3个月内完成了从技术选型→环境搭建→开发→测试→部署的完整流程，中间穿插了大量无关对话。系统应提取出完整的端到端工作流",
+      "name": "跨年更新_30",
+      "difficulty": "hard",
+      "category": "cross_year_update",
+      "description": "测试2025-02-01的信息在2026-01-01更新后能否返回最新值",
       "setup": {
-        "target_conversations": [
-          {"date": "2026-01-10", "content": "技术选型：Go+gRPC+PostgreSQL", "type": "decision"},
-          {"date": "2026-01-25", "content": "开发环境搭建完成，使用Docker Compose", "type": "setup"},
-          {"date": "2026-02-15", "content": "核心API开发完成，32个端点", "type": "development"},
-          {"date": "2026-03-10", "content": "压力测试通过，QPS达到5000", "type": "testing"},
-          {"date": "2026-04-01", "content": "K8s部署完成，HPA自动扩缩容", "type": "deployment"}
-        ],
-        "noise_conversations": 100,
-        "noise_category": "general",
-        "query_time": "2026-04-29"
+        "conversation": {
+          "date": "2025-02-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "缓存TTL设为1小时",
+              "timestamp": "2025-02-01T10:00:00Z"
+            }
+          ]
+        },
+        "update": {
+          "date": "2026-01-01",
+          "messages": [
+            {
+              "role": "user",
+              "content": "缓存改成热点24小时普通1小时",
+              "timestamp": "2026-01-01T10:00:00Z"
+            }
+          ]
+        }
       },
-      "query": {"type": "workflow_extraction", "keyword": "后端服务开发全流程"},
+      "query": {
+        "type": "search",
+        "keyword": "缓存策略"
+      },
       "expected": {
-        "workflow_extracted": true,
-        "workflow_steps": ["技术选型", "环境搭建", "开发", "测试", "部署"],
-        "each_step_details_accessible": true,
-        "noise_filtered": true,
-        "time_span_days": 82,
-        "multi_hop_reasoning_required": true
-      },
-      "difficulty": "expert",
-      "priority": "P0",
-      "tags": ["3-month", "multi-hop", "anti-interference", "workflow", "integration"]
-    },
-    {
-      "test_id": "ltm_031",
-      "name": "多跳推理-跨3条记忆的技术栈决策链",
-      "description": "查询'Project Phoenix的技术栈是谁决定的？'需要链接3条记忆：1)Alice是Project Phoenix负责人 2)Alice参加了2026-02技术评审会 3)评审会决定用Go+PostgreSQL。需要person→project→meeting→decision的多跳推理",
-      "setup": {
-        "memories": [
-          {"content": "Project Phoenix的负责人是Alice", "date": "2026-01-15", "type": "personnel"},
-          {"content": "2026-02-10技术评审会：Alice主持，讨论Phoenix技术选型", "date": "2026-02-10", "type": "meeting"},
-          {"content": "评审会决定：Phoenix使用Go语言+PostgreSQL数据库", "date": "2026-02-10", "type": "decision"}
+        "found": true,
+        "content_keywords": [
+          "24小时",
+          "热点"
         ],
-        "query_time": "2026-04-29"
-      },
-      "query": {"type": "multi_hop_search", "keyword": "Project Phoenix技术栈决策"},
-      "expected": {
-        "answer": "Alice在2026-02-10的技术评审会上决定使用Go+PostgreSQL",
-        "hops_required": 3,
-        "hop_chain": ["person→project", "project→meeting", "meeting→decision"],
-        "decision_maker": "Alice",
-        "tech_stack": ["Go", "PostgreSQL"],
-        "multi_hop_success": true
-      },
-      "difficulty": "expert",
-      "priority": "P0",
-      "tags": ["multi-hop", "3-hop", "decision-chain", "cross-entity"]
-    },
-    {
-      "test_id": "ltm_032",
-      "name": "时序矛盾-3个月内3次更新的版本选择",
-      "description": "同一信息'团队规模'在1月说20人，2月说35人，4月说28人。系统应返回最新版本(28人)并保留历史版本，测试时序矛盾处理",
-      "setup": {
-        "conversations": [
-          {"date": "2026-01-15", "content": "团队目前有20人", "status": "archived"},
-          {"date": "2026-02-20", "content": "团队扩大到35人了，招了15个新人", "status": "superseded"},
-          {"date": "2026-04-01", "content": "团队调整后现在28人，优化了组织结构", "status": "current"}
-        ],
-        "query_time": "2026-04-29"
-      },
-      "query": {"type": "search", "keyword": "团队规模"},
-      "expected": {
-        "current_value": "28人",
-        "history_preserved": true,
-        "version_count": 3,
-        "temporal_order_correct": true,
-        "only_current_is_active": true,
-        "superseded_versions": ["20人", "35人"]
-      },
-      "difficulty": "expert",
-      "priority": "P0",
-      "tags": ["temporal-contradiction", "3-version", "version-selection"]
-    },
-    {
-      "test_id": "ltm_033",
-      "name": "跨实体推理-人员→团队→项目→技术栈链",
-      "description": "查询'Alice所在团队用什么数据库？'需要链接：1)Alice在Platform团队 2)Platform团队负责Project Phoenix 3)Phoenix使用PostgreSQL。测试person→team→project→tech的4跳推理",
-      "setup": {
-        "memories": [
-          {"content": "Alice是Platform团队的Tech Lead", "date": "2026-01-10", "type": "personnel"},
-          {"content": "Platform团队负责Project Phoenix和Project Atlas", "date": "2026-01-20", "type": "team"},
-          {"content": "Project Phoenix使用PostgreSQL作为主数据库", "date": "2026-02-01", "type": "tech"},
-          {"content": "Project Atlas使用MongoDB作为主数据库", "date": "2026-02-05", "type": "tech"}
-        ],
-        "query_time": "2026-04-29"
-      },
-      "query": {"type": "cross_entity_search", "keyword": "Alice团队的数据库"},
-      "expected": {
-        "person": "Alice",
-        "team": "Platform",
-        "projects": ["Project Phoenix", "Project Atlas"],
-        "databases": ["PostgreSQL", "MongoDB"],
-        "hops_required": 4,
-        "hop_chain": ["person→team", "team→project", "project→database"],
-        "all_databases_returned": true
-      },
-      "difficulty": "expert",
-      "priority": "P0",
-      "tags": ["cross-entity", "4-hop", "person-team-project-tech"]
+        "still_accessible": true,
+        "latest_value": true
+      }
     }
   ]
 }
