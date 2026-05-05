@@ -14,7 +14,7 @@ hooks:
   - pre_llm_call
   - post_llm_call
 requires_env:
-  - MEMOS_EMBEDDING_MODEL
+  - OPENAI_API_KEY
 config:
   db_path:
     type: string

@@ -1,6 +1,6 @@
 {
   "dataset_name": "knowledge_health",
-  "version": "2.0",
+  "version": "3.0",
   "description": "团队知识健康评测：测试知识新鲜度检测、遗忘预警、知识缺口检测、团队知识同步和关键知识遗忘检测能力",
   "total_cases": 30,
   "difficulty_distribution": {
@@ -280,7 +280,7 @@
       "test_id": "kh_011",
       "name": "遗忘曲线-重复强化效果验证",
       "description": "同一条知识在7天内被强化3次，retention应明显高于未强化版本",
-      "difficulty": "hard",
+      "difficulty": "easy",
       "category": "forgetting_curve",
       "setup": {
         "context": "对比强化和未强化的知识保持差异",
@@ -296,7 +296,11 @@
             "content": "Git工作流：feature branch → PR → code review → merge to main",
             "stored_at": "2026-04-22T10:00:00",
             "reinforcements": 3,
-            "reinforcement_dates": ["2026-04-24", "2026-04-26", "2026-04-28"]
+            "reinforcement_dates": [
+              "2026-04-24",
+              "2026-04-26",
+              "2026-04-28"
+            ]
           }
         ],
         "recall_at": "2026-04-29T10:00:00"
@@ -321,13 +325,39 @@
       "setup": {
         "context": "评估团队知识库的全面性",
         "team_knowledge_coverage": {
-          "required_domains": ["frontend", "backend", "devops", "database", "security"],
+          "required_domains": [
+            "frontend",
+            "backend",
+            "devops",
+            "database",
+            "security"
+          ],
           "covered_domains": {
-            "frontend": {"contributors": ["alice", "bob"], "entries": 15},
-            "backend": {"contributors": ["charlie"], "entries": 8},
-            "devops": {"contributors": ["dave", "eve"], "entries": 10}
+            "frontend": {
+              "contributors": [
+                "alice",
+                "bob"
+              ],
+              "entries": 15
+            },
+            "backend": {
+              "contributors": [
+                "charlie"
+              ],
+              "entries": 8
+            },
+            "devops": {
+              "contributors": [
+                "dave",
+                "eve"
+              ],
+              "entries": 10
+            }
           },
-          "uncovered_domains": ["database", "security"]
+          "uncovered_domains": [
+            "database",
+            "security"
+          ]
         }
       },
       "query": {
@@ -335,7 +365,10 @@
         "type": "knowledge_gap_analysis"
       },
       "expected": {
-        "gaps_found": ["database", "security"],
+        "gaps_found": [
+          "database",
+          "security"
+        ],
         "gap_count": 2,
         "coverage_rate": "60%",
         "risk_level": "high"
@@ -352,7 +385,10 @@
         "domain_analysis": {
           "domain": "security",
           "entries": [
-            {"content": "所有API必须使用HTTPS", "depth": "basic"}
+            {
+              "content": "所有API必须使用HTTPS",
+              "depth": "basic"
+            }
           ],
           "expected_entries_for_adequate_depth": 10
         }
@@ -373,7 +409,7 @@
       "test_id": "kh_014",
       "name": "知识缺口检测-跨项目分布不均",
       "description": "项目A文档完善，项目B几乎没有，应识别分布不均",
-      "difficulty": "hard",
+      "difficulty": "easy",
       "category": "knowledge_gap",
       "setup": {
         "context": "公司同时维护两个产品线，知识文档差距巨大",
@@ -395,8 +431,13 @@
         "type": "cross_project_gap_analysis"
       },
       "expected": {
-        "project_bison_gaps": ["deployment_docs", "api_docs"],
-        "project_bison_shallow": ["architecture_docs"],
+        "project_bison_gaps": [
+          "deployment_docs",
+          "api_docs"
+        ],
+        "project_bison_shallow": [
+          "architecture_docs"
+        ],
         "distribution_inequality": true,
         "highest_risk_project": "project_bison"
       }
@@ -450,8 +491,16 @@
         "domain_analysis": {
           "domain": "annual_review_process",
           "entries": [
-            {"content": "年终总结模板和流程", "created_at": "2026-01-05", "freshness": "stale"},
-            {"content": "绩效评估标准", "created_at": "2026-01-10", "freshness": "stale"}
+            {
+              "content": "年终总结模板和流程",
+              "created_at": "2026-01-05",
+              "freshness": "stale"
+            },
+            {
+              "content": "绩效评估标准",
+              "created_at": "2026-01-10",
+              "freshness": "stale"
+            }
           ],
           "seasonal_relevance": "Q1 only"
         },
@@ -480,7 +529,11 @@
           "content": "订单服务API端点从/api/v1/orders更新为/api/v2/orders",
           "updated_at": "2026-04-28",
           "updated_by": "charlie",
-          "affected_members": ["alice", "bob", "frank"],
+          "affected_members": [
+            "alice",
+            "bob",
+            "frank"
+          ],
           "sync_status": "pending"
         }
       },
@@ -492,7 +545,11 @@
         "sync_pending": true,
         "affected_count": 3,
         "notification_required": true,
-        "members_to_notify": ["alice", "bob", "frank"]
+        "members_to_notify": [
+          "alice",
+          "bob",
+          "frank"
+        ]
       }
     },
     {
@@ -507,12 +564,29 @@
           "content": "新版代码规范v3.0已发布：包含TypeScript严格模式、ESLint规则集更新",
           "updated_at": "2026-04-25",
           "updated_by": "alice",
-          "affected_members": ["bob", "charlie", "dave", "eve"],
+          "affected_members": [
+            "bob",
+            "charlie",
+            "dave",
+            "eve"
+          ],
           "sync_confirmations": [
-            {"member": "bob", "confirmed_at": "2026-04-25"},
-            {"member": "charlie", "confirmed_at": "2026-04-26"},
-            {"member": "dave", "confirmed_at": "2026-04-26"},
-            {"member": "eve", "confirmed_at": "2026-04-27"}
+            {
+              "member": "bob",
+              "confirmed_at": "2026-04-25"
+            },
+            {
+              "member": "charlie",
+              "confirmed_at": "2026-04-26"
+            },
+            {
+              "member": "dave",
+              "confirmed_at": "2026-04-26"
+            },
+            {
+              "member": "eve",
+              "confirmed_at": "2026-04-27"
+            }
           ]
         }
       },
@@ -539,10 +613,22 @@
           "content": "新安全策略：所有服务间通信必须使用mTLS，JWT有效期从24h缩短到2h",
           "updated_at": "2026-04-20",
           "updated_by": "dave",
-          "affected_members": ["alice", "bob", "charlie", "eve", "frank"],
+          "affected_members": [
+            "alice",
+            "bob",
+            "charlie",
+            "eve",
+            "frank"
+          ],
           "sync_confirmations": [
-            {"member": "alice", "confirmed_at": "2026-04-21"},
-            {"member": "bob", "confirmed_at": "2026-04-22"}
+            {
+              "member": "alice",
+              "confirmed_at": "2026-04-21"
+            },
+            {
+              "member": "bob",
+              "confirmed_at": "2026-04-22"
+            }
           ]
         },
         "current_time": "2026-04-29"
@@ -554,7 +640,11 @@
       "expected": {
         "sync_pending": true,
         "sync_completion_rate": "40%",
-        "unconfirmed_members": ["charlie", "eve", "frank"],
+        "unconfirmed_members": [
+          "charlie",
+          "eve",
+          "frank"
+        ],
         "days_since_update": 9,
         "alert_level": "warning"
       }
@@ -572,7 +662,14 @@
           "updated_at": "2026-04-29T08:00:00",
           "updated_by": "security_team",
           "priority": "P0",
-          "affected_members": ["alice", "bob", "charlie", "dave", "eve", "frank"],
+          "affected_members": [
+            "alice",
+            "bob",
+            "charlie",
+            "dave",
+            "eve",
+            "frank"
+          ],
           "sync_confirmations": []
         },
         "current_time": "2026-04-29T10:00:00"
@@ -657,11 +754,36 @@
       "setup": {
         "context": "年初的一批服务器配置信息已无人关注",
         "knowledge_batch": [
-          {"id": "batch_001", "content": "旧服务器集群A配置：8核16G，CentOS 7", "created_at": "2026-01-15", "access_count": 1},
-          {"id": "batch_002", "content": "旧服务器集群B配置：16核32G，Ubuntu 22.04", "created_at": "2026-01-15", "access_count": 0},
-          {"id": "batch_003", "content": "旧数据库主从配置：MySQL 8.0双主模式", "created_at": "2026-01-20", "access_count": 1},
-          {"id": "batch_004", "content": "旧部署脚本：Ansible playbook v1", "created_at": "2026-01-18", "access_count": 0},
-          {"id": "batch_005", "content": "旧环境变量配置模板", "created_at": "2026-01-22", "access_count": 2}
+          {
+            "id": "batch_001",
+            "content": "旧服务器集群A配置：8核16G，CentOS 7",
+            "created_at": "2026-01-15",
+            "access_count": 1
+          },
+          {
+            "id": "batch_002",
+            "content": "旧服务器集群B配置：16核32G，Ubuntu 22.04",
+            "created_at": "2026-01-15",
+            "access_count": 0
+          },
+          {
+            "id": "batch_003",
+            "content": "旧数据库主从配置：MySQL 8.0双主模式",
+            "created_at": "2026-01-20",
+            "access_count": 1
+          },
+          {
+            "id": "batch_004",
+            "content": "旧部署脚本：Ansible playbook v1",
+            "created_at": "2026-01-18",
+            "access_count": 0
+          },
+          {
+            "id": "batch_005",
+            "content": "旧环境变量配置模板",
+            "created_at": "2026-01-22",
+            "access_count": 2
+          }
         ],
         "current_time": "2026-04-29"
       },
@@ -779,9 +901,24 @@
       "setup": {
         "context": "公司数据库从MySQL迁移到PostgreSQL的历史过程",
         "knowledge_versions": [
-          {"version": 1, "content": "数据库: MySQL 5.7 @ localhost:3306", "created_at": "2025-05-01", "status": "archived"},
-          {"version": 2, "content": "数据库: MySQL 8.0 @ db-staging.example.com:3306", "created_at": "2025-11-15", "status": "superseded"},
-          {"version": 3, "content": "数据库: PostgreSQL 15 @ db-prod.example.com:5432", "created_at": "2026-04-01", "status": "current"}
+          {
+            "version": 1,
+            "content": "数据库: MySQL 5.7 @ localhost:3306",
+            "created_at": "2025-05-01",
+            "status": "archived"
+          },
+          {
+            "version": 2,
+            "content": "数据库: MySQL 8.0 @ db-staging.example.com:3306",
+            "created_at": "2025-11-15",
+            "status": "superseded"
+          },
+          {
+            "version": 3,
+            "content": "数据库: PostgreSQL 15 @ db-prod.example.com:5432",
+            "created_at": "2026-04-01",
+            "status": "current"
+          }
         ]
       },
       "query": {
@@ -792,7 +929,11 @@
         "total_versions": 3,
         "current_version": 3,
         "chronological_order": true,
-        "technology_change": ["MySQL 5.7", "MySQL 8.0", "PostgreSQL 15"],
+        "technology_change": [
+          "MySQL 5.7",
+          "MySQL 8.0",
+          "PostgreSQL 15"
+        ],
         "all_versions_accessible": true
       }
     },
@@ -810,8 +951,16 @@
             "version": 1
           },
           "conflicting_updates": [
-            {"author": "alice", "content": "部署端口: 3000", "timestamp": "2026-04-29T10:00:00"},
-            {"author": "bob", "content": "部署端口: 5000", "timestamp": "2026-04-29T10:01:00"}
+            {
+              "author": "alice",
+              "content": "部署端口: 3000",
+              "timestamp": "2026-04-29T10:00:00"
+            },
+            {
+              "author": "bob",
+              "content": "部署端口: 5000",
+              "timestamp": "2026-04-29T10:01:00"
+            }
           ]
         }
       },
@@ -838,11 +987,26 @@
       "setup": {
         "context": "SSH端口配置被错误修改，需要回滚",
         "knowledge_versions": [
-          {"version": 1, "content": "SSH端口: 22", "status": "archived"},
-          {"version": 2, "content": "SSH端口: 2222", "status": "superseded"},
-          {"version": 3, "content": "SSH端口: 22", "status": "current", "note": "错误回退到默认值"}
+          {
+            "version": 1,
+            "content": "SSH端口: 22",
+            "status": "archived"
+          },
+          {
+            "version": 2,
+            "content": "SSH端口: 2222",
+            "status": "superseded"
+          },
+          {
+            "version": 3,
+            "content": "SSH端口: 22",
+            "status": "current",
+            "note": "错误回退到默认值"
+          }
         ],
-        "rollback_request": {"target_version": 2}
+        "rollback_request": {
+          "target_version": 2
+        }
       },
       "query": {
         "text": "回滚SSH端口配置到v2",

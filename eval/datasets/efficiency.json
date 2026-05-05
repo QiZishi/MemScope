@@ -1,6 +1,6 @@
 {
   "dataset_name": "efficiency",
-  "version": "2.0",
+  "version": "3.0",
   "description": "效率指标评测：测试记忆引擎的写入延迟、查询延迟、内存占用、Token消耗效率和并发性能",
   "total_cases": 30,
   "difficulty_distribution": {
@@ -133,7 +133,7 @@
       "test_id": "efficiency_005",
       "name": "写入延迟-批量写入100条",
       "description": "测试连续写入100条对话的批量写入性能",
-      "difficulty": "hard",
+      "difficulty": "easy",
       "category": "write_latency",
       "setup": {
         "context": "模拟一天内频繁对话的批量写入场景",
@@ -166,11 +166,31 @@
         "context": "用户和AI在讨论一个紧急Bug修复",
         "conversation": {
           "messages": [
-            {"role": "user", "content": "线上数据库连接池满了", "timestamp": "2026-04-28T14:00:00Z"},
-            {"role": "assistant", "content": "建议先检查活跃连接数", "timestamp": "2026-04-28T14:00:05Z"},
-            {"role": "user", "content": "活跃连接500，上限也是500", "timestamp": "2026-04-28T14:01:00Z"},
-            {"role": "assistant", "content": "可能是连接泄漏，检查是否有未关闭的连接", "timestamp": "2026-04-28T14:01:10Z"},
-            {"role": "user", "content": "找到原因了，是定时任务没释放连接", "timestamp": "2026-04-28T14:15:00Z"}
+            {
+              "role": "user",
+              "content": "线上数据库连接池满了",
+              "timestamp": "2026-04-28T14:00:00Z"
+            },
+            {
+              "role": "assistant",
+              "content": "建议先检查活跃连接数",
+              "timestamp": "2026-04-28T14:00:05Z"
+            },
+            {
+              "role": "user",
+              "content": "活跃连接500，上限也是500",
+              "timestamp": "2026-04-28T14:01:00Z"
+            },
+            {
+              "role": "assistant",
+              "content": "可能是连接泄漏，检查是否有未关闭的连接",
+              "timestamp": "2026-04-28T14:01:10Z"
+            },
+            {
+              "role": "user",
+              "content": "找到原因了，是定时任务没释放连接",
+              "timestamp": "2026-04-28T14:15:00Z"
+            }
           ]
         },
         "content_length_chars": 250,
@@ -267,7 +287,7 @@
         "metric_targets": {
           "p50_ms": 500,
           "p95_ms": 1500,
-          "answer_correctness": 0.90
+          "answer_correctness": 0.9
         }
       }
     },
@@ -294,7 +314,7 @@
         "metric_targets": {
           "p50_ms": 500,
           "p95_ms": 1500,
-          "time_filtering_accuracy": 0.90
+          "time_filtering_accuracy": 0.9
         }
       }
     },
@@ -302,7 +322,7 @@
       "test_id": "efficiency_011",
       "name": "查询延迟-10000条记忆开放域查询",
       "description": "在10000条记忆中执行开放域查询的延迟",
-      "difficulty": "hard",
+      "difficulty": "medium",
       "category": "query_latency",
       "setup": {
         "context": "预加载10000条记忆，模拟大规模记忆库的查询",
@@ -321,7 +341,7 @@
         "metric_targets": {
           "p50_ms": 800,
           "p95_ms": 2000,
-          "relevance_score": 0.80
+          "relevance_score": 0.8
         }
       }
     },
@@ -329,7 +349,7 @@
       "test_id": "efficiency_012",
       "name": "查询延迟-模糊语义查询",
       "description": "测试语义相似但关键词不同的模糊查询的延迟和准确率",
-      "difficulty": "hard",
+      "difficulty": "medium",
       "category": "query_latency",
       "setup": {
         "context": "预加载1000条记忆，用户使用口语化表达查询",
@@ -399,7 +419,7 @@
         "metric_targets": {
           "total_memory_mb": 50,
           "per_entry_kb": 50,
-          "memory_growth_linear": 0.90
+          "memory_growth_linear": 0.9
         }
       }
     },
@@ -449,7 +469,7 @@
         "metric_targets": {
           "total_memory_mb": 500,
           "per_entry_kb": 50,
-          "memory_growth_linear": 0.80
+          "memory_growth_linear": 0.8
         }
       }
     },
@@ -472,7 +492,7 @@
       "expected": {
         "operation": "measure_memory_after_delete",
         "metric_targets": {
-          "memory_freed_ratio": 0.40,
+          "memory_freed_ratio": 0.4,
           "no_memory_leak": 1.0,
           "remaining_memory_proportional": true
         }
@@ -575,7 +595,7 @@
       "expected": {
         "operation": "token_comparison",
         "metric_targets": {
-          "token_saving_rate": 0.60,
+          "token_saving_rate": 0.6,
           "with_memory_faster": true
         }
       }
@@ -600,7 +620,7 @@
         "operation": "context_compression",
         "metric_targets": {
           "tokens_used_ratio_to_full": 0.05,
-          "relevant_recall_maintained": 0.90,
+          "relevant_recall_maintained": 0.9,
           "no_hallucination": true
         }
       }
@@ -630,7 +650,7 @@
       "expected": {
         "operation": "multi_turn_token",
         "metric_targets": {
-          "token_growth_rate": 0.10,
+          "token_growth_rate": 0.1,
           "max_round_tokens_stable": true,
           "avg_tokens_per_round": 400
         }
@@ -793,7 +813,7 @@
         "metric_targets": {
           "no_crash": 1.0,
           "data_integrity": 1.0,
-          "p95_latency_stable": 0.90,
+          "p95_latency_stable": 0.9,
           "p95_latency_growth_factor": 1.5,
           "completion_time_s": 120
         }

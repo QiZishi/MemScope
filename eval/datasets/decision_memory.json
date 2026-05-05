@@ -4,10 +4,9 @@
   "description": "决策记忆能力评测：测试系统对团队/用户决策的提取、存储、搜索、长时序回忆、多跳推理和实体追踪能力",
   "total_cases": 30,
   "difficulty_distribution": {
-    "easy": 4,
+    "easy": 9,
     "medium": 15,
-    "hard": 11,
-    "expert": 7
+    "hard": 6
   },
   "test_cases": [
     {
@@ -348,7 +347,7 @@
           "Phase 1: user service, May"
         ]
       },
-      "difficulty": "hard",
+      "difficulty": "easy",
       "priority": "P0",
       "tags": [
         "english",
@@ -391,7 +390,7 @@
         "previous_rejected": "v1",
         "action_required": "start integration"
       },
-      "difficulty": "hard",
+      "difficulty": "easy",
       "priority": "P1",
       "tags": [
         "english",
@@ -530,7 +529,7 @@
           "开发更快"
         ]
       },
-      "difficulty": "hard",
+      "difficulty": "easy",
       "priority": "P0",
       "tags": [
         "reasoning",
@@ -628,7 +627,7 @@
           "不用引入新组件"
         ]
       },
-      "difficulty": "hard",
+      "difficulty": "easy",
       "priority": "P0",
       "tags": [
         "multi-turn",
@@ -675,7 +674,7 @@
         "original_dissent": "Pulumi",
         "final_agreement_by": "user_b"
       },
-      "difficulty": "hard",
+      "difficulty": "easy",
       "priority": "P0",
       "tags": [
         "multi-turn",

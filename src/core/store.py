@@ -117,10 +117,10 @@ class SqliteStore:
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_chunks_session_role ON chunks(sessionKey, role)")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_chunks_visibility_role ON chunks(visibility, role)")
         
-        # FTS5 virtual table for full-text search
+        # FTS5 virtual table for full-text search (standalone mode)
         cursor.execute("""
             CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts USING fts5(
-                content, summary, content='chunks', content_rowid='rowid'
+                content, summary
             )
         """)
         
@@ -327,9 +327,13 @@ class SqliteStore:
             now,
         ))
 
-        # Sync FTS5 content-table index (content='chunks' mode requires rebuild)
+        # Sync FTS5 index (standalone mode - insert into FTS5 table)
         try:
-            cursor.execute("INSERT INTO chunks_fts(chunks_fts) VALUES('rebuild')")
+            content = chunk.get("content", "")
+            summary = chunk.get("summary", "")
+            if content:
+                cursor.execute("INSERT INTO chunks_fts(rowid, content, summary) VALUES(last_insert_rowid(), ?, ?)", 
+                             (content, summary or ""))
         except Exception:
             pass  # FTS5 table may not exist in all configurations
 
@@ -371,56 +375,107 @@ class SqliteStore:
         self,
         query: str,
         max_results: int = 10,
-        min_score: float = 0.45,
+        min_score: float = 0.0,
         role: Optional[str] = None,
         scope: str = "private",
         agent_id: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
-        """Search chunks with visibility scope support and CJK term splitting."""
+        """Search chunks with visibility scope support and CJK term splitting.
+        
+        Uses FTS5 for full-text search when available, falls back to LIKE search.
+        """
         import re
         cursor = self.conn.cursor()
 
         # Split query into individual terms for better Chinese text matching
-        terms = re.findall(r'[\w一-鿿]{2,}', query)
+        # Use multiple strategies: 2-char bigrams, 3-char trigrams, and full query
+        terms = []
+        
+        # Strategy 1: Extract meaningful segments (3+ chars)
+        segments = re.findall(r'[\u4e00-\u9fff]{3,}|[\w]{2,}', query)
+        terms.extend(segments)
+        
+        # Strategy 2: Extract 2-char bigrams for short terms
+        bigrams = [query[i:i+2] for i in range(len(query)-1) if re.match(r'[\u4e00-\u9fff]', query[i:i+2])]
+        terms.extend(bigrams)
+        
+        # Strategy 3: Add full query as fallback
+        if query not in terms:
+            terms.append(query)
+        
+        # Remove duplicates while preserving order
+        seen = set()
+        unique_terms = []
+        for t in terms:
+            if t not in seen:
+                seen.add(t)
+                unique_terms.append(t)
+        terms = unique_terms
+        
         if not terms:
             terms = [query]
-
-        # Build OR conditions for each term
-        term_conditions = []
-        term_params = []
-        for term in terms:
-            term_conditions.append("(content LIKE ? OR summary LIKE ?)")
-            term_params.extend([f"%{term}%", f"%{term}%"])
-        term_where = " OR ".join(term_conditions)
 
         # Build visibility filter based on scope
         visibility_filter = ""
         extra_params = []
 
         if scope == "private":
-            visibility_filter = " AND (visibility = 'private' OR visibility IS NULL)"
+            visibility_filter = " AND (c.visibility = 'private' OR c.visibility IS NULL)"
             if agent_id:
-                visibility_filter += " AND (owner = ? OR owner IS NULL)"
+                visibility_filter += " AND (c.owner = ? OR c.owner IS NULL)"
                 extra_params.append(agent_id)
         elif scope == "shared":
-            visibility_filter = " AND visibility = 'shared'"
+            visibility_filter = " AND c.visibility = 'shared'"
             if agent_id:
-                visibility_filter += " AND (sharedWith IS NULL OR sharedWith LIKE ?)"
+                visibility_filter += " AND (c.sharedWith IS NULL OR c.sharedWith LIKE ?)"
                 extra_params.append(f"%{agent_id}%")
         elif scope == "all":
             if agent_id:
-                visibility_filter = " AND (visibility = 'shared' OR owner = ? OR visibility IS NULL)"
+                visibility_filter = " AND (c.visibility = 'shared' OR c.owner = ? OR c.visibility IS NULL)"
                 extra_params.append(agent_id)
 
         if role:
-            visibility_filter += " AND role = ?"
+            visibility_filter += " AND c.role = ?"
             extra_params.append(role)
+
+        # Try FTS5 search first
+        try:
+            # Build FTS5 query with OR conditions for each term
+            fts_query = " OR ".join(terms)
+            all_params = [fts_query] + extra_params + [max_results]
+            cursor.execute(f"""
+                SELECT c.*, rank FROM chunks c
+                JOIN chunks_fts f ON c.rowid = f.rowid
+                WHERE chunks_fts MATCH ?{visibility_filter}
+                ORDER BY rank
+                LIMIT ?
+            """, all_params)
+            
+            results = []
+            for row in cursor.fetchall():
+                chunk = dict(row)
+                # Convert rank to score (lower rank = higher score)
+                chunk["score"] = 1.0 / (1 + abs(row["rank"]))
+                results.append(chunk)
+            
+            if results:
+                return results
+        except Exception:
+            pass  # FTS5 not available, fall back to LIKE search
+
+        # Fall back to LIKE search
+        term_conditions = []
+        term_params = []
+        for term in terms:
+            term_conditions.append("(c.content LIKE ? OR c.summary LIKE ?)")
+            term_params.extend([f"%{term}%", f"%{term}%"])
+        term_where = " OR ".join(term_conditions)
 
         all_params = term_params + extra_params + [max_results]
         cursor.execute(f"""
-            SELECT * FROM chunks
+            SELECT c.* FROM chunks c
             WHERE ({term_where}){visibility_filter}
-            ORDER BY createdAt DESC
+            ORDER BY c.createdAt DESC
             LIMIT ?
         """, all_params)
 

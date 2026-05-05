@@ -4,10 +4,9 @@
   "description": "偏好记忆能力评测：测试系统对用户偏好的提取、推断、冲突解决、衰减、演进、多跳推理和跨维度关联能力",
   "total_cases": 30,
   "difficulty_distribution": {
-    "easy": 4,
-    "medium": 14,
-    "hard": 12,
-    "expert": 8
+    "easy": 9,
+    "medium": 15,
+    "hard": 6
   },
   "test_cases": [
     {
@@ -283,7 +282,7 @@
         "time_range": "22:00-02:00",
         "inference_source": "activity_pattern"
       },
-      "difficulty": "hard",
+      "difficulty": "easy",
       "priority": "P2",
       "tags": [
         "implicit",
@@ -490,7 +489,7 @@
         ],
         "strength_differentiated": true
       },
-      "difficulty": "hard",
+      "difficulty": "easy",
       "priority": "P1",
       "tags": [
         "conflict",
@@ -535,7 +534,7 @@
         "domain_separated": true,
         "no_conflict": true
       },
-      "difficulty": "hard",
+      "difficulty": "easy",
       "priority": "P1",
       "tags": [
         "conflict",
@@ -609,7 +608,7 @@
         "current_confidence": "< 0.7",
         "decay_reason": "90_days_no_reaffirmation"
       },
-      "difficulty": "hard",
+      "difficulty": "easy",
       "priority": "P0",
       "tags": [
         "decay",
@@ -702,7 +701,7 @@
         },
         "zsh_confidence_higher_than_bash": true
       },
-      "difficulty": "hard",
+      "difficulty": "easy",
       "priority": "P1",
       "tags": [
         "decay",
@@ -736,7 +735,7 @@
         "confidence": ">= 0.6",
         "decay_limited_by": "industry_consensus"
       },
-      "difficulty": "hard",
+      "difficulty": "medium",
       "priority": "P2",
       "tags": [
         "decay",

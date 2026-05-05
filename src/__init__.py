@@ -491,7 +491,8 @@ class MemScopeProvider:
             return None
         try:
             # Search core memories
-            hits = self.recall_engine.search(query, max_results=5, agent_id=self._owner)
+            search_result = self.recall_engine.search(query, max_results=5, agent_id=self._owner)
+            hits = search_result.get('hits', []) if isinstance(search_result, dict) else search_result
 
             # Check for related decisions
             decision_cards = self.decision_card_manager.check_and_push(query, self._owner)
@@ -523,6 +524,8 @@ class MemScopeProvider:
             return
 
         try:
+            import uuid as _uuid
+
             # Ingest conversation
             chunks = self.chunker.chunk_messages(
                 [
@@ -532,14 +535,33 @@ class MemScopeProvider:
                 session_key=self._session_id,
             )
 
-            for chunk in chunks:
+            turn_id = str(_uuid.uuid4())
+
+            # If chunker returns nothing (content < min_chunk_size), store directly
+            if not chunks:
+                combined = f"[user] {user_content}\n[assistant] {assistant_content}"
                 self.store.insert_chunk({
-                    'content': chunk.get('content', ''),
-                    'summary': chunk.get('summary', ''),
+                    'content': combined,
+                    'summary': '',
+                    'role': 'assistant',
                     'owner': self._owner,
-                    'session_key': self._session_id,
-                    'type': 'conversation',
+                    'sessionKey': self._session_id,
+                    'turnId': turn_id,
+                    'seq': 0,
+                    'visibility': 'private',
                 })
+            else:
+                for seq, chunk in enumerate(chunks):
+                    self.store.insert_chunk({
+                        'content': chunk.get('content', ''),
+                        'summary': chunk.get('summary', ''),
+                        'role': chunk.get('role', 'assistant'),
+                        'owner': self._owner,
+                        'sessionKey': self._session_id,
+                        'turnId': turn_id,
+                        'seq': seq,
+                        'visibility': 'private',
+                    })
 
             # Extract preferences from conversation
             prefs = self.preference_extractor.extract_from_conversation(

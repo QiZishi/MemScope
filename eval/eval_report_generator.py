@@ -125,9 +125,12 @@ def generate_markdown_report(report: Dict[str, Any]) -> str:
             "efficiency": "效率指标",
             "command_memory": "方向A-命令记忆",
             "decision_memory": "方向B-决策记忆",
+            "preference_memory": "方向C-个人偏好",
+            "knowledge_health": "方向D-团队知识",
+            "long_term_memory": "长时序记忆",
+            # Legacy aliases
             "direction_c": "方向C-个人偏好",
             "direction_d": "方向D-团队知识",
-            "long_term_memory": "长时序记忆",
         }
         dim_display = dim_names.get(dim, dim)
 
@@ -149,9 +152,12 @@ def generate_markdown_report(report: Dict[str, Any]) -> str:
             "efficiency": "Efficiency         ",
             "command_memory": "Command Memory    ",
             "decision_memory": "Decision Memory   ",
-            "direction_c": "Direction C        ",
-            "direction_d": "Direction D        ",
+            "preference_memory": "Preference Memory ",
+            "knowledge_health": "Knowledge Health  ",
             "long_term_memory": "Long-term Memory  ",
+            # Legacy aliases
+            "direction_c": "Preference Memory ",
+            "direction_d": "Knowledge Health  ",
         }
         label = dim_names.get(dim, dim)
         w(f"  {label}: {_bar_chart(score)}")
@@ -160,45 +166,86 @@ def generate_markdown_report(report: Dict[str, Any]) -> str:
     w(f"```")
     w(f"")
 
+    # ── Metrics Summary ──
+    w(f"### 核心指标汇总")
+    w(f"")
+    w(f"| 维度 | Hit Rate | Precision | Recall | F1 Score |")
+    w(f"|------|----------|-----------|--------|----------|")
+
+    for dim, info in dim_scores.items():
+        dim_names_metrics = {
+            "anti_interference": "抗干扰",
+            "contradiction_update": "矛盾更新",
+            "efficiency": "效率",
+            "command_memory": "命令记忆",
+            "decision_memory": "决策记忆",
+            "preference_memory": "偏好记忆",
+            "knowledge_health": "知识健康",
+            "long_term_memory": "长时序",
+        }
+        label = dim_names_metrics.get(dim, dim)
+        hr = info.get("avg_hit_rate", 0)
+        pr = info.get("avg_precision", 0)
+        rc = info.get("avg_recall", 0)
+        f1 = info.get("avg_f1", 0)
+        w(f"| {label} | {hr:.1f}% | {pr:.1f}% | {rc:.1f}% | {f1:.1f}% |")
+
+    # Overall averages
+    all_hr = [info.get("avg_hit_rate", 0) for info in dim_scores.values()]
+    all_pr = [info.get("avg_precision", 0) for info in dim_scores.values()]
+    all_rc = [info.get("avg_recall", 0) for info in dim_scores.values()]
+    all_f1 = [info.get("avg_f1", 0) for info in dim_scores.values()]
+    avg_hr = sum(all_hr) / len(all_hr) if all_hr else 0
+    avg_pr = sum(all_pr) / len(all_pr) if all_pr else 0
+    avg_rc = sum(all_rc) / len(all_rc) if all_rc else 0
+    avg_f1_val = sum(all_f1) / len(all_f1) if all_f1 else 0
+    w(f"| **整体平均** | **{avg_hr:.1f}%** | **{avg_pr:.1f}%** | **{avg_rc:.1f}%** | **{avg_f1_val:.1f}%** |")
+    w(f"")
+
     # ── Individual Test Results ──
     w(f"## 3. 详细测试结果")
     w(f"")
 
     # Group by dimension
     dim_order = ["anti_interference", "contradiction_update", "efficiency",
-                 "command_memory", "decision_memory", "direction_c", "direction_d",
-                 "long_term_memory"]
+                 "command_memory", "decision_memory", "preference_memory",
+                 "knowledge_health", "long_term_memory"]
     dim_names_cn = {
         "anti_interference": "抗干扰能力测试",
         "contradiction_update": "矛盾更新测试",
         "efficiency": "效率指标测试",
         "command_memory": "方向A - 命令记忆测试",
         "decision_memory": "方向B - 决策记忆测试",
+        "preference_memory": "方向C - 个人偏好测试",
+        "knowledge_health": "方向D - 团队知识测试",
+        "long_term_memory": "长时序记忆测试",
+        # Legacy aliases
         "direction_c": "方向C - 个人偏好测试",
         "direction_d": "方向D - 团队知识测试",
-        "long_term_memory": "长时序记忆测试",
     }
 
     for dim in dim_order:
-        dim_tests = [t for t in detailed if t.get("test_id", "").startswith(
-            dim.replace("_update", "").replace("_interference", "")[:10]
-        )]
-        # More precise grouping
-        dim_tests = []
-        test_dim_map = {
-            "anti_interference_": "anti_interference",
-            "contradiction_": "contradiction_update",
-            "efficiency_": "efficiency",
-            "direction_c_": "direction_c",
-            "direction_d_": "direction_d",
-        }
-        for t in detailed:
-            tid = t.get("test_id", "")
-            for prefix, d in test_dim_map.items():
-                if tid.startswith(prefix):
-                    if d == dim:
-                        dim_tests.append(t)
-                    break
+        # Group by 'dimension' field if available, otherwise fall back to prefix matching
+        dim_tests = [t for t in detailed if t.get("dimension", "") == dim]
+        if not dim_tests:
+            # Fallback: prefix matching for backward compatibility
+            test_dim_map = {
+                "anti_interference_": "anti_interference",
+                "contradiction_": "contradiction_update",
+                "efficiency_": "efficiency",
+                "cmd_": "command_memory",
+                "dec_": "decision_memory",
+                "pref_": "preference_memory",
+                "kh_": "knowledge_health",
+                "ltm_": "long_term_memory",
+            }
+            for t in detailed:
+                tid = t.get("test_id", "")
+                for prefix, d in test_dim_map.items():
+                    if tid.startswith(prefix):
+                        if d == dim:
+                            dim_tests.append(t)
+                        break
 
         if not dim_tests:
             continue
@@ -282,10 +329,10 @@ def generate_markdown_report(report: Dict[str, Any]) -> str:
                           dim_scores.get("command_memory", {}).get("score", 0)),
         "decision_memory": ("≥ 85% decision recall",
                            dim_scores.get("decision_memory", {}).get("score", 0)),
-        "direction_c": ("≥ 90% preference recall",
-                       dim_scores.get("direction_c", {}).get("score", 0)),
-        "direction_d": ("≥ 80% gap detection rate",
-                       dim_scores.get("direction_d", {}).get("score", 0)),
+        "preference_memory": ("≥ 90% preference recall",
+                       dim_scores.get("preference_memory", {}).get("score", 0)),
+        "knowledge_health": ("≥ 80% gap detection rate",
+                       dim_scores.get("knowledge_health", {}).get("score", 0)),
         "long_term_memory": ("≥ 85% long-term recall",
                             dim_scores.get("long_term_memory", {}).get("score", 0)),
     }
@@ -297,8 +344,8 @@ def generate_markdown_report(report: Dict[str, Any]) -> str:
             "efficiency": "效率指标",
             "command_memory": "方向A-命令记忆",
             "decision_memory": "方向B-决策记忆",
-            "direction_c": "方向C",
-            "direction_d": "方向D",
+            "preference_memory": "方向C",
+            "knowledge_health": "方向D",
             "long_term_memory": "长时序记忆",
         }.get(dim, dim)
         status = "✅ PASS" if score >= 70 else "❌ FAIL"

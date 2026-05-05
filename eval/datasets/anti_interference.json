@@ -1,12 +1,12 @@
 {
   "dataset_name": "anti_interference",
-  "version": "2.0",
+  "version": "3.0",
   "description": "抗干扰能力评测数据集 - 30条样本",
   "test_cases": [
     {
       "test_id": "anti_interference_001",
       "name": "抗干扰测试_1",
-      "difficulty": "easy",
+      "difficulty": "medium",
       "category": "mixed",
       "input": {
         "target": {
@@ -57,7 +57,7 @@
     {
       "test_id": "anti_interference_002",
       "name": "抗干扰测试_2",
-      "difficulty": "easy",
+      "difficulty": "medium",
       "category": "mixed",
       "input": {
         "target": {
@@ -243,7 +243,7 @@
     {
       "test_id": "anti_interference_006",
       "name": "抗干扰测试_6",
-      "difficulty": "hard",
+      "difficulty": "medium",
       "category": "mixed",
       "input": {
         "target": {
@@ -654,7 +654,7 @@
     {
       "test_id": "anti_interference_012",
       "name": "抗干扰测试_12",
-      "difficulty": "hard",
+      "difficulty": "medium",
       "category": "mixed",
       "input": {
         "target": {
@@ -1553,5 +1553,11 @@
         ]
       }
     }
-  ]
+  ],
+  "difficulty_distribution": {
+    "easy": 9,
+    "medium": 15,
+    "hard": 6
+  },
+  "total_cases": 30
 }

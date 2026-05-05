@@ -1,12 +1,12 @@
 {
   "dataset_name": "contradiction_update",
-  "version": "2.0",
+  "version": "3.0",
   "description": "矛盾信息更新评测数据集 - 30条样本",
   "test_cases": [
     {
       "test_id": "contradiction_001",
       "name": "矛盾更新测试_1",
-      "difficulty": "easy",
+      "difficulty": "hard",
       "category": "direct_override",
       "input": {
         "old": {
@@ -32,7 +32,7 @@
     {
       "test_id": "contradiction_002",
       "name": "矛盾更新测试_2",
-      "difficulty": "easy",
+      "difficulty": "medium",
       "category": "direct_override",
       "input": {
         "old": {
@@ -818,5 +818,11 @@
         ]
       }
     }
-  ]
+  ],
+  "difficulty_distribution": {
+    "easy": 9,
+    "medium": 15,
+    "hard": 6
+  },
+  "total_cases": 30
 }

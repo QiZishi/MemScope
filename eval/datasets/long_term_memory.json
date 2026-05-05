@@ -1,12 +1,12 @@
 {
   "dataset_name": "long_term_memory",
-  "version": "2.0",
+  "version": "3.0",
   "description": "长时序记忆评测数据集 - 30条样本，覆盖2年时间跨度(2024-05到2026-04)",
   "test_cases": [
     {
       "test_id": "ltm_001",
       "name": "3-6月记忆_1",
-      "difficulty": "easy",
+      "difficulty": "hard",
       "category": "3month",
       "description": "测试2025-11-15的信息在3-6个月后能否回忆",
       "setup": {
@@ -37,7 +37,7 @@
     {
       "test_id": "ltm_002",
       "name": "3-6月记忆_2",
-      "difficulty": "easy",
+      "difficulty": "hard",
       "category": "3month",
       "description": "测试2025-12-01的信息在3-6个月后能否回忆",
       "setup": {
@@ -130,7 +130,7 @@
     {
       "test_id": "ltm_005",
       "name": "3-6月记忆_5",
-      "difficulty": "easy",
+      "difficulty": "medium",
       "category": "3month",
       "description": "测试2026-01-10的信息在3-6个月后能否回忆",
       "setup": {
@@ -1013,5 +1013,11 @@
         "latest_value": true
       }
     }
-  ]
+  ],
+  "difficulty_distribution": {
+    "easy": 9,
+    "medium": 15,
+    "hard": 6
+  },
+  "total_cases": 30
 }

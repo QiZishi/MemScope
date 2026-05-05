@@ -4,7 +4,7 @@ Real Embedder - 真实的嵌入生成器
 调用外部 API（OpenAI/其他）生成真实的文本嵌入
 """
 
-from typing import List, Optional
+from typing import Dict, List, Optional
 import logging
 import os
 
