@@ -39,6 +39,12 @@ class DecisionExtractor:
         r'(?:立即|马上|尽快)(?:执行|实施|上线|部署)',
         r'(?:统一|规范化?)(?:使用|采用)',
         r'(?:合并|拆分|重组)',
+        # 新增: 更直接的决策模式
+        r'(?:确认|决定|选定|敲定|采用|定)(?:了|使用|用|为)',
+        r'(?:数据库|框架|方案|技术栈)(?:就|选定|确认|采用|定)',
+        r'(?:就|那就)(?:定|用|选|确认)',
+        r'(?:最终|最后)(?:确认|选定|定|采用)',
+        r'(?:采用|使用|选定|确认)(?:了)?(?:React|Vue|Angular|Flutter|PostgreSQL|MySQL|Docker|K8s)',
     ]
 
     # 决策信号词（英文）
@@ -204,13 +210,28 @@ class DecisionExtractor:
             if match:
                 return match.group(1).strip()
 
-        # 如果没有明确模式，取决策信号后的句子
+        # 如果没有明确模式，取决策信号所在的整句（保留主题上下文）
         for signal in self.DECISION_SIGNALS_ZH:
             match = re.search(signal, message)
             if match:
-                rest = message[match.end():].strip()
+                # FIX: Include context before the signal word (topic/subject).
+                # Previously only took text after the signal, losing topic context
+                # like "数据库" from "数据库就定下来用PostgreSQL".
+                # Now extract from the start of the clause containing the signal.
+                start = 0
+                # Find the start of the current clause (after last sentence-ending punct)
+                clause_start = max(
+                    message.rfind('。', 0, match.start()),
+                    message.rfind('！', 0, match.start()),
+                    message.rfind('？', 0, match.start()),
+                    message.rfind('.', 0, match.start()),
+                    message.rfind('，', 0, max(0, match.start() - 20)),
+                )
+                if clause_start > 0:
+                    start = clause_start + 1
+                rest = message[start:].strip()
                 # 取到句号或结尾
-                end = re.search(r'[。\.！!]', rest)
+                end = re.search(r'[。\\.！!]', rest)
                 if end:
                     return rest[:end.start()].strip()
                 return rest[:200].strip()

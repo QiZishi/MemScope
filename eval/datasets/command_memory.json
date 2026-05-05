@@ -1,7 +1,7 @@
 {
   "dataset_name": "command_memory",
-  "version": "3.0",
-  "description": "命令记忆能力评测：测试系统对用户历史命令的记录、频率统计、上下文关联、智能推荐、多跳推理、实体追踪和时序推理能力",
+  "version": "4.0",
+  "description": "命令记忆能力评测（飞书企业场景）：测试系统对用户高频飞书操作的记录、频率统计、上下文关联、智能推荐、多跳推理、实体追踪和时序推理能力",
   "total_cases": 30,
   "difficulty_distribution": {
     "easy": 9,
@@ -11,34 +11,34 @@
   "test_cases": [
     {
       "test_id": "cmd_001",
-      "name": "高频命令识别-多用户交叉",
-      "description": "用户A高频使用git(8次), docker(3次); 用户B高频使用npm(6次), node(4次). 查询A的高频命令时不应包含npm或node，验证系统能正确区分不同用户的命令历史",
+      "name": "高频操作识别-多用户交叉",
+      "description": "用户A高频使用飞书审批(8次)和日历(3次)；用户B高频使用多维表格(6次)和OKR(4次)。查询A的高频操作时不应包含多维表格或OKR，验证系统能正确区分不同用户的操作历史",
       "setup": {
-        "user_a_commands": [
+        "user_a_operations": [
           {
-            "command": "git status",
+            "operation": "提交请假审批",
             "count": 4
           },
           {
-            "command": "git commit",
+            "operation": "提交报销审批",
             "count": 4
           },
           {
-            "command": "docker build",
+            "operation": "创建会议",
             "count": 3
           }
         ],
-        "user_b_commands": [
+        "user_b_operations": [
           {
-            "command": "npm install",
+            "operation": "创建多维表格",
             "count": 3
           },
           {
-            "command": "npm test",
+            "operation": "切换表格视图",
             "count": 3
           },
           {
-            "command": "node server.js",
+            "operation": "更新OKR进度",
             "count": 4
           }
         ]
@@ -48,45 +48,42 @@
         "type": "frequent"
       },
       "expected": {
-        "top_command": "git",
+        "top_operation": "审批",
         "min_frequency": 8,
         "must_not_contain": [
-          "npm",
-          "node"
-        ]
+          "多维表格",
+          "OKR"
+        ],
+        "expected_keywords": ["审批", "请假", "报销", "日历", "会议"]
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": [
-        "cross-user",
-        "frequency",
-        "isolation"
-      ]
+      "tags": ["飞书", "cross-user", "frequency", "isolation"]
     },
     {
       "test_id": "cmd_002",
-      "name": "高频命令识别-均匀分布",
-      "description": "用户C的5个命令各使用了2次，频率完全相同。系统应返回全部5个命令并按某种稳定排序，不应遗漏任何一个",
+      "name": "高频操作识别-均匀分布",
+      "description": "用户C的5个飞书操作各使用了2次，频率完全相同。系统应返回全部5个操作并按某种稳定排序，不应遗漏任何一个",
       "setup": {
-        "user_c_commands": [
+        "user_c_operations": [
           {
-            "command": "ls -la",
+            "operation": "查看群聊消息",
             "count": 2
           },
           {
-            "command": "cd /home",
+            "operation": "发送文档评论",
             "count": 2
           },
           {
-            "command": "cat README.md",
+            "operation": "创建任务",
             "count": 2
           },
           {
-            "command": "grep error",
+            "operation": "更新OKR进度",
             "count": 2
           },
           {
-            "command": "tail -f log",
+            "operation": "编辑知识库文档",
             "count": 2
           }
         ]
@@ -97,48 +94,45 @@
         "limit": 5
       },
       "expected": {
-        "all_commands_present": [
-          "ls -la",
-          "cd /home",
-          "cat README.md",
-          "grep error",
-          "tail -f log"
+        "all_operations_present": [
+          "查看群聊消息",
+          "发送文档评论",
+          "创建任务",
+          "更新OKR进度",
+          "编辑知识库文档"
         ],
         "count_of_results": 5,
-        "all_frequencies_equal": true
+        "all_frequencies_equal": true,
+        "expected_keywords": ["群聊", "消息", "评论", "文档", "任务", "OKR", "知识库"]
       },
       "difficulty": "easy",
       "priority": "P1",
-      "tags": [
-        "frequency",
-        "edge-case",
-        "uniform-distribution"
-      ]
+      "tags": ["飞书", "frequency", "edge-case", "uniform-distribution"]
     },
     {
       "test_id": "cmd_003",
-      "name": "高频命令识别-极端偏斜分布",
-      "description": "用户D的命令历史中，git status出现了100次，其他命令各出现1次。验证系统能正确处理极端偏斜的频率分布，git status应排第一",
+      "name": "高频操作识别-极端偏斜分布",
+      "description": "用户D的操作历史中，查看飞书群聊消息出现了100次，其他操作各出现1次。验证系统能正确处理极端偏斜的频率分布，查看群聊消息应排第一",
       "setup": {
-        "user_d_commands": [
+        "user_d_operations": [
           {
-            "command": "git status",
+            "operation": "查看群聊消息",
             "count": 100
           },
           {
-            "command": "vim config.yaml",
+            "operation": "创建采购审批",
             "count": 1
           },
           {
-            "command": "python test.py",
+            "operation": "编辑飞书文档",
             "count": 1
           },
           {
-            "command": "ssh deploy@server",
+            "operation": "修改会议时间",
             "count": 1
           },
           {
-            "command": "curl localhost:8080",
+            "operation": "创建OKR目标",
             "count": 1
           }
         ]
@@ -149,42 +143,39 @@
         "limit": 3
       },
       "expected": {
-        "rank_1": "git status",
+        "rank_1": "查看群聊消息",
         "rank_1_frequency": 100,
         "rank_2_frequency": 1,
-        "top_to_second_ratio": ">= 50"
+        "top_to_second_ratio": ">= 50",
+        "expected_keywords": ["群聊", "消息", "采购", "审批", "文档", "会议", "OKR"]
       },
       "difficulty": "easy",
       "priority": "P1",
-      "tags": [
-        "frequency",
-        "edge-case",
-        "skewed-distribution"
-      ]
+      "tags": ["飞书", "frequency", "edge-case", "skewed-distribution"]
     },
     {
       "test_id": "cmd_004",
-      "name": "高频命令识别-时间衰减",
-      "description": "用户E在3个月前大量使用svn(20次)，最近1周大量使用git(15次)。如果系统支持时间加权，最近的git应排名高于历史svn",
+      "name": "高频操作识别-时间衰减",
+      "description": "用户E在3个月前大量使用旧版审批模板(20次)，最近1周大量使用飞书文档协作(15次)。如果系统支持时间加权，最近的文档协作应排名高于历史审批模板",
       "setup": {
-        "user_e_commands": [
+        "user_e_operations": [
           {
-            "command": "svn update",
+            "operation": "使用旧版请假审批模板",
             "count": 10,
             "timestamp": "2026-01-15"
           },
           {
-            "command": "svn commit",
+            "operation": "使用旧版报销审批模板",
             "count": 10,
             "timestamp": "2026-01-15"
           },
           {
-            "command": "git pull",
+            "operation": "创建飞书文档",
             "count": 8,
             "timestamp": "2026-04-25"
           },
           {
-            "command": "git push",
+            "operation": "分享文档权限",
             "count": 7,
             "timestamp": "2026-04-26"
           }
@@ -197,26 +188,23 @@
         "time_weighted": true
       },
       "expected": {
-        "top_command": "git",
-        "git_rank_higher_than_svn": true
+        "top_operation": "文档",
+        "doc_rank_higher_than_approval_template": true,
+        "expected_keywords": ["文档", "创建", "分享", "权限"]
       },
       "difficulty": "easy",
       "priority": "P0",
-      "tags": [
-        "frequency",
-        "temporal",
-        "time-decay"
-      ]
+      "tags": ["飞书", "frequency", "temporal", "time-decay"]
     },
     {
       "test_id": "cmd_005",
-      "name": "高频命令识别-新用户无历史",
-      "description": "用户F是新用户，没有任何命令历史。系统应返回空列表或明确提示无数据，不应报错或返回其他用户的数据",
+      "name": "高频操作识别-新用户无历史",
+      "description": "用户F是新用户，没有任何飞书操作历史。系统应返回空列表或明确提示无数据，不应报错或返回其他用户的数据",
       "setup": {
         "existing_users": {
-          "user_a_commands": [
+          "user_a_operations": [
             {
-              "command": "git status",
+              "operation": "提交请假审批",
               "count": 10
             }
           ]
@@ -230,34 +218,31 @@
       "expected": {
         "result": "empty",
         "must_not_contain": [
-          "git status"
+          "请假审批"
         ],
-        "error": false
+        "error": false,
+        "expected_keywords": []
       },
       "difficulty": "easy",
       "priority": "P0",
-      "tags": [
-        "frequency",
-        "edge-case",
-        "empty-history"
-      ]
+      "tags": ["飞书", "frequency", "edge-case", "empty-history"]
     },
     {
       "test_id": "cmd_006",
-      "name": "高频命令识别-含特殊字符命令",
-      "description": "用户G的命令中包含特殊字符：管道符、重定向、引号等。系统应正确记录和统计这些含特殊字符的命令",
+      "name": "高频操作识别-含复杂操作描述",
+      "description": "用户G的操作中包含复杂描述：带人名@提及、带附件、带审批金额等。系统应正确记录和统计这些含特殊信息的操作",
       "setup": {
-        "user_g_commands": [
+        "user_g_operations": [
           {
-            "command": "cat log.txt | grep ERROR | wc -l",
+            "operation": "在「产品需求讨论群」@张三 发送消息并附带飞书文档链接",
             "count": 5
           },
           {
-            "command": "echo \"hello world\" > output.txt",
+            "operation": "提交报销审批（金额¥12,500.00，附件3张发票）",
             "count": 3
           },
           {
-            "command": "find . -name '*.py' -exec grep TODO {} \\;",
+            "operation": "创建会议「Q2产品评审 | 14:00-15:30」邀请8人",
             "count": 2
           }
         ]
@@ -267,232 +252,217 @@
         "type": "frequent"
       },
       "expected": {
-        "top_command": "cat log.txt | grep ERROR | wc -l",
-        "all_commands_preserved": true,
-        "special_chars_intact": true
+        "top_operation": "群聊消息",
+        "all_operations_preserved": true,
+        "special_chars_intact": true,
+        "expected_keywords": ["群聊", "消息", "@", "文档", "报销", "审批", "会议", "评审"]
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": [
-        "frequency",
-        "special-chars",
-        "edge-case"
-      ]
+      "tags": ["飞书", "frequency", "special-chars", "edge-case"]
     },
     {
       "test_id": "cmd_007",
-      "name": "项目路径关联-同用户多项目",
-      "description": "用户H在项目A(/home/h/projectA)中使用npm/yarn命令，在项目B(/home/h/projectB)中使用python/pip命令。查询项目A的命令应只返回npm/yarn相关",
+      "name": "业务模块关联-同用户多模块",
+      "description": "用户H在「人事行政部」空间中使用请假/报销审批，在「产品研发部」空间中使用任务管理和代码评审文档。查询人事行政部的操作应只返回审批相关",
       "setup": {
-        "user_h_commands": [
+        "user_h_operations": [
           {
-            "command": "npm install",
-            "path": "/home/h/projectA",
+            "operation": "提交请假审批",
+            "space": "人事行政部",
             "count": 5
           },
           {
-            "command": "npm test",
-            "path": "/home/h/projectA",
+            "operation": "提交报销审批",
+            "space": "人事行政部",
             "count": 3
           },
           {
-            "command": "yarn build",
-            "path": "/home/h/projectA",
+            "operation": "审批采购申请",
+            "space": "人事行政部",
             "count": 2
           },
           {
-            "command": "pip install django",
-            "path": "/home/h/projectB",
+            "operation": "创建研发任务",
+            "space": "产品研发部",
             "count": 4
           },
           {
-            "command": "python manage.py runserver",
-            "path": "/home/h/projectB",
+            "operation": "编辑技术方案文档",
+            "space": "产品研发部",
             "count": 6
           }
         ]
       },
       "query": {
         "user": "user_h",
-        "type": "project_commands",
-        "project": "/home/h/projectA"
+        "type": "space_operations",
+        "space": "人事行政部"
       },
       "expected": {
-        "commands_in_result": [
-          "npm install",
-          "npm test",
-          "yarn build"
+        "operations_in_result": [
+          "提交请假审批",
+          "提交报销审批",
+          "审批采购申请"
         ],
         "must_not_contain": [
-          "pip install django",
-          "python manage.py runserver"
+          "创建研发任务",
+          "编辑技术方案文档"
         ],
-        "project_specific": true
+        "space_specific": true,
+        "expected_keywords": ["请假", "审批", "报销", "采购", "人事", "行政"]
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": [
-        "project-path",
-        "cross-user",
-        "isolation"
-      ]
+      "tags": ["飞书", "space", "cross-module", "isolation"]
     },
     {
       "test_id": "cmd_008",
-      "name": "项目路径关联-嵌套项目",
-      "description": "用户I在/home/i/monorepo和/home/i/monorepo/packages/frontend两个路径下工作。查询monorepo级别应包含所有子路径命令，查询frontend子路径应只包含frontend命令",
+      "name": "业务模块关联-嵌套空间",
+      "description": "用户I在「公司级」和「公司级/市场部」两个层级空间下工作。查询公司级应包含所有子空间操作，查询市场部应只包含市场部操作",
       "setup": {
-        "user_i_commands": [
+        "user_i_operations": [
           {
-            "command": "docker compose up",
-            "path": "/home/i/monorepo",
+            "operation": "查看公司公告",
+            "space": "公司级",
             "count": 3
           },
           {
-            "command": "make deploy",
-            "path": "/home/i/monorepo",
+            "operation": "提交跨部门审批",
+            "space": "公司级",
             "count": 2
           },
           {
-            "command": "npm run dev",
-            "path": "/home/i/monorepo/packages/frontend",
+            "operation": "创建市场活动任务",
+            "space": "公司级/市场部",
             "count": 8
           },
           {
-            "command": "npm run build",
-            "path": "/home/i/monorepo/packages/frontend",
+            "operation": "编辑推广方案文档",
+            "space": "公司级/市场部",
             "count": 4
           }
         ]
       },
       "query": {
         "user": "user_i",
-        "type": "project_commands",
-        "project": "/home/i/monorepo/packages/frontend"
+        "type": "space_operations",
+        "space": "公司级/市场部"
       },
       "expected": {
-        "commands_in_result": [
-          "npm run dev",
-          "npm run build"
+        "operations_in_result": [
+          "创建市场活动任务",
+          "编辑推广方案文档"
         ],
         "must_not_contain": [
-          "docker compose up",
-          "make deploy"
+          "查看公司公告",
+          "提交跨部门审批"
         ],
-        "nested_project_handling": "exact_path_match"
+        "nested_space_handling": "exact_path_match",
+        "expected_keywords": ["市场", "活动", "任务", "推广", "方案"]
       },
       "difficulty": "easy",
       "priority": "P1",
-      "tags": [
-        "project-path",
-        "nested",
-        "monorepo"
-      ]
+      "tags": ["飞书", "space", "nested", "hierarchy"]
     },
     {
       "test_id": "cmd_009",
-      "name": "项目路径关联-跨项目相同命令",
-      "description": "用户J在3个不同项目中都使用了npm install，但频率不同。系统应能区分同一命令在不同项目中的使用情况",
+      "name": "业务模块关联-跨空间相同操作",
+      "description": "用户J在3个不同部门空间中都创建了飞书文档，但频率不同。系统应能区分同一操作在不同空间中的使用情况",
       "setup": {
-        "user_j_commands": [
+        "user_j_operations": [
           {
-            "command": "npm install",
-            "path": "/home/j/frontend",
+            "operation": "创建飞书文档",
+            "space": "产品部",
             "count": 10
           },
           {
-            "command": "npm install",
-            "path": "/home/j/backend",
+            "operation": "创建飞书文档",
+            "space": "技术部",
             "count": 3
           },
           {
-            "command": "npm install",
-            "path": "/home/j/shared-lib",
+            "operation": "创建飞书文档",
+            "space": "运营部",
             "count": 1
           }
         ]
       },
       "query": {
         "user": "user_j",
-        "type": "project_commands",
-        "project": "/home/j/shared-lib"
+        "type": "space_operations",
+        "space": "运营部"
       },
       "expected": {
-        "npm_install_count": 1,
-        "not_from_other_projects": true
+        "create_doc_count": 1,
+        "not_from_other_spaces": true,
+        "expected_keywords": ["创建", "飞书文档", "运营"]
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": [
-        "project-path",
-        "same-command",
-        "count-isolation"
-      ]
+      "tags": ["飞书", "space", "same-operation", "count-isolation"]
     },
     {
       "test_id": "cmd_010",
-      "name": "项目路径关联-路径相似但不同",
-      "description": "用户K在/home/k/app和/home/k/app-test两个路径下工作，虽然路径前缀相似但完全不同。系统不应混淆",
+      "name": "业务模块关联-空间名称相似但不同",
+      "description": "用户K在「市场部」和「市场营销部」两个不同部门空间下工作，虽然名称相似但完全不同。系统不应混淆",
       "setup": {
-        "user_k_commands": [
+        "user_k_operations": [
           {
-            "command": "go run main.go",
-            "path": "/home/k/app",
+            "operation": "创建品牌推广任务",
+            "space": "市场部",
             "count": 7
           },
           {
-            "command": "go test ./...",
-            "path": "/home/k/app-test",
+            "operation": "提交营销预算审批",
+            "space": "市场营销部",
             "count": 5
           }
         ]
       },
       "query": {
         "user": "user_k",
-        "type": "project_commands",
-        "project": "/home/k/app"
+        "type": "space_operations",
+        "space": "市场部"
       },
       "expected": {
-        "commands_in_result": [
-          "go run main.go"
+        "operations_in_result": [
+          "创建品牌推广任务"
         ],
         "must_not_contain": [
-          "go test ./..."
+          "提交营销预算审批"
         ],
-        "path_prefix_confusion": false
+        "space_name_confusion": false,
+        "expected_keywords": ["品牌", "推广", "任务", "市场部"]
       },
       "difficulty": "easy",
       "priority": "P0",
-      "tags": [
-        "project-path",
-        "edge-case",
-        "path-confusion"
-      ]
+      "tags": ["飞书", "space", "edge-case", "name-confusion"]
     },
     {
       "test_id": "cmd_011",
-      "name": "项目路径关联-项目合并统计",
-      "description": "用户L想知道在所有项目中最常用的命令是什么。查询应跨所有项目聚合统计",
+      "name": "业务模块关联-跨空间合并统计",
+      "description": "用户L想知道在所有部门空间中最常用的飞书操作是什么。查询应跨所有空间聚合统计",
       "setup": {
-        "user_l_commands": [
+        "user_l_operations": [
           {
-            "command": "git status",
-            "path": "/home/l/proj1",
+            "operation": "提交请假审批",
+            "space": "人事部",
             "count": 5
           },
           {
-            "command": "git status",
-            "path": "/home/l/proj2",
+            "operation": "提交请假审批",
+            "space": "技术部",
             "count": 4
           },
           {
-            "command": "git status",
-            "path": "/home/l/proj3",
+            "operation": "提交请假审批",
+            "space": "市场部",
             "count": 3
           },
           {
-            "command": "npm test",
-            "path": "/home/l/proj1",
+            "operation": "创建飞书文档",
+            "space": "技术部",
             "count": 8
           }
         ]
@@ -500,71 +470,65 @@
       "query": {
         "user": "user_l",
         "type": "frequent",
-        "all_projects": true
+        "all_spaces": true
       },
       "expected": {
-        "git_status_total": 12,
-        "npm_test_total": 8,
-        "top_command": "git status"
+        "approval_total": 12,
+        "doc_total": 8,
+        "top_operation": "提交请假审批",
+        "expected_keywords": ["请假", "审批", "文档", "创建"]
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": [
-        "project-path",
-        "aggregation",
-        "cross-project"
-      ]
+      "tags": ["飞书", "space", "aggregation", "cross-space"]
     },
     {
       "test_id": "cmd_012",
-      "name": "项目路径关联-空项目",
-      "description": "用户M在一个从未使用过的项目路径下查询命令。系统应返回空结果而非错误",
+      "name": "业务模块关联-空空间",
+      "description": "用户M在一个从未使用过的部门空间下查询操作。系统应返回空结果而非错误",
       "setup": {
-        "user_m_commands": [
+        "user_m_operations": [
           {
-            "command": "ls",
-            "path": "/home/m/active-project",
+            "operation": "查看群聊消息",
+            "space": "活跃部门",
             "count": 2
           }
         ]
       },
       "query": {
         "user": "user_m",
-        "type": "project_commands",
-        "project": "/home/m/empty-project"
+        "type": "space_operations",
+        "space": "空闲部门"
       },
       "expected": {
         "result": "empty",
-        "error": false
+        "error": false,
+        "expected_keywords": []
       },
       "difficulty": "easy",
       "priority": "P1",
-      "tags": [
-        "project-path",
-        "edge-case",
-        "empty-result"
-      ]
+      "tags": ["飞书", "space", "edge-case", "empty-result"]
     },
     {
       "test_id": "cmd_013",
-      "name": "前缀匹配推荐-单字符前缀",
-      "description": "用户N输入'g'作为前缀，历史中有git status、go run、grep命令。系统应返回所有以g开头的命令候选",
+      "name": "前缀匹配推荐-单字前缀",
+      "description": "用户N输入「审」作为前缀，历史中有审批请假、审批报销、审批采购。系统应返回所有以「审」开头的操作候选",
       "setup": {
-        "user_n_commands": [
+        "user_n_operations": [
           {
-            "command": "git status",
+            "operation": "审批请假申请",
             "count": 5
           },
           {
-            "command": "go run main.go",
+            "operation": "审批报销单据",
             "count": 3
           },
           {
-            "command": "grep -r TODO",
+            "operation": "审批采购订单",
             "count": 2
           },
           {
-            "command": "npm install",
+            "operation": "创建飞书文档",
             "count": 4
           }
         ]
@@ -572,51 +536,48 @@
       "query": {
         "user": "user_n",
         "type": "prefix_match",
-        "prefix": "g"
+        "prefix": "审批"
       },
       "expected": {
         "candidates": [
-          "git status",
-          "go run main.go",
-          "grep -r TODO"
+          "审批请假申请",
+          "审批报销单据",
+          "审批采购订单"
         ],
         "must_not_contain": [
-          "npm install"
+          "创建飞书文档"
         ],
-        "count": 3
+        "count": 3,
+        "expected_keywords": ["审批", "请假", "报销", "采购"]
       },
       "difficulty": "easy",
       "priority": "P0",
-      "tags": [
-        "prefix-match",
-        "basic",
-        "single-char"
-      ]
+      "tags": ["飞书", "prefix-match", "basic", "single-char"]
     },
     {
       "test_id": "cmd_014",
       "name": "前缀匹配推荐-长前缀精确匹配",
-      "description": "用户O输入'git co'作为前缀，历史中有git commit、git config、git checkout。应返回这三个候选",
+      "description": "用户O输入「提交报销」作为前缀，历史中有提交报销-差旅、提交报销-餐饮、提交报销-办公用品。应返回这三个候选",
       "setup": {
-        "user_o_commands": [
+        "user_o_operations": [
           {
-            "command": "git commit -m \"fix\"",
+            "operation": "提交报销-差旅费用（北京出差）",
             "count": 6
           },
           {
-            "command": "git config user.name",
+            "operation": "提交报销-餐饮招待费",
             "count": 2
           },
           {
-            "command": "git checkout main",
+            "operation": "提交报销-办公用品采购",
             "count": 4
           },
           {
-            "command": "git push origin main",
+            "operation": "提交请假申请-年假",
             "count": 3
           },
           {
-            "command": "docker compose up",
+            "operation": "创建产品需求文档",
             "count": 5
           }
         ]
@@ -624,40 +585,37 @@
       "query": {
         "user": "user_o",
         "type": "prefix_match",
-        "prefix": "git co"
+        "prefix": "提交报销"
       },
       "expected": {
         "candidates": [
-          "git commit -m \"fix\"",
-          "git config user.name",
-          "git checkout main"
+          "提交报销-差旅费用（北京出差）",
+          "提交报销-餐饮招待费",
+          "提交报销-办公用品采购"
         ],
         "must_not_contain": [
-          "git push origin main",
-          "docker compose up"
+          "提交请假申请-年假",
+          "创建产品需求文档"
         ],
-        "count": 3
+        "count": 3,
+        "expected_keywords": ["报销", "差旅", "餐饮", "办公用品"]
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": [
-        "prefix-match",
-        "multi-candidate",
-        "long-prefix"
-      ]
+      "tags": ["飞书", "prefix-match", "multi-candidate", "long-prefix"]
     },
     {
       "test_id": "cmd_015",
       "name": "前缀匹配推荐-无匹配",
-      "description": "用户P输入'xyz'作为前缀，历史中没有任何以xyz开头的命令。应返回空结果",
+      "description": "用户P输入「翻译」作为前缀，历史中没有任何与翻译相关的操作。应返回空结果",
       "setup": {
-        "user_p_commands": [
+        "user_p_operations": [
           {
-            "command": "git status",
+            "operation": "提交请假审批",
             "count": 5
           },
           {
-            "command": "npm test",
+            "operation": "创建多维表格",
             "count": 3
           }
         ]
@@ -665,41 +623,38 @@
       "query": {
         "user": "user_p",
         "type": "prefix_match",
-        "prefix": "xyz"
+        "prefix": "翻译"
       },
       "expected": {
         "candidates": [],
         "count": 0,
-        "error": false
+        "error": false,
+        "expected_keywords": []
       },
       "difficulty": "easy",
       "priority": "P1",
-      "tags": [
-        "prefix-match",
-        "edge-case",
-        "no-match"
-      ]
+      "tags": ["飞书", "prefix-match", "edge-case", "no-match"]
     },
     {
       "test_id": "cmd_016",
       "name": "前缀匹配推荐-频率排序",
-      "description": "用户Q输入'docker'前缀，有3个docker相关命令但频率不同。候选应按频率从高到低排序",
+      "description": "用户Q输入「创建」前缀，有3个以「创建」开头的操作但频率不同。候选应按频率从高到低排序",
       "setup": {
-        "user_q_commands": [
+        "user_q_operations": [
           {
-            "command": "docker build -t app .",
+            "operation": "创建飞书文档",
             "count": 10
           },
           {
-            "command": "docker compose up -d",
+            "operation": "创建会议",
             "count": 5
           },
           {
-            "command": "docker ps",
+            "operation": "创建任务",
             "count": 15
           },
           {
-            "command": "git push",
+            "operation": "查看日历",
             "count": 20
           }
         ]
@@ -707,36 +662,33 @@
       "query": {
         "user": "user_q",
         "type": "prefix_match",
-        "prefix": "docker"
+        "prefix": "创建"
       },
       "expected": {
         "candidates_ordered": [
-          "docker ps",
-          "docker build -t app .",
-          "docker compose up -d"
+          "创建任务",
+          "创建飞书文档",
+          "创建会议"
         ],
-        "sort_by": "frequency_desc"
+        "sort_by": "frequency_desc",
+        "expected_keywords": ["创建", "任务", "文档", "会议"]
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": [
-        "prefix-match",
-        "ranking",
-        "frequency-sort"
-      ]
+      "tags": ["飞书", "prefix-match", "ranking", "frequency-sort"]
     },
     {
       "test_id": "cmd_017",
-      "name": "前缀匹配推荐-大小写不敏感",
-      "description": "用户R输入'Git'作为前缀（大写G），历史中有'git status'（小写）。系统应做大小写不敏感匹配",
+      "name": "前缀匹配推荐-模糊匹配",
+      "description": "用户R输入「报消」作为前缀（笔误），历史中有「报销审批」操作。系统应做模糊匹配返回相关候选",
       "setup": {
-        "user_r_commands": [
+        "user_r_operations": [
           {
-            "command": "git status",
+            "operation": "提交报销审批",
             "count": 5
           },
           {
-            "command": "git commit",
+            "operation": "查看报销进度",
             "count": 3
           }
         ]
@@ -744,67 +696,64 @@
       "query": {
         "user": "user_r",
         "type": "prefix_match",
-        "prefix": "Git"
+        "prefix": "报消"
       },
       "expected": {
         "candidates": [
-          "git status",
-          "git commit"
+          "提交报销审批",
+          "查看报销进度"
         ],
-        "case_insensitive": true
+        "fuzzy_match": true,
+        "expected_keywords": ["报销", "审批", "进度"]
       },
       "difficulty": "medium",
       "priority": "P2",
-      "tags": [
-        "prefix-match",
-        "case-insensitive",
-        "edge-case"
-      ]
+      "tags": ["飞书", "prefix-match", "fuzzy-match", "edge-case"]
     },
     {
       "test_id": "cmd_018",
       "name": "前缀匹配推荐-限制返回数量",
-      "description": "用户S输入'git'前缀，有10个git相关命令。查询limit=3时应只返回频率最高的3个",
+      "description": "用户S输入「飞书」前缀，有多个飞书相关操作。查询limit=3时应只返回频率最高的3个",
       "setup": {
-        "user_s_commands": [
+        "user_s_operations": [
           {
-            "command": "git status",
+            "operation": "查看飞书消息",
             "count": 20
           },
           {
-            "command": "git add .",
+            "operation": "编辑飞书文档",
             "count": 15
           },
           {
-            "command": "git commit -m",
+            "operation": "分享飞书文档权限",
             "count": 12
           },
           {
-            "command": "git push",
+            "operation": "创建飞书任务",
             "count": 10
           },
           {
-            "command": "git pull",
+            "operation": "搜索飞书知识库",
             "count": 8
           },
           {
-            "command": "git log",
+            "operation": "飞书文档评论反馈",
             "count": 6
           },
           {
-            "command": "git diff",
+            "operation": "飞书日程提醒",
             "count": 5
           },
           {
-            "command": "git stash",
+            "operation": "飞书多维表格录入",
             "count": 3
           },
           {
-            "command": "git branch",
+            "operation": "飞书OKR复盘",
             "count": 2
           },
           {
-            "command": "git merge",
+            "operation": "飞书审批催办",
             "count": 1
           }
         ]
@@ -812,59 +761,56 @@
       "query": {
         "user": "user_s",
         "type": "prefix_match",
-        "prefix": "git",
+        "prefix": "飞书",
         "limit": 3
       },
       "expected": {
         "candidates": [
-          "git status",
-          "git add .",
-          "git commit -m"
+          "查看飞书消息",
+          "编辑飞书文档",
+          "分享飞书文档权限"
         ],
-        "count": 3
+        "count": 3,
+        "expected_keywords": ["飞书", "消息", "文档", "权限"]
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": [
-        "prefix-match",
-        "limit",
-        "truncation"
-      ]
+      "tags": ["飞书", "prefix-match", "limit", "truncation"]
     },
     {
       "test_id": "cmd_019",
-      "name": "上下文感知推荐-连续命令序列",
-      "description": "用户T最近3条命令依次是git add、git status、git commit。下一条命令应推荐git push，因为这是标准的git工作流",
+      "name": "上下文感知推荐-审批流程序列",
+      "description": "用户T最近3条操作依次是创建采购申请、填写采购明细、上传报价单。下一步应推荐「提交采购审批」，因为这是标准的采购审批工作流",
       "setup": {
         "user_t_recent_sequence": [
           {
-            "command": "git add .",
+            "operation": "创建采购申请单",
             "timestamp": "2026-04-29T10:00:00"
           },
           {
-            "command": "git status",
+            "operation": "填写采购明细（3项物品）",
             "timestamp": "2026-04-29T10:01:00"
           },
           {
-            "command": "git commit -m \"feature\"",
+            "operation": "上传供应商报价单附件",
             "timestamp": "2026-04-29T10:02:00"
           }
         ],
         "user_t_history": [
           {
-            "command": "git add .",
+            "operation": "创建采购申请单",
             "count": 20
           },
           {
-            "command": "git status",
+            "operation": "填写采购明细",
             "count": 18
           },
           {
-            "command": "git commit -m",
+            "operation": "上传供应商报价单",
             "count": 17
           },
           {
-            "command": "git push",
+            "operation": "提交采购审批",
             "count": 16
           }
         ]
@@ -875,43 +821,40 @@
         "recent_window": 3
       },
       "expected": {
-        "top_recommendation": "git push",
-        "reason": "sequential_pattern"
+        "top_recommendation": "提交采购审批",
+        "reason": "sequential_pattern",
+        "expected_keywords": ["采购", "审批", "提交"]
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": [
-        "context-aware",
-        "sequence",
-        "workflow"
-      ]
+      "tags": ["飞书", "context-aware", "sequence", "workflow", "审批"]
     },
     {
       "test_id": "cmd_020",
-      "name": "上下文感知推荐-测试后修复模式",
-      "description": "用户U刚执行了npm test（测试失败），然后执行了vim src/app.js（编辑代码）。系统应推荐npm test（重新测试验证）而非npm run build",
+      "name": "上下文感知推荐-修改后重新提交模式",
+      "description": "用户U的报销审批被驳回了，然后修改了报销金额和发票附件。系统应推荐「重新提交报销审批」而非「提交新的请假申请」",
       "setup": {
         "user_u_recent_sequence": [
           {
-            "command": "npm test",
+            "operation": "报销审批被驳回（原因：金额超标）",
             "timestamp": "2026-04-29T14:00:00"
           },
           {
-            "command": "vim src/app.js",
+            "operation": "修改报销金额和发票附件",
             "timestamp": "2026-04-29T14:05:00"
           }
         ],
         "user_u_history": [
           {
-            "command": "npm test",
+            "operation": "重新提交报销审批",
             "count": 30
           },
           {
-            "command": "npm run build",
+            "operation": "提交请假审批",
             "count": 10
           },
           {
-            "command": "git commit",
+            "operation": "查看审批进度",
             "count": 20
           }
         ]
@@ -922,37 +865,34 @@
         "recent_window": 2
       },
       "expected": {
-        "top_recommendation": "npm test",
-        "reason": "test_after_edit_pattern"
+        "top_recommendation": "重新提交报销审批",
+        "reason": "resubmit_after_rejection_pattern",
+        "expected_keywords": ["重新提交", "报销", "审批"]
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": [
-        "context-aware",
-        "debugging",
-        "workflow"
-      ]
+      "tags": ["飞书", "context-aware", "resubmit", "workflow", "审批"]
     },
     {
       "test_id": "cmd_021",
-      "name": "上下文感知推荐-部署序列",
-      "description": "用户V最近执行了docker build和docker tag。历史模式显示之后通常执行docker push。应推荐docker push",
+      "name": "上下文感知推荐-会议准备序列",
+      "description": "用户V最近创建了会议并邀请了参会人。历史模式显示之后通常会上传会议议程文档。应推荐上传会议议程",
       "setup": {
         "user_v_recent_sequence": [
           {
-            "command": "docker build -t myapp:v2 .",
+            "operation": "创建「Q2产品评审会议」",
             "timestamp": "2026-04-29T16:00:00"
           },
           {
-            "command": "docker tag myapp:v2 registry/myapp:v2",
+            "operation": "邀请8位参会人（产品、技术、运营）",
             "timestamp": "2026-04-29T16:05:00"
           }
         ],
         "user_v_history_pattern": {
           "sequence": [
-            "docker build",
-            "docker tag",
-            "docker push"
+            "创建会议",
+            "邀请参会人",
+            "上传会议议程文档"
           ],
           "occurrences": 15
         }
@@ -963,43 +903,40 @@
         "recent_window": 2
       },
       "expected": {
-        "top_recommendation": "docker push",
-        "reason": "deployment_sequence_pattern"
+        "top_recommendation": "上传会议议程文档",
+        "reason": "meeting_preparation_sequence_pattern",
+        "expected_keywords": ["会议", "议程", "文档", "上传"]
       },
       "difficulty": "hard",
       "priority": "P1",
-      "tags": [
-        "context-aware",
-        "deployment",
-        "sequence"
-      ]
+      "tags": ["飞书", "context-aware", "meeting", "sequence", "日历"]
     },
     {
       "test_id": "cmd_022",
-      "name": "上下文感知推荐-无明显模式",
-      "description": "用户W最近执行了两条无关命令：ls和cat README.md。历史中也没有明显的序列模式。系统应回退到频率推荐",
+      "name": "上下文感知推荐-无明显模式回退",
+      "description": "用户W最近执行了两条无关操作：查看天气提醒和浏览公司公告。历史中也没有明显的序列模式。系统应回退到频率推荐",
       "setup": {
         "user_w_recent_sequence": [
           {
-            "command": "ls -la",
+            "operation": "查看日历天气提醒",
             "timestamp": "2026-04-29T09:00:00"
           },
           {
-            "command": "cat README.md",
+            "operation": "浏览公司公告",
             "timestamp": "2026-04-29T09:01:00"
           }
         ],
         "user_w_history": [
           {
-            "command": "ls -la",
+            "operation": "查看日历天气提醒",
             "count": 5
           },
           {
-            "command": "cat README.md",
+            "operation": "浏览公司公告",
             "count": 3
           },
           {
-            "command": "git status",
+            "operation": "提交请假审批",
             "count": 20
           }
         ]
@@ -1010,36 +947,33 @@
         "recent_window": 2
       },
       "expected": {
-        "top_recommendation": "git status",
-        "fallback_to_frequency": true
+        "top_recommendation": "提交请假审批",
+        "fallback_to_frequency": true,
+        "expected_keywords": ["请假", "审批"]
       },
       "difficulty": "medium",
       "priority": "P1",
-      "tags": [
-        "context-aware",
-        "fallback",
-        "no-pattern"
-      ]
+      "tags": ["飞书", "context-aware", "fallback", "no-pattern"]
     },
     {
       "test_id": "cmd_023",
-      "name": "上下文感知推荐-错误恢复模式",
-      "description": "用户X执行了kubectl apply但失败了，然后查看了pod状态。历史显示这种情况下通常会编辑yaml再重新apply",
+      "name": "上下文感知推荐-审批驳回恢复模式",
+      "description": "用户X的采购审批被驳回了，然后查看了驳回原因。历史显示这种情况下通常会修改采购申请并联系审批人说明情况",
       "setup": {
         "user_x_recent_sequence": [
           {
-            "command": "kubectl apply -f deploy.yaml",
+            "operation": "采购审批被驳回",
             "timestamp": "2026-04-29T11:00:00"
           },
           {
-            "command": "kubectl get pods",
+            "operation": "查看驳回原因和审批人意见",
             "timestamp": "2026-04-29T11:01:00"
           }
         ],
         "user_x_history_pattern": {
-          "after_kubectl_apply_then_get_pods": [
-            "vim deploy.yaml",
-            "kubectl apply -f deploy.yaml"
+          "after_rejection_then_view_reason": [
+            "修改采购申请内容",
+            "@审批人 发送说明消息"
           ],
           "occurrences": 8
         }
@@ -1051,27 +985,24 @@
       },
       "expected": {
         "top_recommendations": [
-          "vim deploy.yaml",
-          "kubectl apply -f deploy.yaml"
+          "修改采购申请内容",
+          "@审批人 发送说明消息"
         ],
-        "reason": "error_recovery_pattern"
+        "reason": "approval_rejection_recovery_pattern",
+        "expected_keywords": ["修改", "采购", "申请", "@", "审批人", "消息"]
       },
       "difficulty": "hard",
       "priority": "P2",
-      "tags": [
-        "context-aware",
-        "error-recovery",
-        "kubernetes"
-      ]
+      "tags": ["飞书", "context-aware", "error-recovery", "审批"]
     },
     {
       "test_id": "cmd_024",
-      "name": "上下文感知推荐-空历史回退",
-      "description": "用户Y是新用户，只有当前这一条命令，没有历史。系统应返回空推荐或基于全局流行度推荐",
+      "name": "上下文感知推荐-新用户空历史回退",
+      "description": "用户Y是新用户，只有当前这一条操作（首次打开飞书），没有历史。系统应返回空推荐或基于企业热门操作推荐",
       "setup": {
         "user_y_recent_sequence": [
           {
-            "command": "git init",
+            "operation": "首次登录飞书",
             "timestamp": "2026-04-29T08:00:00"
           }
         ],
@@ -1084,36 +1015,33 @@
       },
       "expected": {
         "result_type": "empty_or_global_fallback",
-        "error": false
+        "error": false,
+        "expected_keywords": []
       },
       "difficulty": "medium",
       "priority": "P2",
-      "tags": [
-        "context-aware",
-        "new-user",
-        "edge-case"
-      ]
+      "tags": ["飞书", "context-aware", "new-user", "edge-case"]
     },
     {
       "test_id": "cmd_025",
-      "name": "子命令区分-git commit vs git push",
-      "description": "用户Z使用git commit 15次和git push 5次。查询git子命令分布时，commit和push应作为独立命令统计",
+      "name": "操作类型区分-审批子类型",
+      "description": "用户Z使用请假审批15次和报销审批5次。查询审批子类型分布时，请假和报销应作为独立类型统计",
       "setup": {
-        "user_z_commands": [
+        "user_z_operations": [
           {
-            "command": "git commit -m \"msg\"",
+            "operation": "提交请假审批-年假",
             "count": 10
           },
           {
-            "command": "git commit --amend",
+            "operation": "提交请假审批-事假",
             "count": 5
           },
           {
-            "command": "git push origin main",
+            "operation": "提交报销审批-差旅",
             "count": 3
           },
           {
-            "command": "git push",
+            "operation": "提交报销审批-餐饮",
             "count": 2
           }
         ]
@@ -1121,50 +1049,47 @@
       "query": {
         "user": "user_z",
         "type": "subcommand_analysis",
-        "base_command": "git"
+        "base_command": "审批"
       },
       "expected": {
-        "commit_total": 15,
-        "push_total": 5,
-        "subcommands_separated": true,
-        "commit_is_top_subcommand": true
+        "leave_total": 15,
+        "expense_total": 5,
+        "subtypes_separated": true,
+        "leave_is_top_subtype": true,
+        "expected_keywords": ["请假", "年假", "事假", "报销", "差旅", "餐饮"]
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": [
-        "subcommand",
-        "git",
-        "analysis"
-      ]
+      "tags": ["飞书", "subcommand", "审批", "analysis"]
     },
     {
       "test_id": "cmd_026",
-      "name": "子命令区分-docker复合命令",
-      "description": "用户AA使用了docker build、docker run、docker compose等多种docker子命令。系统应正确分类和统计每种子命令",
+      "name": "操作类型区分-多维表格复合操作",
+      "description": "用户AA使用了多维表格的创建表格、数据录入、视图切换、字段管理等多种操作。系统应正确分类和统计每种子操作",
       "setup": {
-        "user_aa_commands": [
+        "user_aa_operations": [
           {
-            "command": "docker build -t app .",
+            "operation": "创建多维表格",
             "count": 8
           },
           {
-            "command": "docker run -d -p 8080:80 app",
+            "operation": "录入表格数据",
             "count": 6
           },
           {
-            "command": "docker compose up -d",
+            "operation": "切换表格视图-看板视图",
             "count": 10
           },
           {
-            "command": "docker compose down",
+            "operation": "切换表格视图-甘特图视图",
             "count": 7
           },
           {
-            "command": "docker ps",
+            "operation": "管理表格字段",
             "count": 12
           },
           {
-            "command": "docker logs container_name",
+            "operation": "导出表格数据",
             "count": 4
           }
         ]
@@ -1172,54 +1097,51 @@
       "query": {
         "user": "user_aa",
         "type": "subcommand_analysis",
-        "base_command": "docker"
+        "base_command": "多维表格"
       },
       "expected": {
-        "subcommands": {
-          "compose": 17,
-          "ps": 12,
-          "build": 8,
-          "run": 6,
-          "logs": 4
+        "suboperations": {
+          "管理字段": 12,
+          "切换视图": 17,
+          "创建表格": 8,
+          "录入数据": 6,
+          "导出数据": 4
         },
-        "compose_includes_both_up_and_down": true
+        "view_switch_includes_both_kanban_and_gantt": true,
+        "expected_keywords": ["多维表格", "创建", "录入", "视图", "看板", "甘特图", "字段", "导出"]
       },
       "difficulty": "hard",
       "priority": "P1",
-      "tags": [
-        "subcommand",
-        "docker",
-        "grouping"
-      ]
+      "tags": ["飞书", "subcommand", "多维表格", "grouping"]
     },
     {
       "test_id": "cmd_027",
-      "name": "子命令区分-npm run自定义脚本",
-      "description": "用户BB使用了npm run dev、npm run build、npm run test等自定义脚本。系统应将npm run视为npm的子命令，并进一步区分不同的script",
+      "name": "操作类型区分-文档协作子操作",
+      "description": "用户BB使用了飞书文档的创建文档、编辑内容、添加评论、分享权限、设置目录等操作。系统应将文档相关操作分类统计",
       "setup": {
-        "user_bb_commands": [
+        "user_bb_operations": [
           {
-            "command": "npm run dev",
+            "operation": "创建飞书文档",
             "count": 20
           },
           {
-            "command": "npm run build",
+            "operation": "编辑文档正文内容",
             "count": 10
           },
           {
-            "command": "npm run test",
+            "operation": "添加文档评论",
             "count": 8
           },
           {
-            "command": "npm run lint",
+            "operation": "回复文档评论",
             "count": 5
           },
           {
-            "command": "npm install",
+            "operation": "分享文档权限-可编辑",
             "count": 3
           },
           {
-            "command": "npm publish",
+            "operation": "分享文档权限-仅查看",
             "count": 1
           }
         ]
@@ -1227,118 +1149,112 @@
       "query": {
         "user": "user_bb",
         "type": "subcommand_analysis",
-        "base_command": "npm"
+        "base_command": "飞书文档"
       },
       "expected": {
-        "run_subcommands": {
-          "dev": 20,
-          "build": 10,
-          "test": 8,
-          "lint": 5
+        "content_operations": {
+          "创建": 20,
+          "编辑": 10,
+          "评论": 8,
+          "回复评论": 5
         },
-        "non_run_subcommands": {
-          "install": 3,
-          "publish": 1
-        }
+        "sharing_operations": {
+          "可编辑权限": 3,
+          "仅查看权限": 1
+        },
+        "expected_keywords": ["文档", "创建", "编辑", "评论", "回复", "分享", "权限"]
       },
       "difficulty": "hard",
       "priority": "P1",
-      "tags": [
-        "subcommand",
-        "npm",
-        "custom-scripts"
-      ]
+      "tags": ["飞书", "subcommand", "文档协作", "custom-operations"]
     },
     {
       "test_id": "cmd_028",
-      "name": "子命令区分-kubectl资源操作",
-      "description": "用户CC使用了kubectl get pods、kubectl get services、kubectl delete pod等命令。系统应能区分不同资源类型和操作类型",
+      "name": "操作类型区分-OKR层级操作",
+      "description": "用户CC使用了OKR的创建目标、更新进度、关联KR、季度复盘等操作。系统应能区分不同OKR操作类型和层级",
       "setup": {
-        "user_cc_commands": [
+        "user_cc_operations": [
           {
-            "command": "kubectl get pods",
+            "operation": "创建O级目标（公司战略对齐）",
             "count": 15
           },
           {
-            "command": "kubectl get services",
+            "operation": "创建KR关键结果",
             "count": 5
           },
           {
-            "command": "kubectl get deployments",
+            "operation": "更新KR完成进度",
             "count": 3
           },
           {
-            "command": "kubectl describe pod mypod",
+            "operation": "关联KR到O级目标",
             "count": 4
           },
           {
-            "command": "kubectl delete pod oldpod",
-            "count": 2
+            "operation": "发起季度OKR复盘",
+            "count": 8
           },
           {
-            "command": "kubectl logs mypod",
-            "count": 8
+            "operation": "OKR评分打分",
+            "count": 2
           }
         ]
       },
       "query": {
         "user": "user_cc",
         "type": "subcommand_analysis",
-        "base_command": "kubectl"
+        "base_command": "OKR"
       },
       "expected": {
         "operation_breakdown": {
-          "get": 23,
-          "logs": 8,
-          "describe": 4,
-          "delete": 2
+          "创建目标": 20,
+          "复盘": 8,
+          "关联": 4,
+          "更新进度": 3,
+          "评分": 2
         },
-        "resource_breakdown_under_get": {
-          "pods": 15,
-          "services": 5,
-          "deployments": 3
-        }
+        "objective_vs_kr_under_create": {
+          "O级目标": 15,
+          "KR关键结果": 5
+        },
+        "expected_keywords": ["OKR", "目标", "关键结果", "KR", "进度", "复盘", "评分"]
       },
       "difficulty": "hard",
       "priority": "P2",
-      "tags": [
-        "subcommand",
-        "kubernetes",
-        "resource-analysis"
-      ]
+      "tags": ["飞书", "subcommand", "OKR", "resource-analysis"]
     },
     {
       "test_id": "cmd_029",
-      "name": "子命令区分-跨基础命令比较",
-      "description": "用户DD想知道他最常用的操作类型是'查看'还是'修改'。需要跨git/docker/npm等基础命令分析操作语义",
+      "name": "操作类型区分-跨模块操作语义分析",
+      "description": "用户DD想知道他最常用的操作语义类别是「查看」还是「创建/修改」。需要跨审批/日历/文档/任务等模块分析操作语义",
       "setup": {
-        "user_dd_commands": [
+        "user_dd_operations": [
           {
-            "command": "git status",
+            "operation": "查看审批进度",
             "count": 10
           },
           {
-            "command": "git diff",
+            "operation": "查看日历日程",
             "count": 8
           },
           {
-            "command": "git log",
+            "operation": "查看群聊消息",
             "count": 5
           },
           {
-            "command": "docker ps",
+            "operation": "查看OKR进度",
             "count": 7
           },
           {
-            "command": "docker logs app",
+            "operation": "查看任务列表",
             "count": 6
           },
           {
-            "command": "git commit -m",
+            "operation": "创建飞书文档",
             "count": 3
           },
           {
-            "command": "docker build -t app .",
+            "operation": "提交请假审批",
             "count": 2
           }
         ]
@@ -1348,54 +1264,50 @@
         "type": "semantic_analysis",
         "categories": [
           "view",
-          "modify"
+          "create_modify"
         ]
       },
       "expected": {
-        "view_commands": [
-          "git status",
-          "git diff",
-          "git log",
-          "docker ps",
-          "docker logs app"
+        "view_operations": [
+          "查看审批进度",
+          "查看日历日程",
+          "查看群聊消息",
+          "查看OKR进度",
+          "查看任务列表"
         ],
-        "modify_commands": [
-          "git commit -m",
-          "docker build -t app ."
+        "create_modify_operations": [
+          "创建飞书文档",
+          "提交请假审批"
         ],
         "view_total": 36,
-        "modify_total": 5,
-        "dominant_category": "view"
+        "create_modify_total": 5,
+        "dominant_category": "view",
+        "expected_keywords": ["查看", "审批", "日历", "群聊", "OKR", "任务", "创建", "文档", "请假"]
       },
       "difficulty": "hard",
       "priority": "P2",
-      "tags": [
-        "subcommand",
-        "semantic",
-        "cross-tool",
-        "analysis"
-      ]
+      "tags": ["飞书", "subcommand", "semantic", "cross-module", "analysis"]
     },
     {
       "test_id": "cmd_030",
-      "name": "子命令区分-同名子命令跨工具",
-      "description": "用户EE同时使用git log和docker logs。虽然都含'log'但属于不同工具的子命令，不应混淆",
+      "name": "操作类型区分-同名操作跨模块",
+      "description": "用户EE同时使用「查看审批进度」和「查看OKR进度」。虽然都含「查看进度」但属于不同模块的操作，不应混淆",
       "setup": {
-        "user_ee_commands": [
+        "user_ee_operations": [
           {
-            "command": "git log --oneline",
+            "operation": "查看请假审批进度",
             "count": 8
           },
           {
-            "command": "git log --graph",
+            "operation": "查看报销审批进度",
             "count": 3
           },
           {
-            "command": "docker logs mycontainer",
+            "operation": "查看OKR进度",
             "count": 5
           },
           {
-            "command": "kubectl logs mypod",
+            "operation": "查看任务完成进度",
             "count": 4
           }
         ]
@@ -1403,24 +1315,20 @@
       "query": {
         "user": "user_ee",
         "type": "subcommand_analysis",
-        "base_command": "git"
+        "base_command": "审批"
       },
       "expected": {
-        "git_log_total": 11,
+        "approval_progress_total": 11,
         "must_not_include": [
-          "docker logs",
-          "kubectl logs"
+          "查看OKR进度",
+          "查看任务完成进度"
         ],
-        "tool_isolation": true
+        "module_isolation": true,
+        "expected_keywords": ["审批", "进度", "请假", "报销"]
       },
       "difficulty": "medium",
       "priority": "P0",
-      "tags": [
-        "subcommand",
-        "isolation",
-        "cross-tool",
-        "ambiguity"
-      ]
+      "tags": ["飞书", "subcommand", "isolation", "cross-module", "ambiguity"]
     }
   ]
 }

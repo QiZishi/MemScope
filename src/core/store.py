@@ -388,18 +388,14 @@ class SqliteStore:
         cursor = self.conn.cursor()
 
         # Split query into individual terms for better Chinese text matching
-        # Use multiple strategies: 2-char bigrams, 3-char trigrams, and full query
+        # Use multiple strategies: 3+ char segments and full query
         terms = []
         
         # Strategy 1: Extract meaningful segments (3+ chars)
         segments = re.findall(r'[\u4e00-\u9fff]{3,}|[\w]{2,}', query)
         terms.extend(segments)
         
-        # Strategy 2: Extract 2-char bigrams for short terms
-        bigrams = [query[i:i+2] for i in range(len(query)-1) if re.match(r'[\u4e00-\u9fff]', query[i:i+2])]
-        terms.extend(bigrams)
-        
-        # Strategy 3: Add full query as fallback
+        # Strategy 2: Add full query as fallback
         if query not in terms:
             terms.append(query)
         
@@ -464,6 +460,7 @@ class SqliteStore:
             pass  # FTS5 not available, fall back to LIKE search
 
         # Fall back to LIKE search
+        # Use OR logic but with improved scoring to filter noise
         term_conditions = []
         term_params = []
         for term in terms:
@@ -482,12 +479,21 @@ class SqliteStore:
         results = []
         for row in cursor.fetchall():
             chunk = dict(row)
-            # Simple scoring based on match position
-            score = 0.5  # Base score
-            if query.lower() in chunk.get("content", "").lower():
-                score += 0.2
-            if chunk.get("summary") and query.lower() in chunk.get("summary", "").lower():
-                score += 0.1
+            content = chunk.get("content", "").lower()
+            summary = (chunk.get("summary") or "").lower()
+            query_lower = query.lower()
+            
+            # More nuanced scoring: count matching terms
+            matching_terms = sum(1 for t in terms if t.lower() in content or t.lower() in summary)
+            term_ratio = matching_terms / len(terms) if terms else 0
+            
+            # Score = base + term coverage bonus + exact match bonus
+            score = 0.2 + 0.6 * term_ratio  # 0.2 base, up to 0.8 for full coverage
+            if query_lower in content:
+                score += 0.15
+            if summary and query_lower in summary:
+                score += 0.05
+            score = min(score, 1.0)
 
             if score >= min_score:
                 chunk["score"] = score
