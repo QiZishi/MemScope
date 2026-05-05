@@ -513,11 +513,17 @@ class SqliteStore:
             term_params.extend([f"%{term}%", f"%{term}%"])
         term_where = " OR ".join(term_conditions)
 
+        # 计算相关性分数
+        relevance_conditions = []
+        for term in terms:
+            relevance_conditions.append(f"CASE WHEN c.content LIKE '%{term}%' THEN 1 ELSE 0 END")
+        relevance_score = " + ".join(relevance_conditions)
+
         all_params = term_params + extra_params + [max_results]
         cursor.execute(f"""
-            SELECT c.* FROM chunks c
+            SELECT c.*, ({relevance_score}) as relevance_score FROM chunks c
             WHERE ({term_where}){visibility_filter}
-            ORDER BY c.createdAt DESC
+            ORDER BY relevance_score DESC, c.createdAt DESC
             LIMIT ?
         """, all_params)
 
