@@ -1,0 +1,57 @@
+{
+  "timestamp": "2026-05-06T01:56:59.917856",
+  "overall": {
+    "total_cases": 30,
+    "overall_hit_rate": 0.5,
+    "overall_precision": 0.3388866666666666,
+    "overall_recall": 0.5,
+    "overall_f1_score": 0.3877833333333333,
+    "overall_noise_injection_rate": 0.21666666666666667,
+    "overall_latency_ms": 2.358333333333334,
+    "datasets_count": 3
+  },
+  "datasets": {
+    "feishu_decision_memory": {
+      "total_cases": 10,
+      "avg_hit_rate": 0.5,
+      "avg_precision": 0.28332999999999997,
+      "avg_recall": 0.5,
+      "avg_f1_score": 0.35001000000000004,
+      "avg_noise_injection_rate": 0.25,
+      "avg_latency_ms": 2.176,
+      "difficulty_distribution": {
+        "easy": 3,
+        "medium": 3,
+        "hard": 4
+      }
+    },
+    "feishu_knowledge_health": {
+      "total_cases": 10,
+      "avg_hit_rate": 0.8,
+      "avg_precision": 0.65,
+      "avg_recall": 0.8,
+      "avg_f1_score": 0.6966699999999999,
+      "avg_noise_injection_rate": 0.2,
+      "avg_latency_ms": 2.5170000000000003,
+      "difficulty_distribution": {
+        "easy": 3,
+        "medium": 3,
+        "hard": 4
+      }
+    },
+    "feishu_preference_memory": {
+      "total_cases": 10,
+      "avg_hit_rate": 0.2,
+      "avg_precision": 0.08332999999999999,
+      "avg_recall": 0.2,
+      "avg_f1_score": 0.11667000000000001,
+      "avg_noise_injection_rate": 0.2,
+      "avg_latency_ms": 2.3820000000000006,
+      "difficulty_distribution": {
+        "easy": 3,
+        "medium": 4,
+        "hard": 3
+      }
+    }
+  }
+}

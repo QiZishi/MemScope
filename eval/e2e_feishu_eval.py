@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 """
-MemScope 端到端评测脚本 — 通过飞书API在memscope评估群做真实评测
+MemScope 端到端评测脚本 — 直接调用MemScope API测试
 
 评测逻辑：
-- 不使用"通过/失败/错误"这种代码测试逻辑
-- 计算真正的memory架构指标：命中率、召回率、F1分数、精确率
-- 在飞书memscope评估群做真实评测
+- 每个样本包含chunk（记忆内容）、query（查询）、answer（期望答案）
+- 直接调用MemScope API存储chunk并查询
+- 计算真正的memory指标：命中率、精确率、召回率、F1分数
 
 用法:
-    python3 eval/e2e_feishu_eval.py [--chat-id CHAT_ID] [--rounds ROUNDS]
+    python3 eval/e2e_feishu_eval.py
 """
 
 import json
 import os
-import subprocess
 import sys
 import time
 import uuid
@@ -25,70 +24,12 @@ from typing import Any, Dict, List, Optional, Tuple
 # ============================================================================
 EVAL_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(EVAL_DIR)
+SRC_DIR = os.path.join(PROJECT_ROOT, "src")
 DATASETS_DIR = os.path.join(EVAL_DIR, "datasets")
 HISTORY_DIR = os.path.join(EVAL_DIR, "history")
 
-# ============================================================================
-# 飞书API客户端
-# ============================================================================
-class FeishuClient:
-    """飞书API客户端"""
-    
-    def __init__(self, chat_id: str):
-        self.chat_id = chat_id
-    
-    def send_message(self, text: str) -> Dict[str, Any]:
-        """发送消息到飞书群聊"""
-        cmd = [
-            "lark-cli", "im", "+messages-send",
-            "--chat-id", self.chat_id,
-            "--text", text,
-            "--as", "bot"
-        ]
-        try:
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
-            if result.returncode == 0:
-                return json.loads(result.stdout)
-            return {"error": result.stderr}
-        except Exception as e:
-            return {"error": str(e)}
-    
-    def get_messages(self, limit: int = 20) -> List[Dict[str, Any]]:
-        """获取群聊消息"""
-        cmd = [
-            "lark-cli", "im", "+chat-messages-list",
-            "--chat-id", self.chat_id,
-            "--page-size", str(limit)
-        ]
-        try:
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
-            if result.returncode == 0:
-                data = json.loads(result.stdout)
-                return data.get("data", {}).get("messages", [])
-            return []
-        except Exception:
-            return []
-    
-    def wait_for_bot_response(self, timeout: int = 15) -> Optional[str]:
-        """等待bot响应"""
-        start_time = time.time()
-        initial_messages = self.get_messages(limit=3)
-        initial_ids = {msg.get("message_id") for msg in initial_messages}
-        
-        while time.time() - start_time < timeout:
-            time.sleep(2)
-            current_messages = self.get_messages(limit=5)
-            
-            for msg in current_messages:
-                msg_id = msg.get("message_id")
-                sender = msg.get("sender", {})
-                sender_type = sender.get("sender_type", "")
-                
-                # 找到新的bot响应
-                if msg_id not in initial_ids and sender_type == "app":
-                    return msg.get("content", "")
-        
-        return None
+# 添加src到路径
+sys.path.insert(0, SRC_DIR)
 
 # ============================================================================
 # Memory指标计算
@@ -162,139 +103,74 @@ class MemoryMetrics:
         return noise_hits / len(forbidden_keywords)
 
 # ============================================================================
-# 飞书业务场景数据集
+# 评测数据集加载
 # ============================================================================
-FEISHU_BUSINESS_DATASETS = {
-    "decision_memory": [
-        {
-            "test_id": "feishu_dec_001",
-            "name": "技术选型决策",
-            "category": "技术决策",
-            "setup_messages": [
-                "大家讨论一下前端框架，React还是Vue？",
-                "我建议React，生态更成熟，TypeScript支持好",
-                "同意，我们决定用React，团队也更熟悉"
-            ],
-            "query": "前端框架选型",
-            "expected_keywords": ["React", "前端", "框架"],
-            "forbidden_keywords": ["Vue", "Angular"],
-            "description": "测试从飞书群聊中提取技术选型决策的能力"
-        },
-        {
-            "test_id": "feishu_dec_002",
-            "name": "部署方案决策",
-            "category": "部署决策",
-            "setup_messages": [
-                "部署方案大家有什么建议？",
-                "我建议用Docker + K8s，标准化部署",
-                "同意，我们确认用Docker容器化部署"
-            ],
-            "query": "部署方案",
-            "expected_keywords": ["Docker", "K8s", "容器化"],
-            "forbidden_keywords": ["裸机", "虚拟机"],
-            "description": "测试从飞书群聊中提取部署方案决策的能力"
-        },
-        {
-            "test_id": "feishu_dec_003",
-            "name": "数据库选型决策",
-            "category": "数据库决策",
-            "setup_messages": [
-                "数据库选型，PostgreSQL还是MySQL？",
-                "PostgreSQL，JSON支持更好，适合我们的场景",
-                "最终决定用PostgreSQL"
-            ],
-            "query": "数据库选型",
-            "expected_keywords": ["PostgreSQL", "JSON"],
-            "forbidden_keywords": ["MySQL", "MongoDB"],
-            "description": "测试从飞书群聊中提取数据库选型决策的能力"
-        }
-    ],
-    "preference_memory": [
-        {
-            "test_id": "feishu_pref_001",
-            "name": "编辑器偏好",
-            "category": "工具偏好",
-            "setup_messages": [
-                "我更喜欢用vim写代码，效率高",
-                "我习惯用VSCode，插件生态好"
-            ],
-            "query": "编辑器偏好",
-            "expected_keywords": ["vim", "VSCode"],
-            "forbidden_keywords": ["Emacs", "Sublime"],
-            "description": "测试从飞书群聊中提取编辑器偏好的能力"
-        },
-        {
-            "test_id": "feishu_pref_002",
-            "name": "工作时间偏好",
-            "category": "时间偏好",
-            "setup_messages": [
-                "我一般早上9点到12点效率最高",
-                "这段时间不要安排会议"
-            ],
-            "query": "工作时间偏好",
-            "expected_keywords": ["9点", "12点", "效率"],
-            "forbidden_keywords": ["下午", "晚上"],
-            "description": "测试从飞书群聊中提取工作时间偏好的能力"
-        },
-        {
-            "test_id": "feishu_pref_003",
-            "name": "编码风格偏好",
-            "category": "风格偏好",
-            "setup_messages": [
-                "我通常先写测试再写代码，TDD风格",
-                "代码格式化我偏好Tab缩进"
-            ],
-            "query": "编码风格偏好",
-            "expected_keywords": ["TDD", "Tab", "测试"],
-            "forbidden_keywords": ["Space", "不用测试"],
-            "description": "测试从飞书群聊中提取编码风格偏好的能力"
-        }
-    ],
-    "knowledge_health": [
-        {
-            "test_id": "feishu_kh_001",
-            "name": "API设计规范",
-            "category": "技术规范",
-            "setup_messages": [
-                "API设计规范文档已经写好了",
-                "RESTful风格，统一返回格式",
-                "错误码规范也定义好了"
-            ],
-            "query": "API设计规范",
-            "expected_keywords": ["RESTful", "返回格式", "错误码"],
-            "forbidden_keywords": ["GraphQL", "SOAP"],
-            "description": "测试团队知识健康检测API规范的能力"
-        },
-        {
-            "test_id": "feishu_kh_002",
-            "name": "安全审计流程",
-            "category": "流程规范",
-            "setup_messages": [
-                "安全审计流程需要大家了解",
-                "每月进行一次代码安全扫描",
-                "发现漏洞必须在24小时内修复"
-            ],
-            "query": "安全审计流程",
-            "expected_keywords": ["安全审计", "漏洞", "24小时"],
-            "forbidden_keywords": ["忽略", "延期"],
-            "description": "测试团队知识健康检测安全流程的能力"
-        },
-        {
-            "test_id": "feishu_kh_003",
-            "name": "CI/CD流水线",
-            "category": "DevOps",
-            "setup_messages": [
-                "CI/CD流水线配置完成",
-                "每次push自动运行测试",
-                "部署到staging环境需要手动触发"
-            ],
-            "query": "CI/CD流水线",
-            "expected_keywords": ["CI/CD", "测试", "staging"],
-            "forbidden_keywords": ["手动部署", "跳过测试"],
-            "description": "测试团队知识健康检测CI/CD流程的能力"
-        }
-    ]
-}
+def load_datasets(datasets_dir: str) -> Dict[str, List[Dict]]:
+    """加载所有评测数据集"""
+    datasets = {}
+    
+    for filename in os.listdir(datasets_dir):
+        if filename.endswith(".json") and filename.startswith("feishu_"):
+            filepath = os.path.join(datasets_dir, filename)
+            with open(filepath, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            
+            dataset_name = data.get("dataset_name", filename.replace(".json", ""))
+            test_cases = data.get("test_cases", [])
+            datasets[dataset_name] = test_cases
+    
+    return datasets
+
+# ============================================================================
+# MemScope API调用
+# ============================================================================
+class MemScopeAPI:
+    """MemScope API调用"""
+    
+    def __init__(self):
+        self.store = None
+        self._initialize()
+    
+    def _initialize(self):
+        """初始化MemScope"""
+        try:
+            from core.store import SqliteStore
+            
+            # 创建临时数据库
+            import tempfile
+            tmp = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
+            db_path = tmp.name
+            tmp.close()
+            
+            self.store = SqliteStore(db_path)
+            print("MemScope 初始化成功")
+        except Exception as e:
+            print(f"MemScope 初始化失败: {e}")
+            raise
+    
+    def store_chunk(self, content: str, session_key: str = "eval") -> str:
+        """存储chunk"""
+        chunk_id = str(uuid.uuid4())
+        now = int(time.time() * 1000)
+        
+        self.store.insert_chunk({
+            "id": chunk_id,
+            "sessionKey": session_key,
+            "turnId": str(now),
+            "seq": 0,
+            "role": "assistant",
+            "content": content,
+            "owner": "eval_user",
+            "createdAt": now,
+            "updatedAt": now
+        })
+        
+        return chunk_id
+    
+    def search(self, query: str, max_results: int = 5) -> List[Dict[str, Any]]:
+        """搜索记忆"""
+        results = self.store.search_chunks(query, max_results=max_results)
+        return results
 
 # ============================================================================
 # 端到端评测执行器
@@ -302,58 +178,53 @@ FEISHU_BUSINESS_DATASETS = {
 class E2EEvaluator:
     """端到端评测执行器"""
     
-    def __init__(self, chat_id: str):
-        self.client = FeishuClient(chat_id)
+    def __init__(self):
+        self.api = MemScopeAPI()
         self.metrics = MemoryMetrics()
-        self.results = []
     
-    def run_evaluation(self, datasets: Dict = None) -> Dict[str, Any]:
+    def run_evaluation(self, datasets: Dict[str, List[Dict]]) -> Dict[str, Any]:
         """运行端到端评测"""
-        if datasets is None:
-            datasets = FEISHU_BUSINESS_DATASETS
-        
         print("=" * 70)
-        print("MemScope 端到端评测 — 飞书业务场景")
+        print("MemScope 端到端评测 — 直接调用API测试")
         print("=" * 70)
         print(f"评测时间: {datetime.now().isoformat()}")
-        print(f"评测群聊: {self.client.chat_id}")
+        print(f"数据集数量: {len(datasets)}")
         print()
         
         all_results = {}
         
-        for dimension, test_cases in datasets.items():
+        for dataset_name, test_cases in datasets.items():
             print(f"\n{'='*60}")
-            print(f"评测维度: {dimension}")
+            print(f"数据集: {dataset_name} ({len(test_cases)} 条)")
             print(f"{'='*60}")
             
-            dimension_results = []
+            dataset_results = []
             
             for i, case in enumerate(test_cases):
                 print(f"\n  [{i+1}/{len(test_cases)}] {case['name']}")
                 
                 # 执行单个测试用例
                 result = self._run_single_test(case)
-                dimension_results.append(result)
+                dataset_results.append(result)
                 
                 # 打印结果
                 print(f"    命中率: {result['hit_rate']:.2%}")
                 print(f"    精确率: {result['precision']:.2%}")
                 print(f"    召回率: {result['recall']:.2%}")
                 print(f"    F1分数: {result['f1_score']:.2%}")
-                print(f"    噪声注入率: {result['noise_injection_rate']:.2%}")
             
-            # 计算维度汇总
-            dimension_summary = self._calculate_dimension_summary(dimension_results)
-            all_results[dimension] = {
-                "test_cases": dimension_results,
-                "summary": dimension_summary
+            # 计算数据集汇总
+            dataset_summary = self._calculate_dataset_summary(dataset_results)
+            all_results[dataset_name] = {
+                "test_cases": dataset_results,
+                "summary": dataset_summary
             }
             
-            print(f"\n  维度汇总:")
-            print(f"    平均命中率: {dimension_summary['avg_hit_rate']:.2%}")
-            print(f"    平均精确率: {dimension_summary['avg_precision']:.2%}")
-            print(f"    平均召回率: {dimension_summary['avg_recall']:.2%}")
-            print(f"    平均F1分数: {dimension_summary['avg_f1_score']:.2%}")
+            print(f"\n  数据集汇总:")
+            print(f"    平均命中率: {dataset_summary['avg_hit_rate']:.2%}")
+            print(f"    平均精确率: {dataset_summary['avg_precision']:.2%}")
+            print(f"    平均召回率: {dataset_summary['avg_recall']:.2%}")
+            print(f"    平均F1分数: {dataset_summary['avg_f1_score']:.2%}")
         
         # 计算总体汇总
         overall_summary = self._calculate_overall_summary(all_results)
@@ -361,8 +232,7 @@ class E2EEvaluator:
         return {
             "evaluation_id": f"e2e-{uuid.uuid4().hex[:12]}",
             "timestamp": datetime.now().isoformat(),
-            "chat_id": self.client.chat_id,
-            "dimensions": all_results,
+            "datasets": all_results,
             "overall": overall_summary
         }
     
@@ -370,23 +240,21 @@ class E2EEvaluator:
         """执行单个测试用例"""
         start_time = time.time()
         
-        # 1. 发送setup消息
-        for msg in case.get("setup_messages", []):
-            self.client.send_message(msg)
-            time.sleep(1)
+        # 1. 存储chunk
+        chunk = case.get("chunk", "")
+        self.api.store_chunk(chunk)
         
-        # 2. 发送查询
+        # 2. 查询
         query = case.get("query", "")
-        self.client.send_message(f"查询记忆: {query}")
+        results = self.api.search(query, max_results=5)
         
-        # 3. 等待响应
-        response = self.client.wait_for_bot_response(timeout=15)
+        # 3. 合并搜索结果
+        actual_content = " ".join(r.get("content", "") for r in results)
         elapsed_ms = (time.time() - start_time) * 1000
         
         # 4. 计算指标
         expected_keywords = case.get("expected_keywords", [])
         forbidden_keywords = case.get("forbidden_keywords", [])
-        actual_content = response or ""
         
         hit_rate = self.metrics.calculate_hit_rate(expected_keywords, actual_content)
         precision = self.metrics.calculate_precision(expected_keywords, forbidden_keywords, actual_content)
@@ -397,9 +265,12 @@ class E2EEvaluator:
         return {
             "test_id": case["test_id"],
             "name": case["name"],
+            "difficulty": case.get("difficulty", ""),
             "category": case.get("category", ""),
+            "chunk": chunk[:200],  # 截取前200字符
             "query": query,
-            "response": actual_content[:500],  # 截取前500字符
+            "answer": case.get("answer", ""),
+            "search_results": [r.get("content", "")[:100] for r in results[:3]],
             "expected_keywords": expected_keywords,
             "forbidden_keywords": forbidden_keywords,
             "hit_rate": round(hit_rate, 4),
@@ -408,11 +279,11 @@ class E2EEvaluator:
             "f1_score": round(f1_score, 4),
             "noise_injection_rate": round(noise_injection_rate, 4),
             "latency_ms": round(elapsed_ms, 2),
-            "has_response": response is not None
+            "results_count": len(results)
         }
     
-    def _calculate_dimension_summary(self, results: List[Dict]) -> Dict[str, Any]:
-        """计算维度汇总"""
+    def _calculate_dataset_summary(self, results: List[Dict]) -> Dict[str, Any]:
+        """计算数据集汇总"""
         if not results:
             return {}
         
@@ -424,12 +295,16 @@ class E2EEvaluator:
             "avg_f1_score": sum(r["f1_score"] for r in results) / len(results),
             "avg_noise_injection_rate": sum(r["noise_injection_rate"] for r in results) / len(results),
             "avg_latency_ms": sum(r["latency_ms"] for r in results) / len(results),
-            "response_rate": sum(1 for r in results if r["has_response"]) / len(results)
+            "difficulty_distribution": {
+                "easy": sum(1 for r in results if r["difficulty"] == "easy"),
+                "medium": sum(1 for r in results if r["difficulty"] == "medium"),
+                "hard": sum(1 for r in results if r["difficulty"] == "hard")
+            }
         }
     
     def _calculate_overall_summary(self, all_results: Dict) -> Dict[str, Any]:
         """计算总体汇总"""
-        all_summaries = [dim["summary"] for dim in all_results.values() if "summary" in dim]
+        all_summaries = [ds["summary"] for ds in all_results.values() if "summary" in ds]
         
         if not all_summaries:
             return {}
@@ -444,7 +319,7 @@ class E2EEvaluator:
             "overall_f1_score": sum(s["avg_f1_score"] * s["total_cases"] for s in all_summaries) / total_cases,
             "overall_noise_injection_rate": sum(s["avg_noise_injection_rate"] * s["total_cases"] for s in all_summaries) / total_cases,
             "overall_latency_ms": sum(s["avg_latency_ms"] * s["total_cases"] for s in all_summaries) / total_cases,
-            "overall_response_rate": sum(s["response_rate"] * s["total_cases"] for s in all_summaries) / total_cases
+            "datasets_count": len(all_summaries)
         }
 
 # ============================================================================
@@ -469,11 +344,10 @@ def save_evaluation_results(report: Dict[str, Any], history_dir: str) -> str:
     summary_path = os.path.join(eval_dir, "metrics_summary.json")
     summary = {
         "timestamp": report["timestamp"],
-        "chat_id": report["chat_id"],
         "overall": report.get("overall", {}),
-        "dimensions": {
-            name: dim.get("summary", {})
-            for name, dim in report.get("dimensions", {}).items()
+        "datasets": {
+            name: ds.get("summary", {})
+            for name, ds in report.get("datasets", {}).items()
         }
     }
     with open(summary_path, "w", encoding="utf-8") as f:
@@ -495,36 +369,34 @@ def generate_markdown_report(report: Dict[str, Any], output_path: str):
         "# MemScope 端到端评测报告",
         "",
         f"**评测时间**: {report.get('timestamp', 'N/A')}",
-        f"**评测群聊**: {report.get('chat_id', 'N/A')}",
         f"**评测ID**: {report.get('evaluation_id', 'N/A')}",
         "",
-        "## 总体指标",
+        "## 总体Memory指标",
         "",
-        "| 指标 | 值 |",
-        "|------|-----|",
-        f"| 总测试用例 | {overall.get('total_cases', 0)} |",
-        f"| **命中率 Hit Rate** | **{overall.get('overall_hit_rate', 0):.2%}** |",
-        f"| **精确率 Precision** | **{overall.get('overall_precision', 0):.2%}** |",
-        f"| **召回率 Recall** | **{overall.get('overall_recall', 0):.2%}** |",
-        f"| **F1分数** | **{overall.get('overall_f1_score', 0):.2%}** |",
-        f"| 噪声注入率 | {overall.get('overall_noise_injection_rate', 0):.2%} |",
-        f"| 平均响应时间 | {overall.get('overall_latency_ms', 0):.0f}ms |",
-        f"| 响应率 | {overall.get('overall_response_rate', 0):.2%} |",
+        "| 指标 | 值 | 说明 |",
+        "|------|-----|------|",
+        f"| **命中率 Hit Rate** | **{overall.get('overall_hit_rate', 0):.2%}** | 搜索结果中包含目标信息的比例 |",
+        f"| **精确率 Precision** | **{overall.get('overall_precision', 0):.2%}** | 搜索结果中正确信息的比例 |",
+        f"| **召回率 Recall** | **{overall.get('overall_recall', 0):.2%}** | 目标信息被检索到的比例 |",
+        f"| **F1分数** | **{overall.get('overall_f1_score', 0):.2%}** | 精确率和召回率的调和平均 |",
+        f"| 噪声注入率 | {overall.get('overall_noise_injection_rate', 0):.2%} | 搜索结果中噪声信息的比例 |",
+        f"| 平均响应时间 | {overall.get('overall_latency_ms', 0):.0f}ms | 平均响应延迟 |",
+        f"| 总测试用例 | {overall.get('total_cases', 0)} | - |",
         "",
-        "## 各维度指标",
+        "## 各数据集指标",
         "",
-        "| 维度 | 命中率 | 精确率 | 召回率 | F1分数 | 噪声注入率 |",
-        "|------|--------|--------|--------|--------|------------|",
+        "| 数据集 | 命中率 | 精确率 | 召回率 | F1分数 | 用例数 |",
+        "|--------|--------|--------|--------|--------|--------|",
     ]
     
-    for name, dim in report.get("dimensions", {}).items():
-        summary = dim.get("summary", {})
+    for name, ds in report.get("datasets", {}).items():
+        summary = ds.get("summary", {})
         lines.append(
             f"| {name} | {summary.get('avg_hit_rate', 0):.2%} | "
             f"{summary.get('avg_precision', 0):.2%} | "
             f"{summary.get('avg_recall', 0):.2%} | "
             f"{summary.get('avg_f1_score', 0):.2%} | "
-            f"{summary.get('avg_noise_injection_rate', 0):.2%} |"
+            f"{summary.get('total_cases', 0)} |"
         )
     
     lines.extend([
@@ -533,14 +405,17 @@ def generate_markdown_report(report: Dict[str, Any], output_path: str):
         ""
     ])
     
-    for name, dim in report.get("dimensions", {}).items():
+    for name, ds in report.get("datasets", {}).items():
         lines.append(f"### {name}")
         lines.append("")
         
-        for case in dim.get("test_cases", []):
+        for case in ds.get("test_cases", []):
             lines.append(f"#### {case['name']}")
             lines.append("")
-            lines.append(f"- **查询**: {case['query']}")
+            lines.append(f"- **难度**: {case.get('difficulty', 'N/A')}")
+            lines.append(f"- **类别**: {case.get('category', 'N/A')}")
+            lines.append(f"- **查询**: {case.get('query', 'N/A')}")
+            lines.append(f"- **期望答案**: {case.get('answer', 'N/A')}")
             lines.append(f"- **命中率**: {case['hit_rate']:.2%}")
             lines.append(f"- **精确率**: {case['precision']:.2%}")
             lines.append(f"- **召回率**: {case['recall']:.2%}")
@@ -555,16 +430,15 @@ def generate_markdown_report(report: Dict[str, Any], output_path: str):
 # 主入口
 # ============================================================================
 if __name__ == "__main__":
-    import argparse
-    
-    parser = argparse.ArgumentParser(description="MemScope 端到端评测")
-    parser.add_argument("--chat-id", default="oc_ca5b7423a6cb1cb704cf46876c71aeed",
-                       help="飞书群聊ID（默认: memscope评估群）")
-    args = parser.parse_args()
+    # 加载数据集
+    datasets = load_datasets(DATASETS_DIR)
+    print(f"加载了 {len(datasets)} 个数据集")
+    for name, cases in datasets.items():
+        print(f"  - {name}: {len(cases)} 条")
     
     # 运行评测
-    evaluator = E2EEvaluator(args.chat_id)
-    report = evaluator.run_evaluation()
+    evaluator = E2EEvaluator()
+    report = evaluator.run_evaluation(datasets)
     
     # 保存结果
     eval_dir = save_evaluation_results(report, HISTORY_DIR)

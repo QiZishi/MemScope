@@ -118,9 +118,10 @@ class SqliteStore:
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_chunks_visibility_role ON chunks(visibility, role)")
         
         # FTS5 virtual table for full-text search (standalone mode)
+        # 使用unicode61 tokenizer支持中文
         cursor.execute("""
             CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts USING fts5(
-                content, summary
+                content, summary, tokenize='unicode61'
             )
         """)
         
@@ -388,16 +389,20 @@ class SqliteStore:
         cursor = self.conn.cursor()
 
         # Split query into individual terms for better Chinese text matching
-        # Use multiple strategies: 3+ char segments and full query
+        # Use multiple strategies: 2-6 char Chinese segments, English words, numbers
         terms = []
         
-        # Strategy 1: Extract meaningful segments (3+ chars)
-        segments = re.findall(r'[\u4e00-\u9fff]{3,}|[\w]{2,}', query)
-        terms.extend(segments)
+        # Strategy 1: Extract Chinese word groups (2-6 chars)
+        chinese_words = re.findall(r'[\u4e00-\u9fff]{2,6}', query)
+        terms.extend(chinese_words)
         
-        # Strategy 2: Add full query as fallback
-        if query not in terms:
-            terms.append(query)
+        # Strategy 2: Extract English words
+        english_words = re.findall(r'[a-zA-Z]+', query)
+        terms.extend(english_words)
+        
+        # Strategy 3: Extract numbers
+        numbers = re.findall(r'\d+', query)
+        terms.extend(numbers)
         
         # Remove duplicates while preserving order
         seen = set()

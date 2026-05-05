@@ -1,0 +1,123 @@
+{
+  "dataset_name": "feishu_decision_memory",
+  "version": "1.0",
+  "description": "飞书业务场景决策记忆评测数据集",
+  "total_cases": 10,
+  "schema": {
+    "chunk": "需要记忆的飞书对话/文档内容",
+    "query": "用户查询",
+    "answer": "期望的正确答案"
+  },
+  "test_cases": [
+    {
+      "test_id": "feishu_dec_001",
+      "name": "前端框架选型决策",
+      "difficulty": "easy",
+      "category": "技术选型",
+      "chunk": "张工：大家讨论一下前端框架，React还是Vue？\n李工：我建议React，生态更成熟，TypeScript支持好\n王工：同意，我们决定用React，团队也更熟悉\n张工：好的，方案定React了",
+      "query": "我们前端框架选了什么？",
+      "answer": "React",
+      "expected_keywords": ["React"],
+      "forbidden_keywords": ["Vue", "Angular"]
+    },
+    {
+      "test_id": "feishu_dec_002",
+      "name": "部署方案决策",
+      "difficulty": "easy",
+      "category": "部署方案",
+      "chunk": "张工：部署方案大家有什么建议？\n李工：我建议用Docker + K8s，标准化部署\n王工：同意，我们确认用Docker容器化部署，而不是直接部署到裸机\n张工：好的，Docker方案确认",
+      "query": "我们的部署方案是什么？",
+      "answer": "Docker容器化部署",
+      "expected_keywords": ["Docker", "容器化"],
+      "forbidden_keywords": ["裸机", "虚拟机"]
+    },
+    {
+      "test_id": "feishu_dec_003",
+      "name": "数据库选型决策",
+      "difficulty": "easy",
+      "category": "数据库选型",
+      "chunk": "赵工：数据库选型，PostgreSQL还是MySQL？\n张工：PostgreSQL，JSON支持更好，适合我们的场景\n李工：最终决定用PostgreSQL\n王工：确认，PostgreSQL方案通过",
+      "query": "我们选了什么数据库？",
+      "answer": "PostgreSQL",
+      "expected_keywords": ["PostgreSQL"],
+      "forbidden_keywords": ["MySQL", "MongoDB"]
+    },
+    {
+      "test_id": "feishu_dec_004",
+      "name": "CI/CD工具决策",
+      "difficulty": "medium",
+      "category": "CI/CD",
+      "chunk": "张工：CI/CD方案有三个：Jenkins、GitHub Actions、GitLab CI\n李工：Jenkins太重了，GitLab CI我们没用GitLab\n王工：最终采用GitHub Actions，和我们的代码仓库配合最好\n赵工：确认，GitHub Actions方案通过",
+      "query": "我们用什么CI/CD工具？",
+      "answer": "GitHub Actions",
+      "expected_keywords": ["GitHub Actions"],
+      "forbidden_keywords": ["Jenkins", "GitLab CI"]
+    },
+    {
+      "test_id": "feishu_dec_005",
+      "name": "移动端技术栈决策",
+      "difficulty": "medium",
+      "category": "技术选型",
+      "chunk": "张工：移动端技术栈大家讨论一下，Flutter还是React Native？\n李工：Flutter性能更好，但RN生态更成熟，团队已有JS经验\n王工：确认采用React Native作为移动端方案，主要是团队技术栈匹配\n张工：好的，React Native方案确认",
+      "query": "移动端用什么技术栈？",
+      "answer": "React Native",
+      "expected_keywords": ["React Native"],
+      "forbidden_keywords": ["Flutter", "Swift"]
+    },
+    {
+      "test_id": "feishu_dec_006",
+      "name": "项目管理工具决策",
+      "difficulty": "medium",
+      "category": "工具选型",
+      "chunk": "李工：项目管理工具用什么？Jira还是飞书项目？\n王工：飞书项目更方便，和飞书生态集成好\n张工：那就用飞书项目，省得切换工具\n赵工：确认，飞书项目方案通过",
+      "query": "项目管理用什么工具？",
+      "answer": "飞书项目",
+      "expected_keywords": ["飞书项目"],
+      "forbidden_keywords": ["Jira", "Trello"]
+    },
+    {
+      "test_id": "feishu_dec_007",
+      "name": "API网关选型决策",
+      "difficulty": "hard",
+      "category": "架构选型",
+      "chunk": "张工：API网关选型，Kong还是APISIX？\n李工：Kong更成熟，但APISIX性能更好，支持更多插件\n王工：考虑到我们需要高性能和自定义插件，决定用APISIX\n赵工：APISIX方案确认，下周开始技术调研",
+      "query": "API网关用什么方案？",
+      "answer": "APISIX",
+      "expected_keywords": ["APISIX"],
+      "forbidden_keywords": ["Kong", "Nginx"]
+    },
+    {
+      "test_id": "feishu_dec_008",
+      "name": "监控系统决策",
+      "difficulty": "hard",
+      "category": "运维选型",
+      "chunk": "王工：监控系统用什么？Prometheus+Grafana还是商业方案？\n张工：Prometheus+Grafana开源免费，社区活跃\n李工：决定用Prometheus+Grafana，配合AlertManager做告警\n赵工：确认，监控方案Prometheus+Grafana通过",
+      "query": "监控系统用什么方案？",
+      "answer": "Prometheus+Grafana",
+      "expected_keywords": ["Prometheus", "Grafana"],
+      "forbidden_keywords": ["Datadog", "New Relic"]
+    },
+    {
+      "test_id": "feishu_dec_009",
+      "name": "消息队列决策",
+      "difficulty": "hard",
+      "category": "中间件选型",
+      "chunk": "张工：消息队列选型，RabbitMQ还是Kafka？\n李工：RabbitMQ适合业务消息，Kafka适合大数据流\n王工：我们的场景主要是业务消息，决定用RabbitMQ\n赵工：RabbitMQ方案确认，支持延迟消息和消息确认",
+      "query": "消息队列用什么？",
+      "answer": "RabbitMQ",
+      "expected_keywords": ["RabbitMQ"],
+      "forbidden_keywords": ["Kafka", "RocketMQ"]
+    },
+    {
+      "test_id": "feishu_dec_010",
+      "name": "缓存方案决策",
+      "difficulty": "hard",
+      "category": "中间件选型",
+      "chunk": "李工：缓存方案用什么？Redis还是Memcached？\n张工：Redis功能更丰富，支持数据结构\n王工：决定用Redis，支持字符串、哈希、列表等多种数据结构\n赵工：Redis方案确认，集群模式部署",
+      "query": "缓存用什么方案？",
+      "answer": "Redis",
+      "expected_keywords": ["Redis"],
+      "forbidden_keywords": ["Memcached", "本地缓存"]
+    }
+  ]
+}

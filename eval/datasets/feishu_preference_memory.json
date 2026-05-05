@@ -1,0 +1,123 @@
+{
+  "dataset_name": "feishu_preference_memory",
+  "version": "1.0",
+  "description": "飞书业务场景偏好记忆评测数据集",
+  "total_cases": 10,
+  "schema": {
+    "chunk": "需要记忆的飞书对话内容",
+    "query": "用户查询",
+    "answer": "期望的正确答案"
+  },
+  "test_cases": [
+    {
+      "test_id": "feishu_pref_001",
+      "name": "编辑器偏好",
+      "difficulty": "easy",
+      "category": "工具偏好",
+      "chunk": "张工：我更喜欢用vim写代码，快捷键很高效\n李工：我习惯用VSCode，插件生态好\n王工：我偏好用IDEA写Java",
+      "query": "张工喜欢用什么编辑器？",
+      "answer": "vim",
+      "expected_keywords": ["vim"],
+      "forbidden_keywords": ["VSCode", "IDEA"]
+    },
+    {
+      "test_id": "feishu_pref_002",
+      "name": "工作时间偏好",
+      "difficulty": "easy",
+      "category": "时间偏好",
+      "chunk": "张工：我一般早上9点到12点效率最高，这段时间不要安排会议\n李工：我下午2点到5点状态最好\n王工：我喜欢晚上写代码，安静",
+      "query": "张工什么时候效率最高？",
+      "answer": "早上9点到12点",
+      "expected_keywords": ["9点", "12点"],
+      "forbidden_keywords": ["下午", "晚上"]
+    },
+    {
+      "test_id": "feishu_pref_003",
+      "name": "编码风格偏好",
+      "difficulty": "easy",
+      "category": "风格偏好",
+      "chunk": "张工：我通常先写测试再写代码，TDD风格\n李工：我偏好用Tab缩进，Space太多了按着累\n王工：我喜欢用2个空格缩进",
+      "query": "张工的编码风格是什么？",
+      "answer": "TDD，先写测试再写代码",
+      "expected_keywords": ["TDD", "测试"],
+      "forbidden_keywords": ["Space", "不用测试"]
+    },
+    {
+      "test_id": "feishu_pref_004",
+      "name": "代码审查偏好",
+      "difficulty": "medium",
+      "category": "流程偏好",
+      "chunk": "张工：代码审查我喜欢用飞书文档，方便批注\n李工：我习惯在GitHub PR上直接评论\n王工：我偏好面对面审查，效率高",
+      "query": "张工喜欢怎么审查代码？",
+      "answer": "用飞书文档审查",
+      "expected_keywords": ["飞书文档"],
+      "forbidden_keywords": ["GitHub", "面对面"]
+    },
+    {
+      "test_id": "feishu_pref_005",
+      "name": "沟通工具偏好",
+      "difficulty": "medium",
+      "category": "工具偏好",
+      "chunk": "张工：即时通讯我习惯用飞书，和工作流集成好\n李工：我偏好用微信，大家都用\n王工：我用Slack，国际化团队方便",
+      "query": "张工习惯用什么沟通工具？",
+      "answer": "飞书",
+      "expected_keywords": ["飞书"],
+      "forbidden_keywords": ["微信", "Slack"]
+    },
+    {
+      "test_id": "feishu_pref_006",
+      "name": "文档工具偏好",
+      "difficulty": "medium",
+      "category": "工具偏好",
+      "chunk": "张工：写文档我偏好用飞书文档，协作方便\n李工：我习惯用Notion，模板丰富\n王工：我喜欢用Markdown，纯文本好管理",
+      "query": "张工喜欢用什么写文档？",
+      "answer": "飞书文档",
+      "expected_keywords": ["飞书文档"],
+      "forbidden_keywords": ["Notion", "Markdown"]
+    },
+    {
+      "test_id": "feishu_pref_007",
+      "name": "会议偏好",
+      "difficulty": "medium",
+      "category": "时间偏好",
+      "chunk": "张工：会议我喜欢安排在周一上午，一周开始时对齐\n李工：我偏好周四周五开会，临近周末总结\n王工：我喜欢每天站会，15分钟快速同步",
+      "query": "张工喜欢什么时候开会？",
+      "answer": "周一上午",
+      "expected_keywords": ["周一", "上午"],
+      "forbidden_keywords": ["周四", "周五", "每天"]
+    },
+    {
+      "test_id": "feishu_pref_008",
+      "name": "分支策略偏好",
+      "difficulty": "hard",
+      "category": "流程偏好",
+      "chunk": "张工：Git分支我偏好GitFlow，清晰的分支模型\n李工：我喜欢Trunk Based，简单直接\n王工：我偏好GitHub Flow，PR驱动",
+      "query": "张工喜欢什么Git分支策略？",
+      "answer": "GitFlow",
+      "expected_keywords": ["GitFlow"],
+      "forbidden_keywords": ["Trunk Based", "GitHub Flow"]
+    },
+    {
+      "test_id": "feishu_pref_009",
+      "name": "测试框架偏好",
+      "difficulty": "hard",
+      "category": "工具偏好",
+      "chunk": "张工：前端测试我偏好Jest，配置简单\n李工：我喜欢Vitest，和Vite配合好\n王工：我用Cypress做E2E测试",
+      "query": "张工偏好什么前端测试框架？",
+      "answer": "Jest",
+      "expected_keywords": ["Jest"],
+      "forbidden_keywords": ["Vitest", "Cypress"]
+    },
+    {
+      "test_id": "feishu_pref_010",
+      "name": "日志工具偏好",
+      "difficulty": "hard",
+      "category": "工具偏好",
+      "chunk": "张工：日志我偏好用ELK，搜索方便\n李工：我喜欢Loki+Grafana，轻量级\n王工：我用Splunk，企业级功能强",
+      "query": "张工喜欢用什么日志工具？",
+      "answer": "ELK",
+      "expected_keywords": ["ELK"],
+      "forbidden_keywords": ["Loki", "Splunk"]
+    }
+  ]
+}
