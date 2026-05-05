@@ -17,9 +17,41 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|---------|
+| 2026-05-05 | v2.2 | **评测体系全面修复 + 飞书真实集成 + 2000行审查报告**（详见下方） |
 | 2026-04-29 | v2.1 | 评测体系重构：8个数据集扩展至240条(每集30条)；新增LONGMEMEVAL/LOCOMO基准分析；长时序评测扩展至2年跨度；test/与eval/目录分离；新增评测方案v2.0 |
 | 2026-04-28 | v2.0 | MemScope v2.0 完成：四大记忆模块(command/decision/preference/knowledge_health)全部实现；14个插件工具；7800+行代码 |
 | 2026-04-27 | v1.0 | 初始版本：基于memos-local-hermes-plugin二次开发；基础存储层+检索引擎+摄取管线 |
+
+### v2.2 详细更新内容（2026-05-05）
+
+本次更新基于对评测体系的全面代码审查（产出 2000+ 行 [REVIEW_REPORT.md](REVIEW_REPORT.md)），修复了 15 个 Critical 级别问题和多个 Major 级别问题。
+
+#### P0 — 评测逻辑修复（Critical）
+
+- **修复 3 个评测函数缺失 `failed_checks` 导致全部测试标记为 pass 的严重 bug**：`eval_anti_interference`、`eval_contradiction_update`、`eval_efficiency` 返回字典中没有 `failed_checks` 字段，导致 `metrics.get("failed_checks", [])` 永远返回空列表，所有测试无论实际结果如何都被标记为 "pass"。现在每个评测函数都根据 evaluation_scheme_v2.md 的阈值正确返回 `passed_checks` 和 `failed_checks`
+- **修复 precision 空结果返回 1.0 的逻辑错误**：当搜索结果为空时，precision 应为 0.0（无结果=无精确度），原来错误地返回了 1.0
+- **报告生成器从 5 维度扩展到 8 维度**：新增 command_memory（方向A-命令记忆）、decision_memory（方向B-决策记忆）、long_term_memory（长时序记忆）三个维度，与 evaluation_scheme_v2.md 定义的 8 维度评分体系对齐
+- **run_evaluation 添加维度加权评分**：新增 `DIMENSION_WEIGHTS`（抗干扰15%、矛盾更新15%、效率15%、命令10%、决策15%、偏好15%、知识10%、长时序5%），计算 `overall_score` 和 `grade`（优秀≥85/及格≥70/不及格）
+- **消融评测权重与 scheme v2 对齐**：run_ablation.py 的 7 维度权重按 evaluation_scheme_v2.md 的 8 维度比例重新分配
+
+#### P1 — 真实搜索引擎替换（Major）
+
+- **SqliteStore.insert_chunk 添加 FTS5 同步**：原来插入 chunk 后不会同步到 FTS5 全文索引，导致 FTS5 搜索无法返回新插入的数据。现在每次插入后自动执行 `chunks_fts rebuild`
+- **SqliteStore.search_chunks 移植 CJK 分词逻辑**：从 MiniStore 移植了 `re.findall(r'[\w一-鿿]{2,}', query)` 中文分词逻辑，支持将查询拆分为多个词组进行 OR 匹配，显著提升中文文本搜索效果
+- **评测系统从 MiniStore 替换为 SqliteStore**：real_evaluation.py 不再使用简化版 MiniStore（SQL LIKE 搜索），改为使用真实的 SqliteStore（支持 FTS5 全文搜索 + CJK 分词），评测结果更接近真实使用场景
+
+#### P2 — 飞书真实集成（Major）
+
+- **新增 `src/feishu/` 模块**：
+  - `client.py` — 飞书 Open API 客户端，支持 tenant_access_token 认证、发送文本/卡片消息、获取群聊历史消息、构建决策卡片
+  - `pipeline.py` — 飞书消息处理管线，自动将飞书消息路由到决策提取（方向B）、偏好推断（方向C）、知识注册（方向D）
+- **demo_feishu.py 支持真实 API 调用**：当环境变量 `FEISHU_APP_ID` 和 `FEISHU_APP_SECRET` 存在时自动切换到真实飞书 API，否则保持演示模式
+- **feishu_real_eval.py 修复硬编码路径**：移除 `/root/hermes-data/cron/output` 硬编码，改为基于脚本位置的相对路径解析
+
+#### P3 — 数据集对齐（Minor）
+
+- **8 个数据集统一为 30 条**：command_memory（37→30）、decision_memory（37→30）、preference_memory（38→30），总计 240 条，与 evaluation_scheme_v2.md 一致
+- **新增 2000+ 行审查报告** [REVIEW_REPORT.md](REVIEW_REPORT.md)：涵盖赛题需求符合性、数据集质量、评测代码逻辑、指标体系、飞书集成、Demo 脚本等 8 章内容，逐条列出 65 个问题及修正建议
 
 ---
 
@@ -81,11 +113,14 @@ MemScope/
 │   │   ├── preference_extractor.py      # 偏好提取 (显式+隐式)
 │   │   ├── preference_manager.py        # 偏好生命周期管理
 │   │   └── habit_inference.py           # 习惯推断引擎
-│   └── knowledge_health/                # 🔹 团队知识健康
-│       ├── ebbinghaus.py                # 艾宾浩斯遗忘曲线模型
-│       ├── freshness_monitor.py         # 知识新鲜度监控
-│       ├── gap_detector.py             # 知识缺口检测
-│       └── knowledge_evaluator.py       # 知识重要性评估
+│   ├── knowledge_health/                # 🔹 团队知识健康
+│   │   ├── ebbinghaus.py                # 艾宾浩斯遗忘曲线模型
+│   │   ├── freshness_monitor.py         # 知识新鲜度监控
+│   │   ├── gap_detector.py             # 知识缺口检测
+│   │   └── knowledge_evaluator.py       # 知识重要性评估
+│   └── feishu/                          # 🔹 飞书 API 集成
+│       ├── client.py                    # 飞书 Open API 客户端 (认证/消息/卡片)
+│       └── pipeline.py                  # 飞书消息处理管线 (决策/偏好/知识)
 │
 ├── test/                                # 代码测试（检验代码是否有bug）
 │   ├── conftest.py                      # pytest fixtures
