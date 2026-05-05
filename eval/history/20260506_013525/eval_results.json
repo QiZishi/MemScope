@@ -1,0 +1,264 @@
+{
+  "evaluation_id": "e2e-a4719273676a",
+  "timestamp": "2026-05-06T01:35:25.607993",
+  "chat_id": "oc_ca5b7423a6cb1cb704cf46876c71aeed",
+  "dimensions": {
+    "decision_memory": {
+      "test_cases": [
+        {
+          "test_id": "feishu_dec_001",
+          "name": "技术选型决策",
+          "category": "技术决策",
+          "query": "前端框架选型",
+          "response": "大家讨论一下前端框架，React还是Vue？",
+          "expected_keywords": [
+            "React",
+            "前端",
+            "框架"
+          ],
+          "forbidden_keywords": [
+            "Vue",
+            "Angular"
+          ],
+          "hit_rate": 1.0,
+          "precision": 0.75,
+          "recall": 1.0,
+          "f1_score": 0.8571,
+          "noise_injection_rate": 0.5,
+          "latency_ms": 7953.04,
+          "has_response": true
+        },
+        {
+          "test_id": "feishu_dec_002",
+          "name": "部署方案决策",
+          "category": "部署决策",
+          "query": "部署方案",
+          "response": "部署方案大家有什么建议？",
+          "expected_keywords": [
+            "Docker",
+            "K8s",
+            "容器化"
+          ],
+          "forbidden_keywords": [
+            "裸机",
+            "虚拟机"
+          ],
+          "hit_rate": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "noise_injection_rate": 0.0,
+          "latency_ms": 7819.86,
+          "has_response": true
+        },
+        {
+          "test_id": "feishu_dec_003",
+          "name": "数据库选型决策",
+          "category": "数据库决策",
+          "query": "数据库选型",
+          "response": "数据库选型，PostgreSQL还是MySQL？",
+          "expected_keywords": [
+            "PostgreSQL",
+            "JSON"
+          ],
+          "forbidden_keywords": [
+            "MySQL",
+            "MongoDB"
+          ],
+          "hit_rate": 0.5,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1_score": 0.5,
+          "noise_injection_rate": 0.5,
+          "latency_ms": 7992.15,
+          "has_response": true
+        }
+      ],
+      "summary": {
+        "total_cases": 3,
+        "avg_hit_rate": 0.5,
+        "avg_precision": 0.4166666666666667,
+        "avg_recall": 0.5,
+        "avg_f1_score": 0.45236666666666664,
+        "avg_noise_injection_rate": 0.3333333333333333,
+        "avg_latency_ms": 7921.683333333333,
+        "response_rate": 1.0
+      }
+    },
+    "preference_memory": {
+      "test_cases": [
+        {
+          "test_id": "feishu_pref_001",
+          "name": "编辑器偏好",
+          "category": "工具偏好",
+          "query": "编辑器偏好",
+          "response": "查询记忆: 数据库选型",
+          "expected_keywords": [
+            "vim",
+            "VSCode"
+          ],
+          "forbidden_keywords": [
+            "Emacs",
+            "Sublime"
+          ],
+          "hit_rate": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "noise_injection_rate": 0.0,
+          "latency_ms": 6392.41,
+          "has_response": true
+        },
+        {
+          "test_id": "feishu_pref_002",
+          "name": "工作时间偏好",
+          "category": "时间偏好",
+          "query": "工作时间偏好",
+          "response": "查询记忆: 编辑器偏好",
+          "expected_keywords": [
+            "9点",
+            "12点",
+            "效率"
+          ],
+          "forbidden_keywords": [
+            "下午",
+            "晚上"
+          ],
+          "hit_rate": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "noise_injection_rate": 0.0,
+          "latency_ms": 6282.78,
+          "has_response": true
+        },
+        {
+          "test_id": "feishu_pref_003",
+          "name": "编码风格偏好",
+          "category": "风格偏好",
+          "query": "编码风格偏好",
+          "response": "查询记忆: 工作时间偏好",
+          "expected_keywords": [
+            "TDD",
+            "Tab",
+            "测试"
+          ],
+          "forbidden_keywords": [
+            "Space",
+            "不用测试"
+          ],
+          "hit_rate": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "noise_injection_rate": 0.0,
+          "latency_ms": 6364.94,
+          "has_response": true
+        }
+      ],
+      "summary": {
+        "total_cases": 3,
+        "avg_hit_rate": 0.0,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1_score": 0.0,
+        "avg_noise_injection_rate": 0.0,
+        "avg_latency_ms": 6346.709999999999,
+        "response_rate": 1.0
+      }
+    },
+    "knowledge_health": {
+      "test_cases": [
+        {
+          "test_id": "feishu_kh_001",
+          "name": "API设计规范",
+          "category": "技术规范",
+          "query": "API设计规范",
+          "response": "API设计规范文档已经写好了",
+          "expected_keywords": [
+            "RESTful",
+            "返回格式",
+            "错误码"
+          ],
+          "forbidden_keywords": [
+            "GraphQL",
+            "SOAP"
+          ],
+          "hit_rate": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "noise_injection_rate": 0.0,
+          "latency_ms": 7897.85,
+          "has_response": true
+        },
+        {
+          "test_id": "feishu_kh_002",
+          "name": "安全审计流程",
+          "category": "流程规范",
+          "query": "安全审计流程",
+          "response": "安全审计流程需要大家了解",
+          "expected_keywords": [
+            "安全审计",
+            "漏洞",
+            "24小时"
+          ],
+          "forbidden_keywords": [
+            "忽略",
+            "延期"
+          ],
+          "hit_rate": 0.3333,
+          "precision": 1.0,
+          "recall": 0.3333,
+          "f1_score": 0.5,
+          "noise_injection_rate": 0.0,
+          "latency_ms": 7968.96,
+          "has_response": true
+        },
+        {
+          "test_id": "feishu_kh_003",
+          "name": "CI/CD流水线",
+          "category": "DevOps",
+          "query": "CI/CD流水线",
+          "response": "CI/CD流水线配置完成",
+          "expected_keywords": [
+            "CI/CD",
+            "测试",
+            "staging"
+          ],
+          "forbidden_keywords": [
+            "手动部署",
+            "跳过测试"
+          ],
+          "hit_rate": 0.3333,
+          "precision": 1.0,
+          "recall": 0.3333,
+          "f1_score": 0.5,
+          "noise_injection_rate": 0.0,
+          "latency_ms": 7861.52,
+          "has_response": true
+        }
+      ],
+      "summary": {
+        "total_cases": 3,
+        "avg_hit_rate": 0.22219999999999998,
+        "avg_precision": 0.6666666666666666,
+        "avg_recall": 0.22219999999999998,
+        "avg_f1_score": 0.3333333333333333,
+        "avg_noise_injection_rate": 0.0,
+        "avg_latency_ms": 7909.443333333334,
+        "response_rate": 1.0
+      }
+    }
+  },
+  "overall": {
+    "total_cases": 9,
+    "overall_hit_rate": 0.24073333333333333,
+    "overall_precision": 0.3611111111111111,
+    "overall_recall": 0.24073333333333333,
+    "overall_f1_score": 0.2619,
+    "overall_noise_injection_rate": 0.1111111111111111,
+    "overall_latency_ms": 7392.612222222222,
+    "overall_response_rate": 1.0
+  }
+}

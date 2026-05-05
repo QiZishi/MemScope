@@ -1,0 +1,46 @@
+{
+  "timestamp": "2026-05-06T01:35:25.607993",
+  "chat_id": "oc_ca5b7423a6cb1cb704cf46876c71aeed",
+  "overall": {
+    "total_cases": 9,
+    "overall_hit_rate": 0.24073333333333333,
+    "overall_precision": 0.3611111111111111,
+    "overall_recall": 0.24073333333333333,
+    "overall_f1_score": 0.2619,
+    "overall_noise_injection_rate": 0.1111111111111111,
+    "overall_latency_ms": 7392.612222222222,
+    "overall_response_rate": 1.0
+  },
+  "dimensions": {
+    "decision_memory": {
+      "total_cases": 3,
+      "avg_hit_rate": 0.5,
+      "avg_precision": 0.4166666666666667,
+      "avg_recall": 0.5,
+      "avg_f1_score": 0.45236666666666664,
+      "avg_noise_injection_rate": 0.3333333333333333,
+      "avg_latency_ms": 7921.683333333333,
+      "response_rate": 1.0
+    },
+    "preference_memory": {
+      "total_cases": 3,
+      "avg_hit_rate": 0.0,
+      "avg_precision": 0.0,
+      "avg_recall": 0.0,
+      "avg_f1_score": 0.0,
+      "avg_noise_injection_rate": 0.0,
+      "avg_latency_ms": 6346.709999999999,
+      "response_rate": 1.0
+    },
+    "knowledge_health": {
+      "total_cases": 3,
+      "avg_hit_rate": 0.22219999999999998,
+      "avg_precision": 0.6666666666666666,
+      "avg_recall": 0.22219999999999998,
+      "avg_f1_score": 0.3333333333333333,
+      "avg_noise_injection_rate": 0.0,
+      "avg_latency_ms": 7909.443333333334,
+      "response_rate": 1.0
+    }
+  }
+}
