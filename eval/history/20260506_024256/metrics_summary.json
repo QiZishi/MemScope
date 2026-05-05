@@ -1,0 +1,64 @@
+{
+  "evaluation_id": "e2e-20260506_024256",
+  "timestamp": "20260506_024256",
+  "version": "v4",
+  "overall_metrics": {
+    "total_cases": 80,
+    "hit_rate": 0.9758333333333333,
+    "precision": 0.5708333333333334,
+    "recall": 0.9758333333333333,
+    "f1_score": 0.6760159203541557,
+    "noise_injection_rate": 0.2541666666666667,
+    "avg_latency_ms": 2.0
+  },
+  "dataset_metrics": {
+    "feishu_decision_memory": {
+      "hit_rate": 1.0,
+      "precision": 0.9,
+      "recall": 1.0,
+      "f1_score": 0.93
+    },
+    "feishu_knowledge_health": {
+      "hit_rate": 1.0,
+      "precision": 0.33333333333333337,
+      "recall": 1.0,
+      "f1_score": 0.5
+    },
+    "feishu_preference_memory": {
+      "hit_rate": 1.0,
+      "precision": 0.9,
+      "recall": 1.0,
+      "f1_score": 0.93
+    },
+    "feishu_command_memory": {
+      "hit_rate": 0.8066666666666666,
+      "precision": 0.6333333333333332,
+      "recall": 0.8066666666666666,
+      "f1_score": 0.6581273628332451
+    },
+    "feishu_long_term_memory": {
+      "hit_rate": 1.0,
+      "precision": 0.4666666666666667,
+      "recall": 1.0,
+      "f1_score": 0.62
+    },
+    "feishu_efficiency": {
+      "hit_rate": 1.0,
+      "precision": 0.5333333333333332,
+      "recall": 1.0,
+      "f1_score": 0.6599999999999999
+    },
+    "feishu_contradiction_update": {
+      "hit_rate": 1.0,
+      "precision": 0.36666666666666664,
+      "recall": 1.0,
+      "f1_score": 0.53
+    },
+    "feishu_anti_interference": {
+      "hit_rate": 1.0,
+      "precision": 0.4333333333333333,
+      "recall": 1.0,
+      "f1_score": 0.58
+    }
+  }
+}
