@@ -546,6 +546,12 @@ class SqliteStore:
             if term_ratio < 0.5:
                 score *= 0.8
             
+            # 增加查询和记忆的相关性权重
+            # 如果查询中的关键词在记忆中出现多次，给予额外加分
+            keyword_count = sum(content.count(t.lower()) for t in terms)
+            if keyword_count > 1:
+                score += min(0.1, keyword_count * 0.02)
+            
             score = min(score, 1.0)
 
             if score >= min_score:
