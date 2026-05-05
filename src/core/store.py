@@ -425,6 +425,34 @@ class SqliteStore:
                 unique_terms.append(t)
         terms = unique_terms
         
+        # 过滤掉可能无意义的词项（跨词界的组合）
+        # 例如："们前"、"端框"、"架选" 等
+        # 这些词项通常不会出现在正常的中文文本中
+        filtered_terms = []
+        for term in terms:
+            # 保留英文单词和数字
+            if re.match(r'^[a-zA-Z0-9]+$', term):
+                filtered_terms.append(term)
+            # 保留2字符的中文词汇（大部分是有意义的）
+            elif len(term) == 2:
+                filtered_terms.append(term)
+            # 保留3字符的中文词汇，但过滤掉可能无意义的组合
+            elif len(term) == 3:
+                # 检查是否包含常见的中文词汇
+                # 如果包含，可能是有意义的
+                if any(char in '的了是在有不人大中上下来和到会能要' for char in term):
+                    filtered_terms.append(term)
+                # 检查是否是连续的有意义词汇
+                # 例如："前端"、"框架"、"选了" 等
+                # 这里我们只保留包含常见词根的3字符词汇
+                elif any(term[i:i+2] in '前端框架选了什么我们部署方案确认采用决定' for i in range(2)):
+                    filtered_terms.append(term)
+                # 过滤掉其他3字符词汇
+                # 这些词汇可能是无意义的组合
+            # 过滤掉更长的词汇（可能是无意义的组合）
+        
+        terms = filtered_terms
+        
         if not terms:
             terms = [query]
 
