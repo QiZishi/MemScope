@@ -1,6 +1,6 @@
 {
-  "evaluation_id": "real-eval-ab57a9555b07",
-  "timestamp": "2026-05-06T01:01:11.661119",
+  "evaluation_id": "real-eval-747fa407ab2e",
+  "timestamp": "2026-05-06T00:51:57.536737",
   "system": "MemScope v2.0.0 — 真实系统评估（非mock）",
   "total_cases": 240,
   "passed": 165,
@@ -24,7 +24,7 @@
             "precision": 0.6667,
             "noise_injection_rate": 0.3333,
             "f1_score": 0.8,
-            "latency_ms": 2.62,
+            "latency_ms": 2.65,
             "chunks_found": 3,
             "content_preview": "最近有什么好看的电影 好的，已记录。技术部下周三进行API网关性能压测。 我们技术部下周三要做API网关的性能压测",
             "passed_checks": [
@@ -62,7 +62,7 @@
               }
             }
           },
-          "elapsed_ms": 19.65
+          "elapsed_ms": 20.01
         },
         {
           "test_id": "anti_interference_002",
@@ -74,7 +74,7 @@
             "precision": 1.0,
             "noise_injection_rate": 0.0,
             "f1_score": 1.0,
-            "latency_ms": 0.7,
+            "latency_ms": 0.79,
             "chunks_found": 2,
             "content_preview": "收到，已记录产品部Q3营收目标：850万。 产品部的Q3营收目标定在850万",
             "passed_checks": [
@@ -111,7 +111,7 @@
               }
             }
           },
-          "elapsed_ms": 18.17
+          "elapsed_ms": 17.41
         },
         {
           "test_id": "anti_interference_003",
@@ -123,7 +123,7 @@
             "precision": 0.5,
             "noise_injection_rate": 0.5,
             "f1_score": 0.6667,
-            "latency_ms": 0.65,
+            "latency_ms": 0.57,
             "chunks_found": 4,
             "content_preview": "今天有什么新闻 最近有什么技术分享 好的，已记录K8s集群迁移日期：6月15号。 运维组的K8s集群迁移定在6月15号",
             "passed_checks": [
@@ -161,7 +161,7 @@
               }
             }
           },
-          "elapsed_ms": 17.66
+          "elapsed_ms": 17.69
         },
         {
           "test_id": "anti_interference_004",
@@ -173,7 +173,7 @@
             "precision": 1.0,
             "noise_injection_rate": 0.0,
             "f1_score": 1.0,
-            "latency_ms": 0.62,
+            "latency_ms": 0.67,
             "chunks_found": 2,
             "content_preview": "已记录客户B验收标准：响应时间<200ms。 客户B的项目验收标准是响应时间小于200ms",
             "passed_checks": [
@@ -210,7 +210,7 @@
               }
             }
           },
-          "elapsed_ms": 14.55
+          "elapsed_ms": 14.18
         },
         {
           "test_id": "anti_interference_005",
@@ -222,7 +222,7 @@
             "precision": 1.0,
             "noise_injection_rate": 0.0,
             "f1_score": 1.0,
-            "latency_ms": 1.1,
+            "latency_ms": 0.99,
             "chunks_found": 3,
             "content_preview": "今天有什么安排 已记录安全漏洞CVE-2026-1234，高危级别。 安全组发现了一个高危漏洞CVE-2026-1234",
             "passed_checks": [
@@ -259,7 +259,7 @@
               }
             }
           },
-          "elapsed_ms": 26.64
+          "elapsed_ms": 14.38
         },
         {
           "test_id": "anti_interference_006",
@@ -271,7 +271,7 @@
             "precision": 1.0,
             "noise_injection_rate": 0.0,
             "f1_score": 1.0,
-            "latency_ms": 0.57,
+            "latency_ms": 0.58,
             "chunks_found": 2,
             "content_preview": "好的，已记录数据库主从切换演练：本周日凌晨2点。 数据库主从切换演练定在本周日凌晨2点",
             "passed_checks": [
@@ -308,7 +308,7 @@
               }
             }
           },
-          "elapsed_ms": 4.17
+          "elapsed_ms": 4.09
         },
         {
           "test_id": "anti_interference_007",
@@ -320,7 +320,7 @@
             "precision": 0.6667,
             "noise_injection_rate": 0.3333,
             "f1_score": 0.8,
-            "latency_ms": 0.75,
+            "latency_ms": 0.68,
             "chunks_found": 5,
             "content_preview": "最近有什么好看的剧 今天食堂有什么 最近有什么新歌 收到，已记录前端技术选型：Vue3重构管理后台。 前端组决定用Vue3重构管理后台",
             "passed_checks": [
@@ -358,7 +358,7 @@
               }
             }
           },
-          "elapsed_ms": 50.67
+          "elapsed_ms": 36.22
         },
         {
           "test_id": "anti_interference_008",
@@ -370,7 +370,7 @@
             "precision": 1.0,
             "noise_injection_rate": 0.0,
             "f1_score": 1.0,
-            "latency_ms": 1.17,
+            "latency_ms": 0.67,
             "chunks_found": 3,
             "content_preview": "今天有什么会 已安全记录测试环境数据库密码。 测试环境的数据库密码改成了Test@2026!",
             "passed_checks": [
@@ -407,7 +407,7 @@
               }
             }
           },
-          "elapsed_ms": 40.07
+          "elapsed_ms": 38.08
         },
         {
           "test_id": "anti_interference_009",
@@ -419,7 +419,7 @@
             "precision": 0.0,
             "noise_injection_rate": 1.0,
             "f1_score": 0.0,
-            "latency_ms": 0.57,
+            "latency_ms": 0.59,
             "chunks_found": 6,
             "content_preview": "项目G预算50万。 帮我查下项目G预算 项目F进度60%。 帮我查下项目F进度 已更新项目E负责人：李四（原张三）。 项目E的负责人从张三换成了李四",
             "passed_checks": [
@@ -457,7 +457,7 @@
               }
             }
           },
-          "elapsed_ms": 34.8
+          "elapsed_ms": 30.76
         },
         {
           "test_id": "anti_interference_010",
@@ -469,7 +469,7 @@
             "precision": 1.0,
             "noise_injection_rate": 0.0,
             "f1_score": 1.0,
-            "latency_ms": 0.54,
+            "latency_ms": 0.55,
             "chunks_found": 2,
             "content_preview": "已记录CI/CD迁移：Jenkins→GitLab CI。 CI/CD流水线从Jenkins迁移到GitLab CI",
             "passed_checks": [
@@ -506,7 +506,7 @@
               }
             }
           },
-          "elapsed_ms": 37.17
+          "elapsed_ms": 38.82
         },
         {
           "test_id": "anti_interference_011",
@@ -518,7 +518,7 @@
             "precision": 0.5,
             "noise_injection_rate": 0.5,
             "f1_score": 0.6667,
-            "latency_ms": 0.75,
+            "latency_ms": 0.77,
             "chunks_found": 4,
             "content_preview": "服务正常。 帮我查下服务状态 已更新微服务A超时时间：5秒。 微服务A的超时时间从30秒改成了5秒",
             "passed_checks": [
@@ -556,7 +556,7 @@
               }
             }
           },
-          "elapsed_ms": 38.19
+          "elapsed_ms": 37.33
         },
         {
           "test_id": "anti_interference_012",
@@ -568,7 +568,7 @@
             "precision": 1.0,
             "noise_injection_rate": 0.0,
             "f1_score": 1.0,
-            "latency_ms": 0.74,
+            "latency_ms": 0.71,
             "chunks_found": 2,
             "content_preview": "已记录客户C需求：数据导出支持CSV和Excel。 客户C要求增加数据导出功能支持CSV和Excel格式",
             "passed_checks": [
@@ -605,7 +605,7 @@
               }
             }
           },
-          "elapsed_ms": 41.05
+          "elapsed_ms": 43.48
         },
         {
           "test_id": "anti_interference_013",
@@ -617,7 +617,7 @@
             "precision": 0.0,
             "noise_injection_rate": 1.0,
             "f1_score": 0.0,
-            "latency_ms": 0.9,
+            "latency_ms": 0.57,
             "chunks_found": 8,
             "content_preview": "已记录项目Delta：Svelte。 项目Delta用Svelte 已记录项目Gamma：Angular。 项目Gamma用Angular 已记录项目Beta：Vue。 项目Beta用Vue框架 已记录项目Alpha技术栈：React。 项目Alpha用React框架开发",
             "passed_checks": [
@@ -655,7 +655,7 @@
               }
             }
           },
-          "elapsed_ms": 16.6
+          "elapsed_ms": 14.3
         },
         {
           "test_id": "anti_interference_014",
@@ -667,7 +667,7 @@
             "precision": 0.0,
             "noise_injection_rate": 1.0,
             "f1_score": 0.0,
-            "latency_ms": 0.64,
+            "latency_ms": 0.62,
             "chunks_found": 5,
             "content_preview": "人事部的月度预算10万 技术部的月度预算30万 销售部的月度预算20万 已记录市场部月度预算：15万。 市场部的月度预算15万",
             "passed_checks": [
@@ -705,7 +705,7 @@
               }
             }
           },
-          "elapsed_ms": 15.37
+          "elapsed_ms": 13.87
         },
         {
           "test_id": "anti_interference_015",
@@ -717,7 +717,7 @@
             "precision": 0.0,
             "noise_injection_rate": 1.0,
             "f1_score": 0.0,
-            "latency_ms": 0.54,
+            "latency_ms": 0.51,
             "chunks_found": 8,
             "content_preview": "已记录/api/v2/products超时：2秒。 /api/v2/products的超时设置为2秒 已记录/api/v1/users超时：10秒。 /api/v1/users的超时设置为10秒 已记录/api/v2/orders超时：5秒。 /api/v2/orders的超时设置为5秒 已记录/api/v2/users超时：3秒。 后端接口/api/v2/users的超时设置为3秒",
             "passed_checks": [
@@ -755,7 +755,7 @@
               }
             }
           },
-          "elapsed_ms": 14.17
+          "elapsed_ms": 14.22
         },
         {
           "test_id": "anti_interference_016",
@@ -767,7 +767,7 @@
             "precision": 0.0,
             "noise_injection_rate": 1.0,
             "f1_score": 0.0,
-            "latency_ms": 0.63,
+            "latency_ms": 0.64,
             "chunks_found": 8,
             "content_preview": "已记录赵经理客户：字节。 赵经理负责的客户是字节 已记录王经理客户：阿里。 王经理负责的客户是阿里 已记录李经理客户：腾讯。 李经理负责的客户是腾讯 已记录张经理客户：华为。 张经理负责的客户是华为",
             "passed_checks": [
@@ -805,7 +805,7 @@
               }
             }
           },
-          "elapsed_ms": 14.5
+          "elapsed_ms": 14.42
         },
         {
           "test_id": "anti_interference_017",
@@ -817,7 +817,7 @@
             "precision": 0.0,
             "noise_injection_rate": 1.0,
             "f1_score": 0.0,
-            "latency_ms": 0.67,
+            "latency_ms": 0.65,
             "chunks_found": 5,
             "content_preview": "开发环境Redis地址是10.0.4.100:6379 预发布环境Redis地址是10.0.3.100:6379 测试环境Redis地址是10.0.2.100:6379 已记录生产Redis：10.0.1.100:6379。 生产环境Redis集群地址是10.0.1.100:6379",
             "passed_checks": [
@@ -855,7 +855,7 @@
               }
             }
           },
-          "elapsed_ms": 13.91
+          "elapsed_ms": 14.06
         },
         {
           "test_id": "anti_interference_018",
@@ -867,7 +867,7 @@
             "precision": 0.0,
             "noise_injection_rate": 1.0,
             "f1_score": 0.0,
-            "latency_ms": 0.69,
+            "latency_ms": 0.72,
             "chunks_found": 8,
             "content_preview": "已记录ES连接池：30。 ES连接池最大连接数设为30 已记录MongoDB连接池：50。 MongoDB连接池最大连接数设为50 已记录Redis连接池：100。 Redis连接池最大连接数设为100 已记录数据库连接池最大连接数：200。 数据库连接池最大连接数设为200",
             "passed_checks": [
@@ -905,7 +905,7 @@
               }
             }
           },
-          "elapsed_ms": 14.12
+          "elapsed_ms": 14.3
         },
         {
           "test_id": "anti_interference_019",
@@ -917,7 +917,7 @@
             "precision": 1.0,
             "noise_injection_rate": 0.0,
             "f1_score": 1.0,
-            "latency_ms": 0.61,
+            "latency_ms": 0.65,
             "chunks_found": 1,
             "content_preview": "1月份制定的年度OKR目标是营收增长30%",
             "passed_checks": [
@@ -954,7 +954,7 @@
               }
             }
           },
-          "elapsed_ms": 13.97
+          "elapsed_ms": 13.64
         },
         {
           "test_id": "anti_interference_020",
@@ -966,7 +966,7 @@
             "precision": 1.0,
             "noise_injection_rate": 0.0,
             "f1_score": 1.0,
-            "latency_ms": 0.63,
+            "latency_ms": 1.02,
             "chunks_found": 2,
             "content_preview": "已记录客户D年度框架协议：500万。 去年12月客户D签了年度框架协议价值500万",
             "passed_checks": [
@@ -1003,7 +1003,7 @@
               }
             }
           },
-          "elapsed_ms": 17.55
+          "elapsed_ms": 21.68
         },
         {
           "test_id": "anti_interference_021",
@@ -1053,7 +1053,7 @@
               }
             }
           },
-          "elapsed_ms": 15.34
+          "elapsed_ms": 14.02
         },
         {
           "test_id": "anti_interference_022",
@@ -1065,7 +1065,7 @@
             "precision": 1.0,
             "noise_injection_rate": 0.0,
             "f1_score": 1.0,
-            "latency_ms": 0.69,
+            "latency_ms": 0.63,
             "chunks_found": 4,
             "content_preview": "数据归档完成。 2026年3月做了数据归档 已记录数据库迁移：MySQL→PostgreSQL（2025年3月）。 2025年3月数据库从MySQL迁移到PostgreSQL",
             "passed_checks": [
@@ -1102,7 +1102,7 @@
               }
             }
           },
-          "elapsed_ms": 20.02
+          "elapsed_ms": 18.11
         },
         {
           "test_id": "anti_interference_023",
@@ -1114,7 +1114,7 @@
             "precision": 1.0,
             "noise_injection_rate": 0.0,
             "f1_score": 1.0,
-            "latency_ms": 0.89,
+            "latency_ms": 0.8,
             "chunks_found": 4,
             "content_preview": "服务网格已部署。 2025年12月做了服务网格 已记录核心服务重写：Java→Go（2024年6月）。 2024年6月核心服务从Java重写为Go",
             "passed_checks": [
@@ -1151,7 +1151,7 @@
               }
             }
           },
-          "elapsed_ms": 21.07
+          "elapsed_ms": 21.79
         },
         {
           "test_id": "anti_interference_024",
@@ -1163,7 +1163,7 @@
             "precision": 1.0,
             "noise_injection_rate": 0.0,
             "f1_score": 1.0,
-            "latency_ms": 1.29,
+            "latency_ms": 0.76,
             "chunks_found": 2,
             "content_preview": "已记录零信任架构方案（2024年8月）。 2024年8月安全团队制定了零信任架构方案",
             "passed_checks": [
@@ -1200,7 +1200,7 @@
               }
             }
           },
-          "elapsed_ms": 22.01
+          "elapsed_ms": 20.3
         },
         {
           "test_id": "anti_interference_025",
@@ -1212,7 +1212,7 @@
             "precision": 0.0,
             "noise_injection_rate": 1.0,
             "f1_score": 0.0,
-            "latency_ms": 0.63,
+            "latency_ms": 0.56,
             "chunks_found": 4,
             "content_preview": "李四下周去北京出差 张三下周也要去深圳拜访客户F 好的，已记录您下周深圳拜访客户E。 我下周要去深圳拜访客户E",
             "passed_checks": [
@@ -1250,7 +1250,7 @@
               }
             }
           },
-          "elapsed_ms": 10.83
+          "elapsed_ms": 10.69
         },
         {
           "test_id": "anti_interference_026",
@@ -1262,7 +1262,7 @@
             "precision": 0.0,
             "noise_injection_rate": 1.0,
             "f1_score": 0.0,
-            "latency_ms": 0.51,
+            "latency_ms": 0.57,
             "chunks_found": 6,
             "content_preview": "已记录李四工位。 李四的工位在A栋4楼401 已记录张三工位。 张三的工位在B栋2楼201 已记录您的工位：A栋3楼305。 我的工位在A栋3楼305",
             "passed_checks": [
@@ -1300,7 +1300,7 @@
               }
             }
           },
-          "elapsed_ms": 10.48
+          "elapsed_ms": 10.92
         },
         {
           "test_id": "anti_interference_027",
@@ -1312,7 +1312,7 @@
             "precision": 0.0,
             "noise_injection_rate": 1.0,
             "f1_score": 0.0,
-            "latency_ms": 0.56,
+            "latency_ms": 0.58,
             "chunks_found": 5,
             "content_preview": "王五负责Project-W 李四负责Project-Z 张三负责Project-Y 已记录您负责Project-X。 我负责的项目是Project-X",
             "passed_checks": [
@@ -1350,7 +1350,7 @@
               }
             }
           },
-          "elapsed_ms": 15.56
+          "elapsed_ms": 13.75
         },
         {
           "test_id": "anti_interference_028",
@@ -1362,7 +1362,7 @@
             "precision": 0.0,
             "noise_injection_rate": 1.0,
             "f1_score": 0.0,
-            "latency_ms": 0.59,
+            "latency_ms": 0.6,
             "chunks_found": 4,
             "content_preview": "王五习惯用PyCharm写Python 李四习惯用Vim写Go 张三习惯用IntelliJ写Java 我习惯用VSCode写Python代码",
             "passed_checks": [
@@ -1400,7 +1400,7 @@
               }
             }
           },
-          "elapsed_ms": 14.31
+          "elapsed_ms": 14.54
         },
         {
           "test_id": "anti_interference_029",
@@ -1412,7 +1412,7 @@
             "precision": 0.0,
             "noise_injection_rate": 1.0,
             "f1_score": 0.0,
-            "latency_ms": 0.67,
+            "latency_ms": 0.65,
             "chunks_found": 5,
             "content_preview": "王五的Jira密码过期了 李四的VPN密码重置了 张三的GitLab密码改了 已安全记录您的飞书文档密码。 我的飞书文档权限密码是Doc@2026",
             "passed_checks": [
@@ -1450,7 +1450,7 @@
               }
             }
           },
-          "elapsed_ms": 14.35
+          "elapsed_ms": 14.34
         },
         {
           "test_id": "anti_interference_030",
@@ -1462,7 +1462,7 @@
             "precision": 0.0,
             "noise_injection_rate": 1.0,
             "f1_score": 0.0,
-            "latency_ms": 0.59,
+            "latency_ms": 0.58,
             "chunks_found": 5,
             "content_preview": "王五每周四下午开需求评审会 李四每周一上午开站会 张三每周三上午开技术评审会 已记录：每周五16:00项目复盘会。 我每周五下午4点要开项目复盘会",
             "passed_checks": [
@@ -1500,7 +1500,7 @@
               }
             }
           },
-          "elapsed_ms": 14.76
+          "elapsed_ms": 13.91
         }
       ],
       "avg_hit_rate": 40.0,
@@ -1561,7 +1561,7 @@
               }
             }
           },
-          "elapsed_ms": 82.48
+          "elapsed_ms": 91.71
         },
         {
           "test_id": "cmd_002",
@@ -1597,7 +1597,7 @@
               }
             }
           },
-          "elapsed_ms": 0.12
+          "elapsed_ms": 0.11
         },
         {
           "test_id": "cmd_003",
@@ -1633,7 +1633,7 @@
               }
             }
           },
-          "elapsed_ms": 0.14
+          "elapsed_ms": 0.12
         },
         {
           "test_id": "cmd_004",
@@ -1709,7 +1709,7 @@
               }
             }
           },
-          "elapsed_ms": 0.11
+          "elapsed_ms": 0.12
         },
         {
           "test_id": "cmd_006",
@@ -1747,7 +1747,7 @@
               }
             }
           },
-          "elapsed_ms": 0.12
+          "elapsed_ms": 0.14
         },
         {
           "test_id": "cmd_007",
@@ -1784,7 +1784,7 @@
               }
             }
           },
-          "elapsed_ms": 0.04
+          "elapsed_ms": 0.03
         },
         {
           "test_id": "cmd_008",
@@ -1855,7 +1855,7 @@
               }
             }
           },
-          "elapsed_ms": 0.03
+          "elapsed_ms": 0.04
         },
         {
           "test_id": "cmd_010",
@@ -1891,7 +1891,7 @@
               }
             }
           },
-          "elapsed_ms": 0.03
+          "elapsed_ms": 0.04
         },
         {
           "test_id": "cmd_011",
@@ -1929,7 +1929,7 @@
               }
             }
           },
-          "elapsed_ms": 0.16
+          "elapsed_ms": 0.12
         },
         {
           "test_id": "cmd_012",
@@ -1999,7 +1999,7 @@
               }
             }
           },
-          "elapsed_ms": 0.03
+          "elapsed_ms": 0.04
         },
         {
           "test_id": "cmd_014",
@@ -2036,7 +2036,7 @@
               }
             }
           },
-          "elapsed_ms": 0.03
+          "elapsed_ms": 0.04
         },
         {
           "test_id": "cmd_015",
@@ -2070,7 +2070,7 @@
               }
             }
           },
-          "elapsed_ms": 0.03
+          "elapsed_ms": 0.04
         },
         {
           "test_id": "cmd_016",
@@ -2138,7 +2138,7 @@
               }
             }
           },
-          "elapsed_ms": 0.03
+          "elapsed_ms": 0.04
         },
         {
           "test_id": "cmd_018",
@@ -2172,7 +2172,7 @@
               }
             }
           },
-          "elapsed_ms": 0.03
+          "elapsed_ms": 0.04
         },
         {
           "test_id": "cmd_019",
@@ -2240,7 +2240,7 @@
               }
             }
           },
-          "elapsed_ms": 0.04
+          "elapsed_ms": 0.03
         },
         {
           "test_id": "cmd_021",
@@ -2308,7 +2308,7 @@
               }
             }
           },
-          "elapsed_ms": 0.03
+          "elapsed_ms": 0.06
         },
         {
           "test_id": "cmd_023",
@@ -2342,7 +2342,7 @@
               }
             }
           },
-          "elapsed_ms": 0.05
+          "elapsed_ms": 0.04
         },
         {
           "test_id": "cmd_024",
@@ -2376,7 +2376,7 @@
               }
             }
           },
-          "elapsed_ms": 0.03
+          "elapsed_ms": 0.05
         },
         {
           "test_id": "cmd_025",
@@ -2444,7 +2444,7 @@
               }
             }
           },
-          "elapsed_ms": 0.04
+          "elapsed_ms": 0.03
         },
         {
           "test_id": "cmd_027",
@@ -2478,7 +2478,7 @@
               }
             }
           },
-          "elapsed_ms": 0.04
+          "elapsed_ms": 0.03
         },
         {
           "test_id": "cmd_028",
@@ -2546,7 +2546,7 @@
               }
             }
           },
-          "elapsed_ms": 0.04
+          "elapsed_ms": 0.03
         },
         {
           "test_id": "cmd_030",
@@ -2580,7 +2580,7 @@
               }
             }
           },
-          "elapsed_ms": 0.05
+          "elapsed_ms": 0.03
         }
       ],
       "avg_hit_rate": 86.7,
@@ -2604,7 +2604,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.54,
+            "latency_ms": 0.56,
             "chunks_found": 4,
             "content_preview": "已更新工位号：B-201。 我搬到新工位了，现在是B-201 已记录工位号：A-305。 我的工位号是A-305",
             "passed_checks": [
@@ -2655,7 +2655,7 @@
               }
             }
           },
-          "elapsed_ms": 7.99
+          "elapsed_ms": 7.27
         },
         {
           "test_id": "contradiction_002",
@@ -2666,7 +2666,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.61,
+            "latency_ms": 0.57,
             "chunks_found": 4,
             "content_preview": "已更新截止日期：6月1号。 项目Alpha延期了，截止日期改到6月1号 已记录项目Alpha截止日期：5月15号。 项目Alpha的截止日期是5月15号",
             "passed_checks": [
@@ -2717,7 +2717,7 @@
               }
             }
           },
-          "elapsed_ms": 7.8
+          "elapsed_ms": 7.58
         },
         {
           "test_id": "contradiction_003",
@@ -2728,7 +2728,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.45,
+            "latency_ms": 0.47,
             "chunks_found": 4,
             "content_preview": "已更新API超时：5秒。 API超时改成5秒了 已记录API超时：30秒。 API接口的超时时间设为30秒",
             "passed_checks": [
@@ -2779,7 +2779,7 @@
               }
             }
           },
-          "elapsed_ms": 7.4
+          "elapsed_ms": 6.99
         },
         {
           "test_id": "contradiction_004",
@@ -2790,7 +2790,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.51,
+            "latency_ms": 0.56,
             "chunks_found": 4,
             "content_preview": "已更新联系人：赵经理。 客户联系人换了，现在是赵经理 已记录客户联系人：王经理。 客户的联系人是王经理",
             "passed_checks": [
@@ -2841,7 +2841,7 @@
               }
             }
           },
-          "elapsed_ms": 7.43
+          "elapsed_ms": 7.48
         },
         {
           "test_id": "contradiction_005",
@@ -2852,7 +2852,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.55,
+            "latency_ms": 0.58,
             "chunks_found": 4,
             "content_preview": "已更新部署区域：AWS东京区。 服务迁移到AWS东京区了 已记录部署区域：阿里云华东1区。 服务部署在阿里云华东1区",
             "passed_checks": [
@@ -2903,7 +2903,7 @@
               }
             }
           },
-          "elapsed_ms": 7.77
+          "elapsed_ms": 7.1
         },
         {
           "test_id": "contradiction_006",
@@ -2914,7 +2914,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.52,
+            "latency_ms": 0.54,
             "chunks_found": 4,
             "content_preview": "已更新数据库：PostgreSQL 15。 数据库换成PostgreSQL 15了 已记录数据库：MySQL 8.0。 数据库用的是MySQL 8.0",
             "passed_checks": [
@@ -2965,7 +2965,7 @@
               }
             }
           },
-          "elapsed_ms": 7.39
+          "elapsed_ms": 7.23
         },
         {
           "test_id": "contradiction_007",
@@ -2976,7 +2976,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.54,
+            "latency_ms": 0.57,
             "chunks_found": 3,
             "content_preview": "已更新团队：张三、李四、赵六。 已记录项目团队：张三、李四、王五。 项目团队有张三、李四、王五",
             "passed_checks": [
@@ -3027,7 +3027,7 @@
               }
             }
           },
-          "elapsed_ms": 7.7
+          "elapsed_ms": 7.1
         },
         {
           "test_id": "contradiction_008",
@@ -3038,7 +3038,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.46,
+            "latency_ms": 0.5,
             "chunks_found": 3,
             "content_preview": "硬盘升级到1T了 已记录服务器配置：8核16G 500G。 服务器配置是8核16G 500G硬盘",
             "passed_checks": [
@@ -3089,7 +3089,7 @@
               }
             }
           },
-          "elapsed_ms": 7.43
+          "elapsed_ms": 7.25
         },
         {
           "test_id": "contradiction_009",
@@ -3100,7 +3100,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.49,
+            "latency_ms": 0.56,
             "chunks_found": 4,
             "content_preview": "已更新专业版定价：299元/月。 专业版涨价到299元/月 已记录产品定价。 产品定价是基础版99元/月，专业版199元/月",
             "passed_checks": [
@@ -3151,7 +3151,7 @@
               }
             }
           },
-          "elapsed_ms": 7.61
+          "elapsed_ms": 7.11
         },
         {
           "test_id": "contradiction_010",
@@ -3162,7 +3162,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.45,
+            "latency_ms": 0.42,
             "chunks_found": 4,
             "content_preview": "已更新：GitLab CI+Docker+K8s。 Jenkins换成GitLab CI了 已记录CI/CD技术栈。 CI/CD用Jenkins+Docker+K8s",
             "passed_checks": [
@@ -3224,7 +3224,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.43,
+            "latency_ms": 0.48,
             "chunks_found": 3,
             "content_preview": "已更新告警通道：飞书+邮件。 已记录告警通道：钉钉+邮件。 告警发到钉钉群和邮件",
             "passed_checks": [
@@ -3275,7 +3275,7 @@
               }
             }
           },
-          "elapsed_ms": 7.33
+          "elapsed_ms": 7.0
         },
         {
           "test_id": "contradiction_012",
@@ -3286,7 +3286,7 @@
             "latest_value_correct": false,
             "old_value_preserved": false,
             "answer_contains_found": false,
-            "latency_ms": 0.52,
+            "latency_ms": 0.51,
             "chunks_found": 2,
             "content_preview": "已记录日志方案：ELK。 日志存储用ELK栈",
             "passed_checks": [],
@@ -3337,7 +3337,7 @@
               }
             }
           },
-          "elapsed_ms": 7.15
+          "elapsed_ms": 7.16
         },
         {
           "test_id": "contradiction_013",
@@ -3348,7 +3348,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.51,
+            "latency_ms": 0.55,
             "chunks_found": 6,
             "content_preview": "已更新周会：周二16:00。 周会又改回周二了，但改到4点 已更新周会：周四10:00。 周会改到每周四上午10点 已记录周会时间。 每周二下午3点开周会",
             "passed_checks": [
@@ -3399,7 +3399,7 @@
               }
             }
           },
-          "elapsed_ms": 11.07
+          "elapsed_ms": 10.78
         },
         {
           "test_id": "contradiction_014",
@@ -3410,7 +3410,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.63,
+            "latency_ms": 0.58,
             "chunks_found": 4,
             "content_preview": "已更新发布日期：每月15号。 发布日期改到每月15号 已记录发布日期：每月1号。 版本发布日期定在每月1号",
             "passed_checks": [
@@ -3461,7 +3461,7 @@
               }
             }
           },
-          "elapsed_ms": 8.02
+          "elapsed_ms": 7.77
         },
         {
           "test_id": "contradiction_015",
@@ -3472,9 +3472,71 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.62,
+            "latency_ms": 0.57,
             "chunks_found": 5,
             "content_preview": "已更新评审要求：至少2人。 已更新评审要求：至少3人。 改成3人通过了 已记录评审要求：至少2人。 代码评审要求至少2人通过",
+            "passed_checks": [
+              "latest_value_correct",
+              "old_value_preserved",
+              "answer_contains_found"
+            ],
+            "failed_checks": [],
+            "hit_rate": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0,
+            "metrics": {
+              "hit_rate": {
+                "value": 1.0,
+                "target": 0.85,
+                "passed": true
+              },
+              "precision": {
+                "value": 1.0,
+                "target": 0.85,
+                "passed": true
+              },
+              "recall": {
+                "value": 1.0,
+                "target": 0.9,
+                "passed": true
+              },
+              "f1_score": {
+                "value": 1.0,
+                "target": 0.87,
+                "passed": true
+              },
+              "latest_value_accuracy": {
+                "value": 1.0,
+                "target": 1.0,
+                "passed": true
+              },
+              "old_value_preservation": {
+                "value": 1.0,
+                "target": 1.0,
+                "passed": true
+              },
+              "answer_contains_hit_rate": {
+                "value": 1.0,
+                "target": 1.0,
+                "passed": true
+              }
+            }
+          },
+          "elapsed_ms": 11.01
+        },
+        {
+          "test_id": "contradiction_016",
+          "name": "矛盾更新测试_16",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": true,
+            "old_value_preserved": true,
+            "answer_contains_found": true,
+            "latency_ms": 0.54,
+            "chunks_found": 5,
+            "content_preview": "又改回30天了，但关键日志保留180天 已更新日志保留：90天。 改成保留90天 已记录日志保留：30天。 日志保留策略是保留30天",
             "passed_checks": [
               "latest_value_correct",
               "old_value_preserved",
@@ -3526,68 +3588,6 @@
           "elapsed_ms": 11.21
         },
         {
-          "test_id": "contradiction_016",
-          "name": "矛盾更新测试_16",
-          "difficulty": "medium",
-          "status": "pass",
-          "metrics": {
-            "latest_value_correct": true,
-            "old_value_preserved": true,
-            "answer_contains_found": true,
-            "latency_ms": 0.51,
-            "chunks_found": 5,
-            "content_preview": "又改回30天了，但关键日志保留180天 已更新日志保留：90天。 改成保留90天 已记录日志保留：30天。 日志保留策略是保留30天",
-            "passed_checks": [
-              "latest_value_correct",
-              "old_value_preserved",
-              "answer_contains_found"
-            ],
-            "failed_checks": [],
-            "hit_rate": 1.0,
-            "precision": 1.0,
-            "recall": 1.0,
-            "f1_score": 1.0,
-            "metrics": {
-              "hit_rate": {
-                "value": 1.0,
-                "target": 0.85,
-                "passed": true
-              },
-              "precision": {
-                "value": 1.0,
-                "target": 0.85,
-                "passed": true
-              },
-              "recall": {
-                "value": 1.0,
-                "target": 0.9,
-                "passed": true
-              },
-              "f1_score": {
-                "value": 1.0,
-                "target": 0.87,
-                "passed": true
-              },
-              "latest_value_accuracy": {
-                "value": 1.0,
-                "target": 1.0,
-                "passed": true
-              },
-              "old_value_preservation": {
-                "value": 1.0,
-                "target": 1.0,
-                "passed": true
-              },
-              "answer_contains_hit_rate": {
-                "value": 1.0,
-                "target": 1.0,
-                "passed": true
-              }
-            }
-          },
-          "elapsed_ms": 10.74
-        },
-        {
           "test_id": "contradiction_017",
           "name": "矛盾更新测试_17",
           "difficulty": "hard",
@@ -3596,7 +3596,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.5,
+            "latency_ms": 0.48,
             "chunks_found": 6,
             "content_preview": "已更新限流：100次/分钟。 限流又改回100次了 已更新限流：500次/分钟。 限流改成500次/分钟 已记录API限流：100次/分钟。 API限流设置为100次/分钟",
             "passed_checks": [
@@ -3647,7 +3647,7 @@
               }
             }
           },
-          "elapsed_ms": 10.77
+          "elapsed_ms": 10.34
         },
         {
           "test_id": "contradiction_018",
@@ -3658,7 +3658,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.43,
+            "latency_ms": 0.48,
             "chunks_found": 3,
             "content_preview": "已更新缓存TTL：24小时。 已记录缓存TTL：1小时。 缓存TTL设为1小时",
             "passed_checks": [
@@ -3709,7 +3709,7 @@
               }
             }
           },
-          "elapsed_ms": 10.92
+          "elapsed_ms": 10.36
         },
         {
           "test_id": "contradiction_019",
@@ -3720,7 +3720,7 @@
             "latest_value_correct": false,
             "old_value_preserved": false,
             "answer_contains_found": true,
-            "latency_ms": 0.95,
+            "latency_ms": 0.57,
             "chunks_found": 4,
             "content_preview": "已更新项目A预算：70万。 项目A追加到70万 已记录两个项目预算。 项目A预算50万，项目B预算30万",
             "passed_checks": [
@@ -3772,7 +3772,7 @@
               }
             }
           },
-          "elapsed_ms": 10.53
+          "elapsed_ms": 7.43
         },
         {
           "test_id": "contradiction_020",
@@ -3783,7 +3783,7 @@
             "latest_value_correct": false,
             "old_value_preserved": false,
             "answer_contains_found": true,
-            "latency_ms": 0.74,
+            "latency_ms": 0.52,
             "chunks_found": 4,
             "content_preview": "已更新服务A端口：9090。 服务A端口改成9090 已记录服务端口。 服务A端口8080，服务B端口8081",
             "passed_checks": [
@@ -3835,7 +3835,7 @@
               }
             }
           },
-          "elapsed_ms": 7.57
+          "elapsed_ms": 7.44
         },
         {
           "test_id": "contradiction_021",
@@ -3846,7 +3846,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.57,
+            "latency_ms": 0.58,
             "chunks_found": 4,
             "content_preview": "已更新开发环境：PostgreSQL。 开发环境也改成PostgreSQL了 已记录环境数据库配置。 开发环境用MySQL，测试环境用PostgreSQL",
             "passed_checks": [
@@ -3897,7 +3897,7 @@
               }
             }
           },
-          "elapsed_ms": 7.75
+          "elapsed_ms": 7.48
         },
         {
           "test_id": "contradiction_022",
@@ -3960,7 +3960,7 @@
               }
             }
           },
-          "elapsed_ms": 7.61
+          "elapsed_ms": 7.79
         },
         {
           "test_id": "contradiction_023",
@@ -3971,7 +3971,7 @@
             "latest_value_correct": false,
             "old_value_preserved": false,
             "answer_contains_found": true,
-            "latency_ms": 0.55,
+            "latency_ms": 0.69,
             "chunks_found": 2,
             "content_preview": "已记录前后端技术栈。 前端用React，后端用Spring Boot",
             "passed_checks": [
@@ -4023,7 +4023,7 @@
               }
             }
           },
-          "elapsed_ms": 7.43
+          "elapsed_ms": 7.94
         },
         {
           "test_id": "contradiction_024",
@@ -4034,7 +4034,7 @@
             "latest_value_correct": false,
             "old_value_preserved": true,
             "answer_contains_found": false,
-            "latency_ms": 0.49,
+            "latency_ms": 0.54,
             "chunks_found": 2,
             "content_preview": "已记录监控方案。 监控用Prometheus+Grafana",
             "passed_checks": [
@@ -4086,7 +4086,7 @@
               }
             }
           },
-          "elapsed_ms": 7.29
+          "elapsed_ms": 7.3
         },
         {
           "test_id": "contradiction_025",
@@ -4097,7 +4097,7 @@
             "latest_value_correct": false,
             "old_value_preserved": false,
             "answer_contains_found": false,
-            "latency_ms": 0.56,
+            "latency_ms": 0.51,
             "chunks_found": 3,
             "content_preview": "下周三的会议取消了 已记录会议安排。 帮我约下周三和客户F的会议",
             "passed_checks": [],
@@ -4148,7 +4148,7 @@
               }
             }
           },
-          "elapsed_ms": 9.96
+          "elapsed_ms": 7.1
         },
         {
           "test_id": "contradiction_026",
@@ -4159,9 +4159,71 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.6,
+            "latency_ms": 0.57,
             "chunks_found": 4,
             "content_preview": "已撤回采购申请。 采购申请撤回了 已提交采购申请。 帮我提交采购服务器的申请",
+            "passed_checks": [
+              "latest_value_correct",
+              "old_value_preserved",
+              "answer_contains_found"
+            ],
+            "failed_checks": [],
+            "hit_rate": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0,
+            "metrics": {
+              "hit_rate": {
+                "value": 1.0,
+                "target": 0.85,
+                "passed": true
+              },
+              "precision": {
+                "value": 1.0,
+                "target": 0.85,
+                "passed": true
+              },
+              "recall": {
+                "value": 1.0,
+                "target": 0.9,
+                "passed": true
+              },
+              "f1_score": {
+                "value": 1.0,
+                "target": 0.87,
+                "passed": true
+              },
+              "latest_value_accuracy": {
+                "value": 1.0,
+                "target": 1.0,
+                "passed": true
+              },
+              "old_value_preservation": {
+                "value": 1.0,
+                "target": 1.0,
+                "passed": true
+              },
+              "answer_contains_hit_rate": {
+                "value": 1.0,
+                "target": 1.0,
+                "passed": true
+              }
+            }
+          },
+          "elapsed_ms": 7.45
+        },
+        {
+          "test_id": "contradiction_027",
+          "name": "矛盾更新测试_27",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "latest_value_correct": true,
+            "old_value_preserved": true,
+            "answer_contains_found": true,
+            "latency_ms": 0.56,
+            "chunks_found": 3,
+            "content_preview": "技术大会不去了，取消报名 已报名技术大会。 帮我报名下周的技术大会",
             "passed_checks": [
               "latest_value_correct",
               "old_value_preserved",
@@ -4213,68 +4275,6 @@
           "elapsed_ms": 7.35
         },
         {
-          "test_id": "contradiction_027",
-          "name": "矛盾更新测试_27",
-          "difficulty": "medium",
-          "status": "pass",
-          "metrics": {
-            "latest_value_correct": true,
-            "old_value_preserved": true,
-            "answer_contains_found": true,
-            "latency_ms": 0.52,
-            "chunks_found": 3,
-            "content_preview": "技术大会不去了，取消报名 已报名技术大会。 帮我报名下周的技术大会",
-            "passed_checks": [
-              "latest_value_correct",
-              "old_value_preserved",
-              "answer_contains_found"
-            ],
-            "failed_checks": [],
-            "hit_rate": 1.0,
-            "precision": 1.0,
-            "recall": 1.0,
-            "f1_score": 1.0,
-            "metrics": {
-              "hit_rate": {
-                "value": 1.0,
-                "target": 0.85,
-                "passed": true
-              },
-              "precision": {
-                "value": 1.0,
-                "target": 0.85,
-                "passed": true
-              },
-              "recall": {
-                "value": 1.0,
-                "target": 0.9,
-                "passed": true
-              },
-              "f1_score": {
-                "value": 1.0,
-                "target": 0.87,
-                "passed": true
-              },
-              "latest_value_accuracy": {
-                "value": 1.0,
-                "target": 1.0,
-                "passed": true
-              },
-              "old_value_preservation": {
-                "value": 1.0,
-                "target": 1.0,
-                "passed": true
-              },
-              "answer_contains_hit_rate": {
-                "value": 1.0,
-                "target": 1.0,
-                "passed": true
-              }
-            }
-          },
-          "elapsed_ms": 7.51
-        },
-        {
           "test_id": "contradiction_028",
           "name": "矛盾更新测试_28",
           "difficulty": "medium",
@@ -4283,7 +4283,7 @@
             "latest_value_correct": false,
             "old_value_preserved": true,
             "answer_contains_found": false,
-            "latency_ms": 0.52,
+            "latency_ms": 0.51,
             "chunks_found": 3,
             "content_preview": "上海不去了，退票吧 已预订高铁票。 帮我预订去上海的高铁票",
             "passed_checks": [
@@ -4335,7 +4335,7 @@
               }
             }
           },
-          "elapsed_ms": 7.6
+          "elapsed_ms": 7.38
         },
         {
           "test_id": "contradiction_029",
@@ -4346,7 +4346,7 @@
             "latest_value_correct": true,
             "old_value_preserved": true,
             "answer_contains_found": true,
-            "latency_ms": 0.45,
+            "latency_ms": 0.5,
             "chunks_found": 3,
             "content_preview": "加急发布取消，按正常流程走 已申请加急发布。 帮我申请加急发布版本",
             "passed_checks": [
@@ -4397,7 +4397,7 @@
               }
             }
           },
-          "elapsed_ms": 7.26
+          "elapsed_ms": 7.45
         },
         {
           "test_id": "contradiction_030",
@@ -4459,7 +4459,7 @@
               }
             }
           },
-          "elapsed_ms": 7.45
+          "elapsed_ms": 8.59
         }
       ],
       "avg_hit_rate": 80.0,
@@ -4526,7 +4526,7 @@
               }
             }
           },
-          "elapsed_ms": 13.38
+          "elapsed_ms": 13.12
         },
         {
           "test_id": "dec_002",
@@ -4578,7 +4578,7 @@
               }
             }
           },
-          "elapsed_ms": 0.54
+          "elapsed_ms": 0.51
         },
         {
           "test_id": "dec_003",
@@ -4630,7 +4630,7 @@
               }
             }
           },
-          "elapsed_ms": 0.66
+          "elapsed_ms": 0.57
         },
         {
           "test_id": "dec_004",
@@ -4682,7 +4682,7 @@
               }
             }
           },
-          "elapsed_ms": 0.56
+          "elapsed_ms": 0.54
         },
         {
           "test_id": "dec_005",
@@ -4734,7 +4734,7 @@
               }
             }
           },
-          "elapsed_ms": 0.56
+          "elapsed_ms": 0.5
         },
         {
           "test_id": "dec_006",
@@ -4786,7 +4786,7 @@
               }
             }
           },
-          "elapsed_ms": 2.38
+          "elapsed_ms": 2.39
         },
         {
           "test_id": "dec_007",
@@ -4838,7 +4838,7 @@
               }
             }
           },
-          "elapsed_ms": 0.56
+          "elapsed_ms": 0.54
         },
         {
           "test_id": "dec_008",
@@ -4890,7 +4890,7 @@
               }
             }
           },
-          "elapsed_ms": 2.19
+          "elapsed_ms": 2.21
         },
         {
           "test_id": "dec_009",
@@ -4942,7 +4942,7 @@
               }
             }
           },
-          "elapsed_ms": 2.06
+          "elapsed_ms": 1.96
         },
         {
           "test_id": "dec_010",
@@ -4994,7 +4994,7 @@
               }
             }
           },
-          "elapsed_ms": 0.6
+          "elapsed_ms": 0.65
         },
         {
           "test_id": "dec_011",
@@ -5046,7 +5046,7 @@
               }
             }
           },
-          "elapsed_ms": 0.47
+          "elapsed_ms": 0.53
         },
         {
           "test_id": "dec_012",
@@ -5098,7 +5098,7 @@
               }
             }
           },
-          "elapsed_ms": 0.46
+          "elapsed_ms": 0.49
         },
         {
           "test_id": "dec_013",
@@ -5150,7 +5150,7 @@
               }
             }
           },
-          "elapsed_ms": 0.52
+          "elapsed_ms": 0.6
         },
         {
           "test_id": "dec_014",
@@ -5202,7 +5202,7 @@
               }
             }
           },
-          "elapsed_ms": 0.48
+          "elapsed_ms": 0.5
         },
         {
           "test_id": "dec_015",
@@ -5254,7 +5254,7 @@
               }
             }
           },
-          "elapsed_ms": 2.64
+          "elapsed_ms": 2.48
         },
         {
           "test_id": "dec_016",
@@ -5306,7 +5306,7 @@
               }
             }
           },
-          "elapsed_ms": 2.19
+          "elapsed_ms": 2.18
         },
         {
           "test_id": "dec_017",
@@ -5358,7 +5358,7 @@
               }
             }
           },
-          "elapsed_ms": 0.62
+          "elapsed_ms": 0.68
         },
         {
           "test_id": "dec_018",
@@ -5410,7 +5410,7 @@
               }
             }
           },
-          "elapsed_ms": 0.57
+          "elapsed_ms": 0.59
         },
         {
           "test_id": "dec_019",
@@ -5514,7 +5514,7 @@
               }
             }
           },
-          "elapsed_ms": 0.52
+          "elapsed_ms": 0.53
         },
         {
           "test_id": "dec_021",
@@ -5564,7 +5564,7 @@
               }
             }
           },
-          "elapsed_ms": 0.42
+          "elapsed_ms": 0.39
         },
         {
           "test_id": "dec_022",
@@ -5614,7 +5614,7 @@
               }
             }
           },
-          "elapsed_ms": 0.45
+          "elapsed_ms": 0.5
         },
         {
           "test_id": "dec_023",
@@ -5664,7 +5664,7 @@
               }
             }
           },
-          "elapsed_ms": 0.48
+          "elapsed_ms": 0.42
         },
         {
           "test_id": "dec_024",
@@ -5714,7 +5714,7 @@
               }
             }
           },
-          "elapsed_ms": 0.4
+          "elapsed_ms": 0.46
         },
         {
           "test_id": "dec_025",
@@ -5764,7 +5764,7 @@
               }
             }
           },
-          "elapsed_ms": 0.45
+          "elapsed_ms": 0.39
         },
         {
           "test_id": "dec_026",
@@ -5814,7 +5814,7 @@
               }
             }
           },
-          "elapsed_ms": 0.49
+          "elapsed_ms": 0.61
         },
         {
           "test_id": "dec_027",
@@ -5864,7 +5864,7 @@
               }
             }
           },
-          "elapsed_ms": 0.78
+          "elapsed_ms": 0.47
         },
         {
           "test_id": "dec_028",
@@ -5914,7 +5914,7 @@
               }
             }
           },
-          "elapsed_ms": 0.53
+          "elapsed_ms": 0.47
         },
         {
           "test_id": "dec_029",
@@ -5964,7 +5964,7 @@
               }
             }
           },
-          "elapsed_ms": 0.46
+          "elapsed_ms": 0.41
         },
         {
           "test_id": "dec_030",
@@ -6014,7 +6014,7 @@
               }
             }
           },
-          "elapsed_ms": 0.49
+          "elapsed_ms": 0.44
         }
       ],
       "avg_hit_rate": 76.7,
@@ -6035,33 +6035,33 @@
           "difficulty": "easy",
           "status": "pass",
           "metrics": {
-            "p50_ms": 3.93,
-            "p95_ms": 5.66,
-            "p99_ms": 5.66,
+            "p50_ms": 3.46,
+            "p95_ms": 3.51,
+            "p99_ms": 3.51,
             "iterations": 10,
             "passed_checks": [
-              "write_p50=3.93<=200ms"
+              "write_p50=3.46<=200ms"
             ],
             "failed_checks": [],
             "metrics": {
               "write_latency_p50": {
-                "value": 3.93,
+                "value": 3.46,
                 "target": 200,
                 "passed": false
               },
               "write_latency_p95": {
-                "value": 5.66,
+                "value": 3.51,
                 "target": 500,
                 "passed": false
               },
               "write_latency_p99": {
-                "value": 5.66,
+                "value": 3.51,
                 "target": 1000,
                 "passed": false
               }
             }
           },
-          "elapsed_ms": 40.21
+          "elapsed_ms": 34.36
         },
         {
           "test_id": "efficiency_002",
@@ -6069,33 +6069,33 @@
           "difficulty": "easy",
           "status": "pass",
           "metrics": {
-            "p50_ms": 3.45,
-            "p95_ms": 4.15,
-            "p99_ms": 4.15,
+            "p50_ms": 3.33,
+            "p95_ms": 4.55,
+            "p99_ms": 4.55,
             "iterations": 10,
             "passed_checks": [
-              "write_p50=3.45<=200ms"
+              "write_p50=3.33<=200ms"
             ],
             "failed_checks": [],
             "metrics": {
               "write_latency_p50": {
-                "value": 3.45,
+                "value": 3.33,
                 "target": 200,
                 "passed": false
               },
               "write_latency_p95": {
-                "value": 4.15,
+                "value": 4.55,
                 "target": 500,
                 "passed": false
               },
               "write_latency_p99": {
-                "value": 4.15,
+                "value": 4.55,
                 "target": 1000,
                 "passed": false
               }
             }
           },
-          "elapsed_ms": 35.57
+          "elapsed_ms": 34.72
         },
         {
           "test_id": "efficiency_003",
@@ -6103,33 +6103,33 @@
           "difficulty": "medium",
           "status": "pass",
           "metrics": {
-            "p50_ms": 3.87,
-            "p95_ms": 4.56,
-            "p99_ms": 4.56,
+            "p50_ms": 3.5,
+            "p95_ms": 4.08,
+            "p99_ms": 4.08,
             "iterations": 10,
             "passed_checks": [
-              "write_p50=3.87<=300ms"
+              "write_p50=3.5<=300ms"
             ],
             "failed_checks": [],
             "metrics": {
               "write_latency_p50": {
-                "value": 3.87,
+                "value": 3.5,
                 "target": 300,
                 "passed": false
               },
               "write_latency_p95": {
-                "value": 4.56,
+                "value": 4.08,
                 "target": 800,
                 "passed": false
               },
               "write_latency_p99": {
-                "value": 4.56,
+                "value": 4.08,
                 "target": 1500,
                 "passed": false
               }
             }
           },
-          "elapsed_ms": 38.96
+          "elapsed_ms": 35.68
         },
         {
           "test_id": "efficiency_004",
@@ -6137,33 +6137,33 @@
           "difficulty": "medium",
           "status": "pass",
           "metrics": {
-            "p50_ms": 3.88,
-            "p95_ms": 4.27,
-            "p99_ms": 4.27,
+            "p50_ms": 3.82,
+            "p95_ms": 4.78,
+            "p99_ms": 4.78,
             "iterations": 10,
             "passed_checks": [
-              "write_p50=3.88<=500ms"
+              "write_p50=3.82<=500ms"
             ],
             "failed_checks": [],
             "metrics": {
               "write_latency_p50": {
-                "value": 3.88,
+                "value": 3.82,
                 "target": 500,
                 "passed": false
               },
               "write_latency_p95": {
-                "value": 4.27,
+                "value": 4.78,
                 "target": 1500,
                 "passed": false
               },
               "write_latency_p99": {
-                "value": 4.27,
+                "value": 4.78,
                 "target": 3000,
                 "passed": false
               }
             }
           },
-          "elapsed_ms": 38.65
+          "elapsed_ms": 38.61
         },
         {
           "test_id": "efficiency_005",
@@ -6171,33 +6171,33 @@
           "difficulty": "easy",
           "status": "pass",
           "metrics": {
-            "p50_ms": 3.42,
-            "p95_ms": 4.86,
-            "p99_ms": 4.86,
+            "p50_ms": 3.47,
+            "p95_ms": 3.77,
+            "p99_ms": 3.77,
             "iterations": 10,
             "passed_checks": [
-              "write_p50=3.42<=200ms"
+              "write_p50=3.47<=200ms"
             ],
             "failed_checks": [],
             "metrics": {
               "write_latency_p50": {
-                "value": 3.42,
+                "value": 3.47,
                 "target": 200,
                 "passed": false
               },
               "write_latency_p95": {
-                "value": 4.86,
+                "value": 3.77,
                 "target": 500,
                 "passed": false
               },
               "write_latency_p99": {
-                "value": 4.86,
+                "value": 3.77,
                 "target": 1000,
                 "passed": false
               }
             }
           },
-          "elapsed_ms": 35.94
+          "elapsed_ms": 34.44
         },
         {
           "test_id": "efficiency_006",
@@ -6205,33 +6205,33 @@
           "difficulty": "easy",
           "status": "pass",
           "metrics": {
-            "p50_ms": 3.5,
-            "p95_ms": 3.83,
-            "p99_ms": 3.83,
+            "p50_ms": 3.34,
+            "p95_ms": 4.21,
+            "p99_ms": 4.21,
             "iterations": 10,
             "passed_checks": [
-              "write_p50=3.5<=250ms"
+              "write_p50=3.34<=250ms"
             ],
             "failed_checks": [],
             "metrics": {
               "write_latency_p50": {
-                "value": 3.5,
+                "value": 3.34,
                 "target": 250,
                 "passed": false
               },
               "write_latency_p95": {
-                "value": 3.83,
+                "value": 4.21,
                 "target": 600,
                 "passed": false
               },
               "write_latency_p99": {
-                "value": 3.83,
+                "value": 4.21,
                 "target": 1200,
                 "passed": false
               }
             }
           },
-          "elapsed_ms": 35.2
+          "elapsed_ms": 34.96
         },
         {
           "test_id": "efficiency_007",
@@ -6240,7 +6240,7 @@
           "status": "pass",
           "metrics": {
             "p50_ms": 0.27,
-            "p95_ms": 0.57,
+            "p95_ms": 0.53,
             "iterations": 20,
             "passed_checks": [
               "query_p50=0.27<=300ms"
@@ -6253,13 +6253,13 @@
                 "passed": false
               },
               "query_latency_p95": {
-                "value": 0.57,
+                "value": 0.53,
                 "target": 800,
                 "passed": false
               }
             }
           },
-          "elapsed_ms": 203.12
+          "elapsed_ms": 186.44
         },
         {
           "test_id": "efficiency_008",
@@ -6268,7 +6268,7 @@
           "status": "pass",
           "metrics": {
             "p50_ms": 0.27,
-            "p95_ms": 0.55,
+            "p95_ms": 0.52,
             "iterations": 20,
             "passed_checks": [
               "query_p50=0.27<=300ms"
@@ -6281,45 +6281,17 @@
                 "passed": false
               },
               "query_latency_p95": {
-                "value": 0.55,
+                "value": 0.52,
                 "target": 1000,
                 "passed": false
               }
             }
           },
-          "elapsed_ms": 185.54
+          "elapsed_ms": 179.65
         },
         {
           "test_id": "efficiency_009",
           "name": "查询延迟-5000条记忆多跳查询",
-          "difficulty": "medium",
-          "status": "pass",
-          "metrics": {
-            "p50_ms": 0.26,
-            "p95_ms": 0.53,
-            "iterations": 20,
-            "passed_checks": [
-              "query_p50=0.26<=500ms"
-            ],
-            "failed_checks": [],
-            "metrics": {
-              "query_latency_p50": {
-                "value": 0.26,
-                "target": 500,
-                "passed": false
-              },
-              "query_latency_p95": {
-                "value": 0.53,
-                "target": 1500,
-                "passed": false
-              }
-            }
-          },
-          "elapsed_ms": 180.76
-        },
-        {
-          "test_id": "efficiency_010",
-          "name": "查询延迟-5000条记忆时间查询",
           "difficulty": "medium",
           "status": "pass",
           "metrics": {
@@ -6343,44 +6315,16 @@
               }
             }
           },
-          "elapsed_ms": 189.48
+          "elapsed_ms": 175.99
         },
         {
-          "test_id": "efficiency_011",
-          "name": "查询延迟-10000条记忆开放域查询",
+          "test_id": "efficiency_010",
+          "name": "查询延迟-5000条记忆时间查询",
           "difficulty": "medium",
           "status": "pass",
           "metrics": {
             "p50_ms": 0.27,
-            "p95_ms": 0.52,
-            "iterations": 20,
-            "passed_checks": [
-              "query_p50=0.27<=800ms"
-            ],
-            "failed_checks": [],
-            "metrics": {
-              "query_latency_p50": {
-                "value": 0.27,
-                "target": 800,
-                "passed": false
-              },
-              "query_latency_p95": {
-                "value": 0.52,
-                "target": 2000,
-                "passed": false
-              }
-            }
-          },
-          "elapsed_ms": 184.88
-        },
-        {
-          "test_id": "efficiency_012",
-          "name": "查询延迟-模糊语义查询",
-          "difficulty": "medium",
-          "status": "pass",
-          "metrics": {
-            "p50_ms": 0.27,
-            "p95_ms": 0.56,
+            "p95_ms": 0.65,
             "iterations": 20,
             "passed_checks": [
               "query_p50=0.27<=500ms"
@@ -6393,13 +6337,69 @@
                 "passed": false
               },
               "query_latency_p95": {
-                "value": 0.56,
+                "value": 0.65,
                 "target": 1500,
                 "passed": false
               }
             }
           },
-          "elapsed_ms": 220.14
+          "elapsed_ms": 176.19
+        },
+        {
+          "test_id": "efficiency_011",
+          "name": "查询延迟-10000条记忆开放域查询",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "p50_ms": 0.26,
+            "p95_ms": 0.51,
+            "iterations": 20,
+            "passed_checks": [
+              "query_p50=0.26<=800ms"
+            ],
+            "failed_checks": [],
+            "metrics": {
+              "query_latency_p50": {
+                "value": 0.26,
+                "target": 800,
+                "passed": false
+              },
+              "query_latency_p95": {
+                "value": 0.51,
+                "target": 2000,
+                "passed": false
+              }
+            }
+          },
+          "elapsed_ms": 196.85
+        },
+        {
+          "test_id": "efficiency_012",
+          "name": "查询延迟-模糊语义查询",
+          "difficulty": "medium",
+          "status": "pass",
+          "metrics": {
+            "p50_ms": 0.28,
+            "p95_ms": 0.54,
+            "iterations": 20,
+            "passed_checks": [
+              "query_p50=0.28<=500ms"
+            ],
+            "failed_checks": [],
+            "metrics": {
+              "query_latency_p50": {
+                "value": 0.28,
+                "target": 500,
+                "passed": false
+              },
+              "query_latency_p95": {
+                "value": 0.54,
+                "target": 1500,
+                "passed": false
+              }
+            }
+          },
+          "elapsed_ms": 181.76
         },
         {
           "test_id": "efficiency_013",
@@ -6414,7 +6414,7 @@
             "failed_checks": [],
             "metrics": {}
           },
-          "elapsed_ms": 0.0
+          "elapsed_ms": 0.02
         },
         {
           "test_id": "efficiency_014",
@@ -6459,7 +6459,7 @@
             "failed_checks": [],
             "metrics": {}
           },
-          "elapsed_ms": 0.0
+          "elapsed_ms": 0.01
         },
         {
           "test_id": "efficiency_017",
@@ -6474,7 +6474,7 @@
             "failed_checks": [],
             "metrics": {}
           },
-          "elapsed_ms": 0.0
+          "elapsed_ms": 0.01
         },
         {
           "test_id": "efficiency_018",
@@ -6489,7 +6489,7 @@
             "failed_checks": [],
             "metrics": {}
           },
-          "elapsed_ms": 0.01
+          "elapsed_ms": 0.0
         },
         {
           "test_id": "efficiency_019",
@@ -6579,7 +6579,7 @@
             "failed_checks": [],
             "metrics": {}
           },
-          "elapsed_ms": 0.01
+          "elapsed_ms": 0.0
         },
         {
           "test_id": "efficiency_025",
@@ -6594,7 +6594,7 @@
             "failed_checks": [],
             "metrics": {}
           },
-          "elapsed_ms": 0.01
+          "elapsed_ms": 0.0
         },
         {
           "test_id": "efficiency_026",
@@ -6609,7 +6609,7 @@
             "failed_checks": [],
             "metrics": {}
           },
-          "elapsed_ms": 0.02
+          "elapsed_ms": 0.0
         },
         {
           "test_id": "efficiency_027",
@@ -6624,7 +6624,7 @@
             "failed_checks": [],
             "metrics": {}
           },
-          "elapsed_ms": 0.01
+          "elapsed_ms": 0.0
         },
         {
           "test_id": "efficiency_028",
@@ -6639,7 +6639,7 @@
             "failed_checks": [],
             "metrics": {}
           },
-          "elapsed_ms": 0.01
+          "elapsed_ms": 0.0
         },
         {
           "test_id": "efficiency_029",
@@ -6766,7 +6766,7 @@
               }
             }
           },
-          "elapsed_ms": 0.03
+          "elapsed_ms": 0.04
         },
         {
           "test_id": "kh_008",
@@ -6808,7 +6808,7 @@
               }
             }
           },
-          "elapsed_ms": 0.05
+          "elapsed_ms": 0.04
         },
         {
           "test_id": "kh_009",
@@ -6850,7 +6850,7 @@
               }
             }
           },
-          "elapsed_ms": 0.04
+          "elapsed_ms": 0.03
         },
         {
           "test_id": "kh_010",
@@ -6892,7 +6892,7 @@
               }
             }
           },
-          "elapsed_ms": 0.04
+          "elapsed_ms": 0.03
         },
         {
           "test_id": "kh_011",
@@ -6934,7 +6934,7 @@
               }
             }
           },
-          "elapsed_ms": 9.78
+          "elapsed_ms": 9.5
         },
         {
           "test_id": "kh_012",
@@ -6977,7 +6977,7 @@
               }
             }
           },
-          "elapsed_ms": 0.23
+          "elapsed_ms": 0.28
         },
         {
           "test_id": "kh_013",
@@ -7061,7 +7061,7 @@
               }
             }
           },
-          "elapsed_ms": 0.2
+          "elapsed_ms": 0.19
         },
         {
           "test_id": "kh_015",
@@ -7103,7 +7103,7 @@
               }
             }
           },
-          "elapsed_ms": 0.22
+          "elapsed_ms": 0.2
         },
         {
           "test_id": "kh_016",
@@ -7147,7 +7147,7 @@
               }
             }
           },
-          "elapsed_ms": 0.31
+          "elapsed_ms": 0.17
         },
         {
           "test_id": "kh_017",
@@ -7189,7 +7189,7 @@
               }
             }
           },
-          "elapsed_ms": 0.04
+          "elapsed_ms": 0.03
         },
         {
           "test_id": "kh_018",
@@ -7231,7 +7231,7 @@
               }
             }
           },
-          "elapsed_ms": 0.04
+          "elapsed_ms": 0.03
         },
         {
           "test_id": "kh_019",
@@ -7273,7 +7273,7 @@
               }
             }
           },
-          "elapsed_ms": 0.04
+          "elapsed_ms": 0.03
         },
         {
           "test_id": "kh_020",
@@ -7315,7 +7315,7 @@
               }
             }
           },
-          "elapsed_ms": 0.04
+          "elapsed_ms": 0.03
         },
         {
           "test_id": "kh_021",
@@ -7399,7 +7399,7 @@
               }
             }
           },
-          "elapsed_ms": 0.03
+          "elapsed_ms": 0.04
         },
         {
           "test_id": "kh_023",
@@ -7441,7 +7441,7 @@
               }
             }
           },
-          "elapsed_ms": 0.03
+          "elapsed_ms": 0.04
         },
         {
           "test_id": "kh_024",
@@ -7567,7 +7567,7 @@
               }
             }
           },
-          "elapsed_ms": 0.03
+          "elapsed_ms": 0.04
         },
         {
           "test_id": "kh_027",
@@ -7609,7 +7609,7 @@
               }
             }
           },
-          "elapsed_ms": 0.03
+          "elapsed_ms": 0.04
         },
         {
           "test_id": "kh_028",
@@ -7651,7 +7651,7 @@
               }
             }
           },
-          "elapsed_ms": 0.03
+          "elapsed_ms": 0.06
         },
         {
           "test_id": "kh_029",
@@ -7693,7 +7693,7 @@
               }
             }
           },
-          "elapsed_ms": 0.05
+          "elapsed_ms": 0.04
         },
         {
           "test_id": "kh_030",
@@ -7761,7 +7761,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.76,
+            "latency_ms": 0.56,
             "chunks_found": 1,
             "content_preview": "核心服务从Java重写为Go的方案确定了",
             "hit_rate": 1.0,
@@ -7801,7 +7801,7 @@
               }
             }
           },
-          "elapsed_ms": 4.82
+          "elapsed_ms": 4.4
         },
         {
           "test_id": "ltm_002",
@@ -7814,7 +7814,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.66,
+            "latency_ms": 0.49,
             "chunks_found": 1,
             "content_preview": "和客户甲签了年度合同价值800万",
             "hit_rate": 1.0,
@@ -7854,7 +7854,7 @@
               }
             }
           },
-          "elapsed_ms": 4.65
+          "elapsed_ms": 4.11
         },
         {
           "test_id": "ltm_003",
@@ -7867,7 +7867,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.68,
+            "latency_ms": 0.46,
             "chunks_found": 1,
             "content_preview": "数据库从MySQL迁移到PostgreSQL的计划定了",
             "hit_rate": 1.0,
@@ -7907,7 +7907,7 @@
               }
             }
           },
-          "elapsed_ms": 4.81
+          "elapsed_ms": 4.36
         },
         {
           "test_id": "ltm_004",
@@ -7920,7 +7920,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.61,
+            "latency_ms": 0.44,
             "chunks_found": 1,
             "content_preview": "安全审计发现3个高危漏洞需要在Q1修复",
             "hit_rate": 1.0,
@@ -7960,7 +7960,7 @@
               }
             }
           },
-          "elapsed_ms": 4.69
+          "elapsed_ms": 4.02
         },
         {
           "test_id": "ltm_005",
@@ -7973,7 +7973,7 @@
               "not_found: keywords=['5个', '后端']",
               "still_accessible"
             ],
-            "latency_ms": 0.53,
+            "latency_ms": 0.42,
             "chunks_found": 0,
             "content_preview": "",
             "hit_rate": 0.0,
@@ -8013,7 +8013,7 @@
               }
             }
           },
-          "elapsed_ms": 4.41
+          "elapsed_ms": 3.91
         },
         {
           "test_id": "ltm_006",
@@ -8026,7 +8026,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.44,
+            "latency_ms": 0.45,
             "chunks_found": 1,
             "content_preview": "微服务架构评审确定使用Spring Cloud方案",
             "hit_rate": 1.0,
@@ -8066,7 +8066,7 @@
               }
             }
           },
-          "elapsed_ms": 4.08
+          "elapsed_ms": 3.91
         },
         {
           "test_id": "ltm_007",
@@ -8079,7 +8079,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.49,
+            "latency_ms": 0.36,
             "chunks_found": 1,
             "content_preview": "产品2.0版本的PRD评审通过了",
             "hit_rate": 1.0,
@@ -8119,7 +8119,7 @@
               }
             }
           },
-          "elapsed_ms": 4.12
+          "elapsed_ms": 3.79
         },
         {
           "test_id": "ltm_008",
@@ -8132,7 +8132,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.43,
+            "latency_ms": 0.37,
             "chunks_found": 1,
             "content_preview": "技术债务清理计划确定，目标是减少30%的遗留代码",
             "hit_rate": 1.0,
@@ -8172,7 +8172,7 @@
               }
             }
           },
-          "elapsed_ms": 4.37
+          "elapsed_ms": 3.77
         },
         {
           "test_id": "ltm_009",
@@ -8225,7 +8225,7 @@
               }
             }
           },
-          "elapsed_ms": 4.24
+          "elapsed_ms": 3.86
         },
         {
           "test_id": "ltm_010",
@@ -8238,7 +8238,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.63,
+            "latency_ms": 0.39,
             "chunks_found": 1,
             "content_preview": "性能优化项目启动，目标是API响应时间降低50%",
             "hit_rate": 1.0,
@@ -8278,7 +8278,7 @@
               }
             }
           },
-          "elapsed_ms": 4.29
+          "elapsed_ms": 3.93
         },
         {
           "test_id": "ltm_011",
@@ -8291,7 +8291,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.44,
+            "latency_ms": 0.48,
             "chunks_found": 1,
             "content_preview": "和供应商B签订了服务器托管协议",
             "hit_rate": 1.0,
@@ -8331,7 +8331,7 @@
               }
             }
           },
-          "elapsed_ms": 4.76
+          "elapsed_ms": 4.03
         },
         {
           "test_id": "ltm_012",
@@ -8344,7 +8344,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.43,
+            "latency_ms": 0.42,
             "chunks_found": 1,
             "content_preview": "团队从Scrum切换到Kanban工作流",
             "hit_rate": 1.0,
@@ -8384,7 +8384,7 @@
               }
             }
           },
-          "elapsed_ms": 4.05
+          "elapsed_ms": 3.92
         },
         {
           "test_id": "ltm_013",
@@ -8397,7 +8397,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.34,
+            "latency_ms": 0.39,
             "chunks_found": 1,
             "content_preview": "API版本从v1升级到v2，v1保留兼容6个月",
             "hit_rate": 1.0,
@@ -8437,7 +8437,7 @@
               }
             }
           },
-          "elapsed_ms": 3.71
+          "elapsed_ms": 3.86
         },
         {
           "test_id": "ltm_014",
@@ -8490,7 +8490,7 @@
               }
             }
           },
-          "elapsed_ms": 3.9
+          "elapsed_ms": 3.77
         },
         {
           "test_id": "ltm_015",
@@ -8503,7 +8503,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.43,
+            "latency_ms": 0.48,
             "chunks_found": 1,
             "content_preview": "公司确定了三年技术路线图",
             "hit_rate": 1.0,
@@ -8543,7 +8543,7 @@
               }
             }
           },
-          "elapsed_ms": 4.14
+          "elapsed_ms": 4.05
         },
         {
           "test_id": "ltm_016",
@@ -8556,7 +8556,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.43,
+            "latency_ms": 0.45,
             "chunks_found": 1,
             "content_preview": "第一个微服务从单体架构中拆分出来",
             "hit_rate": 1.0,
@@ -8596,7 +8596,7 @@
               }
             }
           },
-          "elapsed_ms": 4.01
+          "elapsed_ms": 4.51
         },
         {
           "test_id": "ltm_017",
@@ -8662,7 +8662,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.38,
+            "latency_ms": 0.41,
             "chunks_found": 1,
             "content_preview": "数据湖项目启动，选用Apache Iceberg",
             "hit_rate": 1.0,
@@ -8702,7 +8702,7 @@
               }
             }
           },
-          "elapsed_ms": 4.1
+          "elapsed_ms": 3.94
         },
         {
           "test_id": "ltm_019",
@@ -8715,7 +8715,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.41,
+            "latency_ms": 0.42,
             "chunks_found": 1,
             "content_preview": "完成了ISO 27001信息安全认证",
             "hit_rate": 1.0,
@@ -8755,7 +8755,7 @@
               }
             }
           },
-          "elapsed_ms": 4.85
+          "elapsed_ms": 3.99
         },
         {
           "test_id": "ltm_020",
@@ -8768,7 +8768,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.4,
+            "latency_ms": 0.41,
             "chunks_found": 1,
             "content_preview": "年度预算审批通过，技术投入增加40%",
             "hit_rate": 1.0,
@@ -8821,7 +8821,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.39,
+            "latency_ms": 0.37,
             "chunks_found": 1,
             "content_preview": "引入了AI代码助手工具",
             "hit_rate": 1.0,
@@ -8861,7 +8861,7 @@
               }
             }
           },
-          "elapsed_ms": 4.01
+          "elapsed_ms": 4.24
         },
         {
           "test_id": "ltm_022",
@@ -8874,7 +8874,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.59,
+            "latency_ms": 0.4,
             "chunks_found": 1,
             "content_preview": "容器化改造完成，全部服务迁移到K8s",
             "hit_rate": 1.0,
@@ -8914,7 +8914,7 @@
               }
             }
           },
-          "elapsed_ms": 4.89
+          "elapsed_ms": 4.24
         },
         {
           "test_id": "ltm_023",
@@ -8928,7 +8928,7 @@
             "failed_checks": [
               "not_found: keywords=['AWS东京']"
             ],
-            "latency_ms": 0.39,
+            "latency_ms": 0.59,
             "chunks_found": 1,
             "content_preview": "生产环境部署在阿里云华东1区",
             "hit_rate": 0.5,
@@ -8968,7 +8968,7 @@
               }
             }
           },
-          "elapsed_ms": 4.05
+          "elapsed_ms": 5.82
         },
         {
           "test_id": "ltm_024",
@@ -8982,7 +8982,7 @@
             "failed_checks": [
               "not_found: keywords=['500次']"
             ],
-            "latency_ms": 0.4,
+            "latency_ms": 0.37,
             "chunks_found": 1,
             "content_preview": "API限流设为100次/分钟",
             "hit_rate": 0.5,
@@ -9022,7 +9022,7 @@
               }
             }
           },
-          "elapsed_ms": 4.07
+          "elapsed_ms": 3.89
         },
         {
           "test_id": "ltm_025",
@@ -9035,7 +9035,7 @@
               "still_accessible"
             ],
             "failed_checks": [],
-            "latency_ms": 0.41,
+            "latency_ms": 0.4,
             "chunks_found": 1,
             "content_preview": "监控方案是Prometheus+Grafana",
             "hit_rate": 1.0,
@@ -9075,7 +9075,7 @@
               }
             }
           },
-          "elapsed_ms": 3.88
+          "elapsed_ms": 3.94
         },
         {
           "test_id": "ltm_026",
@@ -9089,7 +9089,7 @@
             "failed_checks": [
               "not_found: keywords=['25人']"
             ],
-            "latency_ms": 0.36,
+            "latency_ms": 0.42,
             "chunks_found": 1,
             "content_preview": "团队有10个人",
             "hit_rate": 0.5,
@@ -9129,7 +9129,7 @@
               }
             }
           },
-          "elapsed_ms": 3.93
+          "elapsed_ms": 3.92
         },
         {
           "test_id": "ltm_027",
@@ -9183,7 +9183,7 @@
               }
             }
           },
-          "elapsed_ms": 4.15
+          "elapsed_ms": 4.39
         },
         {
           "test_id": "ltm_028",
@@ -9197,7 +9197,7 @@
             "failed_checks": [
               "not_found: keywords=['3人']"
             ],
-            "latency_ms": 0.41,
+            "latency_ms": 0.39,
             "chunks_found": 1,
             "content_preview": "代码评审要求2人通过",
             "hit_rate": 0.5,
@@ -9237,7 +9237,7 @@
               }
             }
           },
-          "elapsed_ms": 3.9
+          "elapsed_ms": 3.84
         },
         {
           "test_id": "ltm_029",
@@ -9251,7 +9251,7 @@
             "failed_checks": [
               "not_found: keywords=['79元']"
             ],
-            "latency_ms": 0.38,
+            "latency_ms": 0.39,
             "chunks_found": 1,
             "content_preview": "产品定价基础版99元/月",
             "hit_rate": 0.5,
@@ -9291,7 +9291,7 @@
               }
             }
           },
-          "elapsed_ms": 3.88
+          "elapsed_ms": 4.08
         },
         {
           "test_id": "ltm_030",
@@ -9345,7 +9345,7 @@
               }
             }
           },
-          "elapsed_ms": 3.92
+          "elapsed_ms": 4.04
         }
       ],
       "avg_hit_rate": 85.0,
@@ -9410,7 +9410,7 @@
               }
             }
           },
-          "elapsed_ms": 8.12
+          "elapsed_ms": 8.04
         },
         {
           "test_id": "pref_002",
@@ -9462,7 +9462,7 @@
               }
             }
           },
-          "elapsed_ms": 0.45
+          "elapsed_ms": 0.51
         },
         {
           "test_id": "pref_003",
@@ -9566,7 +9566,7 @@
               }
             }
           },
-          "elapsed_ms": 0.46
+          "elapsed_ms": 0.45
         },
         {
           "test_id": "pref_005",
@@ -9618,7 +9618,7 @@
               }
             }
           },
-          "elapsed_ms": 0.76
+          "elapsed_ms": 0.53
         },
         {
           "test_id": "pref_006",
@@ -9669,7 +9669,7 @@
               }
             }
           },
-          "elapsed_ms": 0.41
+          "elapsed_ms": 0.43
         },
         {
           "test_id": "pref_007",
@@ -9720,7 +9720,7 @@
               }
             }
           },
-          "elapsed_ms": 0.39
+          "elapsed_ms": 0.43
         },
         {
           "test_id": "pref_008",
@@ -9771,7 +9771,7 @@
               }
             }
           },
-          "elapsed_ms": 0.47
+          "elapsed_ms": 0.41
         },
         {
           "test_id": "pref_009",
@@ -9827,7 +9827,7 @@
               }
             }
           },
-          "elapsed_ms": 0.11
+          "elapsed_ms": 0.12
         },
         {
           "test_id": "pref_011",
@@ -9878,7 +9878,7 @@
               }
             }
           },
-          "elapsed_ms": 0.78
+          "elapsed_ms": 0.53
         },
         {
           "test_id": "pref_012",
@@ -9929,7 +9929,7 @@
               }
             }
           },
-          "elapsed_ms": 4.44
+          "elapsed_ms": 2.26
         },
         {
           "test_id": "pref_013",
@@ -9978,7 +9978,7 @@
               }
             }
           },
-          "elapsed_ms": 4.26
+          "elapsed_ms": 1.88
         },
         {
           "test_id": "pref_014",
@@ -10027,7 +10027,7 @@
               }
             }
           },
-          "elapsed_ms": 3.34
+          "elapsed_ms": 3.44
         },
         {
           "test_id": "pref_015",
@@ -10078,7 +10078,7 @@
               }
             }
           },
-          "elapsed_ms": 2.11
+          "elapsed_ms": 2.08
         },
         {
           "test_id": "pref_016",
@@ -10129,7 +10129,7 @@
               }
             }
           },
-          "elapsed_ms": 2.01
+          "elapsed_ms": 1.97
         },
         {
           "test_id": "pref_017",
@@ -10180,7 +10180,7 @@
               }
             }
           },
-          "elapsed_ms": 0.55
+          "elapsed_ms": 0.63
         },
         {
           "test_id": "pref_018",
@@ -10229,7 +10229,7 @@
               }
             }
           },
-          "elapsed_ms": 1.75
+          "elapsed_ms": 2.08
         },
         {
           "test_id": "pref_019",
@@ -10280,7 +10280,7 @@
               }
             }
           },
-          "elapsed_ms": 0.44
+          "elapsed_ms": 0.7
         },
         {
           "test_id": "pref_020",
@@ -10331,7 +10331,7 @@
               }
             }
           },
-          "elapsed_ms": 0.53
+          "elapsed_ms": 0.9
         },
         {
           "test_id": "pref_021",
@@ -10380,7 +10380,7 @@
               }
             }
           },
-          "elapsed_ms": 1.92
+          "elapsed_ms": 2.29
         },
         {
           "test_id": "pref_022",
@@ -10429,7 +10429,7 @@
               }
             }
           },
-          "elapsed_ms": 0.27
+          "elapsed_ms": 0.39
         },
         {
           "test_id": "pref_023",
@@ -10478,7 +10478,7 @@
               }
             }
           },
-          "elapsed_ms": 0.32
+          "elapsed_ms": 0.53
         },
         {
           "test_id": "pref_024",
@@ -10527,7 +10527,7 @@
               }
             }
           },
-          "elapsed_ms": 0.23
+          "elapsed_ms": 0.33
         },
         {
           "test_id": "pref_025",
@@ -10576,7 +10576,7 @@
               }
             }
           },
-          "elapsed_ms": 0.24
+          "elapsed_ms": 0.31
         },
         {
           "test_id": "pref_026",
@@ -10625,7 +10625,7 @@
               }
             }
           },
-          "elapsed_ms": 0.1
+          "elapsed_ms": 0.11
         },
         {
           "test_id": "pref_027",
@@ -10674,7 +10674,7 @@
               }
             }
           },
-          "elapsed_ms": 0.13
+          "elapsed_ms": 0.11
         },
         {
           "test_id": "pref_028",
@@ -10723,7 +10723,7 @@
               }
             }
           },
-          "elapsed_ms": 0.1
+          "elapsed_ms": 0.12
         },
         {
           "test_id": "pref_029",
@@ -10772,7 +10772,7 @@
               }
             }
           },
-          "elapsed_ms": 0.12
+          "elapsed_ms": 0.11
         },
         {
           "test_id": "pref_030",
@@ -10821,7 +10821,7 @@
               }
             }
           },
-          "elapsed_ms": 0.12
+          "elapsed_ms": 0.1
         }
       ],
       "avg_hit_rate": 65.5,
@@ -10923,10 +10923,10 @@
   },
   "overall_score": 69.94,
   "grade": "不及格",
-  "report_id": "real-eval-ab57a9555b07",
-  "run_timestamp": "2026-05-06T01:01:11.661119",
+  "report_id": "real-eval-747fa407ab2e",
+  "run_timestamp": "2026-05-06T00:51:57.536737",
   "system_version": "MemScope v2.0.0 — 真实系统评估（非mock）",
-  "elapsed_seconds": 21.9,
+  "elapsed_seconds": 21.0,
   "summary": {
     "total_tests": 240,
     "passed": 165,
@@ -10944,7 +10944,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 19.65,
+      "latency_ms": 20.01,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -10977,7 +10977,7 @@
       "dimension": "anti_interference",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 18.17,
+      "latency_ms": 17.41,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11009,7 +11009,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 17.66,
+      "latency_ms": 17.69,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11042,7 +11042,7 @@
       "dimension": "anti_interference",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 14.55,
+      "latency_ms": 14.18,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11074,7 +11074,7 @@
       "dimension": "anti_interference",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 26.64,
+      "latency_ms": 14.38,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11106,7 +11106,7 @@
       "dimension": "anti_interference",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 4.17,
+      "latency_ms": 4.09,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11138,7 +11138,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 50.67,
+      "latency_ms": 36.22,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11171,7 +11171,7 @@
       "dimension": "anti_interference",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 40.07,
+      "latency_ms": 38.08,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11203,7 +11203,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 34.8,
+      "latency_ms": 30.76,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11236,7 +11236,7 @@
       "dimension": "anti_interference",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 37.17,
+      "latency_ms": 38.82,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11268,7 +11268,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 38.19,
+      "latency_ms": 37.33,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11301,7 +11301,7 @@
       "dimension": "anti_interference",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 41.05,
+      "latency_ms": 43.48,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11333,7 +11333,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 16.6,
+      "latency_ms": 14.3,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11366,7 +11366,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 15.37,
+      "latency_ms": 13.87,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11399,7 +11399,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 14.17,
+      "latency_ms": 14.22,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11432,7 +11432,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 14.5,
+      "latency_ms": 14.42,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11465,7 +11465,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "hard",
-      "latency_ms": 13.91,
+      "latency_ms": 14.06,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11498,7 +11498,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "hard",
-      "latency_ms": 14.12,
+      "latency_ms": 14.3,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11531,7 +11531,7 @@
       "dimension": "anti_interference",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 13.97,
+      "latency_ms": 13.64,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11563,7 +11563,7 @@
       "dimension": "anti_interference",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 17.55,
+      "latency_ms": 21.68,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11595,7 +11595,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 15.34,
+      "latency_ms": 14.02,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11628,7 +11628,7 @@
       "dimension": "anti_interference",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 20.02,
+      "latency_ms": 18.11,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11660,7 +11660,7 @@
       "dimension": "anti_interference",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 21.07,
+      "latency_ms": 21.79,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11692,7 +11692,7 @@
       "dimension": "anti_interference",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 22.01,
+      "latency_ms": 20.3,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11724,7 +11724,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 10.83,
+      "latency_ms": 10.69,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11757,7 +11757,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 10.48,
+      "latency_ms": 10.92,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11790,7 +11790,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 15.56,
+      "latency_ms": 13.75,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11823,7 +11823,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 14.31,
+      "latency_ms": 14.54,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11856,7 +11856,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "hard",
-      "latency_ms": 14.35,
+      "latency_ms": 14.34,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11889,7 +11889,7 @@
       "dimension": "anti_interference",
       "status": "fail",
       "difficulty": "hard",
-      "latency_ms": 14.76,
+      "latency_ms": 13.91,
       "token_count": 0,
       "metrics": {
         "recall": {
@@ -11922,7 +11922,7 @@
       "dimension": "command_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 82.48,
+      "latency_ms": 91.71,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -11940,7 +11940,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 0.12,
+      "latency_ms": 0.11,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -11952,7 +11952,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 0.14,
+      "latency_ms": 0.12,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -11978,7 +11978,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 0.11,
+      "latency_ms": 0.12,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -11992,7 +11992,7 @@
       "dimension": "command_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.12,
+      "latency_ms": 0.14,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -12006,7 +12006,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.04,
+      "latency_ms": 0.03,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -12036,7 +12036,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.03,
+      "latency_ms": 0.04,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -12048,7 +12048,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 0.03,
+      "latency_ms": 0.04,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -12062,7 +12062,7 @@
       "dimension": "command_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.16,
+      "latency_ms": 0.12,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -12088,7 +12088,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 0.03,
+      "latency_ms": 0.04,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -12102,7 +12102,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.03,
+      "latency_ms": 0.04,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -12117,7 +12117,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 0.03,
+      "latency_ms": 0.04,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -12141,7 +12141,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.03,
+      "latency_ms": 0.04,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -12153,7 +12153,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.03,
+      "latency_ms": 0.04,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -12177,7 +12177,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.04,
+      "latency_ms": 0.03,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -12201,7 +12201,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.03,
+      "latency_ms": 0.06,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -12213,7 +12213,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.05,
+      "latency_ms": 0.04,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -12225,7 +12225,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.03,
+      "latency_ms": 0.05,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -12249,7 +12249,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.04,
+      "latency_ms": 0.03,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -12261,7 +12261,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.04,
+      "latency_ms": 0.03,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -12285,7 +12285,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.04,
+      "latency_ms": 0.03,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -12297,7 +12297,7 @@
       "dimension": "command_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.05,
+      "latency_ms": 0.03,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [],
@@ -12309,7 +12309,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 7.99,
+      "latency_ms": 7.27,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12346,7 +12346,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 7.8,
+      "latency_ms": 7.58,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12383,7 +12383,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 7.4,
+      "latency_ms": 6.99,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12420,7 +12420,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 7.43,
+      "latency_ms": 7.48,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12457,7 +12457,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 7.77,
+      "latency_ms": 7.1,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12494,7 +12494,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 7.39,
+      "latency_ms": 7.23,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12531,7 +12531,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 7.7,
+      "latency_ms": 7.1,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12568,7 +12568,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 7.43,
+      "latency_ms": 7.25,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12605,7 +12605,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 7.61,
+      "latency_ms": 7.11,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12679,7 +12679,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 7.33,
+      "latency_ms": 7.0,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12716,7 +12716,7 @@
       "dimension": "contradiction_update",
       "status": "fail",
       "difficulty": "hard",
-      "latency_ms": 7.15,
+      "latency_ms": 7.16,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12753,7 +12753,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 11.07,
+      "latency_ms": 10.78,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12790,7 +12790,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 8.02,
+      "latency_ms": 7.77,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12827,7 +12827,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 11.21,
+      "latency_ms": 11.01,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12864,7 +12864,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 10.74,
+      "latency_ms": 11.21,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12901,7 +12901,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 10.77,
+      "latency_ms": 10.34,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12938,7 +12938,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 10.92,
+      "latency_ms": 10.36,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -12975,7 +12975,7 @@
       "dimension": "contradiction_update",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 10.53,
+      "latency_ms": 7.43,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13013,7 +13013,7 @@
       "dimension": "contradiction_update",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 7.57,
+      "latency_ms": 7.44,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13051,7 +13051,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 7.75,
+      "latency_ms": 7.48,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13088,7 +13088,7 @@
       "dimension": "contradiction_update",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 7.61,
+      "latency_ms": 7.79,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13126,7 +13126,7 @@
       "dimension": "contradiction_update",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 7.43,
+      "latency_ms": 7.94,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13164,7 +13164,7 @@
       "dimension": "contradiction_update",
       "status": "fail",
       "difficulty": "hard",
-      "latency_ms": 7.29,
+      "latency_ms": 7.3,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13202,7 +13202,7 @@
       "dimension": "contradiction_update",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 9.96,
+      "latency_ms": 7.1,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13239,7 +13239,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 7.35,
+      "latency_ms": 7.45,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13276,7 +13276,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 7.51,
+      "latency_ms": 7.35,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13313,7 +13313,7 @@
       "dimension": "contradiction_update",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 7.6,
+      "latency_ms": 7.38,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13351,7 +13351,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 7.26,
+      "latency_ms": 7.45,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13388,7 +13388,7 @@
       "dimension": "contradiction_update",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 7.45,
+      "latency_ms": 8.59,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13425,7 +13425,7 @@
       "dimension": "decision_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 13.38,
+      "latency_ms": 13.12,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13462,7 +13462,7 @@
       "dimension": "decision_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.54,
+      "latency_ms": 0.51,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13497,7 +13497,7 @@
       "dimension": "decision_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.66,
+      "latency_ms": 0.57,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13532,7 +13532,7 @@
       "dimension": "decision_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.56,
+      "latency_ms": 0.54,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13567,7 +13567,7 @@
       "dimension": "decision_memory",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 0.56,
+      "latency_ms": 0.5,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13602,7 +13602,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 2.38,
+      "latency_ms": 2.39,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13637,7 +13637,7 @@
       "dimension": "decision_memory",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 0.56,
+      "latency_ms": 0.54,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13672,7 +13672,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 2.19,
+      "latency_ms": 2.21,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13707,7 +13707,7 @@
       "dimension": "decision_memory",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 2.06,
+      "latency_ms": 1.96,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13742,7 +13742,7 @@
       "dimension": "decision_memory",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 0.6,
+      "latency_ms": 0.65,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13777,7 +13777,7 @@
       "dimension": "decision_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.47,
+      "latency_ms": 0.53,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13812,7 +13812,7 @@
       "dimension": "decision_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.46,
+      "latency_ms": 0.49,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13847,7 +13847,7 @@
       "dimension": "decision_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.52,
+      "latency_ms": 0.6,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13882,7 +13882,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 0.48,
+      "latency_ms": 0.5,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13917,7 +13917,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 2.64,
+      "latency_ms": 2.48,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13952,7 +13952,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 2.19,
+      "latency_ms": 2.18,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -13987,7 +13987,7 @@
       "dimension": "decision_memory",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 0.62,
+      "latency_ms": 0.68,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -14022,7 +14022,7 @@
       "dimension": "decision_memory",
       "status": "fail",
       "difficulty": "hard",
-      "latency_ms": 0.57,
+      "latency_ms": 0.59,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -14092,7 +14092,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.52,
+      "latency_ms": 0.53,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -14127,7 +14127,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 0.42,
+      "latency_ms": 0.39,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -14160,7 +14160,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.45,
+      "latency_ms": 0.5,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -14193,7 +14193,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 0.48,
+      "latency_ms": 0.42,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -14226,7 +14226,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.4,
+      "latency_ms": 0.46,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -14259,7 +14259,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.45,
+      "latency_ms": 0.39,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -14292,7 +14292,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.49,
+      "latency_ms": 0.61,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -14325,7 +14325,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.78,
+      "latency_ms": 0.47,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -14358,7 +14358,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.53,
+      "latency_ms": 0.47,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -14391,7 +14391,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.46,
+      "latency_ms": 0.41,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -14424,7 +14424,7 @@
       "dimension": "decision_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.49,
+      "latency_ms": 0.44,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -14457,11 +14457,11 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 40.21,
+      "latency_ms": 34.36,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
-        "write_p50=3.93<=200ms"
+        "write_p50=3.46<=200ms"
       ],
       "failed_checks": []
     },
@@ -14471,11 +14471,11 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 35.57,
+      "latency_ms": 34.72,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
-        "write_p50=3.45<=200ms"
+        "write_p50=3.33<=200ms"
       ],
       "failed_checks": []
     },
@@ -14485,11 +14485,11 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 38.96,
+      "latency_ms": 35.68,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
-        "write_p50=3.87<=300ms"
+        "write_p50=3.5<=300ms"
       ],
       "failed_checks": []
     },
@@ -14499,11 +14499,11 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 38.65,
+      "latency_ms": 38.61,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
-        "write_p50=3.88<=500ms"
+        "write_p50=3.82<=500ms"
       ],
       "failed_checks": []
     },
@@ -14513,11 +14513,11 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 35.94,
+      "latency_ms": 34.44,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
-        "write_p50=3.42<=200ms"
+        "write_p50=3.47<=200ms"
       ],
       "failed_checks": []
     },
@@ -14527,11 +14527,11 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 35.2,
+      "latency_ms": 34.96,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
-        "write_p50=3.5<=250ms"
+        "write_p50=3.34<=250ms"
       ],
       "failed_checks": []
     },
@@ -14541,7 +14541,7 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 203.12,
+      "latency_ms": 186.44,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -14555,7 +14555,7 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 185.54,
+      "latency_ms": 179.65,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -14569,11 +14569,11 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 180.76,
+      "latency_ms": 175.99,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
-        "query_p50=0.26<=500ms"
+        "query_p50=0.28<=500ms"
       ],
       "failed_checks": []
     },
@@ -14583,11 +14583,11 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 189.48,
+      "latency_ms": 176.19,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
-        "query_p50=0.28<=500ms"
+        "query_p50=0.27<=500ms"
       ],
       "failed_checks": []
     },
@@ -14597,11 +14597,11 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 184.88,
+      "latency_ms": 196.85,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
-        "query_p50=0.27<=800ms"
+        "query_p50=0.26<=800ms"
       ],
       "failed_checks": []
     },
@@ -14611,11 +14611,11 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 220.14,
+      "latency_ms": 181.76,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
-        "query_p50=0.27<=500ms"
+        "query_p50=0.28<=500ms"
       ],
       "failed_checks": []
     },
@@ -14625,7 +14625,7 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 0.0,
+      "latency_ms": 0.02,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -14667,7 +14667,7 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.0,
+      "latency_ms": 0.01,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -14681,7 +14681,7 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.0,
+      "latency_ms": 0.01,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -14695,7 +14695,7 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.01,
+      "latency_ms": 0.0,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -14779,7 +14779,7 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 0.01,
+      "latency_ms": 0.0,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -14793,7 +14793,7 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.01,
+      "latency_ms": 0.0,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -14807,7 +14807,7 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.02,
+      "latency_ms": 0.0,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -14821,7 +14821,7 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.01,
+      "latency_ms": 0.0,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -14835,7 +14835,7 @@
       "dimension": "efficiency",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.01,
+      "latency_ms": 0.0,
       "token_count": 0,
       "metrics": {},
       "passed_checks": [
@@ -14949,7 +14949,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 0.03,
+      "latency_ms": 0.04,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -14984,7 +14984,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.05,
+      "latency_ms": 0.04,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15019,7 +15019,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.04,
+      "latency_ms": 0.03,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15054,7 +15054,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.04,
+      "latency_ms": 0.03,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15089,7 +15089,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 9.78,
+      "latency_ms": 9.5,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15124,7 +15124,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.23,
+      "latency_ms": 0.28,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15195,7 +15195,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 0.2,
+      "latency_ms": 0.19,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15230,7 +15230,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.22,
+      "latency_ms": 0.2,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15265,7 +15265,7 @@
       "dimension": "knowledge_health",
       "status": "fail",
       "difficulty": "hard",
-      "latency_ms": 0.31,
+      "latency_ms": 0.17,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15302,7 +15302,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.04,
+      "latency_ms": 0.03,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15337,7 +15337,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 0.04,
+      "latency_ms": 0.03,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15372,7 +15372,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.04,
+      "latency_ms": 0.03,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15407,7 +15407,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.04,
+      "latency_ms": 0.03,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15477,7 +15477,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.03,
+      "latency_ms": 0.04,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15512,7 +15512,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.03,
+      "latency_ms": 0.04,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15617,7 +15617,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.03,
+      "latency_ms": 0.04,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15652,7 +15652,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.03,
+      "latency_ms": 0.04,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15687,7 +15687,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.03,
+      "latency_ms": 0.06,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15722,7 +15722,7 @@
       "dimension": "knowledge_health",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.05,
+      "latency_ms": 0.04,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15792,7 +15792,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 4.82,
+      "latency_ms": 4.4,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15828,7 +15828,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 4.65,
+      "latency_ms": 4.11,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15864,7 +15864,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 4.81,
+      "latency_ms": 4.36,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15900,7 +15900,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 4.69,
+      "latency_ms": 4.02,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15936,7 +15936,7 @@
       "dimension": "long_term_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 4.41,
+      "latency_ms": 3.91,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -15972,7 +15972,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 4.08,
+      "latency_ms": 3.91,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16008,7 +16008,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 4.12,
+      "latency_ms": 3.79,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16044,7 +16044,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 4.37,
+      "latency_ms": 3.77,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16080,7 +16080,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 4.24,
+      "latency_ms": 3.86,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16116,7 +16116,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 4.29,
+      "latency_ms": 3.93,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16152,7 +16152,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 4.76,
+      "latency_ms": 4.03,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16188,7 +16188,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 4.05,
+      "latency_ms": 3.92,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16224,7 +16224,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 3.71,
+      "latency_ms": 3.86,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16260,7 +16260,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 3.9,
+      "latency_ms": 3.77,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16296,7 +16296,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 4.14,
+      "latency_ms": 4.05,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16332,7 +16332,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 4.01,
+      "latency_ms": 4.51,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16404,7 +16404,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 4.1,
+      "latency_ms": 3.94,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16440,7 +16440,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 4.85,
+      "latency_ms": 3.99,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16512,7 +16512,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 4.01,
+      "latency_ms": 4.24,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16548,7 +16548,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 4.89,
+      "latency_ms": 4.24,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16584,7 +16584,7 @@
       "dimension": "long_term_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 4.05,
+      "latency_ms": 5.82,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16621,7 +16621,7 @@
       "dimension": "long_term_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 4.07,
+      "latency_ms": 3.89,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16658,7 +16658,7 @@
       "dimension": "long_term_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 3.88,
+      "latency_ms": 3.94,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16694,7 +16694,7 @@
       "dimension": "long_term_memory",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 3.93,
+      "latency_ms": 3.92,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16731,7 +16731,7 @@
       "dimension": "long_term_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 4.15,
+      "latency_ms": 4.39,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16768,7 +16768,7 @@
       "dimension": "long_term_memory",
       "status": "fail",
       "difficulty": "hard",
-      "latency_ms": 3.9,
+      "latency_ms": 3.84,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16805,7 +16805,7 @@
       "dimension": "long_term_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 3.88,
+      "latency_ms": 4.08,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16842,7 +16842,7 @@
       "dimension": "long_term_memory",
       "status": "fail",
       "difficulty": "hard",
-      "latency_ms": 3.92,
+      "latency_ms": 4.04,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16879,7 +16879,7 @@
       "dimension": "preference_memory",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 8.12,
+      "latency_ms": 8.04,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16915,7 +16915,7 @@
       "dimension": "preference_memory",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 0.45,
+      "latency_ms": 0.51,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -16987,7 +16987,7 @@
       "dimension": "preference_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.46,
+      "latency_ms": 0.45,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17023,7 +17023,7 @@
       "dimension": "preference_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.76,
+      "latency_ms": 0.53,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17059,7 +17059,7 @@
       "dimension": "preference_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.41,
+      "latency_ms": 0.43,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17094,7 +17094,7 @@
       "dimension": "preference_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.39,
+      "latency_ms": 0.43,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17129,7 +17129,7 @@
       "dimension": "preference_memory",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 0.47,
+      "latency_ms": 0.41,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17176,7 +17176,7 @@
       "dimension": "preference_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 0.11,
+      "latency_ms": 0.12,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17209,7 +17209,7 @@
       "dimension": "preference_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.78,
+      "latency_ms": 0.53,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17244,7 +17244,7 @@
       "dimension": "preference_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 4.44,
+      "latency_ms": 2.26,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17279,7 +17279,7 @@
       "dimension": "preference_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 4.26,
+      "latency_ms": 1.88,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17312,7 +17312,7 @@
       "dimension": "preference_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 3.34,
+      "latency_ms": 3.44,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17345,7 +17345,7 @@
       "dimension": "preference_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 2.11,
+      "latency_ms": 2.08,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17380,7 +17380,7 @@
       "dimension": "preference_memory",
       "status": "fail",
       "difficulty": "easy",
-      "latency_ms": 2.01,
+      "latency_ms": 1.97,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17415,7 +17415,7 @@
       "dimension": "preference_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.55,
+      "latency_ms": 0.63,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17450,7 +17450,7 @@
       "dimension": "preference_memory",
       "status": "pass",
       "difficulty": "easy",
-      "latency_ms": 1.75,
+      "latency_ms": 2.08,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17483,7 +17483,7 @@
       "dimension": "preference_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.44,
+      "latency_ms": 0.7,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17518,7 +17518,7 @@
       "dimension": "preference_memory",
       "status": "fail",
       "difficulty": "medium",
-      "latency_ms": 0.53,
+      "latency_ms": 0.9,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17553,7 +17553,7 @@
       "dimension": "preference_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 1.92,
+      "latency_ms": 2.29,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17586,7 +17586,7 @@
       "dimension": "preference_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.27,
+      "latency_ms": 0.39,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17619,7 +17619,7 @@
       "dimension": "preference_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.32,
+      "latency_ms": 0.53,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17652,7 +17652,7 @@
       "dimension": "preference_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.23,
+      "latency_ms": 0.33,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17685,7 +17685,7 @@
       "dimension": "preference_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.24,
+      "latency_ms": 0.31,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17718,7 +17718,7 @@
       "dimension": "preference_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.1,
+      "latency_ms": 0.11,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17751,7 +17751,7 @@
       "dimension": "preference_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.13,
+      "latency_ms": 0.11,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17784,7 +17784,7 @@
       "dimension": "preference_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.1,
+      "latency_ms": 0.12,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17817,7 +17817,7 @@
       "dimension": "preference_memory",
       "status": "pass",
       "difficulty": "hard",
-      "latency_ms": 0.12,
+      "latency_ms": 0.11,
       "token_count": 0,
       "metrics": {
         "hit_rate": {
@@ -17850,7 +17850,7 @@
       "dimension": "preference_memory",
       "status": "pass",
       "difficulty": "medium",
-      "latency_ms": 0.12,
+      "latency_ms": 0.1,
       "token_count": 0,
       "metrics": {
         "hit_rate": {

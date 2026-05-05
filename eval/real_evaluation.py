@@ -267,13 +267,14 @@ def eval_contradiction_update(store, case: Dict) -> Dict[str, Any]:
 
 
 def eval_efficiency(store, case: Dict) -> Dict[str, Any]:
-    inp = case["input"]
+    setup = case.get("setup", {})
+    query = case.get("query", {})
     expected = case.get("expected", {})
     category = case.get("category", "")
     metric_targets = expected.get("metric_targets", {})
     if "write" in category:
-        conv = inp.get("conversation", {})
-        iterations = inp.get("iterations", 10)
+        conv = setup.get("conversation", {})
+        iterations = setup.get("iterations", 10)
         latencies = []
         for i in range(iterations):
             start = time.perf_counter()
@@ -307,7 +308,7 @@ def eval_efficiency(store, case: Dict) -> Dict[str, Any]:
             insert_conversation(store, f"查询测试 {i}", f"回复 {i}",
                                 session_key=f"eval-eff-q-{i}")
         latencies = []
-        for i in range(inp.get("iterations", 20)):
+        for i in range(setup.get("iterations", 20)):
             start = time.perf_counter()
             store.search_chunks(f"测试 {i%50}", max_results=5)
             latencies.append((time.perf_counter() - start) * 1000)
