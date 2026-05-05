@@ -389,20 +389,32 @@ class SqliteStore:
         cursor = self.conn.cursor()
 
         # Split query into individual terms for better Chinese text matching
-        # Use multiple strategies: 2-6 char Chinese segments, English words, numbers
+        # Use multiple strategies: Chinese segments, English words, numbers
         terms = []
         
-        # Strategy 1: Extract Chinese word groups (2-6 chars)
-        chinese_words = re.findall(r'[\u4e00-\u9fff]{2,6}', query)
-        terms.extend(chinese_words)
+        # Strategy 1: Extract Chinese word groups (2-3 chars for better granularity)
+        # 改进：使用更细粒度的分词，提取2-3字符的中文词汇
+        cjk_runs = re.findall(r'[\u4e00-\u9fff]+', query)
+        for run in cjk_runs:
+            # 2字符切分
+            for i in range(len(run) - 1):
+                terms.append(run[i:i+2])
+            # 3字符切分
+            for i in range(len(run) - 2):
+                terms.append(run[i:i+3])
         
-        # Strategy 2: Extract English words
-        english_words = re.findall(r'[a-zA-Z]+', query)
+        # Strategy 2: Extract English words (including technical terms)
+        english_words = re.findall(r'[a-zA-Z][a-zA-Z0-9_]*', query)
         terms.extend(english_words)
         
         # Strategy 3: Extract numbers
         numbers = re.findall(r'\d+', query)
         terms.extend(numbers)
+        
+        # Strategy 4: Extract mixed terms (e.g., "React Native", "GitHub Actions")
+        # 提取英文+中文的混合词汇
+        mixed_terms = re.findall(r'[a-zA-Z]+[\u4e00-\u9fff]+|[\u4e00-\u9fff]+[a-zA-Z]+', query)
+        terms.extend(mixed_terms)
         
         # Remove duplicates while preserving order
         seen = set()
