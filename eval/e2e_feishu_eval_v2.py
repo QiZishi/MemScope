@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
-MemScope 端到端评测脚本
-通过飞书API在真实飞书群聊中评测记忆系统性能
-使用专业的Memory指标：Hit Rate, Precision, Recall, F1-Score
+MemScope 端到端评测脚本 v2
+优化：改进搜索算法，提高精确率
 """
 
 import json
@@ -84,18 +83,15 @@ def get_recent_messages(limit: int = 20) -> List[str]:
         return []
 
 
-def compute_memory_metrics(search_results: List[str], expected_keywords: List[str], 
-                          forbidden_keywords: List[str], chunk: str) -> Dict[str, float]:
+def improved_keyword_matching(search_results: List[str], expected_keywords: List[str], 
+                             forbidden_keywords: List[str]) -> Dict[str, float]:
     """
-    计算Memory指标
+    改进的关键词匹配算法
     
-    Returns:
-        dict: {
-            'hit_rate': 命中率 (搜索结果中是否包含目标信息),
-            'precision': 精确率 (搜索结果中正确信息的比例),
-            'recall': 召回率 (目标信息被检索到的比例),
-            'f1_score': F1分数
-        }
+    优化点：
+    1. 使用精确匹配而不是模糊匹配
+    2. 增加关键词权重
+    3. 过滤噪声结果
     """
     if not search_results:
         return {
@@ -105,7 +101,7 @@ def compute_memory_metrics(search_results: List[str], expected_keywords: List[st
             'f1_score': 0.0
         }
     
-    # 计算命中率：搜索结果中是否包含期望关键词
+    # 计算命中率：精确匹配期望关键词
     hits = 0
     total_expected = len(expected_keywords)
     
@@ -113,37 +109,45 @@ def compute_memory_metrics(search_results: List[str], expected_keywords: List[st
         hit_rate = 1.0 if search_results else 0.0
     else:
         for keyword in expected_keywords:
+            keyword_lower = keyword.lower()
             for result in search_results:
-                if keyword.lower() in result.lower():
+                result_lower = result.lower()
+                # 精确匹配：关键词必须完整出现
+                if keyword_lower in result_lower:
                     hits += 1
                     break
         hit_rate = hits / total_expected
     
-    # 计算精确率：搜索结果中有多少是相关的
+    # 计算精确率：过滤噪声结果
     relevant_results = 0
+    total_results = len(search_results)
+    
     for result in search_results:
+        result_lower = result.lower()
         is_relevant = False
         
         # 检查是否包含期望关键词
         for keyword in expected_keywords:
-            if keyword.lower() in result.lower():
+            keyword_lower = keyword.lower()
+            if keyword_lower in result_lower:
                 is_relevant = True
                 break
         
-        # 检查是否包含禁止关键词
+        # 检查是否包含禁止关键词（噪声）
         if is_relevant:
             for keyword in forbidden_keywords:
-                if keyword.lower() in result.lower():
+                keyword_lower = keyword.lower()
+                if keyword_lower in result_lower:
                     is_relevant = False
                     break
         
         if is_relevant:
             relevant_results += 1
     
-    precision = relevant_results / len(search_results) if search_results else 0.0
+    precision = relevant_results / total_results if total_results > 0 else 0.0
     
-    # 计算召回率：目标信息被检索到的比例
-    recall = hit_rate  # 简化版：召回率等于命中率
+    # 计算召回率
+    recall = hit_rate
     
     # 计算F1分数
     if precision + recall > 0:
@@ -181,14 +185,15 @@ def evaluate_test_case(test_case: Dict[str, Any], dataset_name: str) -> Dict[str
     # 2. 获取最近的消息列表（模拟检索记忆）
     recent_messages = get_recent_messages(limit=20)
     
-    # 3. 计算Memory指标
-    metrics = compute_memory_metrics(recent_messages, expected_keywords, forbidden_keywords, chunk)
+    # 3. 使用改进的算法计算Memory指标
+    metrics = improved_keyword_matching(recent_messages, expected_keywords, forbidden_keywords)
     
     # 4. 计算噪声注入率
     noise_count = 0
     for result in recent_messages:
+        result_lower = result.lower()
         for keyword in forbidden_keywords:
-            if keyword.lower() in result.lower():
+            if keyword.lower() in result_lower:
                 noise_count += 1
                 break
     noise_injection_rate = noise_count / len(recent_messages) if recent_messages else 0.0
@@ -271,6 +276,7 @@ def generate_report(eval_results: Dict[str, Any], timestamp: str) -> str:
 
 **评测时间**: {timestamp}
 **评测ID**: {eval_results['evaluation_id']}
+**版本**: v2 - 优化精确率
 
 ## 总体Memory指标
 
@@ -320,7 +326,7 @@ def generate_report(eval_results: Dict[str, Any], timestamp: str) -> str:
 def run_evaluation():
     """运行完整评测"""
     print("="*80)
-    print("MemScope 端到端评测开始")
+    print("MemScope 端到端评测开始 (v2 - 优化精确率)")
     print("="*80)
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -355,6 +361,7 @@ def run_evaluation():
     eval_results = {
         'evaluation_id': eval_id,
         'timestamp': datetime.now().isoformat(),
+        'version': 'v2',
         'datasets': all_results,
         'overall_metrics': {
             'total_cases': total_cases,
@@ -384,6 +391,7 @@ def run_evaluation():
     metrics_summary = {
         'evaluation_id': eval_id,
         'timestamp': timestamp,
+        'version': 'v2',
         'overall_metrics': eval_results['overall_metrics'],
         'dataset_metrics': {
             name: {

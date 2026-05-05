@@ -1,0 +1,118 @@
+{
+  "dataset_name": "feishu_long_term_memory",
+  "version": "1.0",
+  "description": "长时序记忆评测（飞书企业场景）：测试系统对历史信息的长期记忆和回忆能力",
+  "total_cases": 10,
+  "test_cases": [
+    {
+      "test_id": "feishu_ltm_001",
+      "name": "3个月前的技术决策",
+      "difficulty": "hard",
+      "category": "长期记忆",
+      "chunk": "2025年11月15日的会议记录：张工提出核心服务从Java重写为Go的方案，团队讨论后确认采用Go语言重写，预计2026年Q2完成",
+      "query": "核心服务重写用的什么语言？",
+      "answer": "Go语言",
+      "expected_keywords": ["Go", "重写", "核心服务"],
+      "forbidden_keywords": ["Java", "Python"]
+    },
+    {
+      "test_id": "feishu_ltm_002",
+      "name": "6个月前的合同信息",
+      "difficulty": "hard",
+      "category": "长期记忆",
+      "chunk": "2025年12月1日的商务记录：和客户甲签了年度合同，合同金额800万，服务期限12个月，包含技术支持和维护",
+      "query": "客户甲的合同金额是多少？",
+      "answer": "800万",
+      "expected_keywords": ["800万", "客户甲", "年度合同"],
+      "forbidden_keywords": ["500万", "1000万"]
+    },
+    {
+      "test_id": "feishu_ltm_003",
+      "name": "数据库迁移计划",
+      "difficulty": "medium",
+      "category": "技术决策",
+      "chunk": "2025年12月20日的技术评审：数据库从MySQL迁移到PostgreSQL的计划确定了，原因是JSON支持更好，预计1月底完成迁移",
+      "query": "数据库迁移的目标是什么？",
+      "answer": "从MySQL迁移到PostgreSQL",
+      "expected_keywords": ["MySQL", "PostgreSQL", "迁移"],
+      "forbidden_keywords": ["MongoDB", "Oracle"]
+    },
+    {
+      "test_id": "feishu_ltm_004",
+      "name": "安全审计发现",
+      "difficulty": "medium",
+      "category": "安全记录",
+      "chunk": "2026年1月5日的安全报告：安全审计发现3个高危漏洞需要在Q1修复，漏洞编号CVE-2026-001、CVE-2026-002、CVE-2026-003",
+      "query": "安全审计发现了几个高危漏洞？",
+      "answer": "3个高危漏洞",
+      "expected_keywords": ["3个", "高危漏洞", "安全审计"],
+      "forbidden_keywords": ["1个", "5个"]
+    },
+    {
+      "test_id": "feishu_ltm_005",
+      "name": "团队扩张记录",
+      "difficulty": "easy",
+      "category": "人员变动",
+      "chunk": "2026年1月10日的人事通知：新入职了5个后端开发工程师，分别负责用户服务、订单服务、支付服务、消息服务、搜索服务",
+      "query": "最近入职了几个后端开发？",
+      "answer": "5个后端开发工程师",
+      "expected_keywords": ["5个", "后端", "开发", "入职"],
+      "forbidden_keywords": ["3个", "10个"]
+    },
+    {
+      "test_id": "feishu_ltm_006",
+      "name": "架构评审决策",
+      "difficulty": "medium",
+      "category": "技术决策",
+      "chunk": "2026年1月20日的架构评审：微服务架构评审确定使用Spring Cloud方案，包括服务注册发现、配置中心、网关、熔断器等组件",
+      "query": "微服务架构用的什么方案？",
+      "answer": "Spring Cloud方案",
+      "expected_keywords": ["Spring Cloud", "微服务", "架构"],
+      "forbidden_keywords": ["Dubbo", "gRPC"]
+    },
+    {
+      "test_id": "feishu_ltm_007",
+      "name": "产品PRD评审",
+      "difficulty": "easy",
+      "category": "产品记录",
+      "chunk": "2025年4月10日的产品会议：产品2.0版本的PRD评审通过了，主要功能包括用户画像、智能推荐、数据分析看板",
+      "query": "产品2.0版本的PRD评审结果是什么？",
+      "answer": "评审通过",
+      "expected_keywords": ["PRD", "评审", "通过", "2.0"],
+      "forbidden_keywords": ["未通过", "待定"]
+    },
+    {
+      "test_id": "feishu_ltm_008",
+      "name": "技术债务清理",
+      "difficulty": "medium",
+      "category": "技术管理",
+      "chunk": "2025年5月20日的技术会议：技术债务清理计划确定，目标是减少30%的遗留代码，重点清理用户模块和订单模块",
+      "query": "技术债务清理的目标是什么？",
+      "answer": "减少30%的遗留代码",
+      "expected_keywords": ["30%", "遗留代码", "技术债务"],
+      "forbidden_keywords": ["50%", "10%"]
+    },
+    {
+      "test_id": "feishu_ltm_009",
+      "name": "CI/CD迁移记录",
+      "difficulty": "medium",
+      "category": "DevOps",
+      "chunk": "2025年6月15日的运维会议：CI/CD流水线从Jenkins迁移到GitLab CI，原因是与代码仓库集成更好，配置更简洁",
+      "query": "CI/CD从什么工具迁移到什么工具？",
+      "answer": "从Jenkins迁移到GitLab CI",
+      "expected_keywords": ["Jenkins", "GitLab CI", "迁移"],
+      "forbidden_keywords": ["GitHub Actions", "Travis CI"]
+    },
+    {
+      "test_id": "feishu_ltm_010",
+      "name": "性能优化项目",
+      "difficulty": "hard",
+      "category": "项目记录",
+      "chunk": "2025年7月1日的项目启动会：性能优化项目启动，目标是API响应时间降低50%，从平均500ms降到250ms以内",
+      "query": "性能优化项目的目标是什么？",
+      "answer": "API响应时间降低50%",
+      "expected_keywords": ["响应时间", "降低50%", "性能优化"],
+      "forbidden_keywords": ["降低30%", "降低80%"]
+    }
+  ]
+}

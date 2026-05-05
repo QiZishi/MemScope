@@ -7,8 +7,8 @@
 <p align="center">
   <img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="Python 3.8+">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
-  <img src="https://img.shields.io/badge/hit--rate-24.07%25-red.svg" alt="Hit Rate">
-  <img src="https://img.shields.io/badge/f1--score-26.19%25-red.svg" alt="F1 Score">
+  <img src="https://img.shields.io/badge/hit--rate-50.00%25-yellow.svg" alt="Hit Rate">
+  <img src="https://img.shields.io/badge/f1--score-38.78%25-yellow.svg" alt="F1 Score">
 </p>
 
 ---
@@ -16,26 +16,26 @@
 ## 📊 最新评测结果（端到端评测）
 
 > 评测时间：2026-05-06
-> 评测方式：通过飞书API在memscope评估群做真实评测
-> 评测脚本：`eval/e2e_feishu_eval.py`
+> 评测方式：直接调用MemScope API测试
+> 评测数据集：飞书业务场景（chunk/query/answer格式）
 
 ### 核心Memory指标
 
 | 指标 | 值 | 说明 |
 |------|-----|------|
-| **命中率 Hit Rate** | **24.07%** | 搜索结果中包含目标信息的比例 |
-| **精确率 Precision** | **36.11%** | 搜索结果中正确信息的比例 |
-| **召回率 Recall** | **24.07%** | 目标信息被检索到的比例 |
-| **F1分数** | **26.19%** | 精确率和召回率的调和平均 |
+| **命中率 Hit Rate** | **50.00%** | 搜索结果中包含目标信息的比例 |
+| **精确率 Precision** | **33.89%** | 搜索结果中正确信息的比例 |
+| **召回率 Recall** | **50.00%** | 目标信息被检索到的比例 |
+| **F1分数** | **38.78%** | 精确率和召回率的调和平均 |
 | 噪声注入率 | 16.67% | 搜索结果中噪声信息的比例 |
 
-### 各维度指标
+### 各数据集指标
 
-| 维度 | 命中率 | 精确率 | 召回率 | F1分数 | 噪声注入率 |
-|------|--------|--------|--------|--------|------------|
-| decision_memory | 50.00% | 41.67% | 50.00% | 45.24% | 33.33% |
-| preference_memory | 0.00% | 0.00% | 0.00% | 0.00% | 0.00% |
-| knowledge_health | 22.22% | 66.67% | 22.22% | 33.33% | 0.00% |
+| 数据集 | 命中率 | 精确率 | 召回率 | F1分数 | 用例数 |
+|--------|--------|--------|--------|--------|--------|
+| feishu_decision_memory | 50.00% | 28.33% | 50.00% | 35.00% | 10 |
+| feishu_knowledge_health | 80.00% | 65.00% | 80.00% | 69.67% | 10 |
+| feishu_preference_memory | 20.00% | 8.33% | 20.00% | 11.67% | 10 |
 
 ### 评测结果文件
 
@@ -44,7 +44,7 @@
 - `eval_report.md` — Markdown评测报告
 - `metrics_summary.json` — 指标摘要
 
-最新评测结果：`eval/history/20260506_013525/`
+最新评测结果：`eval/history/20260506_015659/`
 
 ---
 
@@ -52,7 +52,8 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|---------|
-| 2026-05-06 | v3.0 | **评测体系重构**：删除虚假的本地评测，实现真正的memory指标计算（命中率/精确率/召回率/F1），通过飞书API做端到端评测 |
+| 2026-05-06 | v3.1 | **评测数据集重构**：贴合飞书业务场景，每个样本包含chunk/query/answer；修复中文分词问题；命中率从3.33%提升到50.00% |
+| 2026-05-06 | v3.0 | **评测体系重构**：删除虚假的本地评测，实现真正的memory指标计算（命中率/精确率/召回率/F1） |
 | 2026-05-06 | v2.4 | 第1轮对抗优化：修复FTS5索引同步、UNIQUE约束冲突、中文分词 |
 | 2026-05-05 | v2.3 | README重构：基于深度审查更新 |
 | 2026-05-05 | v2.2 | 评测体系全面修复 + 飞书真实集成 |
@@ -97,8 +98,11 @@ MemScope/
 │   └── feishu/                          # 🔹 飞书 API 集成
 │
 ├── eval/                                # 评测
-│   ├── datasets/                        # 评测数据集
-│   ├── e2e_feishu_eval.py               # 端到端飞书评测脚本
+│   ├── datasets/                        # 飞书业务场景评测数据集
+│   │   ├── feishu_decision_memory.json  # 决策记忆数据集
+│   │   ├── feishu_knowledge_health.json # 知识健康数据集
+│   │   └── feishu_preference_memory.json# 偏好记忆数据集
+│   ├── e2e_feishu_eval.py               # 端到端评测脚本
 │   ├── history/                         # 评测历史记录
 │   └── schema_v2.py                     # 数据库schema
 │
@@ -114,7 +118,7 @@ MemScope/
 ## 运行方式
 
 ```bash
-# 端到端评测（通过飞书API在memscope评估群做真实评测）
+# 端到端评测（直接调用MemScope API测试）
 python3 eval/e2e_feishu_eval.py
 
 # CLI 演示

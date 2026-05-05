@@ -1,0 +1,118 @@
+{
+  "dataset_name": "feishu_efficiency",
+  "version": "1.0",
+  "description": "效率指标评测（飞书企业场景）：测试记忆引擎的查询延迟和响应准确性",
+  "total_cases": 10,
+  "test_cases": [
+    {
+      "test_id": "feishu_eff_001",
+      "name": "简单事实查询",
+      "difficulty": "easy",
+      "category": "查询效率",
+      "chunk": "项目Eagle的deadline是5月20日，负责人是张工，技术栈是React + Node.js",
+      "query": "项目Eagle的deadline是什么时候？",
+      "answer": "5月20日",
+      "expected_keywords": ["5月20日", "deadline"],
+      "forbidden_keywords": ["6月", "4月"]
+    },
+    {
+      "test_id": "feishu_eff_002",
+      "name": "技术栈查询",
+      "difficulty": "easy",
+      "category": "查询效率",
+      "chunk": "项目Falcon的技术选型：前端React 18 + Go 1.22 + PostgreSQL 16，前端状态管理用Zustand，部署用Kubernetes",
+      "query": "项目Falcon的前端框架是什么？",
+      "answer": "React 18",
+      "expected_keywords": ["React", "18", "前端"],
+      "forbidden_keywords": ["Vue", "Angular"]
+    },
+    {
+      "test_id": "feishu_eff_003",
+      "name": "会议安排查询",
+      "difficulty": "easy",
+      "category": "查询效率",
+      "chunk": "本周三下午2点有一个重要的技术评审会，需要准备架构设计文档、数据库ER图、API接口文档以及部署方案",
+      "query": "技术评审会是什么时候？",
+      "answer": "本周三下午2点",
+      "expected_keywords": ["周三", "下午2点", "技术评审"],
+      "forbidden_keywords": ["周一", "上午"]
+    },
+    {
+      "test_id": "feishu_eff_004",
+      "name": "人员信息查询",
+      "difficulty": "medium",
+      "category": "查询效率",
+      "chunk": "后端组成员：张建国(架构师)、李明(高级开发)、王芳(数据库工程师)。前端组成员：赵六(前端负责人)、钱七(前端开发)",
+      "query": "后端组的架构师是谁？",
+      "answer": "张建国",
+      "expected_keywords": ["张建国", "架构师", "后端"],
+      "forbidden_keywords": ["赵六", "李明"]
+    },
+    {
+      "test_id": "feishu_eff_005",
+      "name": "配置信息查询",
+      "difficulty": "medium",
+      "category": "查询效率",
+      "chunk": "生产环境配置：AWS us-east-1的EKS集群，节点4台c5.2xlarge，数据库RDS PostgreSQL 15，缓存Redis 7.0",
+      "query": "生产环境用的什么数据库？",
+      "answer": "RDS PostgreSQL 15",
+      "expected_keywords": ["PostgreSQL", "15", "RDS"],
+      "forbidden_keywords": ["MySQL", "MongoDB"]
+    },
+    {
+      "test_id": "feishu_eff_006",
+      "name": "API规范查询",
+      "difficulty": "medium",
+      "category": "查询效率",
+      "chunk": "API设计规范：RESTful风格，统一返回格式，错误码规范5位数字，分页参数page_size默认20最大100，认证Bearer Token",
+      "query": "API分页参数默认多少？",
+      "answer": "page_size默认20",
+      "expected_keywords": ["20", "page_size", "默认"],
+      "forbidden_keywords": ["10", "50"]
+    },
+    {
+      "test_id": "feishu_eff_007",
+      "name": "监控告警查询",
+      "difficulty": "hard",
+      "category": "查询效率",
+      "chunk": "监控告警规则：CPU使用率超过80%触发告警，内存超过90%触发告警，接口响应超过500ms触发告警，错误率超过1%触发告警",
+      "query": "CPU使用率多少会触发告警？",
+      "answer": "超过80%",
+      "expected_keywords": ["80%", "CPU", "告警"],
+      "forbidden_keywords": ["70%", "90%"]
+    },
+    {
+      "test_id": "feishu_eff_008",
+      "name": "发布流程查询",
+      "difficulty": "hard",
+      "category": "查询效率",
+      "chunk": "发布流程规范：发布前需要完成回归测试，发布时间窗口工作日上午10点-12点，发布后观察30分钟，回滚方案必须提前准备",
+      "query": "发布时间窗口是什么？",
+      "answer": "工作日上午10点-12点",
+      "expected_keywords": ["10点", "12点", "工作日"],
+      "forbidden_keywords": ["下午", "晚上"]
+    },
+    {
+      "test_id": "feishu_eff_009",
+      "name": "权限管理查询",
+      "difficulty": "hard",
+      "category": "查询效率",
+      "chunk": "权限管理规范：最小权限原则，权限申请需要审批，离职员工权限24小时内回收，敏感操作需要二次验证",
+      "query": "离职员工权限多久内回收？",
+      "answer": "24小时内",
+      "expected_keywords": ["24小时", "离职", "回收"],
+      "forbidden_keywords": ["48小时", "一周"]
+    },
+    {
+      "test_id": "feishu_eff_010",
+      "name": "数据备份查询",
+      "difficulty": "medium",
+      "category": "查询效率",
+      "chunk": "数据备份规范：每日全量备份，保留30天，异地备份存储，备份数据加密，每月进行恢复演练",
+      "query": "备份数据保留多久？",
+      "answer": "30天",
+      "expected_keywords": ["30天", "保留", "备份"],
+      "forbidden_keywords": ["7天", "90天"]
+    }
+  ]
+}

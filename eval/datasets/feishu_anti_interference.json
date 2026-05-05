@@ -1,0 +1,118 @@
+{
+  "dataset_name": "feishu_anti_interference",
+  "version": "1.0",
+  "description": "抗干扰能力评测（飞书企业场景）：测试系统在噪声信息中提取目标信息的能力",
+  "total_cases": 10,
+  "test_cases": [
+    {
+      "test_id": "feishu_anti_001",
+      "name": "技术安排提取",
+      "difficulty": "medium",
+      "category": "噪声干扰",
+      "chunk": "张工：我们技术部下周三要做API网关的性能压测。李工：今天食堂的菜不错。王工：帮我订明天的会议室。赵六：最近有什么好看的电影。钱七：帮我查下快递到哪了",
+      "query": "技术部下周三有什么安排？",
+      "answer": "API网关的性能压测",
+      "expected_keywords": ["API网关", "性能压测", "下周三"],
+      "forbidden_keywords": ["食堂", "电影", "快递"]
+    },
+    {
+      "test_id": "feishu_anti_002",
+      "name": "营收目标提取",
+      "difficulty": "medium",
+      "category": "噪声干扰",
+      "chunk": "产品部的Q3营收目标定在850万。帮我点杯咖啡。今天天气怎么样。明天有会议吗。帮我查下竞品的价格",
+      "query": "产品部Q3营收目标是多少？",
+      "answer": "850万",
+      "expected_keywords": ["850万", "Q3"],
+      "forbidden_keywords": ["咖啡", "天气"]
+    },
+    {
+      "test_id": "feishu_anti_003",
+      "name": "迁移日期提取",
+      "difficulty": "easy",
+      "category": "噪声干扰",
+      "chunk": "运维组的K8s集群迁移定在6月15号。帮我发个快递。最近有什么技术分享。帮我查下服务器状态。今天有什么新闻",
+      "query": "K8s集群迁移是什么时候？",
+      "answer": "6月15号",
+      "expected_keywords": ["K8s", "迁移", "6月15"],
+      "forbidden_keywords": ["快递", "新闻"]
+    },
+    {
+      "test_id": "feishu_anti_004",
+      "name": "验收标准提取",
+      "difficulty": "medium",
+      "category": "噪声干扰",
+      "chunk": "客户B的项目验收标准是响应时间小于200ms。帮我订午餐。今天有快递吗。帮我查下代码覆盖率",
+      "query": "客户B的验收标准是什么？",
+      "answer": "响应时间小于200ms",
+      "expected_keywords": ["响应时间", "200ms"],
+      "forbidden_keywords": ["午餐", "快递"]
+    },
+    {
+      "test_id": "feishu_anti_005",
+      "name": "漏洞信息提取",
+      "difficulty": "medium",
+      "category": "噪声干扰",
+      "chunk": "安全组发现了一个高危漏洞CVE-2026-1234。帮我查下版本号。今天有什么安排。帮我发个通知",
+      "query": "安全组最近发现了什么漏洞？",
+      "answer": "CVE-2026-1234高危漏洞",
+      "expected_keywords": ["CVE-2026-1234", "高危"],
+      "forbidden_keywords": ["版本号", "通知"]
+    },
+    {
+      "test_id": "feishu_anti_006",
+      "name": "演练时间提取",
+      "difficulty": "easy",
+      "category": "噪声干扰",
+      "chunk": "数据库主从切换演练定在本周日凌晨2点",
+      "query": "数据库演练是什么时候？",
+      "answer": "本周日凌晨2点",
+      "expected_keywords": ["主从切换", "周日", "凌晨2点"],
+      "forbidden_keywords": []
+    },
+    {
+      "test_id": "feishu_anti_007",
+      "name": "技术选型提取",
+      "difficulty": "hard",
+      "category": "大量噪声",
+      "chunk": "前端组决定用Vue3重构管理后台。今天天气不错。帮我订杯奶茶。最近有什么新歌。帮我查下工资条。明天要加班吗。帮我叫个车。今天食堂有什么。帮我查下快递。最近有什么好看的剧。帮我订个酒店",
+      "query": "前端组用什么重构管理后台？",
+      "answer": "Vue3",
+      "expected_keywords": ["Vue3", "重构"],
+      "forbidden_keywords": ["天气", "奶茶", "新歌"]
+    },
+    {
+      "test_id": "feishu_anti_008",
+      "name": "密码信息提取",
+      "difficulty": "hard",
+      "category": "大量噪声",
+      "chunk": "测试环境的数据库密码改成了Test@2026!。帮我查下日志。今天有什么会。帮我发个邮件。帮我查下监控。帮我订个会议室。帮我查下代码。帮我发个通知。帮我查下文档。帮我查下进度。帮我查下预算",
+      "query": "测试环境数据库密码是什么？",
+      "answer": "Test@2026!",
+      "expected_keywords": ["Test@2026!"],
+      "forbidden_keywords": ["日志", "监控"]
+    },
+    {
+      "test_id": "feishu_anti_009",
+      "name": "负责人变更提取",
+      "difficulty": "medium",
+      "category": "噪声干扰",
+      "chunk": "项目E的负责人从张三换成了李四。帮我查下项目F进度。帮我查下项目G预算。帮我订下周的机票。帮我查下竞品分析。帮我发个周报。帮我查下客户反馈。帮我订个餐。帮我查下服务器",
+      "query": "项目E现在的负责人是谁？",
+      "answer": "李四",
+      "expected_keywords": ["李四", "项目E"],
+      "forbidden_keywords": ["张三", "项目F"]
+    },
+    {
+      "test_id": "feishu_anti_010",
+      "name": "会议时间提取",
+      "difficulty": "easy",
+      "category": "噪声干扰",
+      "chunk": "下周一下午3点有产品评审会。帮我查下天气。最近有什么活动。帮我订个会议室",
+      "query": "产品评审会是什么时候？",
+      "answer": "下周一��午3点",
+      "expected_keywords": ["周一", "下午3点", "产品评审"],
+      "forbidden_keywords": ["天气", "活动"]
+    }
+  ]
+}

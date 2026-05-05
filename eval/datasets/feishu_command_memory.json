@@ -1,0 +1,118 @@
+{
+  "dataset_name": "feishu_command_memory",
+  "version": "1.0",
+  "description": "命令记忆能力评测（飞书企业场景）：测试系统对用户高频飞书操作的记录、频率统计、上下文关联能力",
+  "total_cases": 10,
+  "test_cases": [
+    {
+      "test_id": "feishu_cmd_001",
+      "name": "高频审批操作识别",
+      "difficulty": "easy",
+      "category": "操作频率",
+      "chunk": "张工本周的操作记录：提交请假审批4次、提交报销审批4次、创建会议3次、查看群聊消息20次、编辑飞书文档5次",
+      "query": "张工最常用的飞书操作是什么？",
+      "answer": "查看群聊消息，使用了20次",
+      "expected_keywords": ["群聊", "消息", "20次"],
+      "forbidden_keywords": ["审批", "会议"]
+    },
+    {
+      "test_id": "feishu_cmd_002",
+      "name": "多维表格操作统计",
+      "difficulty": "easy",
+      "category": "操作频率",
+      "chunk": "李工最近的操作：创建多维表格3次、切换表格视图3次、更新OKR进度4次、查看群聊消息10次、发送文档评论2次",
+      "query": "李工使用多维表格相关的操作有多少次？",
+      "answer": "6次，包括创建多维表格3次和切换表格视图3次",
+      "expected_keywords": ["多维表格", "6次", "创建", "切换"],
+      "forbidden_keywords": ["OKR", "文档评论"]
+    },
+    {
+      "test_id": "feishu_cmd_003",
+      "name": "跨空间操作区分",
+      "difficulty": "medium",
+      "category": "空间隔离",
+      "chunk": "王工在人事行政部的操作：提交请假审批5次、提交报销审批3次、审批采购申请2次。王工在产品研发部的操作：创建研发任务4次、编辑技术方案文档6次",
+      "query": "王工在人事行政部做了哪些操作？",
+      "answer": "提交请假审批5次、提交报销审批3次、审批采购申请2次",
+      "expected_keywords": ["请假", "审批", "报销", "采购", "人事"],
+      "forbidden_keywords": ["研发任务", "技术方案", "产品研发"]
+    },
+    {
+      "test_id": "feishu_cmd_004",
+      "name": "嵌套空间操作查询",
+      "difficulty": "medium",
+      "category": "空间层级",
+      "chunk": "赵工在公司级空间的操作：查看公司公告3次、提交跨部门审批2次。赵工在公司级/市场部的操作：创建市场活动任务8次、编辑推广方案文档4次",
+      "query": "赵工在市场部做了什么操作？",
+      "answer": "创建市场活动任务8次、编辑推广方案文档4次",
+      "expected_keywords": ["市场", "活动", "任务", "推广", "方案"],
+      "forbidden_keywords": ["公司公告", "跨部门审批"]
+    },
+    {
+      "test_id": "feishu_cmd_005",
+      "name": "时间衰减操作识别",
+      "difficulty": "medium",
+      "category": "时间权重",
+      "chunk": "钱工的操作历史：3个月前大量使用旧版请假审批模板10次、旧版报销审批模板10次。最近1周：创建飞书文档8次、分享文档权限7次",
+      "query": "钱工最近最常用的操作是什么？",
+      "answer": "创建飞书文档和分享文档权限",
+      "expected_keywords": ["文档", "创建", "分享", "权限"],
+      "forbidden_keywords": ["旧版", "审批模板"]
+    },
+    {
+      "test_id": "feishu_cmd_006",
+      "name": "复杂操作描述记录",
+      "difficulty": "hard",
+      "category": "特殊字符",
+      "chunk": "孙工的操作：在「产品需求讨论群」@张三 发送消息并附带飞书文档链接5次、提交报销审批（金额¥12,500.00，附件3张发票）3次、创建会议「Q2产品评审 | 14:00-15:30」邀请8人2次",
+      "query": "孙工在群聊中发送消息的操作有多少次？",
+      "answer": "5次，在产品需求讨论群@张三发送消息",
+      "expected_keywords": ["群聊", "消息", "5次", "@张三"],
+      "forbidden_keywords": ["报销", "会议"]
+    },
+    {
+      "test_id": "feishu_cmd_007",
+      "name": "跨空间相同操作统计",
+      "difficulty": "hard",
+      "category": "空间聚合",
+      "chunk": "周工在产品部创建飞书文档10次、在技术部创建飞书文档3次、在运营部创建飞书文档1次。周工在技术部编辑技术文档8次",
+      "query": "周工在所有部门空间中创建飞书文档的总次数是多少？",
+      "answer": "14次，产品部10次、技术部3次、运营部1次",
+      "expected_keywords": ["14次", "创建", "飞书文档", "产品部", "技术部", "运营部"],
+      "forbidden_keywords": []
+    },
+    {
+      "test_id": "feishu_cmd_008",
+      "name": "新用户无历史识别",
+      "difficulty": "easy",
+      "category": "边界情况",
+      "chunk": "系统中有用户A的操作记录：提交请假审批10次、查看群聊消息5次。新用户B刚刚注册，没有任何操作记录",
+      "query": "用户B的高频操作是什么？",
+      "answer": "用户B是新用户，暂无操作记录",
+      "expected_keywords": ["新用户", "无记录", "暂无"],
+      "forbidden_keywords": ["请假", "审批"]
+    },
+    {
+      "test_id": "feishu_cmd_009",
+      "name": "操作趋势分析",
+      "difficulty": "hard",
+      "category": "趋势识别",
+      "chunk": "吴工上个月的操作：查看群聊消息100次、创建采购审批1次、编辑飞书文档1次、修改会议时间1次、创建OKR目标1次。吴工本月的操作：编辑飞书文档50次、分享文档30次、创建会议20次",
+      "query": "吴工的操作习惯有什么变化趋势？",
+      "answer": "从查看群聊消息为主转变为文档协作和会议管理为主",
+      "expected_keywords": ["文档", "协作", "会议", "变化", "趋势"],
+      "forbidden_keywords": ["群聊", "采购"]
+    },
+    {
+      "test_id": "feishu_cmd_010",
+      "name": "空间名称相似区分",
+      "difficulty": "medium",
+      "category": "名称区分",
+      "chunk": "郑工在市场部的操作：创建品牌推广任务7次。郑工在市场营销部的操作：提交营销预算审批5次",
+      "query": "郑工在市场部做了什么操作？",
+      "answer": "创建品牌推广任务7次",
+      "expected_keywords": ["市场部", "品牌", "推广", "任务"],
+      "forbidden_keywords": ["市场营销部", "营销预算"]
+    }
+  ]
+}
