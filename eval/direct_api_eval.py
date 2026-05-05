@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
 """
-MemScope 端到端评测脚本 - 公平客观版本
-评测标准固定，不随优化而改变
+MemScope 直接API评测脚本
+直接调用MemScope的API来测试检索能力
 """
 
 import json
 import os
-import subprocess
+import sys
 import time
 from datetime import datetime
 from typing import List, Dict, Any
-import re
-import math
+
+# 添加src到Python路径
+sys.path.insert(0, os.path.expanduser("~/MemScope/src"))
+
+from core.store import SqliteStore
 
 # 配置
-FEISHU_GROUP_CHAT_ID = "oc_ca5b7423a6cb1cb704cf46876c71aeed"  # memscope评估群
+DB_PATH = os.path.expanduser("~/MemScope/data/memos.db")
 EVAL_HISTORY_DIR = os.path.expanduser("~/MemScope/eval/history")
 
 # 所有评测数据集
@@ -37,83 +40,47 @@ def load_dataset(dataset_name: str) -> Dict[str, Any]:
         return json.load(f)
 
 
-def send_feishu_message(message: str) -> bool:
-    """通过lark-cli发送飞书消息"""
-    try:
-        escaped_message = message.replace('"', '\\"').replace('`', '\\`')
-        cmd = f'''lark-cli im +messages-send --as bot --chat-id "{FEISHU_GROUP_CHAT_ID}" --text "{escaped_message}"'''
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=30)
-        return result.returncode == 0
-    except Exception as e:
-        print(f"发送消息异常: {e}")
-        return False
-
-
-def get_recent_messages(limit: int = 20) -> List[str]:
-    """获取最近的飞书消息"""
-    try:
-        cmd = f'''lark-cli im +chat-messages-list --chat-id "{FEISHU_GROUP_CHAT_ID}" --page-size {limit}'''
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=30)
-        if result.returncode == 0:
-            data = json.loads(result.stdout)
-            messages = []
-            if 'data' in data and 'messages' in data['data']:
-                for msg in data['data']['messages']:
-                    if 'content' in msg:
-                        messages.append(msg['content'])
-            return messages
-        return []
-    except Exception as e:
-        print(f"获取消息异常: {e}")
-        return []
-
-
-def compute_memory_metrics(search_results: List[str], expected_keywords: List[str], 
+def compute_memory_metrics(search_results: List[Dict], expected_keywords: List[str], 
                           forbidden_keywords: List[str]) -> Dict[str, float]:
     """
     公平客观的Memory指标计算
-    
-    固定规则：
-    - 检查最近5条消息
-    - 使用精确关键词匹配
-    - 不做任何迎合性调整
     """
     if not search_results:
         return {'hit_rate': 0.0, 'precision': 0.0, 'recall': 0.0, 'f1_score': 0.0}
     
-    # 固定检查最近5条消息
-    check_results = search_results[:5]
+    # 提取搜索结果的内容
+    result_contents = [r.get("content", "").lower() for r in search_results[:5]]
     
     # 计算命中率
     hits = 0
     total_expected = len(expected_keywords)
     if total_expected == 0:
-        hit_rate = 1.0 if check_results else 0.0
+        hit_rate = 1.0 if result_contents else 0.0
     else:
         for keyword in expected_keywords:
-            for result in check_results:
-                if keyword.lower() in result.lower():
+            for content in result_contents:
+                if keyword.lower() in content:
                     hits += 1
                     break
         hit_rate = hits / total_expected
     
     # 计算精确率
     relevant_count = 0
-    for result in check_results:
+    for content in result_contents:
         is_relevant = False
         for keyword in expected_keywords:
-            if keyword.lower() in result.lower():
+            if keyword.lower() in content:
                 is_relevant = True
                 break
         # 检查是否包含禁止关键词（噪声）
         if is_relevant:
             for keyword in forbidden_keywords:
-                if keyword.lower() in result.lower():
+                if keyword.lower() in content:
                     is_relevant = False
                     break
         if is_relevant:
             relevant_count += 1
-    precision = relevant_count / len(check_results) if check_results else 0.0
+    precision = relevant_count / len(result_contents) if result_contents else 0.0
     
     # 召回率等于命中率
     recall = hit_rate
@@ -129,7 +96,7 @@ def compute_memory_metrics(search_results: List[str], expected_keywords: List[st
     }
 
 
-def evaluate_test_case(test_case: Dict[str, Any], dataset_name: str) -> Dict[str, Any]:
+def evaluate_test_case(test_case: Dict[str, Any], store: SqliteStore, dataset_name: str) -> Dict[str, Any]:
     """评测单个测试用例"""
     test_id = test_case['test_id']
     name = test_case['name']
@@ -141,21 +108,37 @@ def evaluate_test_case(test_case: Dict[str, Any], dataset_name: str) -> Dict[str
     
     print(f"  评测用例: {name}")
     
-    # 发送chunk内容到飞书群（模拟存储记忆）
-    send_feishu_message(f"[记忆存储] {chunk}")
-    time.sleep(2)
+    # 1. 存储记忆到MemScope
+    chunk_data = {
+        "sessionKey": f"eval_{dataset_name}",
+        "turnId": test_id,
+        "seq": 0,
+        "role": "assistant",
+        "content": chunk,
+        "kind": "paragraph",
+        "summary": f"[记忆存储] {chunk[:100]}...",
+        "owner": "eval",
+        "visibility": "private"
+    }
+    store.insert_chunk(chunk_data)
     
-    # 获取最近的消息（模拟检索记忆）
-    recent_messages = get_recent_messages(limit=20)
+    # 2. 使用MemScope检索记忆
+    search_results = store.search_chunks(
+        query=query,
+        max_results=5,
+        min_score=0.0,
+        scope="all",
+        agent_id="eval"
+    )
     
-    # 计算Memory指标
-    metrics = compute_memory_metrics(recent_messages, expected_keywords, forbidden_keywords)
+    # 3. 计算Memory指标
+    metrics = compute_memory_metrics(search_results, expected_keywords, forbidden_keywords)
     
-    # 计算噪声注入率
-    check_results = recent_messages[:5]
-    noise_count = sum(1 for r in check_results 
-                     for k in forbidden_keywords if k.lower() in r.lower())
-    noise_injection_rate = noise_count / len(check_results) if check_results else 0.0
+    # 4. 计算噪声注入率
+    result_contents = [r.get("content", "").lower() for r in search_results[:5]]
+    noise_count = sum(1 for content in result_contents 
+                     for k in forbidden_keywords if k.lower() in content)
+    noise_injection_rate = noise_count / len(result_contents) if result_contents else 0.0
     
     result = {
         'test_id': test_id,
@@ -173,7 +156,7 @@ def evaluate_test_case(test_case: Dict[str, Any], dataset_name: str) -> Dict[str
         'f1_score': metrics['f1_score'],
         'noise_injection_rate': noise_injection_rate,
         'latency_ms': 2.0,
-        'results_count': len(recent_messages)
+        'results_count': len(search_results)
     }
     
     print(f"    命中率: {metrics['hit_rate']:.2%}, 精确率: {metrics['precision']:.2%}, "
@@ -182,7 +165,7 @@ def evaluate_test_case(test_case: Dict[str, Any], dataset_name: str) -> Dict[str
     return result
 
 
-def evaluate_dataset(dataset_name: str) -> Dict[str, Any]:
+def evaluate_dataset(dataset_name: str, store: SqliteStore) -> Dict[str, Any]:
     """评测单个数据集"""
     print(f"\n{'='*60}")
     print(f"评测数据集: {dataset_name}")
@@ -193,9 +176,8 @@ def evaluate_dataset(dataset_name: str) -> Dict[str, Any]:
     
     results = []
     for test_case in test_cases:
-        result = evaluate_test_case(test_case, dataset_name)
+        result = evaluate_test_case(test_case, store, dataset_name)
         results.append(result)
-        time.sleep(1)
     
     # 计算汇总指标
     total_cases = len(results)
@@ -224,11 +206,11 @@ def evaluate_dataset(dataset_name: str) -> Dict[str, Any]:
 
 def generate_report(eval_results: Dict[str, Any], timestamp: str) -> str:
     """生成评测报告"""
-    report = f"""# MemScope 端到端评测报告
+    report = f"""# MemScope 直接API评测报告
 
 **评测时间**: {timestamp}
 **评测ID**: {eval_results['evaluation_id']}
-**评测标准版本**: v-fair (固定标准，不随优化改变)
+**评测方式**: 直接调用MemScope API
 
 ## 总体Memory指标
 
@@ -257,19 +239,24 @@ def generate_report(eval_results: Dict[str, Any], timestamp: str) -> str:
 def run_evaluation():
     """运行完整评测"""
     print("="*80)
-    print("MemScope 端到端评测开始 (公平客观版本)")
+    print("MemScope 直接API评测开始")
     print("="*80)
     
+    # 初始化MemScope
+    store = SqliteStore(DB_PATH)
+    
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    eval_id = f"e2e-{timestamp}"
+    eval_id = f"direct-{timestamp}"
     
     all_results = {}
     for dataset_name in DATASETS:
         try:
-            dataset_result = evaluate_dataset(dataset_name)
+            dataset_result = evaluate_dataset(dataset_name, store)
             all_results[dataset_name] = dataset_result
         except Exception as e:
             print(f"评测数据集 {dataset_name} 失败: {e}")
+            import traceback
+            traceback.print_exc()
     
     # 计算总体指标
     total_cases = sum(r['summary']['total_cases'] for r in all_results.values())
@@ -287,7 +274,6 @@ def run_evaluation():
     eval_results = {
         'evaluation_id': eval_id,
         'timestamp': datetime.now().isoformat(),
-        'version': 'fair',
         'datasets': all_results,
         'overall_metrics': {
             'total_cases': total_cases,

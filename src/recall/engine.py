@@ -263,25 +263,34 @@ class RecallEngine:
         scope: str,
         agent_id: str,
     ) -> List[Dict[str, Any]]:
-        """Pattern 搜索（短词/CJK）"""
-        # 提取短词和 CJK bigrams
+        """Pattern 搜索（短词/CJK）- 优化版"""
         import re
+        
+        # 清理查询文本
         cleaned = re.sub(r'[."""(){}[\]*:^~!@#$%&\\/<>,;\'`?？。，！、：""''（）【】《》]', ' ', query)
-        space_split = [t for t in cleaned.split() if len(t) == 2]
         
-        # CJK bigrams
+        # 提取空格分隔的短词（2-4字符）
+        space_split = [t for t in cleaned.split() if 2 <= len(t) <= 4]
+        
+        # 提取中文词汇（2-4字符，比原来的2字符更精确）
         cjk_runs = re.findall(r'[\u4e00-\u9fff\u3400-\u4dbf\uF900-\uFAFF]{2,}', cleaned)
-        cjk_bigrams = []
+        cjk_words = []
         for run in cjk_runs:
-            for i in range(len(run) - 1):
-                cjk_bigrams.append(run[i:i+2])
+            # 提取2-4字符的中文词汇
+            for length in range(2, min(5, len(run) + 1)):
+                for i in range(len(run) - length + 1):
+                    cjk_words.append(run[i:i+length])
         
-        short_terms = list(set(space_split + cjk_bigrams))
+        # 提取英文单词
+        english_words = re.findall(r'[a-zA-Z]{2,}', cleaned)
         
-        if not short_terms:
+        # 合并所有词项，去重
+        all_terms = list(set(space_split + cjk_words + english_words))
+        
+        if not all_terms:
             return []
         
-        return self.store.pattern_search(short_terms, limit, scope, agent_id)
+        return self.store.pattern_search(all_terms, limit, scope, agent_id)
     
     def _make_excerpt(self, content: str, max_len: int = 500) -> str:
         """生成摘要片段"""

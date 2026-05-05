@@ -488,22 +488,33 @@ class SqliteStore:
             summary = (chunk.get("summary") or "").lower()
             query_lower = query.lower()
             
-            # More nuanced scoring: count matching terms
+            # 改进的评分算法
             matching_terms = sum(1 for t in terms if t.lower() in content or t.lower() in summary)
             term_ratio = matching_terms / len(terms) if terms else 0
             
-            # Score = base + term coverage bonus + exact match bonus
-            score = 0.2 + 0.6 * term_ratio  # 0.2 base, up to 0.8 for full coverage
+            # 基础分数 + term覆盖率加成
+            # 提高term覆盖率的权重，降低基础分数
+            score = 0.1 + 0.7 * term_ratio  # 0.1 base, up to 0.8 for full coverage
+            
+            # 精确匹配加成
             if query_lower in content:
                 score += 0.15
             if summary and query_lower in summary:
                 score += 0.05
+            
+            # 如果term覆盖率低于50%，降低分数
+            if term_ratio < 0.5:
+                score *= 0.8
+            
             score = min(score, 1.0)
 
             if score >= min_score:
                 chunk["score"] = score
                 results.append(chunk)
 
+        # 按分数排序
+        results.sort(key=lambda x: x.get("score", 0), reverse=True)
+        
         return results[:max_results]
 
     def share_chunk(self, chunk_id: str, shared_with: Optional[List[str]] = None) -> bool:
@@ -772,7 +783,7 @@ class SqliteStore:
         scope: str = "private",
         agent_id: str = "default",
     ) -> List[Dict[str, Any]]:
-        """Pattern search for short terms (2-char bigrams)."""
+        """Pattern search for short terms - 优化版，改进评分算法"""
         cursor = self.conn.cursor()
         
         if not terms:
@@ -809,8 +820,36 @@ class SqliteStore:
         results = []
         for row in cursor.fetchall():
             chunk = dict(row)
-            chunk["score"] = 0.5  # Base score for pattern match
+            content = (chunk.get("content") or "").lower()
+            summary = (chunk.get("summary") or "").lower()
+            
+            # 改进的评分算法
+            matching_terms = 0
+            total_terms = len(terms)
+            
+            for term in terms:
+                term_lower = term.lower()
+                if term_lower in content or term_lower in summary:
+                    matching_terms += 1
+            
+            # 计算term覆盖率
+            term_ratio = matching_terms / total_terms if total_terms > 0 else 0
+            
+            # 基础分数 + term覆盖率加成
+            score = 0.3 + 0.5 * term_ratio  # 0.3 base, up to 0.8 for full coverage
+            
+            # 如果有完全匹配的term，给予额外加分
+            for term in terms:
+                if term.lower() in content:
+                    score += 0.1
+                    break
+            
+            score = min(score, 1.0)
+            chunk["score"] = score
             results.append(chunk)
+        
+        # 按分数排序
+        results.sort(key=lambda x: x.get("score", 0), reverse=True)
         
         return results
     
