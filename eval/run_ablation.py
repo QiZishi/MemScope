@@ -548,10 +548,14 @@ def main():
     }
 
     totals = {"no_memory": 0, "original_memos": 0, "memscope": 0}
+    # Aligned with evaluation_scheme_v2.md (7 ablation dims, proportional to 8-dim scheme)
+    # scheme v2: command=10%, decision=15%, preference=15%, knowledge=10%,
+    #            anti=15%, contra=15%, efficiency=15%, long_term=5%
+    # Ablation has no long_term_memory; redistribute its 5% proportionally
     weights = {
-        "direction_a": 0.15, "direction_b": 0.15,
-        "direction_c": 0.20, "direction_d": 0.20,
-        "anti_interference": 0.10, "contradiction": 0.10, "efficiency": 0.10,
+        "direction_a": 0.105, "direction_b": 0.1575,
+        "direction_c": 0.1575, "direction_d": 0.105,
+        "anti_interference": 0.1575, "contradiction": 0.1575, "efficiency": 0.1575,
     }
 
     for dim in dimensions:

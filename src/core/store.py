@@ -327,6 +327,12 @@ class SqliteStore:
             now,
         ))
 
+        # Sync FTS5 content-table index (content='chunks' mode requires rebuild)
+        try:
+            cursor.execute("INSERT INTO chunks_fts(chunks_fts) VALUES('rebuild')")
+        except Exception:
+            pass  # FTS5 table may not exist in all configurations
+
         self.conn.commit()
         return chunk_id
 
@@ -370,43 +376,53 @@ class SqliteStore:
         scope: str = "private",
         agent_id: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
-        """Search chunks with visibility scope support."""
+        """Search chunks with visibility scope support and CJK term splitting."""
+        import re
         cursor = self.conn.cursor()
+
+        # Split query into individual terms for better Chinese text matching
+        terms = re.findall(r'[\w一-鿿]{2,}', query)
+        if not terms:
+            terms = [query]
+
+        # Build OR conditions for each term
+        term_conditions = []
+        term_params = []
+        for term in terms:
+            term_conditions.append("(content LIKE ? OR summary LIKE ?)")
+            term_params.extend([f"%{term}%", f"%{term}%"])
+        term_where = " OR ".join(term_conditions)
 
         # Build visibility filter based on scope
         visibility_filter = ""
-        params = [f"%{query}%", f"%{query}%"]
+        extra_params = []
 
         if scope == "private":
-            # Only private memories owned by this agent
             visibility_filter = " AND (visibility = 'private' OR visibility IS NULL)"
             if agent_id:
                 visibility_filter += " AND (owner = ? OR owner IS NULL)"
-                params.append(agent_id)
+                extra_params.append(agent_id)
         elif scope == "shared":
-            # Only shared memories
             visibility_filter = " AND visibility = 'shared'"
             if agent_id:
-                # Include memories shared with this agent
                 visibility_filter += " AND (sharedWith IS NULL OR sharedWith LIKE ?)"
-                params.append(f"%{agent_id}%")
+                extra_params.append(f"%{agent_id}%")
         elif scope == "all":
-            # All memories (private + shared)
             if agent_id:
-                # Private owned by agent + all shared
                 visibility_filter = " AND (visibility = 'shared' OR owner = ? OR visibility IS NULL)"
-                params.append(agent_id)
+                extra_params.append(agent_id)
 
         if role:
             visibility_filter += " AND role = ?"
-            params.append(role)
+            extra_params.append(role)
 
+        all_params = term_params + extra_params + [max_results]
         cursor.execute(f"""
-            SELECT * FROM chunks 
-            WHERE (content LIKE ? OR summary LIKE ?){visibility_filter}
+            SELECT * FROM chunks
+            WHERE ({term_where}){visibility_filter}
             ORDER BY createdAt DESC
             LIMIT ?
-        """, params + [max_results])
+        """, all_params)
 
         results = []
         for row in cursor.fetchall():

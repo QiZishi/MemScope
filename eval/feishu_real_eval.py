@@ -6,26 +6,45 @@ MemScope 飞书真实环境端到端评测脚本
 import json, os, sys, time, tempfile, logging
 from datetime import datetime
 
-sys.path.insert(0, '/root/hermes-data/cron/output')
+# Path setup — resolve relative to this script's location
+EVAL_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(EVAL_DIR)
+SRC_DIR = os.path.join(PROJECT_ROOT, "src")
 
-from src.core.store import SqliteStore
-from src.command_memory.command_tracker import CommandTracker
-from src.command_memory.recommender import CommandRecommender
-from src.decision_memory.decision_extractor import DecisionExtractor
-from src.decision_memory.decision_card import DecisionCardManager
-from src.preference_memory.preference_extractor import PreferenceExtractor
-from src.preference_memory.preference_manager import PreferenceManager
-from src.preference_memory.habit_inference import HabitInference
-from src.knowledge_health.ebbinghaus import EbbinghausModel
-from src.knowledge_health.freshness_monitor import FreshnessMonitor
-from src.knowledge_health.gap_detector import GapDetector
+for p in (PROJECT_ROOT, SRC_DIR,
+          os.path.join(SRC_DIR, "command_memory"),
+          os.path.join(SRC_DIR, "decision_memory"),
+          os.path.join(SRC_DIR, "preference_memory"),
+          os.path.join(SRC_DIR, "knowledge_health")):
+    if p not in sys.path:
+        sys.path.insert(0, p)
+
+from core.store import SqliteStore
+from command_memory.command_tracker import CommandTracker
+from command_memory.recommender import CommandRecommender
+from decision_memory.decision_extractor import DecisionExtractor
+from decision_memory.decision_card import DecisionCardManager
+from preference_memory.preference_extractor import PreferenceExtractor
+from preference_memory.preference_manager import PreferenceManager
+from preference_memory.habit_inference import HabitInference
+from knowledge_health.ebbinghaus import EbbinghausModel
+from knowledge_health.freshness_monitor import FreshnessMonitor
+from knowledge_health.gap_detector import GapDetector
+
+# Import real Feishu client (optional — falls back to simulation)
+try:
+    from feishu.client import FeishuClient as RealFeishuClient
+    HAS_FEISHU_CLIENT = True
+except ImportError:
+    HAS_FEISHU_CLIENT = False
 
 logging.basicConfig(level=logging.WARNING)
 
 # ============================================================
 # 创建评测数据库
 # ============================================================
-eval_dir = '/root/hermes-data/cron/output/eval'
+eval_dir = os.path.join(EVAL_DIR, "eval_output")
+os.makedirs(eval_dir, exist_ok=True)
 tmpdir = tempfile.mkdtemp()
 db = os.path.join(tmpdir, 'feishu_eval.db')
 store = SqliteStore(db)

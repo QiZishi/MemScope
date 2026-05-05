@@ -24,6 +24,12 @@ import uuid
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
+# Add src/ to path for real module imports
+_DEMO_DIR = os.path.dirname(os.path.abspath(__file__))
+_SRC_DIR = os.path.join(_DEMO_DIR, "..", "src")
+if _SRC_DIR not in sys.path:
+    sys.path.insert(0, _SRC_DIR)
+
 # ============================================================================
 # Color helpers
 # ============================================================================
@@ -74,57 +80,41 @@ def result(label: str, value: Any) -> None:
 class FeishuClient:
     """Feishu Open API client for messaging integration.
 
-    In production, this uses the real Feishu Open API.
-    In demo mode, it simulates API responses.
+    When FEISHU_APP_ID and FEISHU_APP_SECRET are set, uses the real Feishu Open API
+    via src.feishu.client.FeishuClient. Otherwise runs in demo mode with simulated responses.
     """
-
-    BASE_URL = "https://open.feishu.cn/open-apis"
 
     def __init__(self, app_id: str = None, app_secret: str = None):
         self.app_id = app_id or os.environ.get("FEISHU_APP_ID", "")
         self.app_secret = app_secret or os.environ.get("FEISHU_APP_SECRET", "")
         self.demo_mode = not (self.app_id and self.app_secret)
-        self._tenant_token = None
+        self._real_client = None
 
         if self.demo_mode:
             info("🔗 飞书 API 运行在演示模式 (模拟响应)")
             info("  设置 FEISHU_APP_ID 和 FEISHU_APP_SECRET 以连接真实 API")
         else:
             info(f"🔗 飞书 API 连接中... (APP_ID: {self.app_id[:8]}...)")
+            try:
+                from feishu.client import FeishuClient as RealClient
+                self._real_client = RealClient(self.app_id, self.app_secret)
+                info("✅ 使用真实飞书 API 客户端")
+            except Exception as e:
+                warn(f"无法加载真实客户端，回退到演示模式: {e}")
+                self.demo_mode = True
 
     def get_tenant_access_token(self) -> str:
         """Get tenant access token for API calls."""
         if self.demo_mode:
             return "mock_tenant_token_demo_mode"
-
-        # Real implementation would call:
-        # POST /auth/v3/tenant_access_token/internal
-        # {
-        #   "app_id": self.app_id,
-        #   "app_secret": self.app_secret
-        # }
-        info("🔑 获取 tenant_access_token...")
-        return "real_token_from_api"
+        try:
+            return self._real_client._get_tenant_token()
+        except Exception as e:
+            warn(f"获取 token 失败: {e}")
+            return "token_error"
 
     def receive_message(self, event: Dict[str, Any]) -> Dict[str, Any]:
-        """Process an incoming message event from Feishu.
-
-        Event format (from Feishu webhook):
-        {
-            "event": {
-                "message": {
-                    "message_id": "om_xxx",
-                    "chat_id": "oc_xxx",
-                    "chat_type": "group",
-                    "content": "{\"text\": \"...\"}",
-                    "sender": {
-                        "sender_id": {"open_id": "ou_xxx"},
-                        "sender_type": "user"
-                    }
-                }
-            }
-        }
-        """
+        """Process an incoming message event from Feishu."""
         msg = event.get("event", {}).get("message", {})
         content_str = msg.get("content", "{}")
         try:
@@ -142,16 +132,7 @@ class FeishuClient:
         }
 
     def send_message(self, chat_id: str, content: str, msg_type: str = "text") -> Dict[str, Any]:
-        """Send a message to a Feishu chat.
-
-        In production, calls:
-        POST /im/v1/messages
-        {
-            "receive_id": chat_id,
-            "msg_type": msg_type,
-            "content": json.dumps({"text": content})
-        }
-        """
+        """Send a message to a Feishu chat."""
         if self.demo_mode:
             return {
                 "message_id": f"om_demo_{uuid.uuid4().hex[:8]}",
@@ -159,11 +140,11 @@ class FeishuClient:
                 "chat_id": chat_id,
                 "content_preview": content[:100],
             }
-
-        # Real implementation
-        # headers = {"Authorization": f"Bearer {self._tenant_token}"}
-        # requests.post(f"{self.BASE_URL}/im/v1/messages", ...)
-        return {"message_id": f"om_{uuid.uuid4().hex[:8]}", "status": "sent"}
+        try:
+            resp = self._real_client.send_text(chat_id, content)
+            return {"message_id": resp.get("data", {}).get("message_id", ""), "status": "sent", "api_response": resp}
+        except Exception as e:
+            return {"error": str(e), "status": "failed"}
 
     def send_rich_message(self, chat_id: str, card: Dict[str, Any]) -> Dict[str, Any]:
         """Send an interactive card message."""
@@ -173,7 +154,11 @@ class FeishuClient:
                 "status": "sent (demo mode)",
                 "card_type": card.get("config", {}).get("wide_screen_mode", False),
             }
-        return {"message_id": f"om_{uuid.uuid4().hex[:8]}", "status": "sent"}
+        try:
+            resp = self._real_client.send_card(chat_id, card)
+            return {"message_id": resp.get("data", {}).get("message_id", ""), "status": "sent", "api_response": resp}
+        except Exception as e:
+            return {"error": str(e), "status": "failed"}
 
 
 # ============================================================================

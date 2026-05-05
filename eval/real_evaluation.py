@@ -38,46 +38,20 @@ for p in (OUTPUT_DIR, SRC_DIR,
 import sqlite3
 import tempfile
 from schema_v2 import apply_v2_schema
-from ministore import MiniStore
+from core.store import SqliteStore
 
 
 # ---------------------------------------------------------------------------
 # 初始化真实 MemScope 系统
 # ---------------------------------------------------------------------------
 def create_real_store():
+    """Create a real SqliteStore with enterprise schema for evaluation."""
     tmp = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
     db_path = tmp.name
     tmp.close()
-    conn = sqlite3.connect(db_path, check_same_thread=False)
-    conn.row_factory = sqlite3.Row
-    conn.executescript("""
-        CREATE TABLE IF NOT EXISTS chunks (
-            id TEXT PRIMARY KEY, sessionKey TEXT NOT NULL, turnId TEXT NOT NULL,
-            seq INTEGER NOT NULL, role TEXT NOT NULL, content TEXT NOT NULL,
-            kind TEXT DEFAULT 'paragraph', summary TEXT, owner TEXT DEFAULT 'local',
-            visibility TEXT DEFAULT 'private', sharedWith TEXT, taskId TEXT,
-            skillId TEXT, createdAt INTEGER NOT NULL, updatedAt INTEGER NOT NULL,
-            UNIQUE(sessionKey, turnId, seq)
-        );
-        CREATE INDEX IF NOT EXISTS idx_chunks_session ON chunks(sessionKey);
-        CREATE INDEX IF NOT EXISTS idx_chunks_owner ON chunks(owner);
-        CREATE INDEX IF NOT EXISTS idx_chunks_created ON chunks(createdAt);
-        CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts USING fts5(
-            content, summary, content='chunks', content_rowid='rowid'
-        );
-        CREATE TABLE IF NOT EXISTS tool_logs (
-            id TEXT PRIMARY KEY, tool TEXT NOT NULL, args TEXT,
-            result TEXT, ts INTEGER NOT NULL, owner TEXT DEFAULT 'local'
-        );
-        CREATE TABLE IF NOT EXISTS embeddings (
-            chunkId TEXT PRIMARY KEY, embedding BLOB NOT NULL, createdAt INTEGER NOT NULL,
-            FOREIGN KEY (chunkId) REFERENCES chunks(id) ON DELETE CASCADE
-        );
-    """)
-    conn.commit()
-    apply_v2_schema(conn)
-    store = MiniStore(conn)
-    return store, conn, db_path
+    store = SqliteStore(db_path)
+    apply_v2_schema(store.conn)
+    return store, store.conn, db_path
 
 
 # ---------------------------------------------------------------------------
@@ -139,12 +113,29 @@ def eval_anti_interference(store, case: Dict) -> Dict[str, Any]:
     all_content = " ".join(r.get("content", "") for r in results)
     recall = text_contains(all_content, expected.get("expected_keywords", []))
     noise_rate = 1.0 - text_not_contains(all_content, expected.get("noise_keywords", []))
-    precision = 1.0 - noise_rate
+    precision = 0.0 if not results else (1.0 - noise_rate)
     f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0
+
+    # Threshold checks per evaluation_scheme_v2.md
+    passed, failed = [], []
+    if recall >= 0.9:
+        passed.append(f"recall={recall:.4f}>=0.9")
+    else:
+        failed.append(f"recall={recall:.4f}<0.9")
+    if precision >= 0.85:
+        passed.append(f"precision={precision:.4f}>=0.85")
+    else:
+        failed.append(f"precision={precision:.4f}<0.85")
+    if f1 >= 0.87:
+        passed.append(f"f1={f1:.4f}>=0.87")
+    else:
+        failed.append(f"f1={f1:.4f}<0.87")
+
     return {"recall": round(recall, 4), "precision": round(precision, 4),
             "noise_injection_rate": round(noise_rate, 4), "f1_score": round(f1, 4),
             "latency_ms": round(latency_ms, 2), "chunks_found": len(results),
-            "content_preview": all_content[:300]}
+            "content_preview": all_content[:300],
+            "passed_checks": passed, "failed_checks": failed}
 
 
 def eval_contradiction_update(store, case: Dict) -> Dict[str, Any]:
@@ -214,9 +205,25 @@ def eval_contradiction_update(store, case: Dict) -> Dict[str, Any]:
     answer_contains = expected.get("expected_answer_contains", [])
     answer_found = text_contains(all_content, answer_contains) >= 0.5 if answer_contains else True
 
+    # Threshold checks
+    passed, failed = [], []
+    if latest_correct:
+        passed.append("latest_value_correct")
+    else:
+        failed.append("latest_value_incorrect")
+    if old_preserved:
+        passed.append("old_value_preserved")
+    else:
+        failed.append("old_value_lost")
+    if answer_found:
+        passed.append("answer_contains_found")
+    else:
+        failed.append("answer_contains_missing")
+
     return {"latest_value_correct": latest_correct, "old_value_preserved": old_preserved,
             "answer_contains_found": answer_found, "latency_ms": round(latency_ms, 2),
-            "chunks_found": len(results), "content_preview": all_content[:300]}
+            "chunks_found": len(results), "content_preview": all_content[:300],
+            "passed_checks": passed, "failed_checks": failed}
 
 
 def eval_efficiency(store, case: Dict) -> Dict[str, Any]:
@@ -233,10 +240,17 @@ def eval_efficiency(store, case: Dict) -> Dict[str, Any]:
                                 conv.get("timestamp"), session_key=f"eval-eff-{i}")
             latencies.append((time.perf_counter() - start) * 1000)
         latencies.sort()
-        return {"p50_ms": round(latencies[len(latencies)//2], 2),
+        p50 = round(latencies[len(latencies)//2], 2)
+        passed, failed = [], []
+        if p50 <= 200:
+            passed.append(f"write_p50={p50}<=200ms")
+        else:
+            failed.append(f"write_p50={p50}>200ms")
+        return {"p50_ms": p50,
                 "p95_ms": round(latencies[int(len(latencies)*0.95)], 2),
                 "p99_ms": round(latencies[int(len(latencies)*0.99)], 2),
-                "iterations": iterations}
+                "iterations": iterations,
+                "passed_checks": passed, "failed_checks": failed}
     elif "query" in category:
         for i in range(50):
             insert_conversation(store, f"查询测试 {i}", f"回复 {i}",
@@ -247,10 +261,17 @@ def eval_efficiency(store, case: Dict) -> Dict[str, Any]:
             store.search_chunks(f"测试 {i%50}", max_results=5)
             latencies.append((time.perf_counter() - start) * 1000)
         latencies.sort()
-        return {"p50_ms": round(latencies[len(latencies)//2], 2),
+        p50 = round(latencies[len(latencies)//2], 2)
+        passed, failed = [], []
+        if p50 <= 300:
+            passed.append(f"query_p50={p50}<=300ms")
+        else:
+            failed.append(f"query_p50={p50}>300ms")
+        return {"p50_ms": p50,
                 "p95_ms": round(latencies[int(len(latencies)*0.95)], 2),
-                "iterations": len(latencies)}
-    return {"status": "measured"}
+                "iterations": len(latencies),
+                "passed_checks": passed, "failed_checks": failed}
+    return {"status": "measured", "passed_checks": ["measured"], "failed_checks": []}
 
 
 def eval_command_memory(store, case: Dict) -> Dict[str, Any]:
@@ -510,6 +531,18 @@ EVALUATORS = {
     "long_term_memory": eval_long_term_memory,
 }
 
+# Per evaluation_scheme_v2.md — 8 dimensions, weights sum to 1.0
+DIMENSION_WEIGHTS = {
+    "anti_interference": 0.15,
+    "contradiction_update": 0.15,
+    "efficiency": 0.15,
+    "command_memory": 0.10,
+    "decision_memory": 0.15,
+    "preference_memory": 0.15,
+    "knowledge_health": 0.10,
+    "long_term_memory": 0.05,
+}
+
 
 # ---------------------------------------------------------------------------
 # 主评估流程
@@ -588,6 +621,30 @@ def run_evaluation() -> Dict[str, Any]:
 
     total = report["total_cases"]
     report["pass_rate"] = round(report["passed"] / total * 100, 1) if total > 0 else 0
+
+    # Compute dimension-weighted overall score per evaluation_scheme_v2.md
+    dimension_scores = {}
+    for ds_name, ds_data in report["dataset_results"].items():
+        dim_weight = DIMENSION_WEIGHTS.get(ds_name, 0.0)
+        dim_score = ds_data.get("pass_rate", 0.0)  # dimension score = pass rate %
+        dimension_scores[ds_name] = {
+            "score": dim_score,
+            "weight": dim_weight,
+            "weighted_score": round(dim_score * dim_weight, 2),
+            "test_count": ds_data.get("total", 0),
+            "passed_count": ds_data.get("passed", 0),
+        }
+    report["dimension_scores"] = dimension_scores
+
+    overall_score = sum(d["weighted_score"] for d in dimension_scores.values())
+    report["overall_score"] = round(overall_score, 2)
+    if overall_score >= 85:
+        report["grade"] = "优秀"
+    elif overall_score >= 70:
+        report["grade"] = "及格"
+    else:
+        report["grade"] = "不及格"
+
     return report
 
 
@@ -608,6 +665,9 @@ if __name__ == "__main__":
           f"失败: {report['failed']}  错误: {report['errors']}  通过率: {report['pass_rate']}%")
     print()
     for name, dr in report["dataset_results"].items():
-        print(f"  {name:25s}: {dr['passed']}/{dr['total']} ({dr['pass_rate']}%)")
+        w = DIMENSION_WEIGHTS.get(name, 0)
+        print(f"  {name:25s}: {dr['passed']}/{dr['total']} ({dr['pass_rate']}%)  权重={w:.0%}")
+    print()
+    print(f"  综合得分: {report.get('overall_score', 0):.2f} / 100  评级: {report.get('grade', 'N/A')}")
     print(f"\n  耗时: {elapsed:.1f}s  报告: {output_path}")
     print("=" * 70)
