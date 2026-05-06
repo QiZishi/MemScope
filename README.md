@@ -179,7 +179,6 @@ MemScope/
 │
 ├── Memory定义与架构白皮书.md                # 记忆定义与架构白皮书
 ├── 自证评测报告.md                          # 自证评测报告
-├── AGENTS.md                               # 开发指南
 ├── plugin.yaml                             # Hermes插件配置
 ├── LICENSE                                 # MIT License
 └── README.md                               # 本文件
