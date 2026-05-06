@@ -1,123 +1,1309 @@
 {
   "dataset_name": "feishu_knowledge_health",
-  "version": "1.0",
+  "version": "2.0",
+  "total_cases": 30,
   "description": "飞书业务场景知识健康评测数据集",
-  "total_cases": 10,
-  "schema": {
-    "chunk": "需要记忆的飞书文档/知识内容",
-    "query": "用户查询",
-    "answer": "期望的正确答案"
-  },
   "test_cases": [
     {
       "test_id": "feishu_kh_001",
       "name": "API设计规范",
       "difficulty": "easy",
       "category": "技术规范",
-      "chunk": "API设计规范：\n1. RESTful风格，统一返回格式\n2. 错误码规范：业务错误码5位数字\n3. 分页参数：page_size默认20，最大100\n4. 认证方式：Bearer Token",
-      "query": "API分页参数默认多少？",
-      "answer": "page_size默认20",
-      "expected_keywords": ["20", "page_size"],
-      "forbidden_keywords": ["10", "50"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "API设计规范：",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "1. RESTful风格，统一返回格式",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "2. 错误码规范：业务错误码5位数字",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "3. 分页参数：page_size默认20，最大100",
+            "timestamp": "2026-01-15T00:16:00"
+          },
+          {
+            "role": "user",
+            "content": "4. 认证方式：Bearer Token",
+            "timestamp": "2026-01-15T00:18:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "API分页参数默认多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "page_size默认20",
+        "keywords": [
+          "20",
+          "page_size"
+        ],
+        "forbidden": [
+          "10",
+          "50"
+        ]
+      }
     },
     {
       "test_id": "feishu_kh_002",
       "name": "安全审计流程",
       "difficulty": "easy",
       "category": "流程规范",
-      "chunk": "安全审计流程：\n1. 每月进行一次代码安全扫描\n2. 发现漏洞必须在24小时内修复\n3. 高危漏洞需要立即处理\n4. 审计报告提交到飞书文档",
-      "query": "漏洞需要多久内修复？",
-      "answer": "24小时内",
-      "expected_keywords": ["24小时"],
-      "forbidden_keywords": ["48小时", "一周"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "安全审计流程：",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "1. 每月进行一次代码安全扫描",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "2. 发现漏洞必须在24小时内修复",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "3. 高危漏洞需要立即处理",
+            "timestamp": "2026-01-15T00:16:00"
+          },
+          {
+            "role": "user",
+            "content": "4. 审计报告提交到飞书文档",
+            "timestamp": "2026-01-15T00:18:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "漏洞需要多久内修复？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "24小时内",
+        "keywords": [
+          "24小时"
+        ],
+        "forbidden": [
+          "48小时",
+          "一周"
+        ]
+      }
     },
     {
       "test_id": "feishu_kh_003",
       "name": "CI/CD流水线配置",
       "difficulty": "easy",
       "category": "DevOps",
-      "chunk": "CI/CD流水线配置：\n1. 每次push自动运行测试\n2. 测试通过后自动构建镜像\n3. 部署到staging环境需要手动触发\n4. 生产环境部署需要审批",
-      "query": "staging环境部署需要什么？",
-      "answer": "手动触发",
-      "expected_keywords": ["手动"],
-      "forbidden_keywords": ["自动", "审批"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "CI/CD流水线配置：",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "1. 每次push自动运行测试",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "2. 测试通过后自动构建镜像",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "3. 部署到staging环境需要手动触发",
+            "timestamp": "2026-01-15T00:16:00"
+          },
+          {
+            "role": "user",
+            "content": "4. 生产环境部署需要审批",
+            "timestamp": "2026-01-15T00:18:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "staging环境部署需要什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "手动触发",
+        "keywords": [
+          "手动"
+        ],
+        "forbidden": [
+          "自动",
+          "审批"
+        ]
+      }
     },
     {
       "test_id": "feishu_kh_004",
       "name": "数据库规范",
       "difficulty": "medium",
       "category": "技术规范",
-      "chunk": "数据库规范：\n1. 表名使用snake_case\n2. 必须有主键id和时间字段\n3. 索引命名：idx_表名_字段名\n4. 禁止使用存储过程\n5. 大表需要分库分表",
-      "query": "数据库表名用什么格式？",
-      "answer": "snake_case",
-      "expected_keywords": ["snake_case"],
-      "forbidden_keywords": ["camelCase", "PascalCase"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "数据库规范：",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "1. 表名使用snake_case",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "2. 必须有主键id和时间字段",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "3. 索引命名：idx_表名_字段名",
+            "timestamp": "2026-01-15T00:16:00"
+          },
+          {
+            "role": "user",
+            "content": "4. 禁止使用存储过程",
+            "timestamp": "2026-01-15T00:18:00"
+          },
+          {
+            "role": "assistant",
+            "content": "5. 大表需要分库分表",
+            "timestamp": "2026-01-15T00:20:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "数据库表名用什么格式？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "snake_case",
+        "keywords": [
+          "snake_case"
+        ],
+        "forbidden": [
+          "camelCase",
+          "PascalCase"
+        ]
+      }
     },
     {
       "test_id": "feishu_kh_005",
       "name": "Git提交规范",
       "difficulty": "medium",
       "category": "流程规范",
-      "chunk": "Git提交规范：\n1. 提交信息格式：type(scope): description\n2. type类型：feat/fix/docs/style/refactor/test/chore\n3. 禁止提交超过500行的代码\n4. 必须关联Issue编号",
-      "query": "Git提交信息格式是什么？",
-      "answer": "type(scope): description",
-      "expected_keywords": ["type", "scope", "description"],
-      "forbidden_keywords": ["随意写", "无格式"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "Git提交规范：",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "1. 提交信息格式：type(scope): description",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "2. type类型：feat/fix/docs/style/refactor/test/chore",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "3. 禁止提交超过500行的代码",
+            "timestamp": "2026-01-15T00:16:00"
+          },
+          {
+            "role": "user",
+            "content": "4. 必须关联Issue编号",
+            "timestamp": "2026-01-15T00:18:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "Git提交信息格式是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "type(scope): description",
+        "keywords": [
+          "type",
+          "scope",
+          "description"
+        ],
+        "forbidden": [
+          "随意写",
+          "无格式"
+        ]
+      }
     },
     {
       "test_id": "feishu_kh_006",
       "name": "代码审查标准",
       "difficulty": "medium",
       "category": "流程规范",
-      "chunk": "代码审查标准：\n1. 必须至少2人审查通过\n2. 审查重点：逻辑正确性、安全性、性能\n3. 审查时间不超过24小时\n4. 审查意见必须在飞书文档记录",
-      "query": "代码审查需要几人通过？",
-      "answer": "至少2人",
-      "expected_keywords": ["2人"],
-      "forbidden_keywords": ["1人", "3人"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "代码审查标准：",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "1. 必须至少2人审查通过",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "2. 审查重点：逻辑正确性、安全性、性能",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "3. 审查时间不超过24小时",
+            "timestamp": "2026-01-15T00:16:00"
+          },
+          {
+            "role": "user",
+            "content": "4. 审查意见必须在飞书文档记录",
+            "timestamp": "2026-01-15T00:18:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "代码审查需要几人通过？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "至少2人",
+        "keywords": [
+          "2人"
+        ],
+        "forbidden": [
+          "1人",
+          "3人"
+        ]
+      }
     },
     {
       "test_id": "feishu_kh_007",
       "name": "监控告警规则",
       "difficulty": "hard",
       "category": "运维规范",
-      "chunk": "监控告警规则：\n1. CPU使用率超过80%触发告警\n2. 内存使用率超过90%触发告警\n3. 接口响应时间超过500ms触发告警\n4. 错误率超过1%触发告警\n5. 告警发送到飞书群",
-      "query": "CPU使用率多少触发告警？",
-      "answer": "80%",
-      "expected_keywords": ["80%"],
-      "forbidden_keywords": ["70%", "90%"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "监控告警规则：",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "1. CPU使用率超过80%触发告警",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "2. 内存使用率超过90%触发告警",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "3. 接口响应时间超过500ms触发告警",
+            "timestamp": "2026-01-15T00:16:00"
+          },
+          {
+            "role": "user",
+            "content": "4. 错误率超过1%触发告警",
+            "timestamp": "2026-01-15T00:18:00"
+          },
+          {
+            "role": "assistant",
+            "content": "5. 告警发送到飞书群",
+            "timestamp": "2026-01-15T00:20:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "CPU使用率多少触发告警？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "80%",
+        "keywords": [
+          "80%"
+        ],
+        "forbidden": [
+          "70%",
+          "90%"
+        ]
+      }
     },
     {
       "test_id": "feishu_kh_008",
       "name": "发布流程规范",
       "difficulty": "hard",
       "category": "流程规范",
-      "chunk": "发布流程规范：\n1. 发布前需要完成回归测试\n2. 发布时间窗口：工作日上午10点-12点\n3. 发布后需要观察30分钟\n4. 回滚方案必须提前准备\n5. 发布记录更新到飞书文档",
-      "query": "发布时间窗口是什么？",
-      "answer": "工作日上午10点-12点",
-      "expected_keywords": ["10点", "12点"],
-      "forbidden_keywords": ["下午", "晚上"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "发布流程规范：",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "1. 发布前需要完成回归测试",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "2. 发布时间窗口：工作日上午10点-12点",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "3. 发布后需要观察30分钟",
+            "timestamp": "2026-01-15T00:16:00"
+          },
+          {
+            "role": "user",
+            "content": "4. 回滚方案必须提前准备",
+            "timestamp": "2026-01-15T00:18:00"
+          },
+          {
+            "role": "assistant",
+            "content": "5. 发布记录更新到飞书文档",
+            "timestamp": "2026-01-15T00:20:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "发布时间窗口是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "工作日上午10点-12点",
+        "keywords": [
+          "10点",
+          "12点"
+        ],
+        "forbidden": [
+          "下午",
+          "晚上"
+        ]
+      }
     },
     {
       "test_id": "feishu_kh_009",
       "name": "权限管理规范",
       "difficulty": "hard",
       "category": "安全规范",
-      "chunk": "权限管理规范：\n1. 最小权限原则\n2. 权限申请需要审批\n3. 离职员工权限24小时内回收\n4. 敏感操作需要二次验证\n5. 权限审计每季度一次",
-      "query": "离职员工权限多久内回收？",
-      "answer": "24小时内",
-      "expected_keywords": ["24小时"],
-      "forbidden_keywords": ["48小时", "一周"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "权限管理规范：",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "1. 最小权限原则",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "2. 权限申请需要审批",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "3. 离职员工权限24小时内回收",
+            "timestamp": "2026-01-15T00:16:00"
+          },
+          {
+            "role": "user",
+            "content": "4. 敏感操作需要二次验证",
+            "timestamp": "2026-01-15T00:18:00"
+          },
+          {
+            "role": "assistant",
+            "content": "5. 权限审计每季度一次",
+            "timestamp": "2026-01-15T00:20:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "离职员工权限多久内回收？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "24小时内",
+        "keywords": [
+          "24小时"
+        ],
+        "forbidden": [
+          "48小时",
+          "一周"
+        ]
+      }
     },
     {
       "test_id": "feishu_kh_010",
       "name": "数据备份规范",
       "difficulty": "hard",
       "category": "运维规范",
-      "chunk": "数据备份规范：\n1. 数据库每天全量备份\n2. 备份数据保留30天\n3. 备份验证每月一次\n4. 异地备份每季度一次\n5. 备份状态监控到飞书群",
-      "query": "备份数据保留多久？",
-      "answer": "30天",
-      "expected_keywords": ["30天"],
-      "forbidden_keywords": ["7天", "90天"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "数据备份规范：",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "1. 数据库每天全量备份",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "2. 备份数据保留30天",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "3. 备份验证每月一次",
+            "timestamp": "2026-01-15T00:16:00"
+          },
+          {
+            "role": "user",
+            "content": "4. 异地备份每季度一次",
+            "timestamp": "2026-01-15T00:18:00"
+          },
+          {
+            "role": "assistant",
+            "content": "5. 备份状态监控到飞书群",
+            "timestamp": "2026-01-15T00:20:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "备份数据保留多久？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "30天",
+        "keywords": [
+          "30天"
+        ],
+        "forbidden": [
+          "7天",
+          "90天"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_kh_011",
+      "name": "接口幂等性规范",
+      "difficulty": "easy",
+      "category": "技术规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "接口幂等性怎么保证？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "用唯一请求ID+Redis去重",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "规范定了：所有写接口必须幂等",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "接口幂等性怎么保证？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "唯一请求ID+Redis去重",
+        "keywords": [
+          "请求ID",
+          "Redis",
+          "幂等"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_012",
+      "name": "灰度发布规范",
+      "difficulty": "medium",
+      "category": "发布规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "灰度发布怎么操作？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "先5%流量，观察30分钟，逐步放量",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认灰度流程",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "灰度发布流程是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "先5%流量观察30分钟",
+        "keywords": [
+          "5%",
+          "30分钟",
+          "灰度"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_013",
+      "name": "链路追踪规范",
+      "difficulty": "medium",
+      "category": "运维规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "链路追踪用什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "用Jaeger，全链路追踪",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "规范：所有服务必须接入Jaeger",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "链路追踪用什么工具？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Jaeger",
+        "keywords": [
+          "Jaeger"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_014",
+      "name": "日志规范",
+      "difficulty": "easy",
+      "category": "技术规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "日志格式有什么要求？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "统一JSON格式，包含traceId和timestamp",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认日志规范",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "日志格式要求是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "统一JSON格式",
+        "keywords": [
+          "JSON",
+          "traceId"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_015",
+      "name": "分支管理规范",
+      "difficulty": "medium",
+      "category": "流程规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "Git分支怎么管理？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "main分支保护，PR必须2人review",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认分支规范",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "Git分支管理规则是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "main分支保护，PR必须2人review",
+        "keywords": [
+          "main",
+          "2人",
+          "review"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_016",
+      "name": "代码回滚规范",
+      "difficulty": "medium",
+      "category": "流程规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "代码回滚怎么操作？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "先回滚代码，再回滚数据库，最后通知相关方",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认回滚流程",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "代码回滚流程是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "先回滚代码再回滚数据库",
+        "keywords": [
+          "回滚代码",
+          "回滚数据库"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_017",
+      "name": "性能基准规范",
+      "difficulty": "medium",
+      "category": "技术规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "性能基准是什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "API响应P99小于500ms，QPS大于1000",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认性能基准",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "API性能基准是多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "P99小于500ms，QPS大于1000",
+        "keywords": [
+          "500ms",
+          "1000"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_018",
+      "name": "安全扫描规范",
+      "difficulty": "easy",
+      "category": "安全规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "安全扫描多久一次？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "每次发布前自动扫描，每周全量扫描",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认扫描频率",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "安全扫描频率是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "每次发布前自动扫描",
+        "keywords": [
+          "发布前",
+          "每周"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_019",
+      "name": "变更管理规范",
+      "difficulty": "medium",
+      "category": "流程规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "变更管理流程是什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "变更申请→审批→实施→验证→关闭",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认变更流程",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "变更管理流程是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "申请→审批→实施→验证→关闭",
+        "keywords": [
+          "申请",
+          "审批",
+          "实施",
+          "验证"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_020",
+      "name": "容灾演练规范",
+      "difficulty": "hard",
+      "category": "运维规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "容灾演练多久一次？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "每季度一次，覆盖主备切换和数据恢复",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认演练频率",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "容灾演练频率是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "每季度一次",
+        "keywords": [
+          "每季度",
+          "主备切换",
+          "数据恢复"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_021",
+      "name": "密钥管理规范",
+      "difficulty": "easy",
+      "category": "安全规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "密钥怎么管理？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "用Vault统一管理，90天轮换",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认密钥管理方案",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "密钥管理用什么方案？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Vault统一管理，90天轮换",
+        "keywords": [
+          "Vault",
+          "90天"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_022",
+      "name": "依赖更新规范",
+      "difficulty": "medium",
+      "category": "技术规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "依赖更新频率？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "每月检查一次，安全补丁24小时内更新",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认依赖更新规范",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "依赖更新频率是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "每月检查，安全补丁24小时内",
+        "keywords": [
+          "每月",
+          "24小时"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_023",
+      "name": "压测规范",
+      "difficulty": "medium",
+      "category": "测试规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "压测怎么做？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "用k6压测，覆盖核心接口，目标QPS>500",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认压测方案",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "压测用什么工具？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "k6压测",
+        "keywords": [
+          "k6",
+          "QPS"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_024",
+      "name": "故障复盘规范",
+      "difficulty": "easy",
+      "category": "流程规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "故障复盘怎么写？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "根因分析→影响范围→改进措施→责任人→DDL",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认复盘模板",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "故障复盘包含什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "根因分析、影响范围、改进措施",
+        "keywords": [
+          "根因",
+          "影响范围",
+          "改进措施"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_025",
+      "name": "上线检查清单",
+      "difficulty": "easy",
+      "category": "流程规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "上线前检查什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "代码review通过、测试通过、监控配置、回滚方案",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认检查清单",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "上线前检查什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "代码review、测试、监控、回滚方案",
+        "keywords": [
+          "review",
+          "测试",
+          "监控",
+          "回滚"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_026",
+      "name": "SQL审核规范",
+      "difficulty": "medium",
+      "category": "技术规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "SQL变更要审核吗？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "所有DDL必须DBA审核，DML超过1000行需审批",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认SQL审核规范",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "SQL审核规则是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "DDL必须DBA审核",
+        "keywords": [
+          "DDL",
+          "DBA",
+          "审核"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_027",
+      "name": "缓存策略规范",
+      "difficulty": "medium",
+      "category": "技术规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "缓存策略怎么定？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "热点数据TTL 5分钟，配置数据TTL 30分钟",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认缓存TTL规范",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "缓存TTL怎么设置？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "热点5分钟，配置30分钟",
+        "keywords": [
+          "5分钟",
+          "30分钟"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_028",
+      "name": "限流熔断规范",
+      "difficulty": "hard",
+      "category": "运维规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "限流熔断怎么配置？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "限流100 QPS，熔断阈值50%错误率，恢复时间30秒",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认限流熔断配置",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "限流阈值是多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "限流100 QPS",
+        "keywords": [
+          "100",
+          "QPS",
+          "50%",
+          "30秒"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_029",
+      "name": "数据脱敏规范",
+      "difficulty": "hard",
+      "category": "安全规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "数据脱敏规则是什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "手机号中间4位脱敏，身份证中间8位脱敏，银行卡只显示后4位",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认脱敏规则",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "手机号怎么脱敏？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "中间4位脱敏",
+        "keywords": [
+          "中间4位",
+          "脱敏"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_kh_030",
+      "name": "监控大盘规范",
+      "difficulty": "medium",
+      "category": "运维规范",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "监控大盘要展示什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "QPS、延迟、错误率、CPU、内存、磁盘",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认大盘指标",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "监控大盘展示什么指标？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "QPS、延迟、错误率、CPU、内存",
+        "keywords": [
+          "QPS",
+          "延迟",
+          "错误率"
+        ],
+        "forbidden": []
+      }
     }
   ]
 }

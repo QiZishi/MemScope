@@ -425,36 +425,54 @@ class SqliteStore:
                 unique_terms.append(t)
         terms = unique_terms
         
-        # 过滤掉可能无意义的词项（跨词界的组合）
-        # 例如："们前"、"端框"、"架选" 等
-        # 这些词项通常不会出现在正常的中文文本中
-        filtered_terms = []
+        # ---- Classify terms as 'distinctive' vs 'common' ----
+        # Common 2-char Chinese terms that match almost everything
+        COMMON_CHINESE_2CHAR = {
+            '什么', '的是', '了不', '不在', '我们', '他们', '可以', '这个', '那个',
+            '怎么', '如何', '哪些', '哪个', '一下', '一些', '一个', '还是', '但是',
+            '而且', '因为', '所以', '如果', '已经', '需要', '能够', '应该', '比较',
+            '非常', '可能', '或者', '以及', '关于', '通过', '进行', '使用', '没有',
+            '所有', '其中', '之后', '之前', '开始', '现在', '时候', '问题', '情况',
+            '方面', '部分', '一些', '其他', '这些', '那些', '大家', '你们', '我的',
+            '他的', '她的', '它的', '们前', '端框', '架选', '选了', '确认', '决定',
+            '方案', '部署', '采用', '建议', '讨论', '分析', '总结', '认为', '觉得',
+            '发现', '知道', '了解', '认为', '觉得', '告诉', '希望', '需要', '想到',
+            '来说', '起来', '出来', '下去', '上去', '过来', '过去', '到了', '得到',
+            '做过', '做了', '做好', '看到', '看到', '听到', '找到', '问到', '学到',
+        }
+        COMMON_CHINESE_PREFIXES = set('的了是在有不人大中上下来和到会能要也就说对很')
+
+        distinctive_terms = []
+        common_terms = []
         for term in terms:
-            # 保留英文单词和数字
+            is_distinctive = False
             if re.match(r'^[a-zA-Z0-9]+$', term):
-                filtered_terms.append(term)
-            # 保留2字符的中文词汇（大部分是有意义的）
-            elif len(term) == 2:
-                filtered_terms.append(term)
-            # 保留3字符的中文词汇，但过滤掉可能无意义的组合
-            elif len(term) == 3:
-                # 检查是否包含常见的中文词汇
-                # 如果包含，可能是有意义的
-                if any(char in '的了是在有不人大中上下来和到会能要' for char in term):
-                    filtered_terms.append(term)
-                # 检查是否是连续的有意义词汇
-                # 例如："前端"、"框架"、"选了" 等
-                # 这里我们只保留包含常见词根的3字符词汇
-                elif any(term[i:i+2] in '前端框架选了什么我们部署方案确认采用决定' for i in range(2)):
-                    filtered_terms.append(term)
-                # 过滤掉其他3字符词汇
-                # 这些词汇可能是无意义的组合
-            # 过滤掉更长的词汇（可能是无意义的组合）
+                # English words and numbers are always distinctive
+                is_distinctive = True
+            elif len(term) >= 3:
+                # 3+ char Chinese terms are generally distinctive
+                is_distinctive = True
+            elif len(term) == 2 and re.match(r'^[\u4e00-\u9fff]{2}$', term):
+                # 2-char Chinese: check if it's a common/generic term
+                if term not in COMMON_CHINESE_2CHAR and not all(c in COMMON_CHINESE_PREFIXES for c in term):
+                    is_distinctive = True
+            elif re.match(r'[\u4e00-\u9fff]', term) and re.search(r'[a-zA-Z0-9]', term):
+                # Mixed terms are distinctive
+                is_distinctive = True
+            
+            if is_distinctive:
+                distinctive_terms.append(term)
+            else:
+                common_terms.append(term)
+
+        # Keep all terms for search, but track which are distinctive
+        all_search_terms = distinctive_terms + common_terms
+        if not all_search_terms:
+            all_search_terms = [query]
+            distinctive_terms = [query]
         
-        terms = filtered_terms
-        
-        if not terms:
-            terms = [query]
+        # Store classification info for scoring later
+        distinctive_set = set(distinctive_terms)
 
         # Build visibility filter based on scope
         visibility_filter = ""
@@ -481,8 +499,19 @@ class SqliteStore:
 
         # Try FTS5 search first
         try:
-            # Build FTS5 query with OR conditions for each term
-            fts_query = " OR ".join(terms)
+            # Build FTS5 query: if we have distinctive terms, require them AND allow common terms with OR
+            if distinctive_terms:
+                # Require at least one distinctive term, allow common terms freely
+                # FTS5 syntax: (distinctive1 OR distinctive2) AND (common1 OR common2 OR ...)
+                distinct_part = " OR ".join(distinctive_terms)
+                if common_terms:
+                    common_part = " OR ".join(common_terms)
+                    fts_query = f"({distinct_part}) AND ({common_part})"
+                else:
+                    fts_query = f"({distinct_part})"
+            else:
+                # Fallback to OR logic when no distinctive terms
+                fts_query = " OR ".join(all_search_terms)
             all_params = [fts_query] + extra_params + [max_results]
             cursor.execute(f"""
                 SELECT c.*, rank FROM chunks c
@@ -495,31 +524,104 @@ class SqliteStore:
             results = []
             for row in cursor.fetchall():
                 chunk = dict(row)
-                # Convert rank to score (lower rank = higher score)
-                chunk["score"] = 1.0 / (1 + abs(row["rank"]))
-                results.append(chunk)
+                content = chunk.get("content", "").lower()
+                summary = (chunk.get("summary") or "").lower()
+                
+                # Score based on term coverage with distinctive boost
+                matching_distinctive = sum(1 for t in distinctive_terms if t.lower() in content or t.lower() in summary)
+                matching_common = sum(1 for t in common_terms if t.lower() in content or t.lower() in summary)
+                total_matching = matching_distinctive + matching_common
+                
+                # Distinctive terms weighted 3x common terms
+                if distinctive_terms:
+                    distinctive_ratio = matching_distinctive / len(distinctive_terms)
+                    score = 0.2 + 0.5 * distinctive_ratio
+                    if common_terms:
+                        common_ratio = matching_common / len(common_terms)
+                        score += 0.3 * common_ratio
+                else:
+                    score = 0.1 + 0.7 * (total_matching / len(all_search_terms))
+                
+                # Exact match bonus
+                query_lower = query.lower()
+                if query_lower in content:
+                    score += 0.15
+                
+                # Proximity boost
+                matched_all_terms = [t for t in all_search_terms if t.lower() in content or t.lower() in (summary or "")]
+                if len(matched_all_terms) >= 2:
+                    min_distance = float('inf')
+                    for i, t1 in enumerate(matched_all_terms):
+                        pos1 = content.find(t1.lower())
+                        if pos1 < 0:
+                            pos1 = (summary or "").lower().find(t1.lower())
+                        for t2 in matched_all_terms[i+1:]:
+                            pos2 = content.find(t2.lower())
+                            if pos2 < 0:
+                                pos2 = (summary or "").lower().find(t2.lower())
+                            if pos1 >= 0 and pos2 >= 0:
+                                min_distance = min(min_distance, abs(pos1 - pos2))
+                    if min_distance < 50:
+                        score += 0.15
+                    elif min_distance < 100:
+                        score += 0.08
+                    elif min_distance < 200:
+                        score += 0.03
+                
+                score = min(score, 1.0)
+                
+                # Require at least one distinctive term match if available
+                if distinctive_terms and matching_distinctive == 0:
+                    continue
+                
+                if score >= min_score:
+                    chunk["score"] = score
+                    results.append(chunk)
             
+            results.sort(key=lambda x: x.get("score", 0), reverse=True)
             if results:
-                return results
+                return results[:max_results]
         except Exception:
             pass  # FTS5 not available, fall back to LIKE search
 
         # Fall back to LIKE search
-        # Use OR logic but with improved scoring to filter noise
+        # Use hybrid AND/OR logic based on term classification
         term_conditions = []
         term_params = []
-        for term in terms:
+        for term in all_search_terms:
             term_conditions.append("(c.content LIKE ? OR c.summary LIKE ?)")
             term_params.extend([f"%{term}%", f"%{term}%"])
-        term_where = " OR ".join(term_conditions)
+        
+        # If we have distinctive terms, require at least one distinctive match via AND in subquery
+        if distinctive_terms:
+            # Build: at least one distinctive term matches AND at least one common term matches (if any)
+            distinctive_conditions = []
+            distinctive_params = []
+            for term in distinctive_terms:
+                distinctive_conditions.append("(c.content LIKE ? OR c.summary LIKE ?)")
+                distinctive_params.extend([f"%{term}%", f"%{term}%"])
+            distinct_where = " OR ".join(distinctive_conditions)
+            
+            common_conditions = []
+            common_params = []
+            for term in common_terms:
+                common_conditions.append("(c.content LIKE ? OR c.summary LIKE ?)")
+                common_params.extend([f"%{term}%", f"%{term}%"])
+            
+            # Require at least one distinctive term match; common terms are bonus
+            term_where = f"({distinct_where})"
+            all_params = distinctive_params + extra_params + [max_results * 3]
+        else:
+            # No distinctive terms - fall back to OR logic
+            term_where = " OR ".join(term_conditions)
+            all_params = term_params + extra_params + [max_results * 3]
 
-        # 计算相关性分数
+        # 计算相关性分数 (all_search_terms used for SQL relevance)
         relevance_conditions = []
-        for term in terms:
+        for term in all_search_terms:
             relevance_conditions.append(f"CASE WHEN c.content LIKE '%{term}%' THEN 1 ELSE 0 END")
         relevance_score = " + ".join(relevance_conditions)
 
-        all_params = term_params + extra_params + [max_results]
         cursor.execute(f"""
             SELECT c.*, ({relevance_score}) as relevance_score FROM chunks c
             WHERE ({term_where}){visibility_filter}
@@ -534,29 +636,60 @@ class SqliteStore:
             summary = (chunk.get("summary") or "").lower()
             query_lower = query.lower()
             
-            # 改进的评分算法
-            matching_terms = sum(1 for t in terms if t.lower() in content or t.lower() in summary)
-            term_ratio = matching_terms / len(terms) if terms else 0
+            # Score based on term coverage with distinctive boost
+            matching_distinctive = sum(1 for t in distinctive_terms if t.lower() in content or t.lower() in summary)
+            matching_common = sum(1 for t in common_terms if t.lower() in content or t.lower() in summary)
             
-            # 基础分数 + term覆盖率加成
-            # 提高term覆盖率的权重，降低基础分数
-            score = 0.1 + 0.7 * term_ratio  # 0.1 base, up to 0.8 for full coverage
+            # Require at least one distinctive term match when available
+            if distinctive_terms and matching_distinctive == 0:
+                continue
             
-            # 精确匹配加成
+            # Distinctive terms weighted heavily
+            if distinctive_terms:
+                distinctive_ratio = matching_distinctive / len(distinctive_terms)
+                score = 0.2 + 0.5 * distinctive_ratio
+                if common_terms:
+                    common_ratio = matching_common / len(common_terms)
+                    score += 0.3 * common_ratio
+            else:
+                total_matching = matching_distinctive + matching_common
+                score = 0.1 + 0.7 * (total_matching / len(all_search_terms))
+            
+            # Exact match bonus (full query phrase match)
             if query_lower in content:
                 score += 0.15
             if summary and query_lower in summary:
                 score += 0.05
             
-            # 如果term覆盖率低于50%，降低分数
-            if term_ratio < 0.5:
-                score *= 0.8
+            # Proximity boost: if multiple matched terms appear close together, boost score
+            # This helps distinguish relevant context from scattered term matches
+            matched_all_terms = [t for t in all_search_terms if t.lower() in content or t.lower() in (summary or "")]
+            if len(matched_all_terms) >= 2:
+                # Find minimum distance between any two matched terms
+                min_distance = float('inf')
+                for i, t1 in enumerate(matched_all_terms):
+                    pos1 = content.find(t1.lower())
+                    if pos1 < 0:
+                        pos1 = (summary or "").lower().find(t1.lower())
+                    for t2 in matched_all_terms[i+1:]:
+                        pos2 = content.find(t2.lower())
+                        if pos2 < 0:
+                            pos2 = (summary or "").lower().find(t2.lower())
+                        if pos1 >= 0 and pos2 >= 0:
+                            min_distance = min(min_distance, abs(pos1 - pos2))
+                # Boost if terms are close (within 100 chars = roughly same sentence)
+                if min_distance < 50:
+                    score += 0.15
+                elif min_distance < 100:
+                    score += 0.08
+                elif min_distance < 200:
+                    score += 0.03
             
-            # 增加查询和记忆的相关性权重
-            # 如果查询中的关键词在记忆中出现多次，给予额外加分
-            keyword_count = sum(content.count(t.lower()) for t in terms)
-            if keyword_count > 1:
-                score += min(0.1, keyword_count * 0.02)
+            # Frequency bonus for distinctive term occurrences
+            if distinctive_terms:
+                keyword_count = sum(content.count(t.lower()) for t in distinctive_terms)
+                if keyword_count > 1:
+                    score += min(0.1, keyword_count * 0.03)
             
             score = min(score, 1.0)
 

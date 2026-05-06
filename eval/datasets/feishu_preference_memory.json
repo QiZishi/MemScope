@@ -1,123 +1,1198 @@
 {
   "dataset_name": "feishu_preference_memory",
-  "version": "1.0",
+  "version": "2.0",
+  "total_cases": 30,
   "description": "飞书业务场景偏好记忆评测数据集",
-  "total_cases": 10,
-  "schema": {
-    "chunk": "需要记忆的飞书对话内容",
-    "query": "用户查询",
-    "answer": "期望的正确答案"
-  },
   "test_cases": [
     {
       "test_id": "feishu_pref_001",
       "name": "编辑器偏好",
       "difficulty": "easy",
       "category": "工具偏好",
-      "chunk": "张工：我更喜欢用vim写代码，快捷键很高效\n李工：我习惯用VSCode，插件生态好\n王工：我偏好用IDEA写Java",
-      "query": "张工喜欢用什么编辑器？",
-      "answer": "vim",
-      "expected_keywords": ["vim"],
-      "forbidden_keywords": ["VSCode", "IDEA"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：我更喜欢用vim写代码，快捷键很高效",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：我习惯用VSCode，插件生态好",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：我偏好用IDEA写Java",
+            "timestamp": "2026-01-15T00:14:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工喜欢用什么编辑器？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "vim",
+        "keywords": [
+          "vim"
+        ],
+        "forbidden": [
+          "VSCode",
+          "IDEA"
+        ]
+      }
     },
     {
       "test_id": "feishu_pref_002",
       "name": "工作时间偏好",
       "difficulty": "easy",
       "category": "时间偏好",
-      "chunk": "张工：我一般早上9点到12点效率最高，这段时间不要安排会议\n李工：我下午2点到5点状态最好\n王工：我喜欢晚上写代码，安静",
-      "query": "张工什么时候效率最高？",
-      "answer": "早上9点到12点",
-      "expected_keywords": ["9点", "12点"],
-      "forbidden_keywords": ["下午", "晚上"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：我一般早上9点到12点效率最高，这段时间不要安排会议",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：我下午2点到5点状态最好",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：我喜欢晚上写代码，安静",
+            "timestamp": "2026-01-15T00:14:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工什么时候效率最高？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "早上9点到12点",
+        "keywords": [
+          "9点",
+          "12点"
+        ],
+        "forbidden": [
+          "下午",
+          "晚上"
+        ]
+      }
     },
     {
       "test_id": "feishu_pref_003",
       "name": "编码风格偏好",
       "difficulty": "easy",
       "category": "风格偏好",
-      "chunk": "张工：我通常先写测试再写代码，TDD风格\n李工：我偏好用Tab缩进，Space太多了按着累\n王工：我喜欢用2个空格缩进",
-      "query": "张工的编码风格是什么？",
-      "answer": "TDD，先写测试再写代码",
-      "expected_keywords": ["TDD", "测试"],
-      "forbidden_keywords": ["Space", "不用测试"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：我通常先写测试再写代码，TDD风格",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：我偏好用Tab缩进，Space太多了按着累",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：我喜欢用2个空格缩进",
+            "timestamp": "2026-01-15T00:14:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工的编码风格是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "TDD，先写测试再写代码",
+        "keywords": [
+          "TDD",
+          "测试"
+        ],
+        "forbidden": [
+          "Space",
+          "不用测试"
+        ]
+      }
     },
     {
       "test_id": "feishu_pref_004",
       "name": "代码审查偏好",
       "difficulty": "medium",
       "category": "流程偏好",
-      "chunk": "张工：代码审查我喜欢用飞书文档，方便批注\n李工：我习惯在GitHub PR上直接评论\n王工：我偏好面对面审查，效率高",
-      "query": "张工喜欢怎么审查代码？",
-      "answer": "用飞书文档审查",
-      "expected_keywords": ["飞书文档"],
-      "forbidden_keywords": ["GitHub", "面对面"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：代码审查我喜欢用飞书文档，方便批注",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：我习惯在GitHub PR上直接评论",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：我偏好面对面审查，效率高",
+            "timestamp": "2026-01-15T00:14:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工喜欢怎么审查代码？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "用飞书文档审查",
+        "keywords": [
+          "飞书文档"
+        ],
+        "forbidden": [
+          "GitHub",
+          "面对面"
+        ]
+      }
     },
     {
       "test_id": "feishu_pref_005",
       "name": "沟通工具偏好",
       "difficulty": "medium",
       "category": "工具偏好",
-      "chunk": "张工：即时通讯我习惯用飞书，和工作流集成好\n李工：我偏好用微信，大家都用\n王工：我用Slack，国际化团队方便",
-      "query": "张工习惯用什么沟通工具？",
-      "answer": "飞书",
-      "expected_keywords": ["飞书"],
-      "forbidden_keywords": ["微信", "Slack"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：即时通讯我习惯用飞书，和工作流集成好",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：我偏好用微信，大家都用",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：我用Slack，国际化团队方便",
+            "timestamp": "2026-01-15T00:14:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工习惯用什么沟通工具？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "飞书",
+        "keywords": [
+          "飞书"
+        ],
+        "forbidden": [
+          "微信",
+          "Slack"
+        ]
+      }
     },
     {
       "test_id": "feishu_pref_006",
       "name": "文档工具偏好",
       "difficulty": "medium",
       "category": "工具偏好",
-      "chunk": "张工：写文档我偏好用飞书文档，协作方便\n李工：我习惯用Notion，模板丰富\n王工：我喜欢用Markdown，纯文本好管理",
-      "query": "张工喜欢用什么写文档？",
-      "answer": "飞书文档",
-      "expected_keywords": ["飞书文档"],
-      "forbidden_keywords": ["Notion", "Markdown"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：写文档我偏好用飞书文档，协作方便",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：我习惯用Notion，模板丰富",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：我喜欢用Markdown，纯文本好管理",
+            "timestamp": "2026-01-15T00:14:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工喜欢用什么写文档？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "飞书文档",
+        "keywords": [
+          "飞书文档"
+        ],
+        "forbidden": [
+          "Notion",
+          "Markdown"
+        ]
+      }
     },
     {
       "test_id": "feishu_pref_007",
       "name": "会议偏好",
       "difficulty": "medium",
       "category": "时间偏好",
-      "chunk": "张工：会议我喜欢安排在周一上午，一周开始时对齐\n李工：我偏好周四周五开会，临近周末总结\n王工：我喜欢每天站会，15分钟快速同步",
-      "query": "张工喜欢什么时候开会？",
-      "answer": "周一上午",
-      "expected_keywords": ["周一", "上午"],
-      "forbidden_keywords": ["周四", "周五", "每天"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：会议我喜欢安排在周一上午，一周开始时对齐",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：我偏好周四周五开会，临近周末总结",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：我喜欢每天站会，15分钟快速同步",
+            "timestamp": "2026-01-15T00:14:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工喜欢什么时候开会？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "周一上午",
+        "keywords": [
+          "周一",
+          "上午"
+        ],
+        "forbidden": [
+          "周四",
+          "周五",
+          "每天"
+        ]
+      }
     },
     {
       "test_id": "feishu_pref_008",
       "name": "分支策略偏好",
       "difficulty": "hard",
       "category": "流程偏好",
-      "chunk": "张工：Git分支我偏好GitFlow，清晰的分支模型\n李工：我喜欢Trunk Based，简单直接\n王工：我偏好GitHub Flow，PR驱动",
-      "query": "张工喜欢什么Git分支策略？",
-      "answer": "GitFlow",
-      "expected_keywords": ["GitFlow"],
-      "forbidden_keywords": ["Trunk Based", "GitHub Flow"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：Git分支我偏好GitFlow，清晰的分支模型",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：我喜欢Trunk Based，简单直接",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：我偏好GitHub Flow，PR驱动",
+            "timestamp": "2026-01-15T00:14:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工喜欢什么Git分支策略？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "GitFlow",
+        "keywords": [
+          "GitFlow"
+        ],
+        "forbidden": [
+          "Trunk Based",
+          "GitHub Flow"
+        ]
+      }
     },
     {
       "test_id": "feishu_pref_009",
       "name": "测试框架偏好",
       "difficulty": "hard",
       "category": "工具偏好",
-      "chunk": "张工：前端测试我偏好Jest，配置简单\n李工：我喜欢Vitest，和Vite配合好\n王工：我用Cypress做E2E测试",
-      "query": "张工偏好什么前端测试框架？",
-      "answer": "Jest",
-      "expected_keywords": ["Jest"],
-      "forbidden_keywords": ["Vitest", "Cypress"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：前端测试我偏好Jest，配置简单",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：我喜欢Vitest，和Vite配合好",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：我用Cypress做E2E测试",
+            "timestamp": "2026-01-15T00:14:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工偏好什么前端测试框架？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Jest",
+        "keywords": [
+          "Jest"
+        ],
+        "forbidden": [
+          "Vitest",
+          "Cypress"
+        ]
+      }
     },
     {
       "test_id": "feishu_pref_010",
       "name": "日志工具偏好",
       "difficulty": "hard",
       "category": "工具偏好",
-      "chunk": "张工：日志我偏好用ELK，搜索方便\n李工：我喜欢Loki+Grafana，轻量级\n王工：我用Splunk，企业级功能强",
-      "query": "张工喜欢用什么日志工具？",
-      "answer": "ELK",
-      "expected_keywords": ["ELK"],
-      "forbidden_keywords": ["Loki", "Splunk"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：日志我偏好用ELK，搜索方便",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：我喜欢Loki+Grafana，轻量级",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：我用Splunk，企业级功能强",
+            "timestamp": "2026-01-15T00:14:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工喜欢用什么日志工具？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "ELK",
+        "keywords": [
+          "ELK"
+        ],
+        "forbidden": [
+          "Loki",
+          "Splunk"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_pref_011",
+      "name": "IDE偏好",
+      "difficulty": "easy",
+      "category": "工具偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工你用什么IDE？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "我用IntelliJ IDEA，Java开发首选",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "李工呢？",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "我用VSCode，轻量好用",
+            "timestamp": "2026-01-15T00:03:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工用什么IDE？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "IntelliJ IDEA",
+        "keywords": [
+          "IntelliJ",
+          "IDEA"
+        ],
+        "forbidden": [
+          "VSCode"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_pref_012",
+      "name": "终端工具偏好",
+      "difficulty": "easy",
+      "category": "工具偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "终端用什么工具？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工用iTerm2，李工用Windows Terminal",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "我偏好iTerm2",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工用什么终端？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "iTerm2",
+        "keywords": [
+          "iTerm2"
+        ],
+        "forbidden": [
+          "Windows Terminal"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_pref_013",
+      "name": "浏览器偏好",
+      "difficulty": "easy",
+      "category": "工具偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "开发用什么浏览器？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工用Chrome，调试工具强大",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "王工用Firefox，隐私好",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工用什么浏览器？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Chrome",
+        "keywords": [
+          "Chrome"
+        ],
+        "forbidden": [
+          "Firefox"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_pref_014",
+      "name": "编程语言偏好",
+      "difficulty": "medium",
+      "category": "技术偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "新项目用什么语言？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工建议Go，性能好并发强",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "李工建议Rust，安全性高",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "user",
+            "content": "我偏好Go，团队已有经验",
+            "timestamp": "2026-01-15T00:03:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工偏好什么编程语言？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Go",
+        "keywords": [
+          "Go"
+        ],
+        "forbidden": [
+          "Rust"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_pref_015",
+      "name": "代码风格偏好",
+      "difficulty": "medium",
+      "category": "风格偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "代码缩进用几个空格？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工用4空格，李工用2空格",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "我坚持4空格，可读性好",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工用几个空格缩进？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "4空格",
+        "keywords": [
+          "4空格"
+        ],
+        "forbidden": [
+          "2空格"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_pref_016",
+      "name": "注释风格偏好",
+      "difficulty": "medium",
+      "category": "风格偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "代码注释用中文还是英文？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工用中文注释，方便团队理解",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "李工用英文注释，国际化",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工注释用什么语言？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "中文",
+        "keywords": [
+          "中文注释"
+        ],
+        "forbidden": [
+          "英文注释"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_pref_017",
+      "name": "命名规范偏好",
+      "difficulty": "medium",
+      "category": "风格偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "变量命名用什么风格？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工用camelCase，Python用snake_case",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "统一规范就好",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工偏好什么命名风格？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "camelCase",
+        "keywords": [
+          "camelCase"
+        ],
+        "forbidden": [
+          "snake_case"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_pref_018",
+      "name": "提交信息格式",
+      "difficulty": "medium",
+      "category": "流程偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "Git提交信息怎么写？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工用conventional commits格式",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "type(scope): description",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工偏好什么提交格式？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "conventional commits",
+        "keywords": [
+          "conventional",
+          "commits"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_pref_019",
+      "name": "分支命名偏好",
+      "difficulty": "medium",
+      "category": "流程偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "分支命名怎么规范？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工用feature/xxx，hotfix/xxx",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "统一分支命名规范",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工偏好什么分支命名？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "feature/xxx格式",
+        "keywords": [
+          "feature",
+          "hotfix"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_pref_020",
+      "name": "部署习惯",
+      "difficulty": "medium",
+      "category": "流程偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "部署习惯是什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工习惯先部署staging验证，再上production",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "分两步走更安全",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工的部署习惯是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "先staging再production",
+        "keywords": [
+          "staging",
+          "production"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_pref_021",
+      "name": "调试方式偏好",
+      "difficulty": "medium",
+      "category": "工具偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "调试代码用什么方式？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工用断点调试，李工用print大法",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "我偏好断点，更精确",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工偏好什么调试方式？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "断点调试",
+        "keywords": [
+          "断点"
+        ],
+        "forbidden": [
+          "print"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_pref_022",
+      "name": "文档格式偏好",
+      "difficulty": "easy",
+      "category": "工具偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "写文档用什么格式？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工用Markdown，纯文本好管理",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "李工用飞书文档，协作方便",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工偏好什么文档格式？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Markdown",
+        "keywords": [
+          "Markdown"
+        ],
+        "forbidden": [
+          "飞书文档"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_pref_023",
+      "name": "会议习惯",
+      "difficulty": "medium",
+      "category": "时间偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "会议安排有什么习惯？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工偏好30分钟短会，避免拖堂",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "会议要有agenda和action items",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工偏好多长的会议？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "30分钟短会",
+        "keywords": [
+          "30分钟"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_pref_024",
+      "name": "午休时间偏好",
+      "difficulty": "easy",
+      "category": "时间偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "午休时间几点到几点？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工12点到1点半午休，不安排会议",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "这段时间不要打扰",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工午休时间是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "12点到1点半",
+        "keywords": [
+          "12点",
+          "1点半"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_pref_025",
+      "name": "通知偏好",
+      "difficulty": "medium",
+      "category": "工具偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "通知方式偏好什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工偏好飞书消息，不开邮件通知",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "邮件太慢了",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工偏好什么通知方式？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "飞书消息",
+        "keywords": [
+          "飞书消息"
+        ],
+        "forbidden": [
+          "邮件"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_pref_026",
+      "name": "主题颜色偏好",
+      "difficulty": "easy",
+      "category": "界面偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "IDE用什么主题？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工用暗色主题，护眼",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "李工用亮色主题",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工偏好什么IDE主题？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "暗色主题",
+        "keywords": [
+          "暗色"
+        ],
+        "forbidden": [
+          "亮色"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_pref_027",
+      "name": "字体大小偏好",
+      "difficulty": "easy",
+      "category": "界面偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "代码字体大小多少？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工用14号字，看代码不累",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "太大了占屏幕",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工偏好什么字体大小？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "14号",
+        "keywords": [
+          "14号"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_pref_028",
+      "name": "快捷键偏好",
+      "difficulty": "medium",
+      "category": "工具偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "快捷键有什么偏好？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工用Vim快捷键，效率高",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "习惯成自然了",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工偏好什么快捷键风格？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Vim快捷键",
+        "keywords": [
+          "Vim"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_pref_029",
+      "name": "插件偏好",
+      "difficulty": "medium",
+      "category": "工具偏好",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "VSCode装什么插件？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工必装Copilot、GitLens、Error Lens",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "这三个提升效率最多",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工必装什么VSCode插件？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Copilot、GitLens、Error Lens",
+        "keywords": [
+          "Copilot",
+          "GitLens",
+          "Error Lens"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_pref_030",
+      "name": "代码审查偏好",
+      "difficulty": "hard",
+      "category": "流程偏好",
+      "reasoning_type": "knowledge_update",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "代码审查偏好怎么做？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工偏好面对面审查，效率高",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "后来改用飞书文档审查了，方便异步",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "好的，更新为飞书文档审查",
+            "timestamp": "2026-01-15T00:03:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工现在偏好什么审查方式？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "飞书文档审查",
+        "keywords": [
+          "飞书文档"
+        ],
+        "forbidden": [
+          "面对面"
+        ]
+      }
     }
   ]
 }

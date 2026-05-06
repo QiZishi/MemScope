@@ -1,118 +1,1381 @@
 {
   "dataset_name": "feishu_anti_interference",
-  "version": "1.0",
-  "description": "抗干扰能力评测（飞书企业场景）：测试系统在噪声信息中提取目标信息的能力",
-  "total_cases": 10,
+  "version": "2.0",
+  "total_cases": 30,
+  "description": "飞书业务场景抗干扰评测数据集",
   "test_cases": [
     {
       "test_id": "feishu_anti_001",
       "name": "技术安排提取",
       "difficulty": "medium",
       "category": "噪声干扰",
-      "chunk": "张工：我们技术部下周三要做API网关的性能压测。李工：今天食堂的菜不错。王工：帮我订明天的会议室。赵六：最近有什么好看的电影。钱七：帮我查下快递到哪了",
-      "query": "技术部下周三有什么安排？",
-      "answer": "API网关的性能压测",
-      "expected_keywords": ["API网关", "性能压测", "下周三"],
-      "forbidden_keywords": ["食堂", "电影", "快递"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：我们技术部下周三要做API网关的性能压测。李工：今天食堂的菜不错。王工：帮我订明天的会议室。赵六：最近有什么好看的电影。钱七：帮我查下快递到哪了",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "技术部下周三有什么安排？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "API网关的性能压测",
+        "keywords": [
+          "API网关",
+          "性能压测",
+          "下周三"
+        ],
+        "forbidden": [
+          "食堂",
+          "电影",
+          "快递"
+        ]
+      }
     },
     {
       "test_id": "feishu_anti_002",
       "name": "营收目标提取",
       "difficulty": "medium",
       "category": "噪声干扰",
-      "chunk": "产品部的Q3营收目标定在850万。帮我点杯咖啡。今天天气怎么样。明天有会议吗。帮我查下竞品的价格",
-      "query": "产品部Q3营收目标是多少？",
-      "answer": "850万",
-      "expected_keywords": ["850万", "Q3"],
-      "forbidden_keywords": ["咖啡", "天气"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "产品部的Q3营收目标定在850万。帮我点杯咖啡。今天天气怎么样。明天有会议吗。帮我查下竞品的价格",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "产品部Q3营收目标是多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "850万",
+        "keywords": [
+          "850万",
+          "Q3"
+        ],
+        "forbidden": [
+          "咖啡",
+          "天气"
+        ]
+      }
     },
     {
       "test_id": "feishu_anti_003",
       "name": "迁移日期提取",
       "difficulty": "easy",
       "category": "噪声干扰",
-      "chunk": "运维组的K8s集群迁移定在6月15号。帮我发个快递。最近有什么技术分享。帮我查下服务器状态。今天有什么新闻",
-      "query": "K8s集群迁移是什么时候？",
-      "answer": "6月15号",
-      "expected_keywords": ["K8s", "迁移", "6月15"],
-      "forbidden_keywords": ["快递", "新闻"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "运维组的K8s集群迁移定在6月15号。帮我发个快递。最近有什么技术分享。帮我查下服务器状态。今天有什么新闻",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "K8s集群迁移是什么时候？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "6月15号",
+        "keywords": [
+          "K8s",
+          "迁移",
+          "6月15"
+        ],
+        "forbidden": [
+          "快递",
+          "新闻"
+        ]
+      }
     },
     {
       "test_id": "feishu_anti_004",
       "name": "验收标准提取",
       "difficulty": "medium",
       "category": "噪声干扰",
-      "chunk": "客户B的项目验收标准是响应时间小于200ms。帮我订午餐。今天有快递吗。帮我查下代码覆盖率",
-      "query": "客户B的验收标准是什么？",
-      "answer": "响应时间小于200ms",
-      "expected_keywords": ["响应时间", "200ms"],
-      "forbidden_keywords": ["午餐", "快递"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "客户B的项目验收标准是响应时间小于200ms。帮我订午餐。今天有快递吗。帮我查下代码覆盖率",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "客户B的验收标准是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "响应时间小于200ms",
+        "keywords": [
+          "响应时间",
+          "200ms"
+        ],
+        "forbidden": [
+          "午餐",
+          "快递"
+        ]
+      }
     },
     {
       "test_id": "feishu_anti_005",
       "name": "漏洞信息提取",
       "difficulty": "medium",
       "category": "噪声干扰",
-      "chunk": "安全组发现了一个高危漏洞CVE-2026-1234。帮我查下版本号。今天有什么安排。帮我发个通知",
-      "query": "安全组最近发现了什么漏洞？",
-      "answer": "CVE-2026-1234高危漏洞",
-      "expected_keywords": ["CVE-2026-1234", "高危"],
-      "forbidden_keywords": ["版本号", "通知"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "安全组发现了一个高危漏洞CVE-2026-1234。帮我查下版本号。今天有什么安排。帮我发个通知",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "安全组最近发现了什么漏洞？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "CVE-2026-1234高危漏洞",
+        "keywords": [
+          "CVE-2026-1234",
+          "高危"
+        ],
+        "forbidden": [
+          "版本号",
+          "通知"
+        ]
+      }
     },
     {
       "test_id": "feishu_anti_006",
       "name": "演练时间提取",
       "difficulty": "easy",
       "category": "噪声干扰",
-      "chunk": "数据库主从切换演练定在本周日凌晨2点",
-      "query": "数据库演练是什么时候？",
-      "answer": "本周日凌晨2点",
-      "expected_keywords": ["主从切换", "周日", "凌晨2点"],
-      "forbidden_keywords": []
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "数据库主从切换演练定在本周日凌晨2点",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "数据库演练是什么时候？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "本周日凌晨2点",
+        "keywords": [
+          "主从切换",
+          "周日",
+          "凌晨2点"
+        ],
+        "forbidden": []
+      }
     },
     {
       "test_id": "feishu_anti_007",
       "name": "技术选型提取",
       "difficulty": "hard",
       "category": "大量噪声",
-      "chunk": "前端组决定用Vue3重构管理后台。今天天气不错。帮我订杯奶茶。最近有什么新歌。帮我查下工资条。明天要加班吗。帮我叫个车。今天食堂有什么。帮我查下快递。最近有什么好看的剧。帮我订个酒店",
-      "query": "前端组用什么重构管理后台？",
-      "answer": "Vue3",
-      "expected_keywords": ["Vue3", "重构"],
-      "forbidden_keywords": ["天气", "奶茶", "新歌"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "前端组决定用Vue3重构管理后台。今天天气不错。帮我订杯奶茶。最近有什么新歌。帮我查下工资条。明天要加班吗。帮我叫个车。今天食堂有什么。帮我查下快递。最近有什么好看的剧。帮我订个酒店",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "前端组用什么重构管理后台？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Vue3",
+        "keywords": [
+          "Vue3",
+          "重构"
+        ],
+        "forbidden": [
+          "天气",
+          "奶茶",
+          "新歌"
+        ]
+      }
     },
     {
       "test_id": "feishu_anti_008",
       "name": "密码信息提取",
       "difficulty": "hard",
       "category": "大量噪声",
-      "chunk": "测试环境的数据库密码改成了Test@2026!。帮我查下日志。今天有什么会。帮我发个邮件。帮我查下监控。帮我订个会议室。帮我查下代码。帮我发个通知。帮我查下文档。帮我查下进度。帮我查下预算",
-      "query": "测试环境数据库密码是什么？",
-      "answer": "Test@2026!",
-      "expected_keywords": ["Test@2026!"],
-      "forbidden_keywords": ["日志", "监控"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "测试环境的数据库密码改成了Test@2026!。帮我查下日志。今天有什么会。帮我发个邮件。帮我查下监控。帮我订个会议室。帮我查下代码。帮我发个通知。帮我查下文档。帮我查下进度。帮我查下预算",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "测试环境数据库密码是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Test@2026!",
+        "keywords": [
+          "Test@2026!"
+        ],
+        "forbidden": [
+          "日志",
+          "监控"
+        ]
+      }
     },
     {
       "test_id": "feishu_anti_009",
       "name": "负责人变更提取",
       "difficulty": "medium",
       "category": "噪声干扰",
-      "chunk": "项目E的负责人从张三换成了李四。帮我查下项目F进度。帮我查下项目G预算。帮我订下周的机票。帮我查下竞品分析。帮我发个周报。帮我查下客户反馈。帮我订个餐。帮我查下服务器",
-      "query": "项目E现在的负责人是谁？",
-      "answer": "李四",
-      "expected_keywords": ["李四", "项目E"],
-      "forbidden_keywords": ["张三", "项目F"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "项目E的负责人从张三换成了李四。帮我查下项目F进度。帮我查下项目G预算。帮我订下周的机票。帮我查下竞品分析。帮我发个周报。帮我查下客户反馈。帮我订个餐。帮我查下服务器",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "项目E现在的负责人是谁？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "李四",
+        "keywords": [
+          "李四",
+          "项目E"
+        ],
+        "forbidden": [
+          "张三",
+          "项目F"
+        ]
+      }
     },
     {
       "test_id": "feishu_anti_010",
       "name": "会议时间提取",
       "difficulty": "easy",
       "category": "噪声干扰",
-      "chunk": "下周一下午3点有产品评审会。帮我查下天气。最近有什么活动。帮我订个会议室",
-      "query": "产品评审会是什么时候？",
-      "answer": "下周一��午3点",
-      "expected_keywords": ["周一", "下午3点", "产品评审"],
-      "forbidden_keywords": ["天气", "活动"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "下周一下午3点有产品评审会。帮我查下天气。最近有什么活动。帮我订个会议室",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "产品评审会是什么时候？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "下周一��午3点",
+        "keywords": [
+          "周一",
+          "下午3点",
+          "产品评审"
+        ],
+        "forbidden": [
+          "天气",
+          "活动"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_anti_011",
+      "name": "服务器密码提取",
+      "difficulty": "easy",
+      "category": "安全信息",
+      "reasoning_type": "adversarial",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "今天天气不错",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "是的，适合出去走走",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "服务器密码是Admin@2026",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到，已记录",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "晚上吃什么？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "建议试试新开的日料店",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "服务器密码是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Admin@2026",
+        "keywords": [
+          "Admin@2026"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_012",
+      "name": "数据库连接串",
+      "difficulty": "medium",
+      "category": "安全信息",
+      "reasoning_type": "adversarial",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "周末有什么安排？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "准备去看电影",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "数据库连接串是mysql://root:Pass123@10.0.0.1:3306/db",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到连接串信息",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "电影推荐一下",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "推荐最近上映的科幻片",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "数据库连接串是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "mysql://root:Pass123@10.0.0.1:3306/db",
+        "keywords": [
+          "Pass123",
+          "3306"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_013",
+      "name": "API密钥提取",
+      "difficulty": "medium",
+      "category": "安全信息",
+      "reasoning_type": "adversarial",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "午饭吃什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "建议吃沙拉，健康",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "API密钥是sk-abc123def456",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到密钥",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "下午开会吗？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "下午2点有技术评审会",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "API密钥是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "sk-abc123def456",
+        "keywords": [
+          "sk-abc123def456"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_014",
+      "name": "部署时间窗口",
+      "difficulty": "easy",
+      "category": "运维信息",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "聊一下最近的项目进度",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "项目进度正常，预计下周完成",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "部署窗口是每周三凌晨2-4点",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到部署窗口信息",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "周末有加班吗？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "暂时没有加班安排",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "部署时间窗口是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "每周三凌晨2-4点",
+        "keywords": [
+          "周三",
+          "凌晨",
+          "2-4点"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_015",
+      "name": "发布版本号",
+      "difficulty": "easy",
+      "category": "版本信息",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "中午吃什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "建议去楼下食堂",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "下次发布版本号是v3.5.0",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到版本号",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "食堂有什么好吃的？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "红烧肉不错",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "下次发布版本号是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "v3.5.0",
+        "keywords": [
+          "v3.5.0"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_016",
+      "name": "紧急联系人",
+      "difficulty": "easy",
+      "category": "人员信息",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "天气预报说了什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "今天多云转晴",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "紧急联系人是王总，电话13800138000",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到联系人信息",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "明天天气呢？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "明天可能有雨",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "紧急联系人是谁？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "王总",
+        "keywords": [
+          "王总",
+          "13800138000"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_017",
+      "name": "审批流程信息",
+      "difficulty": "medium",
+      "category": "流程信息",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "周末去哪玩？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "建议去爬山",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "审批流程：部门经理→VP→CEO，超过50万需要CEO审批",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到审批流程",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "有什么好山推荐？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "香山不错",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "超过50万需要谁审批？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "CEO",
+        "keywords": [
+          "CEO",
+          "50万"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_018",
+      "name": "回滚方案",
+      "difficulty": "medium",
+      "category": "运维信息",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "今天股票怎么样？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "大盘小幅上涨",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "回滚方案：先回滚代码到上一版本，再回滚数据库迁移脚本",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到回滚方案",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "推荐什么股票？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "投资需谨慎",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "回滚方案是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "先回滚代码再回滚数据库",
+        "keywords": [
+          "回滚代码",
+          "回滚数据库"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_019",
+      "name": "备份策略",
+      "difficulty": "medium",
+      "category": "运维信息",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "最近看了什么电影？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "看了流浪地球3",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "备份策略：每天全量备份，保留30天，异地备份每季度一次",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到备份策略",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "电影好看吗？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "值得推荐",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "备份保留多少天？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "30天",
+        "keywords": [
+          "30天",
+          "全量备份",
+          "异地备份"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_020",
+      "name": "性能指标",
+      "difficulty": "medium",
+      "category": "运维信息",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "周末有什么计划？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "准备在家休息",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "性能指标：P99延迟小于500ms，QPS大于1000，错误率小于0.1%",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到性能指标",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "休息做什么？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "看看书",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "P99延迟要求是多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "小于500ms",
+        "keywords": [
+          "500ms",
+          "1000",
+          "0.1%"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_021",
+      "name": "安全等级",
+      "difficulty": "hard",
+      "category": "安全信息",
+      "reasoning_type": "adversarial",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "聊一下团队建设",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "建议组织户外活动",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "系统安全等级是等保三级",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到安全等级信息",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "户外活动去哪？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "可以去密云水库",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "系统安全等级是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "等保三级",
+        "keywords": [
+          "等保三级"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_022",
+      "name": "合规要求",
+      "difficulty": "hard",
+      "category": "合规信息",
+      "reasoning_type": "adversarial",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "最近有什么新闻？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "AI领域有很多新进展",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "合规要求：数据不出境，PII数据加密存储，日志保留180天",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到合规要求",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "AI有什么新进展？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "多模态模型发展很快",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "日志保留多少天？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "180天",
+        "keywords": [
+          "180天",
+          "数据不出境",
+          "PII加密"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_023",
+      "name": "许可证密钥",
+      "difficulty": "hard",
+      "category": "安全信息",
+      "reasoning_type": "adversarial",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "今天工作忙吗？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "还好，正常节奏",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "许可证密钥是LIC-2026-ABCD-1234",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到许可证密钥",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "下班后做什么？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "建议运动一下",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "许可证密钥是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "LIC-2026-ABCD-1234",
+        "keywords": [
+          "LIC-2026-ABCD-1234"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_024",
+      "name": "加密密钥",
+      "difficulty": "hard",
+      "category": "安全信息",
+      "reasoning_type": "adversarial",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "最近在看什么书？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "在看三体",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "加密密钥是AES-256-CBC，密钥base64:YWJjZGVmZ2hpamtsbW5vcA==",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到加密信息",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "三体好看吗？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "非常推荐",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "加密密钥格式是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "AES-256-CBC",
+        "keywords": [
+          "AES-256-CBC",
+          "base64"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_025",
+      "name": "访问令牌",
+      "difficulty": "hard",
+      "category": "安全信息",
+      "reasoning_type": "adversarial",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "周末天气怎么样？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "周末晴天",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "访问令牌是eyJhbGciOiJIUzI1NiJ9.test123",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到令牌",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "适合户外活动吗？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "非常适合",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "访问令牌是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "eyJhbGciOiJIUzI1NiJ9.test123",
+        "keywords": [
+          "eyJhbGciOiJIUzI1NiJ9"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_026",
+      "name": "内部IP地址",
+      "difficulty": "medium",
+      "category": "网络信息",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "中午约饭吗？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "好的，去哪吃？",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "数据库内网IP是10.0.1.100，Redis是10.0.1.101",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到IP信息",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "去吃火锅吧",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "好主意",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "数据库内网IP是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "10.0.1.100",
+        "keywords": [
+          "10.0.1.100",
+          "10.0.1.101"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_027",
+      "name": "端口配置",
+      "difficulty": "medium",
+      "category": "网络信息",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "最近有什么好剧推荐？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "推荐庆余年2",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "服务端口配置：API 8080，管理端口 9090，调试端口 5005",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到端口配置",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "庆余年好看吗？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "值得一看",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "API端口是多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "8080",
+        "keywords": [
+          "8080",
+          "9090",
+          "5005"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_028",
+      "name": "路由规则",
+      "difficulty": "medium",
+      "category": "网络信息",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "周末有什么安排？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "准备去逛商场",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "路由规则：/api/v1/*走后端，/static/*走CDN，/ws/*走WebSocket",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到路由规则",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "去哪个商场？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "三里屯不错",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "API路由规则是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "/api/v1/*走后端",
+        "keywords": [
+          "/api/v1",
+          "CDN",
+          "WebSocket"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_029",
+      "name": "防火墙规则",
+      "difficulty": "medium",
+      "category": "安全信息",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "今天有什么好吃的推荐？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "推荐楼下新开的面馆",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "防火墙规则：只允许443和80端口对外，内网全通",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到防火墙规则",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "面馆叫什么名字？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "叫老北京炸酱面",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "对外允许什么端口？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "443和80",
+        "keywords": [
+          "443",
+          "80"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_anti_030",
+      "name": "SSL证书信息",
+      "difficulty": "medium",
+      "category": "安全信息",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "最近在学什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "在学Rust",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "SSL证书明年3月到期，需要提前续签，域名*.example.com",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "收到证书信息",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "Rust难学吗？",
+            "timestamp": "2026-01-15T00:04:00"
+          },
+          {
+            "role": "assistant",
+            "content": "有一定难度",
+            "timestamp": "2026-01-15T00:05:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "SSL证书什么时候到期？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "明年3月",
+        "keywords": [
+          "3月",
+          "到期",
+          "example.com"
+        ],
+        "forbidden": []
+      }
     }
   ]
 }

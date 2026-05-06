@@ -1,118 +1,987 @@
 {
   "dataset_name": "feishu_efficiency",
-  "version": "1.0",
-  "description": "效率指标评测（飞书企业场景）：测试记忆引擎的查询延迟和响应准确性",
-  "total_cases": 10,
+  "version": "2.0",
+  "total_cases": 30,
+  "description": "飞书业务场景效率评测数据集",
   "test_cases": [
     {
       "test_id": "feishu_eff_001",
       "name": "简单事实查询",
       "difficulty": "easy",
       "category": "查询效率",
-      "chunk": "项目Eagle的deadline是5月20日，负责人是张工，技术栈是React + Node.js",
-      "query": "项目Eagle的deadline是什么时候？",
-      "answer": "5月20日",
-      "expected_keywords": ["5月20日", "deadline"],
-      "forbidden_keywords": ["6月", "4月"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "项目Eagle的deadline是5月20日，负责人是张工，技术栈是React + Node.js",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "项目Eagle的deadline是什么时候？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "5月20日",
+        "keywords": [
+          "5月20日",
+          "deadline"
+        ],
+        "forbidden": [
+          "6月",
+          "4月"
+        ]
+      }
     },
     {
       "test_id": "feishu_eff_002",
       "name": "技术栈查询",
       "difficulty": "easy",
       "category": "查询效率",
-      "chunk": "项目Falcon的技术选型：前端React 18 + Go 1.22 + PostgreSQL 16，前端状态管理用Zustand，部署用Kubernetes",
-      "query": "项目Falcon的前端框架是什么？",
-      "answer": "React 18",
-      "expected_keywords": ["React", "18", "前端"],
-      "forbidden_keywords": ["Vue", "Angular"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "项目Falcon的技术选型：前端React 18 + Go 1.22 + PostgreSQL 16，前端状态管理用Zustand，部署用Kubernetes",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "项目Falcon的前端框架是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "React 18",
+        "keywords": [
+          "React",
+          "18",
+          "前端"
+        ],
+        "forbidden": [
+          "Vue",
+          "Angular"
+        ]
+      }
     },
     {
       "test_id": "feishu_eff_003",
       "name": "会议安排查询",
       "difficulty": "easy",
       "category": "查询效率",
-      "chunk": "本周三下午2点有一个重要的技术评审会，需要准备架构设计文档、数据库ER图、API接口文档以及部署方案",
-      "query": "技术评审会是什么时候？",
-      "answer": "本周三下午2点",
-      "expected_keywords": ["周三", "下午2点", "技术评审"],
-      "forbidden_keywords": ["周一", "上午"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "本周三下午2点有一个重要的技术评审会，需要准备架构设计文档、数据库ER图、API接口文档以及部署方案",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "技术评审会是什么时候？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "本周三下午2点",
+        "keywords": [
+          "周三",
+          "下午2点",
+          "技术评审"
+        ],
+        "forbidden": [
+          "周一",
+          "上午"
+        ]
+      }
     },
     {
       "test_id": "feishu_eff_004",
       "name": "人员信息查询",
       "difficulty": "medium",
       "category": "查询效率",
-      "chunk": "后端组成员：张建国(架构师)、李明(高级开发)、王芳(数据库工程师)。前端组成员：赵六(前端负责人)、钱七(前端开发)",
-      "query": "后端组的架构师是谁？",
-      "answer": "张建国",
-      "expected_keywords": ["张建国", "架构师", "后端"],
-      "forbidden_keywords": ["赵六", "李明"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "后端组成员：张建国(架构师)、李明(高级开发)、王芳(数据库工程师)。前端组成员：赵六(前端负责人)、钱七(前端开发)",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "后端组的架构师是谁？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "张建国",
+        "keywords": [
+          "张建国",
+          "架构师",
+          "后端"
+        ],
+        "forbidden": [
+          "赵六",
+          "李明"
+        ]
+      }
     },
     {
       "test_id": "feishu_eff_005",
       "name": "配置信息查询",
       "difficulty": "medium",
       "category": "查询效率",
-      "chunk": "生产环境配置：AWS us-east-1的EKS集群，节点4台c5.2xlarge，数据库RDS PostgreSQL 15，缓存Redis 7.0",
-      "query": "生产环境用的什么数据库？",
-      "answer": "RDS PostgreSQL 15",
-      "expected_keywords": ["PostgreSQL", "15", "RDS"],
-      "forbidden_keywords": ["MySQL", "MongoDB"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "生产环境配置：AWS us-east-1的EKS集群，节点4台c5.2xlarge，数据库RDS PostgreSQL 15，缓存Redis 7.0",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "生产环境用的什么数据库？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "RDS PostgreSQL 15",
+        "keywords": [
+          "PostgreSQL",
+          "15",
+          "RDS"
+        ],
+        "forbidden": [
+          "MySQL",
+          "MongoDB"
+        ]
+      }
     },
     {
       "test_id": "feishu_eff_006",
       "name": "API规范查询",
       "difficulty": "medium",
       "category": "查询效率",
-      "chunk": "API设计规范：RESTful风格，统一返回格式，错误码规范5位数字，分页参数page_size默认20最大100，认证Bearer Token",
-      "query": "API分页参数默认多少？",
-      "answer": "page_size默认20",
-      "expected_keywords": ["20", "page_size", "默认"],
-      "forbidden_keywords": ["10", "50"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "API设计规范：RESTful风格，统一返回格式，错误码规范5位数字，分页参数page_size默认20最大100，认证Bearer Token",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "API分页参数默认多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "page_size默认20",
+        "keywords": [
+          "20",
+          "page_size",
+          "默认"
+        ],
+        "forbidden": [
+          "10",
+          "50"
+        ]
+      }
     },
     {
       "test_id": "feishu_eff_007",
       "name": "监控告警查询",
       "difficulty": "hard",
       "category": "查询效率",
-      "chunk": "监控告警规则：CPU使用率超过80%触发告警，内存超过90%触发告警，接口响应超过500ms触发告警，错误率超过1%触发告警",
-      "query": "CPU使用率多少会触发告警？",
-      "answer": "超过80%",
-      "expected_keywords": ["80%", "CPU", "告警"],
-      "forbidden_keywords": ["70%", "90%"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "监控告警规则：CPU使用率超过80%触发告警，内存超过90%触发告警，接口响应超过500ms触发告警，错误率超过1%触发告警",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "CPU使用率多少会触发告警？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "超过80%",
+        "keywords": [
+          "80%",
+          "CPU",
+          "告警"
+        ],
+        "forbidden": [
+          "70%",
+          "90%"
+        ]
+      }
     },
     {
       "test_id": "feishu_eff_008",
       "name": "发布流程查询",
       "difficulty": "hard",
       "category": "查询效率",
-      "chunk": "发布流程规范：发布前需要完成回归测试，发布时间窗口工作日上午10点-12点，发布后观察30分钟，回滚方案必须提前准备",
-      "query": "发布时间窗口是什么？",
-      "answer": "工作日上午10点-12点",
-      "expected_keywords": ["10点", "12点", "工作日"],
-      "forbidden_keywords": ["下午", "晚上"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "发布流程规范：发布前需要完成回归测试，发布时间窗口工作日上午10点-12点，发布后观察30分钟，回滚方案必须提前准备",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "发布时间窗口是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "工作日上午10点-12点",
+        "keywords": [
+          "10点",
+          "12点",
+          "工作日"
+        ],
+        "forbidden": [
+          "下午",
+          "晚上"
+        ]
+      }
     },
     {
       "test_id": "feishu_eff_009",
       "name": "权限管理查询",
       "difficulty": "hard",
       "category": "查询效率",
-      "chunk": "权限管理规范：最小权限原则，权限申请需要审批，离职员工权限24小时内回收，敏感操作需要二次验证",
-      "query": "离职员工权限多久内回收？",
-      "answer": "24小时内",
-      "expected_keywords": ["24小时", "离职", "回收"],
-      "forbidden_keywords": ["48小时", "一周"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "权限管理规范：最小权限原则，权限申请需要审批，离职员工权限24小时内回收，敏感操作需要二次验证",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "离职员工权限多久内回收？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "24小时内",
+        "keywords": [
+          "24小时",
+          "离职",
+          "回收"
+        ],
+        "forbidden": [
+          "48小时",
+          "一周"
+        ]
+      }
     },
     {
       "test_id": "feishu_eff_010",
       "name": "数据备份查询",
       "difficulty": "medium",
       "category": "查询效率",
-      "chunk": "数据备份规范：每日全量备份，保留30天，异地备份存储，备份数据加密，每月进行恢复演练",
-      "query": "备份数据保留多久？",
-      "answer": "30天",
-      "expected_keywords": ["30天", "保留", "备份"],
-      "forbidden_keywords": ["7天", "90天"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "数据备份规范：每日全量备份，保留30天，异地备份存储，备份数据加密，每月进行恢复演练",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "备份数据保留多久？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "30天",
+        "keywords": [
+          "30天",
+          "保留",
+          "备份"
+        ],
+        "forbidden": [
+          "7天",
+          "90天"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_eff_011",
+      "name": "项目状态查询",
+      "difficulty": "easy",
+      "category": "状态查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "项目A现在什么状态？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "项目A进度75%，预计下周完成",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "项目A进度多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "75%",
+        "keywords": [
+          "75%"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_012",
+      "name": "代码行数查询",
+      "difficulty": "easy",
+      "category": "统计查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "项目代码多少行？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "总代码12万行，Python 8万，JavaScript 4万",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "项目代码多少行？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "12万行",
+        "keywords": [
+          "12万行"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_013",
+      "name": "测试覆盖率查询",
+      "difficulty": "easy",
+      "category": "质量查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "测试覆盖率多少？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "整体覆盖率82%，核心模块95%",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "测试覆盖率多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "82%",
+        "keywords": [
+          "82%",
+          "95%"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_014",
+      "name": "部署频率查询",
+      "difficulty": "easy",
+      "category": "运维查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "上周部署了几次？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "上周部署了8次，其中3次hotfix",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "上周部署几次？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "8次",
+        "keywords": [
+          "8次",
+          "3次hotfix"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_015",
+      "name": "故障率查询",
+      "difficulty": "easy",
+      "category": "运维查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "本月故障率多少？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "本月故障率0.1%，比上月降了50%",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "本月故障率多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "0.1%",
+        "keywords": [
+          "0.1%"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_016",
+      "name": "响应时间查询",
+      "difficulty": "easy",
+      "category": "性能查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "API平均响应时间？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "平均响应时间120ms，P99是350ms",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "API平均响应时间？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "120ms",
+        "keywords": [
+          "120ms",
+          "350ms"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_017",
+      "name": "吞吐量查询",
+      "difficulty": "medium",
+      "category": "性能查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "系统QPS多少？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "当前QPS 800，峰值1500，设计容量3000",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "系统QPS多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "800",
+        "keywords": [
+          "800",
+          "1500"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_018",
+      "name": "资源使用查询",
+      "difficulty": "medium",
+      "category": "运维查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "服务器资源使用率？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "CPU 45%，内存 62%，磁盘 38%",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "CPU使用率多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "45%",
+        "keywords": [
+          "45%",
+          "62%",
+          "38%"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_019",
+      "name": "成本统计查询",
+      "difficulty": "medium",
+      "category": "财务查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "本月云服务成本多少？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "本月云服务成本8.5万，比上月降了10%",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "本月云服务成本？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "8.5万",
+        "keywords": [
+          "8.5万"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_020",
+      "name": "人员工时查询",
+      "difficulty": "medium",
+      "category": "管理查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工本月工时多少？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工本月工时168小时，加班12小时",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "张工本月工时？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "168小时",
+        "keywords": [
+          "168小时",
+          "12小时"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_021",
+      "name": "任务进度查询",
+      "difficulty": "medium",
+      "category": "项目查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "本周任务完成率？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "本周任务完成率85%，3个任务延期",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "本周任务完成率？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "85%",
+        "keywords": [
+          "85%",
+          "3个延期"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_022",
+      "name": "需求状态查询",
+      "difficulty": "medium",
+      "category": "产品查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "本迭代需求状态？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "本迭代15个需求，已完成10个，进行中3个，待开发2个",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "本迭代需求状态？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "15个需求，已完成10个",
+        "keywords": [
+          "15个",
+          "10个"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_023",
+      "name": "Bug数量查询",
+      "difficulty": "easy",
+      "category": "质量查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "当前Bug数量？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "当前Bug 23个，P0有2个，P1有5个",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "当前Bug数量？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "23个",
+        "keywords": [
+          "23个",
+          "P0",
+          "P1"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_024",
+      "name": "发布版本查询",
+      "difficulty": "easy",
+      "category": "版本查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "最新发布版本号？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "最新版本v3.2.1，昨天发布",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "最新版本号？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "v3.2.1",
+        "keywords": [
+          "v3.2.1"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_025",
+      "name": "依赖版本查询",
+      "difficulty": "medium",
+      "category": "技术查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "React版本多少？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "当前React 18.2，Next.js 14.1",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "React版本多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "18.2",
+        "keywords": [
+          "18.2",
+          "14.1"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_026",
+      "name": "环境配置查询",
+      "difficulty": "medium",
+      "category": "运维查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "生产环境配置？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "生产环境：8核16G×3台，RDS 4核8G，Redis 2G",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "生产环境服务器配置？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "8核16G×3台",
+        "keywords": [
+          "8核",
+          "16G",
+          "3台"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_027",
+      "name": "网络拓扑查询",
+      "difficulty": "hard",
+      "category": "运维查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "网络拓扑是什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "公网→CDN→LB→K8s集群→RDS/Redis，内网通过VPC互通",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "网络拓扑结构？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "公网→CDN→LB→K8s→RDS",
+        "keywords": [
+          "CDN",
+          "LB",
+          "K8s",
+          "VPC"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_028",
+      "name": "存储容量查询",
+      "difficulty": "medium",
+      "category": "运维查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "存储使用了多少？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "OSS使用了2TB，RDS使用了500GB",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "存储使用了多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "OSS 2TB，RDS 500GB",
+        "keywords": [
+          "2TB",
+          "500GB"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_029",
+      "name": "带宽使用查询",
+      "difficulty": "medium",
+      "category": "运维查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "带宽使用率？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "当前带宽使用率35%，峰值60%",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "带宽使用率多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "35%",
+        "keywords": [
+          "35%",
+          "60%"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_eff_030",
+      "name": "队列长度查询",
+      "difficulty": "hard",
+      "category": "运维查询",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "消息队列积压了吗？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "RabbitMQ队列长度1200，正常范围，无积压",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "消息队列长度多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "1200",
+        "keywords": [
+          "1200",
+          "RabbitMQ"
+        ],
+        "forbidden": []
+      }
     }
   ]
 }

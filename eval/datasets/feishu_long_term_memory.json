@@ -1,118 +1,1020 @@
 {
   "dataset_name": "feishu_long_term_memory",
-  "version": "1.0",
-  "description": "长时序记忆评测（飞书企业场景）：测试系统对历史信息的长期记忆和回忆能力",
-  "total_cases": 10,
+  "version": "2.0",
+  "total_cases": 30,
+  "description": "飞书业务场景长期记忆评测数据集",
   "test_cases": [
     {
       "test_id": "feishu_ltm_001",
       "name": "3个月前的技术决策",
       "difficulty": "hard",
       "category": "长期记忆",
-      "chunk": "2025年11月15日的会议记录：张工提出核心服务从Java重写为Go的方案，团队讨论后确认采用Go语言重写，预计2026年Q2完成",
-      "query": "核心服务重写用的什么语言？",
-      "answer": "Go语言",
-      "expected_keywords": ["Go", "重写", "核心服务"],
-      "forbidden_keywords": ["Java", "Python"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "2025年11月15日的会议记录：张工提出核心服务从Java重写为Go的方案，团队讨论后确认采用Go语言重写，预计2026年Q2完成",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "核心服务重写用的什么语言？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Go语言",
+        "keywords": [
+          "Go",
+          "重写",
+          "核心服务"
+        ],
+        "forbidden": [
+          "Java",
+          "Python"
+        ]
+      }
     },
     {
       "test_id": "feishu_ltm_002",
       "name": "6个月前的合同信息",
       "difficulty": "hard",
       "category": "长期记忆",
-      "chunk": "2025年12月1日的商务记录：和客户甲签了年度合同，合同金额800万，服务期限12个月，包含技术支持和维护",
-      "query": "客户甲的合同金额是多少？",
-      "answer": "800万",
-      "expected_keywords": ["800万", "客户甲", "年度合同"],
-      "forbidden_keywords": ["500万", "1000万"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "2025年12月1日的商务记录：和客户甲签了年度合同，合同金额800万，服务期限12个月，包含技术支持和维护",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "客户甲的合同金额是多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "800万",
+        "keywords": [
+          "800万",
+          "客户甲",
+          "年度合同"
+        ],
+        "forbidden": [
+          "500万",
+          "1000万"
+        ]
+      }
     },
     {
       "test_id": "feishu_ltm_003",
       "name": "数据库迁移计划",
       "difficulty": "medium",
       "category": "技术决策",
-      "chunk": "2025年12月20日的技术评审：数据库从MySQL迁移到PostgreSQL的计划确定了，原因是JSON支持更好，预计1月底完成迁移",
-      "query": "数据库迁移的目标是什么？",
-      "answer": "从MySQL迁移到PostgreSQL",
-      "expected_keywords": ["MySQL", "PostgreSQL", "迁移"],
-      "forbidden_keywords": ["MongoDB", "Oracle"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "2025年12月20日的技术评审：数据库从MySQL迁移到PostgreSQL的计划确定了，原因是JSON支持更好，预计1月底完成迁移",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "数据库迁移的目标是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "从MySQL迁移到PostgreSQL",
+        "keywords": [
+          "MySQL",
+          "PostgreSQL",
+          "迁移"
+        ],
+        "forbidden": [
+          "MongoDB",
+          "Oracle"
+        ]
+      }
     },
     {
       "test_id": "feishu_ltm_004",
       "name": "安全审计发现",
       "difficulty": "medium",
       "category": "安全记录",
-      "chunk": "2026年1月5日的安全报告：安全审计发现3个高危漏洞需要在Q1修复，漏洞编号CVE-2026-001、CVE-2026-002、CVE-2026-003",
-      "query": "安全审计发现了几个高危漏洞？",
-      "answer": "3个高危漏洞",
-      "expected_keywords": ["3个", "高危漏洞", "安全审计"],
-      "forbidden_keywords": ["1个", "5个"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "2026年1月5日的安全报告：安全审计发现3个高危漏洞需要在Q1修复，漏洞编号CVE-2026-001、CVE-2026-002、CVE-2026-003",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "安全审计发现了几个高危漏洞？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "3个高危漏洞",
+        "keywords": [
+          "3个",
+          "高危漏洞",
+          "安全审计"
+        ],
+        "forbidden": [
+          "1个",
+          "5个"
+        ]
+      }
     },
     {
       "test_id": "feishu_ltm_005",
       "name": "团队扩张记录",
       "difficulty": "easy",
       "category": "人员变动",
-      "chunk": "2026年1月10日的人事通知：新入职了5个后端开发工程师，分别负责用户服务、订单服务、支付服务、消息服务、搜索服务",
-      "query": "最近入职了几个后端开发？",
-      "answer": "5个后端开发工程师",
-      "expected_keywords": ["5个", "后端", "开发", "入职"],
-      "forbidden_keywords": ["3个", "10个"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "2026年1月10日的人事通知：新入职了5个后端开发工程师，分别负责用户服务、订单服务、支付服务、消息服务、搜索服务",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "最近入职了几个后端开发？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "5个后端开发工程师",
+        "keywords": [
+          "5个",
+          "后端",
+          "开发",
+          "入职"
+        ],
+        "forbidden": [
+          "3个",
+          "10个"
+        ]
+      }
     },
     {
       "test_id": "feishu_ltm_006",
       "name": "架构评审决策",
       "difficulty": "medium",
       "category": "技术决策",
-      "chunk": "2026年1月20日的架构评审：微服务架构评审确定使用Spring Cloud方案，包括服务注册发现、配置中心、网关、熔断器等组件",
-      "query": "微服务架构用的什么方案？",
-      "answer": "Spring Cloud方案",
-      "expected_keywords": ["Spring Cloud", "微服务", "架构"],
-      "forbidden_keywords": ["Dubbo", "gRPC"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "2026年1月20日的架构评审：微服务架构评审确定使用Spring Cloud方案，包括服务注册发现、配置中心、网关、熔断器等组件",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "微服务架构用的什么方案？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Spring Cloud方案",
+        "keywords": [
+          "Spring Cloud",
+          "微服务",
+          "架构"
+        ],
+        "forbidden": [
+          "Dubbo",
+          "gRPC"
+        ]
+      }
     },
     {
       "test_id": "feishu_ltm_007",
       "name": "产品PRD评审",
       "difficulty": "easy",
       "category": "产品记录",
-      "chunk": "2025年4月10日的产品会议：产品2.0版本的PRD评审通过了，主要功能包括用户画像、智能推荐、数据分析看板",
-      "query": "产品2.0版本的PRD评审结果是什么？",
-      "answer": "评审通过",
-      "expected_keywords": ["PRD", "评审", "通过", "2.0"],
-      "forbidden_keywords": ["未通过", "待定"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "2025年4月10日的产品会议：产品2.0版本的PRD评审通过了，主要功能包括用户画像、智能推荐、数据分析看板",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "产品2.0版本的PRD评审结果是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "评审通过",
+        "keywords": [
+          "PRD",
+          "评审",
+          "通过",
+          "2.0"
+        ],
+        "forbidden": [
+          "未通过",
+          "待定"
+        ]
+      }
     },
     {
       "test_id": "feishu_ltm_008",
       "name": "技术债务清理",
       "difficulty": "medium",
       "category": "技术管理",
-      "chunk": "2025年5月20日的技术会议：技术债务清理计划确定，目标是减少30%的遗留代码，重点清理用户模块和订单模块",
-      "query": "技术债务清理的目标是什么？",
-      "answer": "减少30%的遗留代码",
-      "expected_keywords": ["30%", "遗留代码", "技术债务"],
-      "forbidden_keywords": ["50%", "10%"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "2025年5月20日的技术会议：技术债务清理计划确定，目标是减少30%的遗留代码，重点清理用户模块和订单模块",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "技术债务清理的目标是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "减少30%的遗留代码",
+        "keywords": [
+          "30%",
+          "遗留代码",
+          "技术债务"
+        ],
+        "forbidden": [
+          "50%",
+          "10%"
+        ]
+      }
     },
     {
       "test_id": "feishu_ltm_009",
       "name": "CI/CD迁移记录",
       "difficulty": "medium",
       "category": "DevOps",
-      "chunk": "2025年6月15日的运维会议：CI/CD流水线从Jenkins迁移到GitLab CI，原因是与代码仓库集成更好，配置更简洁",
-      "query": "CI/CD从什么工具迁移到什么工具？",
-      "answer": "从Jenkins迁移到GitLab CI",
-      "expected_keywords": ["Jenkins", "GitLab CI", "迁移"],
-      "forbidden_keywords": ["GitHub Actions", "Travis CI"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "2025年6月15日的运维会议：CI/CD流水线从Jenkins迁移到GitLab CI，原因是与代码仓库集成更好，配置更简洁",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "CI/CD从什么工具迁移到什么工具？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "从Jenkins迁移到GitLab CI",
+        "keywords": [
+          "Jenkins",
+          "GitLab CI",
+          "迁移"
+        ],
+        "forbidden": [
+          "GitHub Actions",
+          "Travis CI"
+        ]
+      }
     },
     {
       "test_id": "feishu_ltm_010",
       "name": "性能优化项目",
       "difficulty": "hard",
       "category": "项目记录",
-      "chunk": "2025年7月1日的项目启动会：性能优化项目启动，目标是API响应时间降低50%，从平均500ms降到250ms以内",
-      "query": "性能优化项目的目标是什么？",
-      "answer": "API响应时间降低50%",
-      "expected_keywords": ["响应时间", "降低50%", "性能优化"],
-      "forbidden_keywords": ["降低30%", "降低80%"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "2025年7月1日的项目启动会：性能优化项目启动，目标是API响应时间降低50%，从平均500ms降到250ms以内",
+            "timestamp": "2026-01-15T00:10:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "性能优化项目的目标是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "API响应时间降低50%",
+        "keywords": [
+          "响应时间",
+          "降低50%",
+          "性能优化"
+        ],
+        "forbidden": [
+          "降低30%",
+          "降低80%"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_ltm_011",
+      "name": "3月前项目复盘",
+      "difficulty": "medium",
+      "category": "项目管理",
+      "reasoning_type": "temporal",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "去年Q4的项目复盘结论是什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "主要结论：需求变更过多导致延期2周，后续需加强需求评审",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "去年Q4项目复盘的结论？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "需求变更过多导致延期",
+        "keywords": [
+          "需求变更",
+          "延期",
+          "复盘"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_012",
+      "name": "4月前预算审批",
+      "difficulty": "medium",
+      "category": "财务",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "Q2预算批了多少？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "Q2预算批了150万，比申请少了30万",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "Q2预算批了多少？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "150万",
+        "keywords": [
+          "150万",
+          "预算"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_013",
+      "name": "5月前供应商选择",
+      "difficulty": "medium",
+      "category": "采购",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "云服务商最终选了谁？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "最终选了阿里云，价格比AWS低40%",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "云服务商选了谁？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "阿里云",
+        "keywords": [
+          "阿里云"
+        ],
+        "forbidden": [
+          "AWS"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_ltm_014",
+      "name": "6月前组织调整",
+      "difficulty": "hard",
+      "category": "人事",
+      "reasoning_type": "temporal",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "去年的组织调整内容是什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "技术部拆分为前端组、后端组、平台组，张工任平台组TL",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "技术部怎么调整的？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "拆分为前端组、后端组、平台组",
+        "keywords": [
+          "前端组",
+          "后端组",
+          "平台组"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_015",
+      "name": "8月前产品发布",
+      "difficulty": "medium",
+      "category": "产品",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "v2.0发布时间和主要特性？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "v2.0在去年8月发布，主要特性：多语言支持、暗色模式",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "v2.0什么时候发布的？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "去年8月",
+        "keywords": [
+          "8月",
+          "v2.0",
+          "多语言",
+          "暗色模式"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_016",
+      "name": "10月前年度规划",
+      "difficulty": "hard",
+      "category": "战略",
+      "reasoning_type": "temporal",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "明年的技术规划重点是什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "重点：微服务改造、数据平台建设、AI能力集成",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "明年技术规划重点？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "微服务改造、数据平台、AI集成",
+        "keywords": [
+          "微服务",
+          "数据平台",
+          "AI"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_017",
+      "name": "1年前技术选型",
+      "difficulty": "hard",
+      "category": "技术",
+      "reasoning_type": "temporal",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "一年前为什么选了React而不是Vue？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "当时评估：React生态更成熟，TypeScript支持好，团队更熟悉",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "一年前为什么选React？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "生态成熟，TypeScript支持好",
+        "keywords": [
+          "React",
+          "生态",
+          "TypeScript"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_018",
+      "name": "1年前团队重组",
+      "difficulty": "hard",
+      "category": "人事",
+      "reasoning_type": "temporal",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "一年前团队为什么重组？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "业务扩张，从3个小组扩到5个，新增了AI组和数据组",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "一年前团队怎么重组的？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "从3个小组扩到5个",
+        "keywords": [
+          "3个",
+          "5个",
+          "AI组",
+          "数据组"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_019",
+      "name": "跨年度KPI变更",
+      "difficulty": "medium",
+      "category": "管理",
+      "reasoning_type": "knowledge_update",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "今年的KPI和去年有什么变化？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "去年KPI侧重功能交付，今年侧重稳定性和性能",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "Q2又调整了，增加AI相关指标",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "今年KPI有什么变化？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "侧重稳定性和性能，增加AI指标",
+        "keywords": [
+          "稳定性",
+          "性能",
+          "AI指标"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_020",
+      "name": "跨年度战略调整",
+      "difficulty": "hard",
+      "category": "战略",
+      "reasoning_type": "temporal",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "公司战略这两年有什么变化？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "从ToC转向ToB，去年开始做企业版，今年重点是行业解决方案",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "公司战略方向有什么变化？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "从ToC转向ToB",
+        "keywords": [
+          "ToC",
+          "ToB",
+          "企业版"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_021",
+      "name": "历史故障记录",
+      "difficulty": "medium",
+      "category": "运维",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "去年最严重的一次故障是什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "去年11月数据库主从切换失败，影响2小时，根因是配置不一致",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "去年最严重的故障？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "数据库主从切换失败",
+        "keywords": [
+          "数据库",
+          "主从切换",
+          "2小时"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_022",
+      "name": "历史安全事件",
+      "difficulty": "medium",
+      "category": "安全",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "去年有安全事件吗？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "去年3月发现一个SQL注入漏洞，24小时内修复，无数据泄露",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "去年安全事件详情？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "SQL注入漏洞，24小时修复",
+        "keywords": [
+          "SQL注入",
+          "24小时"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_023",
+      "name": "历史合规审计",
+      "difficulty": "medium",
+      "category": "合规",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "上次合规审计结果？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "上次审计发现3个minor问题，已全部整改通过",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "上次合规审计结果？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "3个minor问题已整改",
+        "keywords": [
+          "3个",
+          "minor",
+          "整改"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_024",
+      "name": "历史人事变动",
+      "difficulty": "easy",
+      "category": "人事",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "去年技术部离职率多少？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "去年技术部离职率8%，低于行业平均15%",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "去年技术部离职率？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "8%",
+        "keywords": [
+          "8%",
+          "离职率"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_025",
+      "name": "历史合同续签",
+      "difficulty": "medium",
+      "category": "商务",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "阿里云合同什么时候续签？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "阿里云合同明年3月到期，需要提前2个月启动续签",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "阿里云合同什么时候到期？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "明年3月",
+        "keywords": [
+          "3月",
+          "到期",
+          "续签"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_026",
+      "name": "历史版本发布",
+      "difficulty": "easy",
+      "category": "产品",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "v1.0到v3.0的发布时间线？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "v1.0是去年4月，v2.0是去年8月，v3.0是今年1月",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "v2.0什么时候发布的？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "去年8月",
+        "keywords": [
+          "去年",
+          "8月"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_027",
+      "name": "历史架构演进",
+      "difficulty": "hard",
+      "category": "技术",
+      "reasoning_type": "multi_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "架构从单体到微服务的演进过程？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "去年Q1开始拆分，Q2完成核心服务，Q3完成全部迁移",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "迁移过程中最大的挑战是什么？",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "数据一致性，最终用Saga模式解决",
+            "timestamp": "2026-01-15T00:03:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "微服务迁移什么时候完成的？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "去年Q3",
+        "keywords": [
+          "Q3",
+          "迁移",
+          "Saga"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_028",
+      "name": "历史成本优化",
+      "difficulty": "medium",
+      "category": "财务",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "去年做了哪些成本优化？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "服务器成本降了30%，主要是用Spot实例和资源调度优化",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "去年成本优化效果？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "服务器成本降了30%",
+        "keywords": [
+          "30%",
+          "Spot实例"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_029",
+      "name": "历史流程变更",
+      "difficulty": "medium",
+      "category": "管理",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "发布流程去年有什么变化？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "从去年Q3开始，所有发布必须经过灰度环境",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "发布流程去年怎么变的？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "必须经过灰度环境",
+        "keywords": [
+          "灰度环境",
+          "Q3"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_ltm_030",
+      "name": "历史工具迁移",
+      "difficulty": "medium",
+      "category": "工具",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "去年从什么工具迁到了什么？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "去年从Jira迁到了飞书项目，省了一笔license费",
+            "timestamp": "2026-01-15T00:01:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "去年做了什么工具迁移？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "从Jira迁到飞书项目",
+        "keywords": [
+          "Jira",
+          "飞书项目"
+        ],
+        "forbidden": []
+      }
     }
   ]
 }

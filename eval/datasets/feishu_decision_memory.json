@@ -1,123 +1,1266 @@
 {
   "dataset_name": "feishu_decision_memory",
-  "version": "1.0",
+  "version": "2.0",
+  "total_cases": 30,
   "description": "飞书业务场景决策记忆评测数据集",
-  "total_cases": 10,
-  "schema": {
-    "chunk": "需要记忆的飞书对话/文档内容",
-    "query": "用户查询",
-    "answer": "期望的正确答案"
-  },
   "test_cases": [
     {
       "test_id": "feishu_dec_001",
       "name": "前端框架选型决策",
       "difficulty": "easy",
       "category": "技术选型",
-      "chunk": "张工：大家讨论一下前端框架，React还是Vue？\n李工：我建议React，生态更成熟，TypeScript支持好\n王工：同意，我们决定用React，团队也更熟悉\n张工：好的，方案定React了",
-      "query": "我们前端框架选了什么？",
-      "answer": "React",
-      "expected_keywords": ["React"],
-      "forbidden_keywords": ["Vue", "Angular"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：大家讨论一下前端框架，React还是Vue？",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：我建议React，生态更成熟，TypeScript支持好",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：同意，我们决定用React，团队也更熟悉",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工：好的，方案定React了",
+            "timestamp": "2026-01-15T00:16:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "我们前端框架选了什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "React",
+        "keywords": [
+          "React"
+        ],
+        "forbidden": [
+          "Vue",
+          "Angular"
+        ]
+      }
     },
     {
       "test_id": "feishu_dec_002",
       "name": "部署方案决策",
       "difficulty": "easy",
       "category": "部署方案",
-      "chunk": "张工：部署方案大家有什么建议？\n李工：我建议用Docker + K8s，标准化部署\n王工：同意，我们确认用Docker容器化部署，而不是直接部署到裸机\n张工：好的，Docker方案确认",
-      "query": "我们的部署方案是什么？",
-      "answer": "Docker容器化部署",
-      "expected_keywords": ["Docker", "容器化"],
-      "forbidden_keywords": ["裸机", "虚拟机"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：部署方案大家有什么建议？",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：我建议用Docker + K8s，标准化部署",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：同意，我们确认用Docker容器化部署，而不是直接部署到裸机",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工：好的，Docker方案确认",
+            "timestamp": "2026-01-15T00:16:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "我们的部署方案是什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Docker容器化部署",
+        "keywords": [
+          "Docker",
+          "容器化"
+        ],
+        "forbidden": [
+          "裸机",
+          "虚拟机"
+        ]
+      }
     },
     {
       "test_id": "feishu_dec_003",
       "name": "数据库选型决策",
       "difficulty": "easy",
       "category": "数据库选型",
-      "chunk": "赵工：数据库选型，PostgreSQL还是MySQL？\n张工：PostgreSQL，JSON支持更好，适合我们的场景\n李工：最终决定用PostgreSQL\n王工：确认，PostgreSQL方案通过",
-      "query": "我们选了什么数据库？",
-      "answer": "PostgreSQL",
-      "expected_keywords": ["PostgreSQL"],
-      "forbidden_keywords": ["MySQL", "MongoDB"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "赵工：数据库选型，PostgreSQL还是MySQL？",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工：PostgreSQL，JSON支持更好，适合我们的场景",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "李工：最终决定用PostgreSQL",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "王工：确认，PostgreSQL方案通过",
+            "timestamp": "2026-01-15T00:16:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "我们选了什么数据库？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "PostgreSQL",
+        "keywords": [
+          "PostgreSQL"
+        ],
+        "forbidden": [
+          "MySQL",
+          "MongoDB"
+        ]
+      }
     },
     {
       "test_id": "feishu_dec_004",
       "name": "CI/CD工具决策",
       "difficulty": "medium",
       "category": "CI/CD",
-      "chunk": "张工：CI/CD方案有三个：Jenkins、GitHub Actions、GitLab CI\n李工：Jenkins太重了，GitLab CI我们没用GitLab\n王工：最终采用GitHub Actions，和我们的代码仓库配合最好\n赵工：确认，GitHub Actions方案通过",
-      "query": "我们用什么CI/CD工具？",
-      "answer": "GitHub Actions",
-      "expected_keywords": ["GitHub Actions"],
-      "forbidden_keywords": ["Jenkins", "GitLab CI"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：CI/CD方案有三个：Jenkins、GitHub Actions、GitLab CI",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：Jenkins太重了，GitLab CI我们没用GitLab",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：最终采用GitHub Actions，和我们的代码仓库配合最好",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "赵工：确认，GitHub Actions方案通过",
+            "timestamp": "2026-01-15T00:16:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "我们用什么CI/CD工具？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "GitHub Actions",
+        "keywords": [
+          "GitHub Actions"
+        ],
+        "forbidden": [
+          "Jenkins",
+          "GitLab CI"
+        ]
+      }
     },
     {
       "test_id": "feishu_dec_005",
       "name": "移动端技术栈决策",
       "difficulty": "medium",
       "category": "技术选型",
-      "chunk": "张工：移动端技术栈大家讨论一下，Flutter还是React Native？\n李工：Flutter性能更好，但RN生态更成熟，团队已有JS经验\n王工：确认采用React Native作为移动端方案，主要是团队技术栈匹配\n张工：好的，React Native方案确认",
-      "query": "移动端用什么技术栈？",
-      "answer": "React Native",
-      "expected_keywords": ["React Native"],
-      "forbidden_keywords": ["Flutter", "Swift"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：移动端技术栈大家讨论一下，Flutter还是React Native？",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：Flutter性能更好，但RN生态更成熟，团队已有JS经验",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：确认采用React Native作为移动端方案，主要是团队技术栈匹配",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工：好的，React Native方案确认",
+            "timestamp": "2026-01-15T00:16:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "移动端用什么技术栈？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "React Native",
+        "keywords": [
+          "React Native"
+        ],
+        "forbidden": [
+          "Flutter",
+          "Swift"
+        ]
+      }
     },
     {
       "test_id": "feishu_dec_006",
       "name": "项目管理工具决策",
       "difficulty": "medium",
       "category": "工具选型",
-      "chunk": "李工：项目管理工具用什么？Jira还是飞书项目？\n王工：飞书项目更方便，和飞书生态集成好\n张工：那就用飞书项目，省得切换工具\n赵工：确认，飞书项目方案通过",
-      "query": "项目管理用什么工具？",
-      "answer": "飞书项目",
-      "expected_keywords": ["飞书项目"],
-      "forbidden_keywords": ["Jira", "Trello"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "李工：项目管理工具用什么？Jira还是飞书项目？",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "王工：飞书项目更方便，和飞书生态集成好",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "张工：那就用飞书项目，省得切换工具",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "赵工：确认，飞书项目方案通过",
+            "timestamp": "2026-01-15T00:16:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "项目管理用什么工具？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "飞书项目",
+        "keywords": [
+          "飞书项目"
+        ],
+        "forbidden": [
+          "Jira",
+          "Trello"
+        ]
+      }
     },
     {
       "test_id": "feishu_dec_007",
       "name": "API网关选型决策",
       "difficulty": "hard",
       "category": "架构选型",
-      "chunk": "张工：API网关选型，Kong还是APISIX？\n李工：Kong更成熟，但APISIX性能更好，支持更多插件\n王工：考虑到我们需要高性能和自定义插件，决定用APISIX\n赵工：APISIX方案确认，下周开始技术调研",
-      "query": "API网关用什么方案？",
-      "answer": "APISIX",
-      "expected_keywords": ["APISIX"],
-      "forbidden_keywords": ["Kong", "Nginx"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：API网关选型，Kong还是APISIX？",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：Kong更成熟，但APISIX性能更好，支持更多插件",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：考虑到我们需要高性能和自定义插件，决定用APISIX",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "赵工：APISIX方案确认，下周开始技术调研",
+            "timestamp": "2026-01-15T00:16:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "API网关用什么方案？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "APISIX",
+        "keywords": [
+          "APISIX"
+        ],
+        "forbidden": [
+          "Kong",
+          "Nginx"
+        ]
+      }
     },
     {
       "test_id": "feishu_dec_008",
       "name": "监控系统决策",
       "difficulty": "hard",
       "category": "运维选型",
-      "chunk": "王工：监控系统用什么？Prometheus+Grafana还是商业方案？\n张工：Prometheus+Grafana开源免费，社区活跃\n李工：决定用Prometheus+Grafana，配合AlertManager做告警\n赵工：确认，监控方案Prometheus+Grafana通过",
-      "query": "监控系统用什么方案？",
-      "answer": "Prometheus+Grafana",
-      "expected_keywords": ["Prometheus", "Grafana"],
-      "forbidden_keywords": ["Datadog", "New Relic"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "王工：监控系统用什么？Prometheus+Grafana还是商业方案？",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工：Prometheus+Grafana开源免费，社区活跃",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "李工：决定用Prometheus+Grafana，配合AlertManager做告警",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "赵工：确认，监控方案Prometheus+Grafana通过",
+            "timestamp": "2026-01-15T00:16:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "监控系统用什么方案？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Prometheus+Grafana",
+        "keywords": [
+          "Prometheus",
+          "Grafana"
+        ],
+        "forbidden": [
+          "Datadog",
+          "New Relic"
+        ]
+      }
     },
     {
       "test_id": "feishu_dec_009",
       "name": "消息队列决策",
       "difficulty": "hard",
       "category": "中间件选型",
-      "chunk": "张工：消息队列选型，RabbitMQ还是Kafka？\n李工：RabbitMQ适合业务消息，Kafka适合大数据流\n王工：我们的场景主要是业务消息，决定用RabbitMQ\n赵工：RabbitMQ方案确认，支持延迟消息和消息确认",
-      "query": "消息队列用什么？",
-      "answer": "RabbitMQ",
-      "expected_keywords": ["RabbitMQ"],
-      "forbidden_keywords": ["Kafka", "RocketMQ"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "张工：消息队列选型，RabbitMQ还是Kafka？",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "李工：RabbitMQ适合业务消息，Kafka适合大数据流",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：我们的场景主要是业务消息，决定用RabbitMQ",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "赵工：RabbitMQ方案确认，支持延迟消息和消息确认",
+            "timestamp": "2026-01-15T00:16:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "消息队列用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "RabbitMQ",
+        "keywords": [
+          "RabbitMQ"
+        ],
+        "forbidden": [
+          "Kafka",
+          "RocketMQ"
+        ]
+      }
     },
     {
       "test_id": "feishu_dec_010",
       "name": "缓存方案决策",
       "difficulty": "hard",
       "category": "中间件选型",
-      "chunk": "李工：缓存方案用什么？Redis还是Memcached？\n张工：Redis功能更丰富，支持数据结构\n王工：决定用Redis，支持字符串、哈希、列表等多种数据结构\n赵工：Redis方案确认，集群模式部署",
-      "query": "缓存用什么方案？",
-      "answer": "Redis",
-      "expected_keywords": ["Redis"],
-      "forbidden_keywords": ["Memcached", "本地缓存"]
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "李工：缓存方案用什么？Redis还是Memcached？",
+            "timestamp": "2026-01-15T00:10:00"
+          },
+          {
+            "role": "assistant",
+            "content": "张工：Redis功能更丰富，支持数据结构",
+            "timestamp": "2026-01-15T00:12:00"
+          },
+          {
+            "role": "user",
+            "content": "王工：决定用Redis，支持字符串、哈希、列表等多种数据结构",
+            "timestamp": "2026-01-15T00:14:00"
+          },
+          {
+            "role": "assistant",
+            "content": "赵工：Redis方案确认，集群模式部署",
+            "timestamp": "2026-01-15T00:16:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "缓存用什么方案？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Redis",
+        "keywords": [
+          "Redis"
+        ],
+        "forbidden": [
+          "Memcached",
+          "本地缓存"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_011",
+      "name": "消息队列选型",
+      "difficulty": "easy",
+      "category": "中间件选型",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "消息队列用RabbitMQ还是Kafka？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "RabbitMQ适合业务消息，Kafka适合大数据流",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "用RabbitMQ，确认方案",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "消息队列选了什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "RabbitMQ",
+        "keywords": [
+          "RabbitMQ"
+        ],
+        "forbidden": [
+          "Kafka",
+          "RocketMQ"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_012",
+      "name": "缓存方案选型",
+      "difficulty": "easy",
+      "category": "中间件选型",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "缓存用Redis还是Memcached？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "Redis功能更丰富，支持多种数据结构",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认用Redis集群模式",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "缓存用什么方案？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Redis",
+        "keywords": [
+          "Redis"
+        ],
+        "forbidden": [
+          "Memcached"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_013",
+      "name": "日志收集方案",
+      "difficulty": "easy",
+      "category": "运维选型",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "日志收集用ELK还是Loki？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "Loki更轻量，和Grafana配合好",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "定Loki方案",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "日志收集用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Loki",
+        "keywords": [
+          "Loki"
+        ],
+        "forbidden": [
+          "ELK",
+          "Splunk"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_014",
+      "name": "代码仓库迁移",
+      "difficulty": "medium",
+      "category": "工具选型",
+      "reasoning_type": "knowledge_update",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "代码仓库从GitLab迁到GitHub？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "GitHub Actions生态更好",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "先不动，保持GitLab",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "好的，保持现状",
+            "timestamp": "2026-01-15T00:03:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "代码仓库用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "GitLab",
+        "keywords": [
+          "GitLab"
+        ],
+        "forbidden": [
+          "GitHub"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_015",
+      "name": "容器编排选型",
+      "difficulty": "medium",
+      "category": "架构选型",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "容器编排用K8s还是Swarm？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "K8s生态更成熟",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "决定用K8s",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "容器编排用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "K8s",
+        "keywords": [
+          "K8s",
+          "Kubernetes"
+        ],
+        "forbidden": [
+          "Docker Swarm"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_016",
+      "name": "测试框架选型",
+      "difficulty": "medium",
+      "category": "技术选型",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "测试框架用pytest还是unittest？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "pytest更简洁，插件丰富",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "确认用pytest",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "测试框架选了什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "pytest",
+        "keywords": [
+          "pytest"
+        ],
+        "forbidden": [
+          "unittest"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_017",
+      "name": "API认证方案",
+      "difficulty": "medium",
+      "category": "安全选型",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "API认证用JWT还是OAuth2？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "JWT适合无状态，OAuth2适合第三方授权",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "内部用JWT，对外用OAuth2",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "API认证用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "JWT和OAuth2",
+        "keywords": [
+          "JWT",
+          "OAuth2"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_dec_018",
+      "name": "CDN服务商选择",
+      "difficulty": "medium",
+      "category": "基础设施",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "CDN用阿里云还是Cloudflare？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "阿里云国内快，Cloudflare全球好",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "国内阿里云，海外Cloudflare",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "CDN用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "阿里云和Cloudflare",
+        "keywords": [
+          "阿里云",
+          "Cloudflare"
+        ],
+        "forbidden": []
+      }
+    },
+    {
+      "test_id": "feishu_dec_019",
+      "name": "数据库读写分离",
+      "difficulty": "hard",
+      "category": "架构选型",
+      "reasoning_type": "multi_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "读写分离用ProxySQL还是MaxScale？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "ProxySQL更灵活",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "之前PostgreSQL已定，要兼容",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "assistant",
+            "content": "PostgreSQL用PgBouncer配合流复制",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "user",
+            "content": "好，用PgBouncer",
+            "timestamp": "2026-01-15T00:04:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "数据库读写分离用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "PgBouncer",
+        "keywords": [
+          "PgBouncer"
+        ],
+        "forbidden": [
+          "ProxySQL"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_020",
+      "name": "微服务通信方式",
+      "difficulty": "hard",
+      "category": "架构选型",
+      "reasoning_type": "multi_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "微服务间通信用gRPC还是REST？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "gRPC性能好，REST兼容性好",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "内部用gRPC，对外保持REST",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "微服务内部通信用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "gRPC",
+        "keywords": [
+          "gRPC"
+        ],
+        "forbidden": [
+          "REST"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_021",
+      "name": "负载均衡方案",
+      "difficulty": "medium",
+      "category": "基础设施",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "负载均衡用Nginx还是HAProxy？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "Nginx功能全面",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "用Nginx统一",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "负载均衡用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Nginx",
+        "keywords": [
+          "Nginx"
+        ],
+        "forbidden": [
+          "HAProxy"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_022",
+      "name": "对象存储选型",
+      "difficulty": "easy",
+      "category": "基础设施",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "对象存储用MinIO还是OSS？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "MinIO自建可控",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "用MinIO，数据安全要求高",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "对象存储用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "MinIO",
+        "keywords": [
+          "MinIO"
+        ],
+        "forbidden": [
+          "OSS"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_023",
+      "name": "配置中心选型",
+      "difficulty": "medium",
+      "category": "中间件",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "配置中心用Nacos还是Apollo？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "Nacos功能全",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "选Nacos，和服务发现统一",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "配置中心用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Nacos",
+        "keywords": [
+          "Nacos"
+        ],
+        "forbidden": [
+          "Apollo"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_024",
+      "name": "分布式事务方案",
+      "difficulty": "hard",
+      "category": "架构选型",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "分布式事务用Seata还是TCC？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "Seata开箱即用",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "先用Seata",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "分布式事务用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Seata",
+        "keywords": [
+          "Seata"
+        ],
+        "forbidden": [
+          "TCC"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_025",
+      "name": "服务网格选型",
+      "difficulty": "hard",
+      "category": "架构选型",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "服务网格用Istio还是Linkerd？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "Linkerd轻量",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "用Linkerd，轻量优先",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "服务网格用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Linkerd",
+        "keywords": [
+          "Linkerd"
+        ],
+        "forbidden": [
+          "Istio"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_026",
+      "name": "CI构建缓存",
+      "difficulty": "medium",
+      "category": "DevOps",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "CI缓存用ccache还是sccache？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "sccache支持云存储后端",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "用sccache配合S3",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "CI构建缓存用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "sccache",
+        "keywords": [
+          "sccache"
+        ],
+        "forbidden": [
+          "ccache"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_027",
+      "name": "文档平台选型",
+      "difficulty": "easy",
+      "category": "工具选型",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "技术文档用Confluence还是飞书？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "飞书协作方便",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "用飞书文档",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "技术文档用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "飞书文档",
+        "keywords": [
+          "飞书文档"
+        ],
+        "forbidden": [
+          "Confluence"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_028",
+      "name": "错误追踪工具",
+      "difficulty": "medium",
+      "category": "工具选型",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "错误追踪用Sentry还是Bugsnag？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "Sentry开源免费",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "用Sentry自建部署",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "错误追踪用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Sentry",
+        "keywords": [
+          "Sentry"
+        ],
+        "forbidden": [
+          "Bugsnag"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_029",
+      "name": "API版本策略",
+      "difficulty": "hard",
+      "category": "架构选型",
+      "reasoning_type": "temporal",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "API版本用URL还是Header？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "URL直观，Header更RESTful",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "先用URL路径",
+            "timestamp": "2026-01-15T00:02:00"
+          },
+          {
+            "role": "user",
+            "content": "方案更新：改为Header方式",
+            "timestamp": "2026-01-15T00:03:00"
+          },
+          {
+            "role": "assistant",
+            "content": "好的，更新为Header",
+            "timestamp": "2026-01-15T00:04:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "API版本管理用什么方式？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Header方式",
+        "keywords": [
+          "Header"
+        ],
+        "forbidden": [
+          "URL路径"
+        ]
+      }
+    },
+    {
+      "test_id": "feishu_dec_030",
+      "name": "数据序列化格式",
+      "difficulty": "medium",
+      "category": "技术选型",
+      "reasoning_type": "single_hop",
+      "setup": {
+        "conversations": [
+          {
+            "role": "user",
+            "content": "序列化用Protobuf还是JSON？",
+            "timestamp": "2026-01-15T00:00:00"
+          },
+          {
+            "role": "assistant",
+            "content": "Protobuf体积小速度快",
+            "timestamp": "2026-01-15T00:01:00"
+          },
+          {
+            "role": "user",
+            "content": "内部用Protobuf，对外用JSON",
+            "timestamp": "2026-01-15T00:02:00"
+          }
+        ]
+      },
+      "query": {
+        "text": "内部通信数据格式用什么？",
+        "type": "search"
+      },
+      "expected": {
+        "answer": "Protobuf",
+        "keywords": [
+          "Protobuf"
+        ],
+        "forbidden": [
+          "JSON"
+        ]
+      }
     }
   ]
 }
