@@ -2497,3 +2497,181 @@ class SqliteStore:
         except Exception as e:
             logger.error(f"get_top_memories failed: {e}")
             return []
+
+
+    # ========== Memory Forgetting ==========
+
+    def schedule_forgetting(
+        self,
+        memory_type: str,
+        memory_id: str,
+        owner: str,
+        reason: str = "outdated",
+        delay_days: int = 30,
+    ) -> str:
+        """Schedule a memory for forgetting using existing forgetting_schedule table.
+        
+        Uses chunk_id for memory_id, topic for memory_type:reason.
+        """
+        try:
+            import uuid as _uuid
+            forget_id = str(_uuid.uuid4())
+            now = int(time.time() * 1000)
+            scheduled_at = now + delay_days * 24 * 3600 * 1000
+            
+            cursor = self.conn.cursor()
+            cursor.execute(
+                "INSERT INTO forgetting_schedule "
+                "(id, owner, chunk_id, topic, interval_days, ease_factor, repetitions, next_review_at, last_reviewed_at, status, createdAt, updatedAt) "
+                "VALUES (?, ?, ?, ?, 1.0, 2.5, 0, ?, NULL, 'pending', ?, ?)",
+                (forget_id, owner, memory_id, f"{memory_type}:{reason}", scheduled_at, now, now),
+            )
+            self.conn.commit()
+            return forget_id
+        except Exception as e:
+            logger.error(f"schedule_forgetting failed: {e}")
+            return ""
+
+    def execute_forgetting(self, owner: str = None) -> Dict[str, int]:
+        """Execute scheduled forgettings that are due.
+        
+        Uses existing schema: chunk_id = memory_id, topic = 'type:reason'
+        """
+        try:
+            now = int(time.time() * 1000)
+            cursor = self.conn.cursor()
+            
+            conditions = ["status = 'pending'", "next_review_at <= ?"]
+            params: list = [now]
+            if owner:
+                conditions.append("owner = ?")
+                params.append(owner)
+            where = " AND ".join(conditions)
+            
+            cursor.execute(
+                f"SELECT id, chunk_id, topic FROM forgetting_schedule WHERE {where}",
+                params,
+            )
+            due = cursor.fetchall()
+            
+            forgotten: Dict[str, int] = {"decision": 0, "preference": 0, "knowledge": 0, "chunk": 0}
+            
+            for row in due:
+                forget_id, mem_id, topic = row
+                mem_type = topic.split(":")[0] if ":" in topic else "chunk"
+                
+                success = False
+                if mem_type == "decision":
+                    cursor.execute("UPDATE decisions SET status = 'forgotten' WHERE id = ?", (mem_id,))
+                    success = cursor.rowcount > 0
+                elif mem_type == "preference":
+                    cursor.execute("DELETE FROM user_preferences WHERE id = ?", (mem_id,))
+                    success = cursor.rowcount > 0
+                elif mem_type == "knowledge":
+                    cursor.execute("DELETE FROM knowledge_health WHERE id = ?", (mem_id,))
+                    success = cursor.rowcount > 0
+                elif mem_type == "chunk":
+                    cursor.execute("DELETE FROM chunks WHERE id = ?", (mem_id,))
+                    success = cursor.rowcount > 0
+                
+                if success:
+                    cursor.execute(
+                        "UPDATE forgetting_schedule SET status = 'forgotten', updatedAt = ? WHERE id = ?",
+                        (now, forget_id),
+                    )
+                    forgotten[mem_type] = forgotten.get(mem_type, 0) + 1
+            
+            self.conn.commit()
+            return forgotten
+            
+        except Exception as e:
+            logger.error(f"execute_forgetting failed: {e}")
+            return {}
+
+    def auto_forget(self, owner: str, max_age_days: int = 90, min_access: int = 0, force: bool = False) -> Dict[str, int]:
+        """Automatically identify and schedule memories for forgetting.
+        
+        Criteria:
+        1. Superseded decisions older than 7 days -> forget (force=True skips age check)
+        2. Knowledge with freshness_score < 0.3 -> forget
+        3. Chunks never accessed in max_age_days -> schedule forgetting
+        """
+        try:
+            now = int(time.time() * 1000)
+            cursor = self.conn.cursor()
+            scheduled = 0
+            
+            # 1. Superseded decisions (age check unless force=True)
+            if force:
+                cursor.execute(
+                    "SELECT id FROM decisions WHERE owner = ? AND status = 'superseded'",
+                    (owner,),
+                )
+            else:
+                seven_days_ago = now - 7 * 24 * 3600 * 1000
+                cursor.execute(
+                    "SELECT id FROM decisions WHERE owner = ? AND status = 'superseded' AND updatedAt < ?",
+                    (owner, seven_days_ago),
+                )
+            for row in cursor.fetchall():
+                self.schedule_forgetting("decision", row[0], owner, reason="superseded", delay_days=0)
+                scheduled += 1
+            
+            # 2. Low-freshness knowledge
+            cursor.execute(
+                "SELECT id FROM knowledge_health WHERE owner = ? AND freshness_score < 0.3",
+                (owner,),
+            )
+            for row in cursor.fetchall():
+                self.schedule_forgetting("knowledge", row[0], owner, reason="low_freshness", delay_days=7)
+                scheduled += 1
+            
+            # 3. Old chunks never accessed
+            max_age_ms = now - max_age_days * 24 * 3600 * 1000
+            cursor.execute(
+                "SELECT c.id FROM chunks c "
+                "LEFT JOIN memory_access_log a ON a.memory_type = 'chunk' AND a.memory_id = c.id "
+                "WHERE c.owner = ? AND c.createdAt < ? AND a.id IS NULL "
+                "LIMIT 100",
+                (owner, max_age_ms),
+            )
+            for row in cursor.fetchall():
+                self.schedule_forgetting("chunk", row[0], owner, reason="never_accessed", delay_days=14)
+                scheduled += 1
+            
+            return {"scheduled": scheduled}
+            
+        except Exception as e:
+            logger.error(f"auto_forget failed: {e}")
+            return {"scheduled": 0}
+
+    def get_forgetting_candidates(self, owner: str) -> Dict[str, Any]:
+        """Get memories that are candidates for forgetting."""
+        try:
+            cursor = self.conn.cursor()
+            
+            candidates = {
+                "superseded_decisions": [],
+                "low_freshness_knowledge": [],
+                "unaccessed_chunks": [],
+            }
+            
+            # Superseded decisions
+            cursor.execute(
+                "SELECT id, title, chosen, status FROM decisions WHERE owner = ? AND status = 'superseded'",
+                (owner,),
+            )
+            candidates["superseded_decisions"] = [dict(row) for row in cursor.fetchall()]
+            
+            # Low-freshness knowledge
+            cursor.execute(
+                "SELECT id, topic, freshness_score FROM knowledge_health WHERE owner = ? AND freshness_score < 0.5",
+                (owner,),
+            )
+            candidates["low_freshness_knowledge"] = [dict(row) for row in cursor.fetchall()]
+            
+            return candidates
+            
+        except Exception as e:
+            logger.error(f"get_forgetting_candidates failed: {e}")
+            return {}

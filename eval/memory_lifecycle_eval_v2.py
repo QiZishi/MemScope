@@ -36,6 +36,7 @@ class MemoryLifecycleEval:
             "consolidation": {"total": 0, "passed": 0, "details": []},
             "health_monitoring": {"total": 0, "passed": 0, "details": []},
             "cross_agent_sharing": {"total": 0, "passed": 0, "details": []},
+            "memory_forgetting": {"total": 0, "passed": 0, "details": []},
         }
 
     def run_all(self):
@@ -52,6 +53,7 @@ class MemoryLifecycleEval:
         self._eval_consolidation()
         self._eval_health_monitoring()
         self._eval_cross_agent_sharing()
+        self._eval_memory_forgetting()
 
         self._print_summary()
         return self.results
@@ -521,6 +523,50 @@ class MemoryLifecycleEval:
 
         os.unlink(db)
 
+
+    def _eval_memory_forgetting(self):
+        """Test: Memory forgetting - superseded memories are properly forgotten."""
+        print("\n[9/10] Memory Forgetting")
+        print("-" * 40)
+
+        db = tempfile.mktemp(suffix='.db')
+        store = SqliteStore(db)
+        mm = MemoryManager(store)
+
+        # Create and contradict a decision
+        mm.ingest_conversation([{"role": "user", "content": "我们决定用React作为前端框架"}], owner="test", session_key="s1")
+        mm.ingest_conversation([{"role": "user", "content": "我们最终决定切换到Vue"}], owner="test", session_key="s2")
+
+        # Auto-forget (force=True to skip age check)
+        self.results["memory_forgetting"]["total"] += 1
+        result = store.auto_forget(owner="test", max_age_days=0, force=True)
+        forgotten = store.execute_forgetting(owner="test")
+
+        # Verify: superseded decision should be forgotten
+        decisions = store.search_decisions(owner="test", limit=10)
+        active = [d for d in decisions if d["status"] == "active"]
+        forgotten_decs = [d for d in decisions if d["status"] == "forgotten"]
+
+        passed = (
+            len(active) >= 1
+            and len(forgotten_decs) >= 1
+            and any("Vue" in (d.get("chosen", "") or "") for d in active)
+            and any("React" in (d.get("chosen", "") or "") for d in forgotten_decs)
+        )
+
+        if passed:
+            self.results["memory_forgetting"]["passed"] += 1
+            print(f"  ✅ Forgetting: active={len(active)}, forgotten={len(forgotten_decs)}")
+        else:
+            print(f"  ❌ Forgetting failed: active={len(active)}, forgotten={len(forgotten_decs)}")
+
+        self.results["memory_forgetting"]["details"].append({
+            "name": "Superseded decision forgetting",
+            "passed": passed,
+        })
+
+        os.unlink(db)
+
     def _check_latest_decision(self, recall, expected_chosen):
         """Check if the active decision has the expected chosen value."""
         for d in recall.get("decisions", []):
@@ -576,6 +622,7 @@ class MemoryLifecycleEval:
             "Memory Consolidation": self.results.get("consolidation", {}).get("passed", 0) > 0,
             "Health Monitoring": self.results.get("health_monitoring", {}).get("passed", 0) > 0,
             "Cross-Agent Sharing": self.results.get("cross_agent_sharing", {}).get("passed", 0) > 0,
+            "Memory Forgetting": self.results.get("memory_forgetting", {}).get("passed", 0) > 0,
         }
         for cap, available in caps.items():
             print(f"    {'✅' if available else '❌'} {cap}")

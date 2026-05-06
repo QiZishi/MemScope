@@ -1,6 +1,16 @@
 File unchanged since last read. The content from the earlier read_file result in this conversation is still current — refer to that instead of re-reading.
 
 
+
+### v5.6 (2026-05-06)
+- **记忆遗忘系统**: schedule_forgetting() / auto_forget() / execute_forgetting()
+  - 被覆写决策自动遗忘（superseded -> forgotten）
+  - 低新鲜度知识自动调度遗忘
+  - 长期未访问chunks自动调度遗忘
+  - force参数跳过时限检查
+- Memory生命周期评测: 19/19 -> 20/20 (100%)
+- 检索指标: 综合评分67.05（无退化）
+
 ### v5.5 (2026-05-06)
 - **跨Agent记忆共享**: share_memory() / get_shared_memories()
 - **记忆健康监控**: check_memory_health() — freshness/consistency/coverage
