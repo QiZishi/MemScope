@@ -37,6 +37,7 @@ class MemoryLifecycleEval:
             "health_monitoring": {"total": 0, "passed": 0, "details": []},
             "cross_agent_sharing": {"total": 0, "passed": 0, "details": []},
             "memory_forgetting": {"total": 0, "passed": 0, "details": []},
+            "proactive_recommendation": {"total": 0, "passed": 0, "details": []},
         }
 
     def run_all(self):
@@ -54,6 +55,7 @@ class MemoryLifecycleEval:
         self._eval_health_monitoring()
         self._eval_cross_agent_sharing()
         self._eval_memory_forgetting()
+        self._eval_proactive_recommendation()
 
         self._print_summary()
         return self.results
@@ -567,6 +569,66 @@ class MemoryLifecycleEval:
 
         os.unlink(db)
 
+
+    def _eval_proactive_recommendation(self):
+        """Test: Proactive recommendation - system suggests relevant memories without explicit query."""
+        print("\n[10/11] Proactive Recommendation")
+        print("-" * 40)
+
+        db = tempfile.mktemp(suffix='.db')
+        store = SqliteStore(db)
+        mm = MemoryManager(store)
+
+        # Build memory base
+        mm.ingest_conversation([
+            {"role": "user", "content": "我们决定用React作为前端框架"},
+            {"role": "user", "content": "数据库用的是PostgreSQL"},
+            {"role": "user", "content": "部署在AWS上"},
+        ], owner="test", session_key="s1")
+        mm.consolidate_memories(owner="test")
+
+        # Test 1: Proactive recommendation finds relevant memories
+        self.results["proactive_recommendation"]["total"] += 1
+        rec = mm.proactive_recommend("我们需要优化数据库查询", owner="test")
+
+        has_recommendations = len(rec.get("recommendations", [])) > 0
+        has_topics = len(rec.get("topics_detected", [])) > 0
+        passed = has_recommendations and has_topics
+
+        if passed:
+            self.results["proactive_recommendation"]["passed"] += 1
+            types = set(r["type"] for r in rec["recommendations"])
+            print(f"  ✅ Proactive: {len(rec['recommendations'])} recommendations, topics={rec['topics_detected']}, types={types}")
+        else:
+            print(f"  ❌ Proactive failed: {rec}")
+
+        self.results["proactive_recommendation"]["details"].append({
+            "name": "Proactive recommendation",
+            "passed": passed,
+            "recommendations": len(rec.get("recommendations", [])),
+        })
+
+        # Test 2: Prefetch returns memory briefing
+        self.results["proactive_recommendation"]["total"] += 1
+        briefing = mm.prefetch(session_key="new", owner="test")
+        has_briefing = (
+            len(briefing.get("recent_decisions", [])) > 0
+            or len(briefing.get("knowledge_summary", [])) > 0
+        )
+
+        if has_briefing:
+            self.results["proactive_recommendation"]["passed"] += 1
+            print(f"  ✅ Prefetch: decisions={len(briefing['recent_decisions'])} prefs={len(briefing['active_preferences'])} knowledge={len(briefing['knowledge_summary'])}")
+        else:
+            print(f"  ❌ Prefetch failed: empty briefing")
+
+        self.results["proactive_recommendation"]["details"].append({
+            "name": "Session prefetch",
+            "passed": has_briefing,
+        })
+
+        os.unlink(db)
+
     def _check_latest_decision(self, recall, expected_chosen):
         """Check if the active decision has the expected chosen value."""
         for d in recall.get("decisions", []):
@@ -623,6 +685,7 @@ class MemoryLifecycleEval:
             "Health Monitoring": self.results.get("health_monitoring", {}).get("passed", 0) > 0,
             "Cross-Agent Sharing": self.results.get("cross_agent_sharing", {}).get("passed", 0) > 0,
             "Memory Forgetting": self.results.get("memory_forgetting", {}).get("passed", 0) > 0,
+            "Proactive Recommendation": self.results.get("proactive_recommendation", {}).get("passed", 0) > 0,
         }
         for cap, available in caps.items():
             print(f"    {'✅' if available else '❌'} {cap}")

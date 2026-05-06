@@ -2,6 +2,15 @@ File unchanged since last read. The content from the earlier read_file result in
 
 
 
+
+### v5.7 (2026-05-06)
+- **主动推荐系统**: proactive_recommend() / prefetch()
+  - 基于对话上下文自动识别话题并推荐相关记忆
+  - 会话开始时prefetch()返回记忆简报（决策/偏好/知识/整合摘要）
+  - 搜索决策+偏好+知识+整合chunk四种记忆类型
+- Memory生命周期评测: 20/20 -> 22/22 (100%)
+- 检索指标: 综合评分67.05（无退化）
+
 ### v5.6 (2026-05-06)
 - **记忆遗忘系统**: schedule_forgetting() / auto_forget() / execute_forgetting()
   - 被覆写决策自动遗忘（superseded -> forgotten）

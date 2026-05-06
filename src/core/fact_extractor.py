@@ -1249,3 +1249,263 @@ class MemoryManager:
         except Exception as e:
             logger.error(f"get_shared_memories failed: {e}")
             return []
+
+
+    def proactive_recommend(
+        self,
+        message: str,
+        owner: str = "default",
+        max_recommendations: int = 5,
+    ) -> Dict[str, Any]:
+        """Proactively recommend relevant memories based on a new message.
+        
+        Unlike recall() which requires an explicit query, this method:
+        1. Analyzes the incoming message for topics/entities
+        2. Searches all memory types for relevant entries
+        3. Ranks by relevance and importance
+        4. Returns top recommendations with context
+        
+        Args:
+            message: The new user message to find context for
+            owner: Memory owner
+            max_recommendations: Max items to recommend
+            
+        Returns:
+            Dict with 'recommendations' list and 'topics_detected' list.
+        """
+        import re as _re
+        
+        # Step 1: Extract topics and entities from message
+        topics = self._extract_topics(message)
+        
+        # Step 2: Search each memory type
+        candidates = []
+        
+        # Search decisions (broader matching: also search by chosen value and context)
+        seen_decision_ids = set()
+        for topic in topics:
+            # Search by title/context/chosen
+            decisions = self.store.search_decisions(owner=owner, query=topic, limit=3)
+            for d in decisions:
+                if d.get("status") == "active" and d["id"] not in seen_decision_ids:
+                    seen_decision_ids.add(d["id"])
+                    candidates.append({
+                        "type": "decision",
+                        "id": d["id"],
+                        "title": d.get("title", ""),
+                        "value": d.get("chosen", ""),
+                        "context": d.get("context", ""),
+                        "topic_match": topic,
+                        "status": d.get("status", "active"),
+                    })
+        
+        # Also get ALL active decisions as broader context
+        all_active = self.store.search_decisions(owner=owner, limit=20)
+        for d in all_active:
+            if d.get("status") == "active" and d["id"] not in seen_decision_ids:
+                # Check if any topic word appears in title/context/chosen
+                title_ctx = f"{d.get('title', '')} {d.get('context', '')} {d.get('chosen', '')}"
+                for topic in topics:
+                    if topic.lower() in title_ctx.lower() or any(
+                        t in title_ctx for t in ['框架', '选型', '技术', '方案', '工具']
+                    ):
+                        seen_decision_ids.add(d["id"])
+                        candidates.append({
+                            "type": "decision",
+                            "id": d["id"],
+                            "title": d.get("title", ""),
+                            "value": d.get("chosen", ""),
+                            "context": d.get("context", ""),
+                            "topic_match": topic,
+                            "status": d.get("status", "active"),
+                        })
+                        break
+        
+        # Search preferences
+        prefs = self.store.list_preferences(owner=owner)
+        for pref in prefs:
+            pref_text = f"{pref.get('category', '')} {pref.get('key', '')} {pref.get('value', '')}"
+            for topic in topics:
+                if topic.lower() in pref_text.lower():
+                    candidates.append({
+                        "type": "preference",
+                        "category": pref.get("category", ""),
+                        "key": pref.get("key", ""),
+                        "value": pref.get("value", ""),
+                        "topic_match": topic,
+                    })
+                    break
+        
+        # Search knowledge (topic-matched + all active knowledge for context)
+        cursor = self.store.conn.cursor()
+        seen_knowledge = set()
+        for topic in topics:
+            cursor.execute(
+                "SELECT * FROM knowledge_health WHERE owner = ? AND topic LIKE ? ORDER BY freshness_score DESC LIMIT 3",
+                (owner, f"%{topic}%"),
+            )
+            for row in cursor.fetchall():
+                row_dict = dict(row)
+                if row_dict["id"] not in seen_knowledge:
+                    seen_knowledge.add(row_dict["id"])
+                    candidates.append({
+                        "type": "knowledge",
+                        "topic": row_dict.get("topic", ""),
+                        "freshness": row_dict.get("freshness_score", 0),
+                        "accuracy": row_dict.get("accuracy_score", 0),
+                        "topic_match": topic,
+                    })
+        
+        # Also include high-freshness knowledge as general context
+        cursor.execute(
+            "SELECT * FROM knowledge_health WHERE owner = ? AND freshness_score > 0.7 ORDER BY freshness_score DESC LIMIT 5",
+            (owner,),
+        )
+        for row in cursor.fetchall():
+            row_dict = dict(row)
+            if row_dict["id"] not in seen_knowledge:
+                seen_knowledge.add(row_dict["id"])
+                candidates.append({
+                    "type": "knowledge",
+                    "topic": row_dict.get("topic", ""),
+                    "freshness": row_dict.get("freshness_score", 0),
+                    "accuracy": row_dict.get("accuracy_score", 0),
+                    "topic_match": "(context)",
+                })
+        
+        # Search consolidated chunks
+        for topic in topics:
+            cursor.execute(
+                "SELECT * FROM chunks WHERE owner = ? AND content LIKE ? AND kind LIKE 'consolidated%' LIMIT 2",
+                (owner, f"%{topic}%"),
+            )
+            for row in cursor.fetchall():
+                row_dict = dict(row)
+                candidates.append({
+                    "type": "consolidated",
+                    "content": row_dict.get("content", ""),
+                    "kind": row_dict.get("kind", ""),
+                    "topic_match": topic,
+                })
+        
+        # Step 3: Deduplicate and rank
+        seen = set()
+        unique = []
+        for c in candidates:
+            key = f"{c['type']}:{c.get('id', '')}{c.get('topic', '')}{c.get('key', '')}"
+            if key not in seen:
+                seen.add(key)
+                unique.append(c)
+        
+        # Step 4: Limit
+        recommendations = unique[:max_recommendations]
+        
+        return {
+            "recommendations": recommendations,
+            "topics_detected": topics,
+            "total_candidates": len(candidates),
+            "unique_candidates": len(unique),
+        }
+
+    def _extract_topics(self, text: str) -> list:
+        """Extract key topics/entities from text for proactive matching."""
+        import re as _re
+        
+        topics = set()
+        
+        # Tech terms
+        tech_terms = [
+            'React', 'Vue', 'Angular', 'Next.js', 'Svelte',
+            'Python', 'Java', 'Go', 'Rust', 'TypeScript', 'JavaScript',
+            'PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'SQLite',
+            'Docker', 'Kubernetes', 'K8s', 'AWS', 'Azure', 'GCP',
+            'RabbitMQ', 'Kafka', 'Nginx', 'gRPC', 'GraphQL',
+            'Git', 'Jenkins', 'GitHub', 'GitLab',
+            'FastAPI', 'Django', 'Flask', 'Spring',
+            'Prometheus', 'Grafana', 'ELK',
+        ]
+        for term in tech_terms:
+            if term.lower() in text.lower():
+                topics.add(term)
+        
+        # Chinese topic patterns
+        topic_patterns = [
+            (r'(?:数据库|DB|数据存储)', '数据库'),
+            (r'(?:前端|前端框架|UI)', '前端'),
+            (r'(?:后端|后端框架|服务端)', '后端'),
+            (r'(?:部署|部署方案|云平台)', '部署'),
+            (r'(?:消息队列|MQ)', '消息队列'),
+            (r'(?:缓存)', '缓存'),
+            (r'(?:容器|容器化)', '容器'),
+            (r'(?:监控|监控系统)', '监控'),
+            (r'(?:CI/CD|持续集成|流水线)', 'CI/CD'),
+            (r'(?:测试|测试框架)', '测试'),
+            (r'(?:安全|认证|授权)', '安全'),
+            (r'(?:性能|优化)', '性能'),
+            (r'(?:架构|系统架构)', '架构'),
+            (r'(?:框架|技术栈|技术选型)', '技术选型'),
+        ]
+        for pattern, topic in topic_patterns:
+            if _re.search(pattern, text, _re.IGNORECASE):
+                topics.add(topic)
+        
+        # Also extract any quoted or backticked terms
+        quoted = _re.findall(r'["\']([^"\' ]+)["\']|`([^`]+)`', text)
+        for q in quoted:
+            term = q[0] or q[1]
+            if len(term) >= 2:
+                topics.add(term)
+        
+        return list(topics)
+
+    def prefetch(
+        self,
+        session_key: str,
+        owner: str = "default",
+    ) -> Dict[str, Any]:
+        """Prefetch relevant memories at session start.
+        
+        Called when a new conversation session begins.
+        Returns a memory briefing: recent decisions, active preferences,
+        relevant knowledge, and consolidated summaries.
+        
+        This is the Memory system's prefetch() lifecycle hook.
+        """
+        cursor = self.store.conn.cursor()
+        
+        briefing = {
+            "recent_decisions": [],
+            "active_preferences": [],
+            "knowledge_summary": [],
+            "consolidated": [],
+        }
+        
+        # Recent active decisions (last 10)
+        cursor.execute(
+            "SELECT * FROM decisions WHERE owner = ? AND status = 'active' ORDER BY updatedAt DESC LIMIT 10",
+            (owner,),
+        )
+        briefing["recent_decisions"] = [dict(row) for row in cursor.fetchall()]
+        
+        # Active preferences
+        cursor.execute(
+            "SELECT * FROM user_preferences WHERE owner = ? ORDER BY updatedAt DESC LIMIT 10",
+            (owner,),
+        )
+        briefing["active_preferences"] = [dict(row) for row in cursor.fetchall()]
+        
+        # Knowledge with high freshness
+        cursor.execute(
+            "SELECT * FROM knowledge_health WHERE owner = ? AND freshness_score > 0.5 ORDER BY freshness_score DESC LIMIT 10",
+            (owner,),
+        )
+        briefing["knowledge_summary"] = [dict(row) for row in cursor.fetchall()]
+        
+        # Consolidated summaries
+        cursor.execute(
+            "SELECT * FROM chunks WHERE owner = ? AND kind LIKE 'consolidated%' ORDER BY createdAt DESC LIMIT 5",
+            (owner,),
+        )
+        briefing["consolidated"] = [dict(row) for row in cursor.fetchall()]
+        
+        return briefing
