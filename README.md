@@ -8,175 +8,207 @@
   <img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="Python 3.8+">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
   <img src="https://img.shields.io/badge/samples-240-brightgreen.svg" alt="240 Samples">
+  <img src="https://img.shields.io/badge/fact_extraction-90%25-brightgreen.svg" alt="Fact Extraction F1">
+  <img src="https://img.shields.io/badge/contradiction-100%25-brightgreen.svg" alt="Contradiction Detection">
   <img src="https://img.shields.io/badge/recall@1-58.01%25-brightgreen.svg" alt="Recall@1">
-  <img src="https://img.shields.io/badge/memory_f1-90%25-brightgreen.svg" alt="Memory F1">
 </p>
 
 ---
 
-## 📊 最新评测结果（v5.9）
+## 更新日志
 
-> 评测时间：2026-05-06
-> 评测方式：直接调用 MemScope API（240条样本，8个数据集）
-> 性能评测脚本：eval/memory_performance_eval.py（用指标衡量，非通过率）
-
-### Memory能力指标（核心创新）
-
-| 能力 | 指标 | 值 | 说明 |
-|------|------|-----|------|
-| **事实提取** | Precision | **90.0%** | 从对话中提取决策/偏好/知识的准确率 |
-| **事实提取** | Recall | **90.0%** | 不遗漏重要事实 |
-| **事实提取** | F1 | **90.0%** | 精确率和召回率的调和平均 |
-| **矛盾检测** | Detection Rate | **100%** | 新信息自动覆写旧信息（含跨类型检测） |
-| **矛盾检测** | False Positives | **0** | 无误报 |
-| **主动推荐** | Precision | **100%** | 推荐的记忆全部相关 |
-| **主动推荐** | F1 | **76.9%** | 推荐的精确率和召回率平衡 |
-
-### 检索指标（240样本）
-
-| 指标 | 值 | 说明 |
-|------|-----|------|
-| **Recall@1** | **58.01%** | Top-1 结果命中率 |
-| **Recall@3** | **77.84%** | Top-3 结果命中率 |
-| **Recall@5** | **84.99%** | Top-5 结果命中率 |
-| **MRR** | **68.67%** | 平均倒数排名 |
-| **F1分数** | **50.29%** | 精确率和召回率的调和平均 |
-| **综合评分** | **67.05** | 加权综合得分（满分100） |
-
-### 效能指标
-
-| 指标 | 值 | 目标 | 状态 |
-|------|-----|------|------|
-| 写入延迟 P50 | **1.88ms** | ≤200ms | ✅ 达标 |
-| 查询延迟 P50 | **1.56ms** | ≤300ms | ✅ 达标 |
-| 操作节省率 | **77.0%** | ≥50% | ✅ 达标 |
+| 版本 | 日期 | 主要更新 |
+|------|------|----------|
+| v5.9 | 2026-05-06 | **性能优化**：事实提取P/R/F1=90%、矛盾检测100%、推荐F1=76.9%；新增性能评测脚本 |
+| v5.8 | 2026-05-06 | **端到端集成测试**：9阶段完整测试（摄入→矛盾→一致性→整合→健康→共享→遗忘→推荐→预取） |
+| v5.7 | 2026-05-06 | **主动推荐**：proactive_recommend() / prefetch()，基于上下文自动推送记忆 |
+| v5.6 | 2026-05-06 | **记忆遗忘**：auto_forget() / execute_forgetting()，过时记忆自动清理 |
+| v5.5 | 2026-05-06 | **跨Agent共享+健康监控**：share_memory()、check_memory_health() |
+| v5.4 | 2026-05-06 | **记忆整合**：consolidate_memories()，决策时间线/偏好画像/知识图谱 |
+| v5.3 | 2026-05-06 | **Memory生命周期**：FactExtractor + MemoryManager，事实提取+矛盾检测+统一召回 |
+| v5.2 | 2026-05-06 | **Memory生命周期评测**：首次实现Memory维度评测 |
+| v5.1 | 2026-05-06 | **搜索评分优化**：distinctive/common词项分类，R@1从48%提升到58% |
+| v5.0 | 2026-05-06 | **评测体系重构**：240条样本、多轮对话格式、Recall@k/MRR指标 |
 
 ---
 
-## 🧠 Memory系统能力（10项）
+## 功能特性
 
-> 不只是RAG检索，而是完整的Memory生命周期
+### 10 项 Memory 能力
 
-| # | 能力 | 说明 | API |
-|---|------|------|-----|
-| 1 | **事实提取** | 从对话中自动提取决策/偏好/知识 | `FactExtractor.extract_and_store()` |
-| 2 | **矛盾检测** | 新信息自动覆写旧信息（含跨类型） | `extract_and_store(detect_contradictions=True)` |
-| 3 | **统一召回** | 跨chunks+决策+偏好+知识搜索 | `MemoryManager.recall()` |
-| 4 | **记忆一致性** | 矛盾后只返回最新信息 | 决策status=active/superseded/forgotten |
-| 5 | **时序排序** | 后续信息优先于早期信息 | createdAt排序 |
-| 6 | **记忆整合** | 多个相关记忆合并为高层知识 | `consolidate_memories()` |
-| 7 | **健康监控** | freshness/consistency/coverage | `check_memory_health()` |
-| 8 | **跨Agent共享** | Alice的记忆可共享给Bob | `share_memory()` / `get_shared_memories()` |
-| 9 | **记忆遗忘** | 过时/被覆写记忆自动遗忘 | `auto_forget()` / `execute_forgetting()` |
-| 10 | **主动推荐** | 基于上下文自动推送相关记忆 | `proactive_recommend()` / `prefetch()` |
+MemScope 不是 RAG，而是完整的 Memory 系统：
 
-### 端到端集成测试（9阶段）
+| # | 能力 | 说明 | RAG 有？ |
+|---|------|------|----------|
+| 1 | 事实提取 | 从对话中自动提取决策/偏好/知识 | ❌ |
+| 2 | 矛盾检测 | 新信息自动覆写旧信息（含跨类型） | ❌ |
+| 3 | 统一召回 | 跨 chunks+决策+偏好+知识搜索 | 部分 |
+| 4 | 记忆一致性 | 矛盾后只返回最新信息 | ❌ |
+| 5 | 时序排序 | 后续信息优先于早期信息 | ❌ |
+| 6 | 记忆整合 | 多个相关记忆合并为高层知识 | ❌ |
+| 7 | 健康监控 | freshness/consistency/coverage | ❌ |
+| 8 | 跨Agent共享 | Alice 的记忆可共享给 Bob | ❌ |
+| 9 | 记忆遗忘 | 过时/被覆写记忆自动遗忘 | ❌ |
+| 10 | 主动推荐 | 基于上下文自动推送相关记忆 | ❌ |
 
-| 阶段 | 说明 | 结果 |
+### 四大记忆方向（赛题）
+
+| 方向 | 场景 | 示例 |
 |------|------|------|
-| 摄入 | 对话自动提取事实 | ✅ |
-| 矛盾 | 新信息覆写旧信息 | ✅ |
-| 一致性 | 只返回最新值 | ✅ |
-| 整合 | 多记忆合并为高层知识 | ✅ |
-| 健康 | freshness/consistency/coverage | ✅ |
-| 共享 | 跨Agent记忆传递 | ✅ |
-| 遗忘 | 过时记忆自动遗忘 | ✅ |
-| 推荐 | 基于上下文主动推荐 | ✅ |
-| 预取 | 会话开始记忆简报 | ✅ |
+| **A: CLI命令记忆** | 高频命令、操作模式 | 「git push 用了47次」 |
+| **B: 飞书决策记忆** | 技术选型、方案讨论 | 「前端框架选了React」 |
+| **C: 个人偏好记忆** | 工具偏好、工作习惯 | 「我喜欢用Python」 |
+| **D: 团队知识健康** | 知识新鲜度、遗忘预警 | 「API文档6个月无人查阅」 |
 
 ---
 
-## 📋 更新日志
+## 评测数据集与性能
 
-### v5.9 (2026-05-06) — 性能优化
-- **性能评测**: eval/memory_performance_eval.py — 用指标而非通过率衡量性能
-  - 事实提取: Precision=90.0%, Recall=90.0%, F1=90.0%
-  - 矛盾检测: Detection Rate=100%, False Positives=0
-  - 主动推荐: Precision=100%, Recall=62.5%, F1=76.9%
-- **关键优化**:
-  - 偏好值清理: 'Python写代码'->'Python', 'Go语言'->'Go'
-  - 跨类型矛盾检测: knowledge vs decision
-  - 推荐相关性评分: min_relevance过滤噪声
+### 评测数据集
 
-### v5.8 (2026-05-06)
-- **端到端集成测试**: eval/e2e_integration_test.py (9/9 100%)
+8 个数据集，每个 30 条样本，共 240 条：
 
-### v5.7 (2026-05-06)
-- **主动推荐系统**: proactive_recommend() / prefetch()
+| 数据集 | 样本数 | 推理类型 | 覆盖方向 |
+|--------|--------|----------|----------|
+| feishu_anti_interference | 30 | single_hop, adversarial | 抗干扰测试 |
+| feishu_contradiction_update | 30 | knowledge_update, temporal | 矛盾更新测试 |
+| feishu_efficiency | 30 | single_hop | 效能验证 |
+| feishu_command_memory | 30 | single_hop, multi_hop | 方向A: CLI命令 |
+| feishu_decision_memory | 30 | single_hop, multi_hop, temporal | 方向B: 决策记忆 |
+| feishu_preference_memory | 30 | single_hop, adversarial | 方向C: 偏好记忆 |
+| feishu_knowledge_health | 30 | single_hop | 方向D: 知识健康 |
+| feishu_long_term_memory | 30 | temporal, multi_hop | 长时序记忆 |
 
-### v5.6 (2026-05-06)
-- **记忆遗忘系统**: schedule_forgetting() / auto_forget() / execute_forgetting()
+### 性能指标
 
-### v5.5 (2026-05-06)
-- **跨Agent记忆共享**: share_memory() / get_shared_memories()
-- **记忆健康监控**: check_memory_health()
+#### Memory 能力指标（核心创新）
 
-### v5.4 (2026-05-06)
-- **记忆整合系统**: consolidate_memories() — 决策时间线/偏好画像/知识图谱
+| 能力 | 指标 | 值 |
+|------|------|-----|
+| 事实提取 | Precision / Recall / F1 | **90% / 90% / 90%** |
+| 矛盾检测 | Detection Rate | **100%** |
+| 矛盾检测 | False Positives | **0** |
+| 主动推荐 | Precision | **100%** |
+| 主动推荐 | F1 | **76.9%** |
 
-### v5.3 (2026-05-06)
-- **Memory生命周期系统**: FactExtractor + MemoryManager
+#### 检索指标（240 样本）
 
-### v5.1 (2026-05-06)
-- **搜索评分算法优化**: distinctive/common词项分类
+| 指标 | 值 |
+|------|-----|
+| Recall@1 | **58.01%** |
+| Recall@3 | **77.84%** |
+| Recall@5 | **84.99%** |
+| MRR | **68.67%** |
+| F1 | **50.29%** |
+| 综合评分 | **67.05** |
 
-### v5.0 (2026-05-06)
-- **评测体系全面调整**: 240条样本/多轮对话格式/Recall@k/MRR
+#### 效能指标
 
----
+| 指标 | 值 | 目标 |
+|------|-----|------|
+| 写入延迟 P50 | **1.88ms** | ≤200ms ✅ |
+| 查询延迟 P50 | **1.56ms** | ≤300ms ✅ |
+| 操作节省率 | **77.0%** | ≥50% ✅ |
 
-## Overview
-
-MemScope 是一个面向企业场景的 AI Agent 长周期协作记忆引擎，基于 [memos-local-hermes-plugin](https://github.com/damxin/memos-local-hermes-plugin) 二次开发，作为 Hermes Agent 的插件运行。
-
-### 四大记忆能力（赛题方向）
-
-| 能力模块 | 核心功能 | 子模块 |
-|----------|---------|--------|
-| **command_memory** CLI命令记忆 | 高频命令统计、项目路径关联、上下文感知推荐 | command_tracker, pattern_analyzer, recommender |
-| **decision_memory** 飞书决策记忆 | 中英文决策提取、历史决策卡片推送 | decision_extractor, decision_card |
-| **preference_memory** 个人偏好记忆 | 偏好提取(显式+隐式)、行为模式推断、冲突解决 | preference_extractor, preference_manager, habit_inference |
-| **knowledge_health** 团队知识健康 | 艾宾浩斯遗忘曲线、知识缺口检测、遗忘预警 | ebbinghaus, freshness_monitor, gap_detector, knowledge_evaluator |
+> 详细评测报告见 [自证评测报告.md](自证评测报告.md)
 
 ---
 
-## 🏗️ 项目结构
+## 目录结构
 
 ```
 MemScope/
-├── src/                          # 核心源码
+├── src/                                    # 核心源码
+│   ├── __init__.py                         # MemScopeProvider 主入口
 │   ├── core/
-│   │   ├── store.py              # SQLite存储层（FTS5全文索引 + LIKE回退）
-│   │   └── fact_extractor.py     # Memory核心：FactExtractor + MemoryManager
-│   ├── recall/engine.py          # 混合检索引擎（FTS + Pattern + RRF融合）
-│   ├── command_memory/           # 方向A: CLI命令记忆
-│   ├── decision_memory/          # 方向B: 飞书决策记忆
-│   ├── preference_memory/        # 方向C: 个人偏好记忆
-│   ├── knowledge_health/         # 方向D: 团队知识健康
-│   ├── feishu/                   # 飞书API集成
-│   ├── ingest/                   # 摄取管线（分块/去重/摘要）
-│   └── context_engine/           # 上下文自动注入
-├── eval/                         # 评测体系
-│   ├── direct_api_eval.py        # 核心检索能力评测（240条样本）
-│   ├── memory_performance_eval.py # Memory能力性能评测（P/R/F1指标）
-│   ├── memory_lifecycle_eval_v2.py # Memory生命周期评测（代码测试）
-│   ├── e2e_integration_test.py   # 端到端集成测试（9阶段）
-│   ├── efficiency_eval.py        # 效能指标评测
-│   ├── ablation_eval.py          # 消融对比评测
-│   └── datasets/                 # 评测数据集（8个×30条=240条）
-├── demo/                         # 演示脚本
-├── docs/                         # 文档
-└── test/                         # 代码测试（pytest）
+│   │   ├── store.py                        # SQLite存储层（FTS5 + LIKE + 评分）
+│   │   ├── fact_extractor.py               # FactExtractor + MemoryManager
+│   │   └── embedder.py                     # 向量嵌入
+│   ├── recall/                             # 混合检索引擎
+│   │   ├── engine.py                       # RecallEngine（FTS + Pattern + RRF）
+│   │   ├── rrf.py                          # RRF 多源融合
+│   │   ├── mmr.py                          # MMR 多样性重排
+│   │   └── recency.py                      # 时间衰减
+│   ├── command_memory/                     # 方向A: CLI命令记忆
+│   │   ├── command_tracker.py              # 命令追踪
+│   │   └── recommender.py                  # 命令推荐
+│   ├── decision_memory/                    # 方向B: 飞书决策记忆
+│   │   ├── decision_extractor.py           # 决策提取
+│   │   └── decision_card.py                # 决策卡片
+│   ├── preference_memory/                  # 方向C: 个人偏好记忆
+│   │   ├── preference_extractor.py         # 偏好提取
+│   │   ├── preference_manager.py           # 偏好管理
+│   │   └── habit_inference.py              # 习惯推断
+│   ├── knowledge_health/                   # 方向D: 团队知识健康
+│   │   ├── ebbinghaus.py                   # 艾宾浩斯遗忘曲线
+│   │   ├── freshness_monitor.py            # 新鲜度监控
+│   │   └── gap_detector.py                 # 知识缺口检测
+│   ├── ingest/                             # 摄取管线
+│   │   ├── chunker.py                      # 语义分块
+│   │   └── summarizer.py                   # 摘要生成
+│   ├── context_engine/                     # 上下文自动注入
+│   │   └── index.py                        # ContextEngine
+│   └── shared/                             # 共享工具
+│       └── utils.py                        # cosine_similarity 等
+│
+├── eval/                                   # 评测体系
+│   ├── datasets/                           # 评测数据集（8×30=240条）
+│   │   ├── feishu_anti_interference.json
+│   │   ├── feishu_command_memory.json
+│   │   ├── feishu_contradiction_update.json
+│   │   ├── feishu_decision_memory.json
+│   │   ├── feishu_efficiency.json
+│   │   ├── feishu_knowledge_health.json
+│   │   ├── feishu_long_term_memory.json
+│   │   └── feishu_preference_memory.json
+│   ├── direct_api_eval.py                  # 检索评测（240样本）
+│   ├── memory_performance_eval.py          # Memory能力性能评测
+│   ├── memory_lifecycle_eval_v2.py         # 生命周期评测
+│   ├── e2e_integration_test.py             # 端到端集成测试
+│   ├── efficiency_eval.py                  # 效能评测
+│   └── history/                            # 评测历史记录
+│
+├── demo/                                   # 演示脚本
+│   ├── demo_cli.py                         # CLI演示
+│   ├── demo_feishu.py                      # 飞书演示
+│   └── demo_scenario.md                    # 演示场景说明
+│
+├── test/                                   # 代码测试（pytest）
+│   ├── conftest.py
+│   ├── test_anti_interference.py
+│   ├── test_command_memory.py
+│   ├── test_contradiction_update.py
+│   ├── test_decision_memory.py
+│   ├── test_efficiency.py
+│   ├── test_feishu_integration.py
+│   ├── test_knowledge_health.py
+│   └── test_preference_memory.py
+│
+├── docs/                                   # 设计文档
+│   ├── architecture_design.md              # 核心架构设计
+│   ├── evaluation_scheme.md                # 评测方案
+│   ├── evaluation_benchmark_analysis.md    # LongMemEval/LOCOMO分析
+│   ├── memos_analysis.md                   # MemOS架构分析
+│   ├── memory_research_report.md           # 记忆研究综述
+│   ├── enterprise_memory_architecture_comparison.md  # 架构对比
+│   └── feishu_cli_integration.md           # 飞书集成方案
+│
+├── Memory定义与架构白皮书.md                # 记忆定义与架构白皮书
+├── 自证评测报告.md                          # 自证评测报告
+├── AGENTS.md                               # 开发指南
+├── plugin.yaml                             # Hermes插件配置
+├── LICENSE                                 # MIT License
+└── README.md                               # 本文件
 ```
 
 ---
 
-## 🚀 快速开始
+## 快速开始
 
 ### 环境要求
 
 - Python 3.8+
-- SQLite 3.35+（支持FTS5）
+- SQLite 3.35+（支持 FTS5）
 
 ### 安装
 
@@ -189,85 +221,92 @@ pip install -r requirements.txt
 ### 运行评测
 
 ```bash
-# 核心检索能力评测（240条样本）
+# 检索评测（240 样本，Recall@k / MRR / F1）
 python3 eval/direct_api_eval.py
 
-# Memory能力性能评测（P/R/F1指标）
+# Memory 能力性能评测（P/R/F1 指标）
 python3 eval/memory_performance_eval.py
 
-# Memory生命周期评测（代码测试）
+# Memory 生命周期评测（10 项能力）
 python3 eval/memory_lifecycle_eval_v2.py
 
-# 端到端集成测试
+# 端到端集成测试（9 阶段）
 python3 eval/e2e_integration_test.py
 
-# 效能指标评测
+# 效能评测（延迟 / 操作节省率）
 python3 eval/efficiency_eval.py
 ```
 
+### API 使用
+
+```python
+from core.store import SqliteStore
+from core.fact_extractor import MemoryManager
+
+# 初始化
+store = SqliteStore("memos.db")
+mm = MemoryManager(store)
+
+# 摄入对话（自动提取事实 + 矛盾检测）
+result = mm.ingest_conversation([
+    {"role": "user", "content": "我们决定用React作为前端框架"},
+    {"role": "user", "content": "数据库用的是PostgreSQL"},
+], owner="team", session_key="meeting_001")
+# result: {"chunks_stored": 2, "facts_extracted": {"decisions": 1, "knowledge": 1}, "contradictions_resolved": 0}
+
+# 统一召回
+recall = mm.recall("前端框架", owner="team")
+# recall: {"chunks": [...], "decisions": [...], "preferences": [...], "knowledge": [...]}
+
+# 主动推荐
+rec = mm.proactive_recommend("我们需要优化数据库查询", owner="team")
+# rec: {"recommendations": [...], "topics_detected": ["数据库", "性能"]}
+
+# 记忆整合
+mm.consolidate_memories(owner="team")
+
+# 记忆遗忘
+store.auto_forget(owner="team", force=True)
+store.execute_forgetting(owner="team")
+```
+
 ---
 
-## 📊 评测体系
+## 核心技术
 
-### 评测数据集
+### 事实提取（FactExtractor）
 
-8个数据集，每个30条样本，共240条，覆盖四大记忆方向 + 三个赛题必测项：
+从非结构化对话中自动提取三类结构化事实：
 
-| 数据集 | 权重 | 样本结构 | 推理类型 |
-|--------|------|----------|----------|
-| anti_interference | 15% | 多轮对话 + 噪声干扰 | single_hop, adversarial |
-| contradiction_update | 15% | 信息变更 + 时序覆写 | knowledge_update, temporal |
-| efficiency | 15% | 查询效率 + 准确性 | single_hop |
-| command_memory | 10% | 操作模式识别 | single_hop, multi_hop |
-| decision_memory | 15% | 团队决策提取 | single_hop, multi_hop, temporal |
-| preference_memory | 15% | 个人偏好记忆 | single_hop, adversarial, knowledge_update |
-| knowledge_health | 10% | 团队知识健康 | single_hop |
-| long_term_memory | 5% | 长时序记忆 | temporal, multi_hop |
+| 类型 | 信号词 | 示例输入 | 提取结果 |
+|------|--------|----------|----------|
+| 决策 | 决定/确认/选定/切换到 | 「我们决定用React」 | decision(title="前端框架选择", chosen="React") |
+| 偏好 | 喜欢/偏好/不要用 | 「我喜欢用Python」 | preference(category="language", value="Python") |
+| 知识 | 用的是/部署在/版本是 | 「数据库用PostgreSQL」 | knowledge(topic="database:PostgreSQL") |
 
-### 评测指标
+### 矛盾检测（Contradiction Detection）
 
-| 指标 | 说明 | 来源 |
-|------|------|------|
-| Recall@k | Top-k 结果命中率 | LongMemEval |
-| MRR | 平均倒数排名 | 信息检索标准 |
-| Precision | 返回结果中相关比例 | 赛题要求 |
-| F1 | P和R的调和平均 | 赛题要求 |
-| 延迟 P50/P95/P99 | 写入和查询延迟 | 赛题要求 |
-| 操作节省率 | 有/无记忆的操作步数对比 | 赛题要求 |
+新信息到达时自动检测与已有记忆的矛盾：
 
----
+- **同类型**：decision "React" → 新 decision "Vue" → 旧标记 superseded
+- **跨类型**：knowledge "database:MySQL" vs 新 decision "数据库选型:PostgreSQL" → 矛盾标记
 
-## 🔧 技术架构
+### 记忆整合（Consolidation）
 
-### Memory生命周期
+多个相关记忆合并为高层知识：
 
-```
-对话输入 → 事实提取(FactExtractor) → 矛盾检测 → 结构化存储
-                                              ↓
-              记忆整合(consolidate) ← 多轮积累 ←┘
-                    ↓
-    主动推荐(proactive_recommend) → 上下文注入
-                    ↓
-    记忆遗忘(auto_forget) → 过时记忆清理
-```
+- **决策时间线**：MySQL → PostgreSQL（当前: PostgreSQL）
+- **偏好画像**：language=Python, framework=React
+- **知识图谱**：database:PostgreSQL, infra:AWS
 
-### 检索流程
+### 主动推荐（Proactive Recommendation）
 
-```
-查询 → 词项提取 → 词项分类(distinctive/common) → FTS5搜索 → 评分排序 → 结果
-                      ↓
-              中文2-3字切分 + 英文单词 + 数字
-                      ↓
-         FTS5: (distinctive1 OR distinctive2) AND (common1 OR common2)
-                      ↓
-         评分: distinctive覆盖(70%) + common覆盖(10%) + 邻近度(15%) + 精确匹配(5%)
-```
+不需要用户搜索，基于对话上下文自动推送：
 
-### 存储架构
-
-- **SQLite** + **FTS5** 全文索引
-- 零外部依赖，纯本地运行
-- 支持 private/shared/all 三级可见性
+1. 提取话题：「优化数据库查询」→ topics=["数据库", "性能"]
+2. 搜索记忆：匹配 decision/preference/knowledge/consolidated
+3. 相关性评分：topic 匹配度 × 类型权重
+4. 返回 top-N（min_relevance ≥ 0.1）
 
 ---
 
@@ -275,7 +314,9 @@ python3 eval/efficiency_eval.py
 
 1. Wu, D., et al. (2025). LongMemEval: Benchmarking Chat Assistants on Long-Term Interactive Memory. *ICLR 2025*.
 2. Maharana, A., et al. (2024). Evaluating Very Long-Term Conversational Memory of LLM Agents. *ACL Findings 2024*.
-3. 飞书 OpenClaw 赛道-企业级长程协作 Memory 系统.
+3. Ebbinghaus, H. (1885). Memory: A Contribution to Experimental Psychology.
+4. 飞书 OpenClaw 赛道 — 企业级长程协作 Memory 系统.
+5. memos-local-hermes-plugin — MemScope 的基础架构.
 
 ---
 
