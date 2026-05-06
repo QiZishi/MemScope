@@ -1,5 +1,13 @@
 File unchanged since last read. The content from the earlier read_file result in this conversation is still current — refer to that instead of re-reading.
 
+
+### v5.5 (2026-05-06)
+- **跨Agent记忆共享**: share_memory() / get_shared_memories()
+- **记忆健康监控**: check_memory_health() — freshness/consistency/coverage
+- **重要性评分**: log_memory_access() / get_memory_importance()
+- Memory生命周期评测: 17/17 -> 19/19 (100%)
+- 检索指标: 综合评分67.05（无退化）
+
 ### v5.4 (2026-05-06)
 - **🆕 记忆整合系统**：多个相关记忆合并为高层知识
   - 决策时间线：同一主题的多次决策合并为时间线（MySQL -> PostgreSQL）
