@@ -3,7 +3,18 @@ File unchanged since last read. The content from the earlier read_file result in
 
 
 
-### v5.8 (2026-05-06) — 最终版
+### v5.9 (2026-05-06) — 性能优化
+- **性能评测**: eval/memory_performance_eval.py — 用指标而非通过率衡量性能
+  - 事实提取: Precision=90.0%, Recall=90.0%, F1=90.0%
+  - 矛盾检测: Detection Rate=100%, False Positives=0
+  - 主动推荐: Precision=100%, Recall=62.5%, F1=76.9%
+  - 全量检索: Recall@1=58.0%, MRR=68.7%, Composite=67.0
+- **关键优化**:
+  - 偏好值清理: 'Python写代码'->'Python', 'Go语言'->'Go'
+  - 跨类型矛盾检测: knowledge vs decision
+  - 推荐相关性评分: min_relevance过滤噪声
+
+### v5.8 (2026-05-06)
 - **端到端集成测试**: eval/e2e_integration_test.py (9/9 100%)
   - 完整9阶段测试: 摄入→矛盾→一致性→整合→健康→共享→遗忘→推荐→预取
   - 模拟真实团队协作场景（Day1决策→Day5变更→整合→共享→遗忘）
