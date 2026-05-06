@@ -7,6 +7,7 @@ import sqlite3
 import json
 import logging
 import time
+import math
 import uuid
 from typing import Any, Dict, List, Optional
 from pathlib import Path
@@ -103,6 +104,20 @@ class SqliteStore:
                 PRIMARY KEY (taskId, skillId)
             )
         """)
+
+        # Memory access log for importance scoring
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS memory_access_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                memory_type TEXT NOT NULL,
+                memory_id TEXT NOT NULL,
+                query TEXT,
+                accessed_at INTEGER NOT NULL,
+                context TEXT
+            )
+        """)
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_access_log_memory ON memory_access_log(memory_type, memory_id)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_access_log_time ON memory_access_log(accessed_at)")
 
         # Create indexes for performance
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_chunks_session ON chunks(sessionKey)")
@@ -2387,4 +2402,98 @@ class SqliteStore:
             return [dict(row) for row in cursor.fetchall()]
         except Exception as e:
             logger.error(f"get_due_reviews failed: {e}")
+            return []
+
+
+    # ========== Memory Importance Scoring ==========
+
+    def log_memory_access(self, memory_type: str, memory_id: str, query: str = "", context: str = "") -> None:
+        """Log a memory access for importance scoring."""
+        try:
+            now = int(time.time() * 1000)
+            cursor = self.conn.cursor()
+            cursor.execute(
+                "INSERT INTO memory_access_log (memory_type, memory_id, query, accessed_at, context) VALUES (?, ?, ?, ?, ?)",
+                (memory_type, memory_id, query, now, context),
+            )
+            self.conn.commit()
+        except Exception as e:
+            logger.error(f"log_memory_access failed: {e}")
+
+    def get_memory_importance(self, memory_type: str, memory_id: str) -> float:
+        """Calculate importance score for a memory (0.0 to 1.0).
+        
+        Importance = f(access_count, recency, diversity)
+        """
+        try:
+            cursor = self.conn.cursor()
+            now = int(time.time() * 1000)
+            
+            # Access count (last 30 days)
+            thirty_days_ago = now - 30 * 24 * 3600 * 1000
+            cursor.execute(
+                "SELECT COUNT(*) FROM memory_access_log WHERE memory_type = ? AND memory_id = ? AND accessed_at > ?",
+                (memory_type, memory_id, thirty_days_ago),
+            )
+            access_count = cursor.fetchone()[0]
+            
+            # Recency
+            cursor.execute(
+                "SELECT MAX(accessed_at) FROM memory_access_log WHERE memory_type = ? AND memory_id = ?",
+                (memory_type, memory_id),
+            )
+            last_access = cursor.fetchone()[0]
+            if last_access:
+                days_since = (now - last_access) / (24 * 3600 * 1000)
+                recency = 1.0 / (1.0 + days_since / 7.0)
+            else:
+                recency = 0.1
+            
+            # Query diversity
+            cursor.execute(
+                "SELECT COUNT(DISTINCT query) FROM memory_access_log WHERE memory_type = ? AND memory_id = ? AND query != ''",
+                (memory_type, memory_id),
+            )
+            diversity = cursor.fetchone()[0]
+            
+            # Combined score
+            access_score = min(1.0, 0.3 + 0.3 * math.log(max(1, access_count)))
+            diversity_score = min(1.0, 0.2 + 0.1 * diversity)
+            
+            importance = 0.4 * access_score + 0.4 * recency + 0.2 * diversity_score
+            return min(1.0, max(0.0, importance))
+            
+        except Exception as e:
+            logger.error(f"get_memory_importance failed: {e}")
+            return 0.5
+
+    def get_top_memories(self, owner: str, memory_type: str = None, limit: int = 10):
+        """Get the most important memories for an owner."""
+        try:
+            cursor = self.conn.cursor()
+            
+            if memory_type == "decision":
+                cursor.execute(
+                    "SELECT * FROM decisions WHERE owner = ? AND status = 'active' ORDER BY updatedAt DESC LIMIT ?",
+                    (owner, limit),
+                )
+            elif memory_type == "preference":
+                cursor.execute(
+                    "SELECT * FROM user_preferences WHERE owner = ? ORDER BY updatedAt DESC LIMIT ?",
+                    (owner, limit),
+                )
+            elif memory_type == "knowledge":
+                cursor.execute(
+                    "SELECT * FROM knowledge_health WHERE owner = ? ORDER BY freshness_score DESC LIMIT ?",
+                    (owner, limit),
+                )
+            else:
+                results = []
+                for mtype in ["decision", "preference", "knowledge"]:
+                    results.extend(self.get_top_memories(owner, mtype, limit // 3))
+                return results[:limit]
+            
+            return [dict(row) for row in cursor.fetchall()]
+        except Exception as e:
+            logger.error(f"get_top_memories failed: {e}")
             return []

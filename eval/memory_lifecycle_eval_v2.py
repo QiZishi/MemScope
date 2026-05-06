@@ -34,6 +34,8 @@ class MemoryLifecycleEval:
             "memory_consistency": {"total": 0, "passed": 0, "details": []},
             "temporal_ordering": {"total": 0, "passed": 0, "details": []},
             "consolidation": {"total": 0, "passed": 0, "details": []},
+            "health_monitoring": {"total": 0, "passed": 0, "details": []},
+            "cross_agent_sharing": {"total": 0, "passed": 0, "details": []},
         }
 
     def run_all(self):
@@ -48,6 +50,8 @@ class MemoryLifecycleEval:
         self._eval_memory_consistency()
         self._eval_temporal_ordering()
         self._eval_consolidation()
+        self._eval_health_monitoring()
+        self._eval_cross_agent_sharing()
 
         self._print_summary()
         return self.results
@@ -436,6 +440,87 @@ class MemoryLifecycleEval:
         os.unlink(db)
 
 
+
+    def _eval_health_monitoring(self):
+        """Test: Memory health monitoring - freshness, consistency, coverage."""
+        print("\n[7/8] Health Monitoring")
+        print("-" * 40)
+
+        db = tempfile.mktemp(suffix='.db')
+        store = SqliteStore(db)
+        mm = MemoryManager(store)
+
+        # Create diverse memories
+        mm.ingest_conversation([
+            {"role": "user", "content": "我们决定用React作为前端框架"},
+            {"role": "user", "content": "数据库用的是PostgreSQL"},
+            {"role": "user", "content": "我喜欢用Python"},
+            {"role": "user", "content": "部署在AWS上"},
+        ], owner="test", session_key="s1")
+
+        self.results["health_monitoring"]["total"] += 1
+        health = mm.check_memory_health(owner="test")
+
+        passed = (
+            health["overall_score"] > 0.5
+            and health["freshness"]["score"] > 0
+            and health["consistency"]["score"] > 0
+            and health["coverage"]["score"] > 0
+        )
+
+        if passed:
+            self.results["health_monitoring"]["passed"] += 1
+            print(f"  ✅ Health: overall={health['overall_score']:.2f} freshness={health['freshness']['score']:.2f} consistency={health['consistency']['score']:.2f} coverage={health['coverage']['score']:.2f}")
+        else:
+            print(f"  ❌ Health check failed: {health}")
+
+        self.results["health_monitoring"]["details"].append({
+            "name": "Memory health monitoring",
+            "passed": passed,
+            "score": health["overall_score"],
+        })
+
+        os.unlink(db)
+
+    def _eval_cross_agent_sharing(self):
+        """Test: Cross-agent memory sharing."""
+        print("\n[8/8] Cross-Agent Sharing")
+        print("-" * 40)
+
+        db = tempfile.mktemp(suffix='.db')
+        store = SqliteStore(db)
+        mm = MemoryManager(store)
+
+        # Alice creates memories
+        mm.ingest_conversation([
+            {"role": "user", "content": "我们决定用React作为前端框架"},
+            {"role": "user", "content": "数据库用的是PostgreSQL"},
+        ], owner="alice", session_key="s1")
+
+        # Share Alice's decision with Bob
+        self.results["cross_agent_sharing"]["total"] += 1
+        decisions = store.search_decisions(owner="alice", limit=5)
+        shared = mm.share_memory("decision", decisions[0]["id"], "bob")
+
+        # Bob can recall the shared memory
+        bob_recall = mm.recall("React", owner="bob")
+        bob_has_shared = len(bob_recall.get("decisions", [])) > 0
+
+        passed = shared and bob_has_shared
+
+        if passed:
+            self.results["cross_agent_sharing"]["passed"] += 1
+            print(f"  ✅ Cross-agent sharing: Alice -> Bob, Bob recalled {len(bob_recall['decisions'])} decision(s)")
+        else:
+            print(f"  ❌ Cross-agent sharing failed: shared={shared}, bob_recall={len(bob_recall.get('decisions', []))}")
+
+        self.results["cross_agent_sharing"]["details"].append({
+            "name": "Cross-agent sharing (Alice -> Bob)",
+            "passed": passed,
+        })
+
+        os.unlink(db)
+
     def _check_latest_decision(self, recall, expected_chosen):
         """Check if the active decision has the expected chosen value."""
         for d in recall.get("decisions", []):
@@ -489,6 +574,8 @@ class MemoryLifecycleEval:
             "Memory Consistency": self.results["memory_consistency"]["passed"] > 0,
             "Temporal Ordering": self.results["temporal_ordering"]["passed"] > 0,
             "Memory Consolidation": self.results.get("consolidation", {}).get("passed", 0) > 0,
+            "Health Monitoring": self.results.get("health_monitoring", {}).get("passed", 0) > 0,
+            "Cross-Agent Sharing": self.results.get("cross_agent_sharing", {}).get("passed", 0) > 0,
         }
         for cap, available in caps.items():
             print(f"    {'✅' if available else '❌'} {cap}")

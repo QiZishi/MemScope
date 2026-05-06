@@ -1014,3 +1014,238 @@ class MemoryManager:
             })
         
         return graph
+
+    def context_aware_recall(
+        self,
+        query: str,
+        conversation_context: List[str] = None,
+        owner: str = "default",
+        max_results: int = 5,
+    ) -> Dict[str, Any]:
+        """Context-aware memory recall.
+        
+        Uses conversation context to disambiguate and improve search.
+        
+        Strategy:
+        1. Extract context keywords from recent messages
+        2. Boost memories that match both query AND context
+        3. Filter out memories that are irrelevant to current context
+        
+        Args:
+            query: The search query
+            conversation_context: Recent conversation messages for context
+            owner: Memory owner
+            max_results: Maximum results to return
+        """
+        results = {
+            "chunks": [],
+            "decisions": [],
+            "preferences": [],
+            "knowledge": [],
+            "context_boost": [],
+        }
+
+        # 1. Extract context keywords
+        context_keywords = set()
+        if conversation_context:
+            for msg in conversation_context[-3:]:  # Last 3 messages
+                words = re.findall(r'[\w\u4e00-\u9fff]{2,}', msg.lower())
+                context_keywords.update(words)
+
+        # 2. Standard recall
+        base_recall = self.recall(query, owner=owner, max_chunks=max_results)
+        
+        # 3. Boost results that match context
+        for chunk in base_recall.get("chunks", []):
+            content = chunk.get("content", "").lower()
+            context_match = sum(1 for kw in context_keywords if kw in content)
+            chunk["_context_score"] = context_match
+            chunk["_relevance"] = chunk.get("_score", 0) + context_match * 0.1
+
+        # Sort by combined relevance
+        base_recall["chunks"].sort(key=lambda x: x.get("_relevance", 0), reverse=True)
+        
+        # 4. Also search structured memories with context
+        if context_keywords:
+            context_query = " ".join(list(context_keywords)[:5])
+            context_decisions = self.store.search_decisions(owner=owner, query=context_query, limit=3)
+            
+            # Merge with base results (avoid duplicates)
+            seen_ids = {d["id"] for d in base_recall.get("decisions", [])}
+            for d in context_decisions:
+                if d["id"] not in seen_ids:
+                    base_recall["decisions"].append(d)
+                    results["context_boost"].append({"type": "decision", "id": d["id"], "title": d.get("title", "")})
+
+        results.update(base_recall)
+        return results
+
+    def smart_ingest(
+        self,
+        messages: List[Dict[str, Any]],
+        owner: str = "default",
+        session_key: str = "default",
+    ) -> Dict[str, Any]:
+        """Smart ingestion that does everything:
+        1. Store chunks
+        2. Extract facts
+        3. Detect contradictions
+        4. Consolidate if enough new facts
+        """
+        # Step 1-3: Standard ingestion with fact extraction
+        result = self.ingest_conversation(messages, owner, session_key, extract_facts=True)
+        
+        # Step 4: Consolidate if we extracted enough new facts
+        total_facts = sum(result["facts_extracted"].values())
+        if total_facts >= 2:
+            consolidation = self.consolidate_memories(owner)
+            result["consolidation"] = consolidation
+        
+        return result
+
+
+    def check_memory_health(self, owner: str = "default") -> Dict[str, Any]:
+        """Check the health of all memories for an owner.
+        
+        Health indicators:
+        - Freshness: how recently memories were updated
+        - Coverage: do we have memories for all important topics?
+        - Consistency: are there any conflicting memories?
+        - Staleness: are any memories outdated?
+        """
+        cursor = self.store.conn.cursor()
+        now = int(time.time() * 1000)
+        
+        health = {
+            "overall_score": 1.0,
+            "freshness": {"score": 1.0, "stale_count": 0, "details": []},
+            "consistency": {"score": 1.0, "conflicts": 0, "details": []},
+            "coverage": {"score": 1.0, "gaps": [], "details": []},
+        }
+        
+        # 1. Freshness check - decisions older than 30 days without update
+        thirty_days_ago = now - 30 * 24 * 3600 * 1000
+        cursor.execute(
+            "SELECT id, title, updatedAt FROM decisions WHERE owner = ? AND status = 'active' AND updatedAt < ?",
+            (owner, thirty_days_ago),
+        )
+        stale_decisions = cursor.fetchall()
+        if stale_decisions:
+            health["freshness"]["stale_count"] = len(stale_decisions)
+            for d in stale_decisions:
+                days_old = (now - d[2]) / (24 * 3600 * 1000)
+                health["freshness"]["details"].append({
+                    "id": d[0], "title": d[1], "days_old": int(days_old)
+                })
+            health["freshness"]["score"] = max(0.5, 1.0 - 0.05 * len(stale_decisions))
+        
+        # 2. Consistency check - active decisions with same title but different chosen
+        cursor.execute(
+            "SELECT title, COUNT(DISTINCT chosen) as cnt FROM decisions "
+            "WHERE owner = ? AND status = 'active' GROUP BY title HAVING cnt > 1",
+            (owner,),
+        )
+        conflicts = cursor.fetchall()
+        if conflicts:
+            health["consistency"]["conflicts"] = len(conflicts)
+            for c in conflicts:
+                health["consistency"]["details"].append({"title": c[0], "variants": c[1]})
+            health["consistency"]["score"] = max(0.5, 1.0 - 0.1 * len(conflicts))
+        
+        # 3. Coverage check - common topic categories
+        expected_topics = ["database", "framework", "language", "tool", "infrastructure"]
+        cursor.execute(
+            "SELECT topic FROM knowledge_health WHERE owner = ?",
+            (owner,),
+        )
+        existing_topics = set()
+        for row in cursor.fetchall():
+            topic_type = row[0].split(":")[0] if ":" in row[0] else row[0]
+            existing_topics.add(topic_type)
+        
+        cursor.execute(
+            "SELECT DISTINCT category FROM user_preferences WHERE owner = ?",
+            (owner,),
+        )
+        for row in cursor.fetchall():
+            existing_topics.add(row[0])
+        
+        gaps = [t for t in expected_topics if t not in existing_topics]
+        if gaps:
+            health["coverage"]["gaps"] = gaps
+            health["coverage"]["score"] = max(0.5, 1.0 - 0.1 * len(gaps))
+        
+        # Overall score
+        health["overall_score"] = (
+            0.4 * health["freshness"]["score"] +
+            0.3 * health["consistency"]["score"] +
+            0.3 * health["coverage"]["score"]
+        )
+        
+        return health
+
+    def share_memory(self, memory_type: str, memory_id: str, target_owner: str) -> bool:
+        """Share a memory with another owner (cross-agent sharing)."""
+        try:
+            cursor = self.store.conn.cursor()
+            conn = self.store.conn
+            now = int(time.time() * 1000)
+            
+            if memory_type == "decision":
+                cursor.execute("SELECT * FROM decisions WHERE id = ?", (memory_id,))
+                row = cursor.fetchone()
+                if row:
+                    row_dict = dict(row)
+                    cursor.execute(
+                        "INSERT OR REPLACE INTO decisions (id, owner, project, title, context, chosen, alternatives, outcome, status, tags, createdAt, updatedAt) "
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        (str(uuid.uuid4()), target_owner, row_dict.get("project"), row_dict["title"],
+                         row_dict.get("context"), row_dict.get("chosen"), row_dict.get("alternatives"),
+                         row_dict.get("outcome"), "active", "shared:" + row_dict.get("owner", ""), now, now),
+                    )
+                    conn.commit()
+                    return True
+            
+            elif memory_type == "preference":
+                cursor.execute("SELECT * FROM user_preferences WHERE id = ?", (memory_id,))
+                row = cursor.fetchone()
+                if row:
+                    row_dict = dict(row)
+                    cursor.execute(
+                        "INSERT OR REPLACE INTO user_preferences (id, owner, category, key, value, confidence, source, createdAt, updatedAt) "
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        (str(uuid.uuid4()), target_owner, row_dict["category"], row_dict["key"],
+                         row_dict["value"], row_dict.get("confidence", 0.8), "shared", now, now),
+                    )
+                    conn.commit()
+                    return True
+            
+            return False
+        except Exception as e:
+            logger.error(f"share_memory failed: {e}")
+            return False
+
+    def get_shared_memories(self, owner: str, memory_type: str = None) -> List[Dict[str, Any]]:
+        """Get memories shared with this owner."""
+        try:
+            cursor = self.store.conn.cursor()
+            results = []
+            
+            if memory_type in (None, "decision"):
+                cursor.execute(
+                    "SELECT * FROM decisions WHERE owner = ? AND tags LIKE 'shared:%' ORDER BY updatedAt DESC LIMIT 20",
+                    (owner,),
+                )
+                results.extend([dict(row) for row in cursor.fetchall()])
+            
+            if memory_type in (None, "preference"):
+                cursor.execute(
+                    "SELECT * FROM user_preferences WHERE owner = ? AND source = 'shared' ORDER BY updatedAt DESC LIMIT 20",
+                    (owner,),
+                )
+                results.extend([dict(row) for row in cursor.fetchall()])
+            
+            return results
+        except Exception as e:
+            logger.error(f"get_shared_memories failed: {e}")
+            return []
