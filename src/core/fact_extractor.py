@@ -812,3 +812,205 @@ class MemoryManager:
         summary["knowledge"] = cursor.fetchone()[0]
 
         return summary
+
+    def consolidate_memories(self, owner: str = "default") -> Dict[str, Any]:
+        """Consolidate related memories into higher-level knowledge.
+        
+        This is what makes MemScope a MEMORY system, not just RAG.
+        
+        Consolidation rules:
+        1. Multiple decisions about same topic -> Decision timeline summary
+        2. Multiple preferences in same category -> Preference profile
+        3. Related knowledge entries -> Knowledge graph node
+        """
+        result = {
+            "decision_timelines": 0,
+            "preference_profiles": 0,
+            "knowledge_graphs": 0,
+        }
+        
+        result["decision_timelines"] = self._consolidate_decisions(owner)
+        result["preference_profiles"] = self._consolidate_preferences(owner)
+        result["knowledge_graphs"] = self._consolidate_knowledge(owner)
+        
+        return result
+
+    def _consolidate_decisions(self, owner: str) -> int:
+        """Consolidate decisions about the same topic into timelines."""
+        cursor = self.store.conn.cursor()
+        
+        cursor.execute(
+            "SELECT title, COUNT(*) as cnt, "
+            "GROUP_CONCAT(chosen, ' -> ') as timeline, "
+            "MAX(CASE WHEN status='active' THEN chosen END) as current "
+            "FROM decisions WHERE owner = ? GROUP BY title HAVING cnt > 1",
+            (owner,),
+        )
+        
+        consolidated = 0
+        for row in cursor.fetchall():
+            title, count, timeline, current = row[0], row[1], row[2], row[3]
+            
+            if count > 1 and timeline:
+                summary_text = f"[Decision History] {title}: {timeline}"
+                if current:
+                    summary_text += f" (current: {current})"
+                
+                self.store.insert_chunk({
+                    "sessionKey": f"consolidated_{owner}",
+                    "turnId": f"decision_timeline_{title}",
+                    "seq": 0,
+                    "role": "system",
+                    "content": summary_text,
+                    "kind": "consolidated_decision",
+                    "summary": f"{title} decision history",
+                    "owner": owner,
+                    "visibility": "private",
+                })
+                consolidated += 1
+        
+        return consolidated
+
+    def _consolidate_preferences(self, owner: str) -> int:
+        """Consolidate preferences into user profiles."""
+        cursor = self.store.conn.cursor()
+        
+        cursor.execute(
+            "SELECT category, GROUP_CONCAT(key || '=' || value, ', ') as prefs, COUNT(*) as cnt "
+            "FROM user_preferences WHERE owner = ? GROUP BY category HAVING cnt > 0",
+            (owner,),
+        )
+        
+        consolidated = 0
+        for row in cursor.fetchall():
+            category, prefs_str, count = row[0], row[1], row[2]
+            
+            if prefs_str:
+                pref_items = []
+                for pref in prefs_str.split(', '):
+                    if '=' in pref:
+                        key, value = pref.split('=', 1)
+                        if value == 'avoid':
+                            pref_items.append(f"avoid {key}")
+                        elif value == 'prefer':
+                            pref_items.append(f"prefer {key}")
+                        else:
+                            pref_items.append(f"{key}={value}")
+                
+                if pref_items:
+                    summary_text = f"[User Preferences] {category}: {', '.join(pref_items)}"
+                    
+                    self.store.insert_chunk({
+                        "sessionKey": f"consolidated_{owner}",
+                        "turnId": f"preference_profile_{category}",
+                        "seq": 0,
+                        "role": "system",
+                        "content": summary_text,
+                        "kind": "consolidated_preference",
+                        "summary": f"{category} preference profile",
+                        "owner": owner,
+                        "visibility": "private",
+                    })
+                    consolidated += 1
+        
+        return consolidated
+
+    def _consolidate_knowledge(self, owner: str) -> int:
+        """Consolidate related knowledge into graph nodes."""
+        cursor = self.store.conn.cursor()
+        
+        cursor.execute(
+            "SELECT topic, source, freshness_score, accuracy_score "
+            "FROM knowledge_health WHERE owner = ? ORDER BY topic",
+            (owner,),
+        )
+        
+        rows = cursor.fetchall()
+        if not rows:
+            return 0
+        
+        topic_groups = {}
+        for row in rows:
+            topic = row[0]
+            topic_type = topic.split(':')[0] if ':' in topic else 'general'
+            if topic_type not in topic_groups:
+                topic_groups[topic_type] = []
+            topic_groups[topic_type].append(topic)
+        
+        consolidated = 0
+        for topic_type, topics in topic_groups.items():
+            if topics:
+                values = [t.split(':', 1)[1] for t in topics if ':' in t]
+                if values:
+                    summary_text = f"[Knowledge Graph] {topic_type}: {', '.join(values)}"
+                    
+                    self.store.insert_chunk({
+                        "sessionKey": f"consolidated_{owner}",
+                        "turnId": f"knowledge_graph_{topic_type}",
+                        "seq": 0,
+                        "role": "system",
+                        "content": summary_text,
+                        "kind": "consolidated_knowledge",
+                        "summary": f"{topic_type} knowledge summary",
+                        "owner": owner,
+                        "visibility": "private",
+                    })
+                    consolidated += 1
+        
+        return consolidated
+
+    def get_decision_timeline(self, owner: str, topic: str) -> List[Dict[str, Any]]:
+        """Get the decision timeline for a specific topic."""
+        cursor = self.store.conn.cursor()
+        cursor.execute(
+            "SELECT * FROM decisions WHERE owner = ? AND title LIKE ? ORDER BY createdAt ASC",
+            (owner, f"%{topic}%"),
+        )
+        return [dict(row) for row in cursor.fetchall()]
+
+    def get_preference_profile(self, owner: str) -> Dict[str, Any]:
+        """Get the user complete preference profile."""
+        cursor = self.store.conn.cursor()
+        cursor.execute(
+            "SELECT category, key, value, confidence, source "
+            "FROM user_preferences WHERE owner = ? ORDER BY category, key",
+            (owner,),
+        )
+        
+        profile = {}
+        for row in cursor.fetchall():
+            cat = row[0]
+            if cat not in profile:
+                profile[cat] = []
+            profile[cat].append({
+                "key": row[1],
+                "value": row[2],
+                "confidence": row[3],
+                "source": row[4],
+            })
+        
+        return profile
+
+    def get_knowledge_graph(self, owner: str) -> Dict[str, Any]:
+        """Get the knowledge graph for an owner."""
+        cursor = self.store.conn.cursor()
+        cursor.execute(
+            "SELECT topic, source, freshness_score, accuracy_score "
+            "FROM knowledge_health WHERE owner = ? ORDER BY topic",
+            (owner,),
+        )
+        
+        graph = {}
+        for row in cursor.fetchall():
+            topic = row[0]
+            topic_type = topic.split(':')[0] if ':' in topic else 'general'
+            if topic_type not in graph:
+                graph[topic_type] = []
+            graph[topic_type].append({
+                "topic": topic,
+                "source": row[1],
+                "freshness": row[2],
+                "accuracy": row[3],
+            })
+        
+        return graph

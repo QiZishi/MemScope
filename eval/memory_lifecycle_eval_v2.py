@@ -33,6 +33,7 @@ class MemoryLifecycleEval:
             "unified_recall": {"total": 0, "passed": 0, "details": []},
             "memory_consistency": {"total": 0, "passed": 0, "details": []},
             "temporal_ordering": {"total": 0, "passed": 0, "details": []},
+            "consolidation": {"total": 0, "passed": 0, "details": []},
         }
 
     def run_all(self):
@@ -46,6 +47,7 @@ class MemoryLifecycleEval:
         self._eval_unified_recall()
         self._eval_memory_consistency()
         self._eval_temporal_ordering()
+        self._eval_consolidation()
 
         self._print_summary()
         return self.results
@@ -387,6 +389,53 @@ class MemoryLifecycleEval:
 
         os.unlink(db)
 
+
+    def _eval_consolidation(self):
+        """Test: Memory consolidation - multiple related memories merged into higher-level knowledge."""
+        print("\n[6/6] Memory Consolidation")
+        print("-" * 40)
+
+        db = tempfile.mktemp(suffix='.db')
+        store = SqliteStore(db)
+        mm = MemoryManager(store)
+
+        # Create multiple decisions about same topic
+        mm.ingest_conversation([{"role": "user", "content": "我们决定用MySQL作为数据库"}], owner="test", session_key="s1")
+        mm.ingest_conversation([{"role": "user", "content": "经过测试，我们决定切换到PostgreSQL"}], owner="test", session_key="s2")
+
+        # Create preferences
+        mm.ingest_conversation([{"role": "user", "content": "我喜欢用React"}], owner="test", session_key="s3")
+        mm.ingest_conversation([{"role": "user", "content": "我更喜欢用Vue"}], owner="test", session_key="s4")
+
+        # Create knowledge
+        mm.ingest_conversation([{"role": "user", "content": "项目数据库用的是PostgreSQL"}], owner="test", session_key="s5")
+        mm.ingest_conversation([{"role": "user", "content": "部署在AWS上"}], owner="test", session_key="s6")
+
+        # Consolidate
+        self.results["consolidation"]["total"] += 1
+        result = mm.consolidate_memories(owner="test")
+
+        passed = (
+            result["decision_timelines"] >= 1
+            and result["preference_profiles"] >= 1
+            and result["knowledge_graphs"] >= 1
+        )
+
+        if passed:
+            self.results["consolidation"]["passed"] += 1
+            print(f"  ✅ Consolidation: {result}")
+        else:
+            print(f"  ❌ Consolidation failed: {result}")
+
+        self.results["consolidation"]["details"].append({
+            "name": "Memory consolidation",
+            "passed": passed,
+            "result": result,
+        })
+
+        os.unlink(db)
+
+
     def _check_latest_decision(self, recall, expected_chosen):
         """Check if the active decision has the expected chosen value."""
         for d in recall.get("decisions", []):
@@ -417,6 +466,7 @@ class MemoryLifecycleEval:
         total_passed = 0
         total_tests = 0
 
+        # Include all categories including consolidation
         for category, data in self.results.items():
             passed = data["passed"]
             total = data["total"]
@@ -438,6 +488,7 @@ class MemoryLifecycleEval:
             "Unified Recall": self.results["unified_recall"]["passed"] > 0,
             "Memory Consistency": self.results["memory_consistency"]["passed"] > 0,
             "Temporal Ordering": self.results["temporal_ordering"]["passed"] > 0,
+            "Memory Consolidation": self.results.get("consolidation", {}).get("passed", 0) > 0,
         }
         for cap, available in caps.items():
             print(f"    {'✅' if available else '❌'} {cap}")

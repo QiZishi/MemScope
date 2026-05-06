@@ -1,0 +1,174 @@
+{
+  "fact_extraction": {
+    "total": 5,
+    "passed": 5,
+    "details": [
+      {
+        "name": "Decision extraction",
+        "passed": true,
+        "expected": {
+          "decisions": 1,
+          "preferences": 0,
+          "knowledge": 0
+        },
+        "actual": {
+          "decisions": 1,
+          "preferences": 0,
+          "knowledge": 0
+        }
+      },
+      {
+        "name": "Preference extraction",
+        "passed": true,
+        "expected": {
+          "decisions": 0,
+          "preferences": 1,
+          "knowledge": 0
+        },
+        "actual": {
+          "decisions": 0,
+          "preferences": 1,
+          "knowledge": 0
+        }
+      },
+      {
+        "name": "Knowledge extraction",
+        "passed": true,
+        "expected": {
+          "decisions": 0,
+          "preferences": 0,
+          "knowledge": 1
+        },
+        "actual": {
+          "decisions": 0,
+          "preferences": 0,
+          "knowledge": 1
+        }
+      },
+      {
+        "name": "Mixed extraction",
+        "passed": true,
+        "expected": {
+          "decisions": 1,
+          "preferences": 1,
+          "knowledge": 1
+        },
+        "actual": {
+          "decisions": 1,
+          "preferences": 1,
+          "knowledge": 1
+        }
+      },
+      {
+        "name": "No facts (casual chat)",
+        "passed": true,
+        "expected": {
+          "decisions": 0,
+          "preferences": 0,
+          "knowledge": 0
+        },
+        "actual": {
+          "decisions": 0,
+          "preferences": 0,
+          "knowledge": 0
+        }
+      }
+    ]
+  },
+  "contradiction_detection": {
+    "total": 3,
+    "passed": 3,
+    "details": [
+      {
+        "name": "Decision update (React → Vue)",
+        "passed": true,
+        "contradictions": 1
+      },
+      {
+        "name": "Preference update (Python → Go)",
+        "passed": true,
+        "contradictions": 1
+      },
+      {
+        "name": "No contradiction (different topics)",
+        "passed": true,
+        "contradictions": 0
+      }
+    ]
+  },
+  "unified_recall": {
+    "total": 4,
+    "passed": 4,
+    "details": [
+      {
+        "name": "Recall decision by tech term",
+        "passed": true,
+        "query": "React",
+        "results_count": 1
+      },
+      {
+        "name": "Recall preference by tool",
+        "passed": true,
+        "query": "VS Code",
+        "results_count": 1
+      },
+      {
+        "name": "Recall knowledge by tech",
+        "passed": true,
+        "query": "PostgreSQL",
+        "results_count": 1
+      },
+      {
+        "name": "Recall chunk by content",
+        "passed": true,
+        "query": "AWS",
+        "results_count": 1
+      }
+    ]
+  },
+  "memory_consistency": {
+    "total": 3,
+    "passed": 3,
+    "details": [
+      {
+        "name": "Decision shows latest value",
+        "passed": true
+      },
+      {
+        "name": "Preference shows latest value",
+        "passed": true
+      },
+      {
+        "name": "Old decision is superseded",
+        "passed": true
+      }
+    ]
+  },
+  "temporal_ordering": {
+    "total": 1,
+    "passed": 1,
+    "details": [
+      {
+        "name": "Decision evolution (MySQL → PostgreSQL)",
+        "passed": true,
+        "active_count": 2,
+        "superseded_count": 1
+      }
+    ]
+  },
+  "consolidation": {
+    "total": 1,
+    "passed": 1,
+    "details": [
+      {
+        "name": "Memory consolidation",
+        "passed": true,
+        "result": {
+          "decision_timelines": 1,
+          "preference_profiles": 1,
+          "knowledge_graphs": 2
+        }
+      }
+    ]
+  }
+}
