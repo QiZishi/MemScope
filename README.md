@@ -3,6 +3,11 @@ File unchanged since last read. The content from the earlier read_file result in
 
 
 
+### v5.8 (2026-05-06) — 最终版
+- **端到端集成测试**: eval/e2e_integration_test.py (9/9 100%)
+  - 完整9阶段测试: 摄入→矛盾→一致性→整合→健康→共享→遗忘→推荐→预取
+  - 模拟真实团队协作场景（Day1决策→Day5变更→整合→共享→遗忘）
+
 ### v5.7 (2026-05-06)
 - **主动推荐系统**: proactive_recommend() / prefetch()
   - 基于对话上下文自动识别话题并推荐相关记忆
