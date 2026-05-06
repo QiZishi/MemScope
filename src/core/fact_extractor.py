@@ -69,11 +69,13 @@ class FactExtractor:
     # Knowledge signal patterns (factual statements)
     KNOWLEDGE_SIGNALS_ZH = [
         r'(?:项目|系统|服务|应用)(?:用的是|使用的是|基于|采用的是|运行在)',
-        r'(?:数据库|框架|语言|工具)(?:是|为|用的是|用|使用)',
+        r'(?:数据库|框架|语言|工具)(?:是|为|用的是)',
         r'(?:部署在|运行在|托管在|放在)',
         r'(?:版本|ver)(?:是|为|=)',
         r'(?:配置|设置)(?:为|是|=)',
         r'(?:用|使用)\s*(?:的是)?\s*(?:PostgreSQL|MySQL|MongoDB|Redis|Docker|K8s|AWS|Azure|GCP)',
+        r'(?:监控|缓存|消息队列|负载均衡|反向代理)\s*(?:用|使用的是)',
+        r'(?:中间件|MQ|ES|LB)\s*(?:用|使用的是)',
     ]
 
     KNOWLEDGE_SIGNALS_EN = [
@@ -212,6 +214,7 @@ class FactExtractor:
         # Store knowledge
         for kn in facts["knowledge"]:
             if detect_contradictions:
+                # Same-type check (knowledge vs knowledge)
                 contradiction = self._check_knowledge_contradiction(kn, owner)
                 if contradiction:
                     stored["contradictions"].append({
@@ -219,6 +222,19 @@ class FactExtractor:
                         "topic": kn["topic"],
                         "old_value": contradiction.get("source", "unknown"),
                         "new_value": kn.get("value", ""),
+                    })
+                
+                # Cross-type check: new knowledge vs existing decisions
+                # e.g., knowledge "database:MySQL" contradicts decision "数据库选型: PostgreSQL"
+                cross_contradiction = self._check_decision_knowledge_cross(kn, owner, direction="knowledge_vs_decision")
+                if cross_contradiction:
+                    stored["contradictions"].append({
+                        "type": "cross_knowledge_decision",
+                        "old_decision_id": cross_contradiction["id"],
+                        "old_decision_title": cross_contradiction.get("title", ""),
+                        "old_decision_chosen": cross_contradiction.get("chosen", ""),
+                        "new_knowledge_topic": kn["topic"],
+                        "new_knowledge_value": kn.get("value", ""),
                     })
 
             kid = self.store.upsert_knowledge_health(
@@ -231,6 +247,19 @@ class FactExtractor:
             )
             if kid:
                 stored["knowledge"].append({"id": kid, **kn})
+
+        # Cross-type check: new decisions vs existing knowledge
+        if detect_contradictions:
+            for decision in facts["decisions"]:
+                cross_contradiction = self._check_decision_knowledge_cross(decision, owner, direction="decision_vs_knowledge")
+                if cross_contradiction:
+                    stored["contradictions"].append({
+                        "type": "cross_decision_knowledge",
+                        "new_decision_title": decision["title"],
+                        "new_decision_chosen": decision["chosen"],
+                        "old_knowledge_topic": cross_contradiction.get("topic", ""),
+                        "old_knowledge_source": cross_contradiction.get("source", ""),
+                    })
 
         return stored
 
@@ -342,16 +371,19 @@ class FactExtractor:
                 break
 
         if value:
+            # Clean up value: extract just the tech term, not the full phrase
+            # "Python写代码" -> "Python", "Go语言" -> "Go"
+            cleaned_value = self._clean_preference_value(value)
+            
             # Determine category and topic-based key
-            category = self._categorize_preference(value, text)
+            category = self._categorize_preference(cleaned_value, text)
             # Use topic-based key so contradictions can be detected
-            # e.g., 'React' and 'Vue' both get key='前端框架' under category='framework'
-            topic_key = self._get_preference_topic_key(category, value, text)
+            topic_key = self._get_preference_topic_key(category, cleaned_value, text)
             
             preferences.append({
                 "category": category,
                 "key": topic_key,
-                "value": value,  # Store the actual value (e.g., 'React')
+                "value": cleaned_value,
                 "confidence": 0.8,
             })
 
@@ -393,13 +425,14 @@ class FactExtractor:
                     "completeness": 0.8,
                 })
 
-        # Also extract general "用的是" patterns (and shorter variants)
+        # Also extract general patterns (strict to avoid false positives)
         uses_patterns = [
             r'(?:用的是|使用的是|基于|采用的是)\s*(.{2,30}?)(?:[，。,.]|$)',
-            r'(?:数据库|database)\s*(?:用|使用)\s*(\w+)',
-            r'(?:框架|framework)\s*(?:用|使用)\s*(\w+)',
+            r'(?:数据库|database)\s*(?:用的是|使用的是)\s*(\w+)',
+            r'(?:框架|framework)\s*(?:用的是|使用的是)\s*(\w+)',
             r'(?:部署|deploy)\s*(?:在|到)\s*(\w+)',
-            r'(?:用|使用)\s*(PostgreSQL|MySQL|MongoDB|Redis|Docker|K8s|AWS|Azure|GCP)(?:[，。,.\s]|$)',
+            r'(?:监控|缓存|消息队列)\s*(?:用的是|使用的是)\s*(\w+)',
+            r'(?:用的是|使用的是)\s*(PostgreSQL|MySQL|MongoDB|Redis|Docker|K8s|AWS|Azure|GCP|RabbitMQ|Kafka|Prometheus|Grafana|Nginx)(?:[，。,.\s]|$)',
         ]
         for pattern in uses_patterns:
             m = re.search(pattern, text, re.IGNORECASE)
@@ -508,6 +541,82 @@ class FactExtractor:
             return existing
         return None
 
+    def _check_decision_knowledge_cross(
+        self, item: Dict[str, Any], owner: str, direction: str = "decision_vs_knowledge"
+    ) -> Optional[Dict[str, Any]]:
+        """Cross-type contradiction: decision vs knowledge or knowledge vs decision.
+        
+        Examples:
+            Knowledge 'database:MySQL' vs Decision '数据库选型: PostgreSQL' -> contradiction
+            Decision '数据库选型: PostgreSQL' vs Knowledge 'database:MySQL' -> contradiction
+        """
+        cursor = self.store.conn.cursor()
+        
+        if direction == "decision_vs_knowledge":
+            # New decision vs existing knowledge
+            # e.g., decision about '数据库选型' vs knowledge 'database:MySQL'
+            title = item.get("title", "")
+            chosen = item.get("chosen", "")
+            
+            # Extract topic type from decision title
+            topic_type = None
+            if any(t in title for t in ['数据库', 'database']):
+                topic_type = 'database'
+            elif any(t in title for t in ['前端', '框架']):
+                topic_type = 'framework'
+            elif any(t in title for t in ['部署', '云']):
+                topic_type = 'infrastructure'
+            elif any(t in title for t in ['消息队列', 'MQ']):
+                topic_type = 'mq'
+            elif any(t in title for t in ['监控']):
+                topic_type = 'monitoring'
+            
+            if topic_type:
+                # Search knowledge with matching topic type
+                cursor.execute(
+                    "SELECT * FROM knowledge_health WHERE owner = ? AND topic LIKE ?",
+                    (owner, f"{topic_type}:%"),
+                )
+                for row in cursor.fetchall():
+                    kn = dict(row)
+                    kn_value = kn.get("topic", "").split(":")[-1] if ":" in kn.get("topic", "") else ""
+                    # If knowledge has a different value than the decision's chosen
+                    if kn_value and kn_value.lower() != chosen.lower():
+                        return kn
+        
+        elif direction == "knowledge_vs_decision":
+            # New knowledge vs existing decisions
+            # e.g., knowledge 'database:MySQL' vs decision '数据库选型: PostgreSQL'
+            topic = item.get("topic", "")
+            value = item.get("value", "")
+            
+            # Extract topic type from knowledge topic
+            topic_type = topic.split(":")[0] if ":" in topic else ""
+            
+            # Search decisions with matching topic
+            search_terms = {
+                'database': '数据库',
+                'framework': '框架',
+                'infrastructure': '部署',
+                'mq': '消息队列',
+                'monitoring': '监控',
+            }
+            
+            search_term = search_terms.get(topic_type, "")
+            if search_term:
+                cursor.execute(
+                    "SELECT * FROM decisions WHERE owner = ? AND title LIKE ? AND status = 'active'",
+                    (owner, f"%{search_term}%"),
+                )
+                for row in cursor.fetchall():
+                    d = dict(row)
+                    chosen = d.get("chosen", "")
+                    # If decision has a different value than the knowledge
+                    if chosen and chosen.lower() != value.lower():
+                        return d
+        
+        return None
+
     def _extract_decision_topic(self, text: str, found_terms: List[str]) -> str:
         """Extract the TOPIC of a decision (not the chosen value).
         
@@ -570,6 +679,38 @@ class FactExtractor:
             if m:
                 return m.group(1).strip()
         return None
+
+    def _clean_preference_value(self, value: str) -> str:
+        """Clean preference value to extract just the tech term.
+        
+        'Python写代码' -> 'Python'
+        'Go语言' -> 'Go'
+        'VS Code写Python' -> 'VS Code'
+        'React框架' -> 'React'
+        """
+        # Try to find a known tech term in the value
+        for term in self.TECH_TERMS:
+            if term.lower() in value.lower():
+                return term
+        
+        # Try to extract the first meaningful word (Chinese or English)
+        # Remove common suffixes like '写代码', '语言', '框架', '工具'
+        suffixes_to_remove = ['写代码', '写程序', '编程', '语言', '框架', '工具', '平台', '数据库', '服务器']
+        cleaned = value
+        for suffix in suffixes_to_remove:
+            if cleaned.endswith(suffix):
+                cleaned = cleaned[:-len(suffix)]
+        
+        # Also try: extract first English word or first Chinese word
+        en_match = re.match(r'^([A-Za-z][A-Za-z0-9.#+]+)', cleaned)
+        if en_match:
+            return en_match.group(1)
+        
+        zh_match = re.match(r'^([一-鿿]{2,6})', cleaned)
+        if zh_match:
+            return zh_match.group(1)
+        
+        return cleaned.strip()
 
     def _get_preference_topic_key(self, category: str, value: str, context: str) -> str:
         """Get a topic-based key for a preference so contradictions can be detected.
@@ -1256,19 +1397,18 @@ class MemoryManager:
         message: str,
         owner: str = "default",
         max_recommendations: int = 5,
+        min_relevance: float = 0.1,
     ) -> Dict[str, Any]:
         """Proactively recommend relevant memories based on a new message.
         
-        Unlike recall() which requires an explicit query, this method:
-        1. Analyzes the incoming message for topics/entities
-        2. Searches all memory types for relevant entries
-        3. Ranks by relevance and importance
-        4. Returns top recommendations with context
+        Only returns memories with direct topic relevance (no noise).
+        Each recommendation has a relevance_score for ranking.
         
         Args:
             message: The new user message to find context for
             owner: Memory owner
             max_recommendations: Max items to recommend
+            min_relevance: Minimum relevance score to include (0-1)
             
         Returns:
             Dict with 'recommendations' list and 'topics_detected' list.
@@ -1277,39 +1417,28 @@ class MemoryManager:
         
         # Step 1: Extract topics and entities from message
         topics = self._extract_topics(message)
+        if not topics:
+            return {
+                "recommendations": [],
+                "topics_detected": [],
+                "total_candidates": 0,
+                "unique_candidates": 0,
+            }
         
-        # Step 2: Search each memory type
+        # Step 2: Search each memory type (ONLY direct matches)
         candidates = []
         
-        # Search decisions (broader matching: also search by chosen value and context)
+        # Search decisions (direct topic match only)
         seen_decision_ids = set()
         for topic in topics:
-            # Search by title/context/chosen
             decisions = self.store.search_decisions(owner=owner, query=topic, limit=3)
             for d in decisions:
                 if d.get("status") == "active" and d["id"] not in seen_decision_ids:
                     seen_decision_ids.add(d["id"])
-                    candidates.append({
-                        "type": "decision",
-                        "id": d["id"],
-                        "title": d.get("title", ""),
-                        "value": d.get("chosen", ""),
-                        "context": d.get("context", ""),
-                        "topic_match": topic,
-                        "status": d.get("status", "active"),
-                    })
-        
-        # Also get ALL active decisions as broader context
-        all_active = self.store.search_decisions(owner=owner, limit=20)
-        for d in all_active:
-            if d.get("status") == "active" and d["id"] not in seen_decision_ids:
-                # Check if any topic word appears in title/context/chosen
-                title_ctx = f"{d.get('title', '')} {d.get('context', '')} {d.get('chosen', '')}"
-                for topic in topics:
-                    if topic.lower() in title_ctx.lower() or any(
-                        t in title_ctx for t in ['框架', '选型', '技术', '方案', '工具']
-                    ):
-                        seen_decision_ids.add(d["id"])
+                    # Calculate relevance: how many topics match
+                    title_ctx = f"{d.get('title', '')} {d.get('context', '')} {d.get('chosen', '')}"
+                    relevance = sum(1 for t in topics if t.lower() in title_ctx.lower()) / len(topics)
+                    if relevance >= min_relevance:
                         candidates.append({
                             "type": "decision",
                             "id": d["id"],
@@ -1318,28 +1447,42 @@ class MemoryManager:
                             "context": d.get("context", ""),
                             "topic_match": topic,
                             "status": d.get("status", "active"),
+                            "relevance_score": relevance,
                         })
-                        break
         
-        # Search preferences
+        # Search preferences (direct topic match only)
         prefs = self.store.list_preferences(owner=owner)
         for pref in prefs:
             pref_text = f"{pref.get('category', '')} {pref.get('key', '')} {pref.get('value', '')}"
-            for topic in topics:
-                if topic.lower() in pref_text.lower():
-                    candidates.append({
-                        "type": "preference",
-                        "category": pref.get("category", ""),
-                        "key": pref.get("key", ""),
-                        "value": pref.get("value", ""),
-                        "topic_match": topic,
-                    })
-                    break
+            matched_topics = [t for t in topics if t.lower() in pref_text.lower()]
+            relevance = len(matched_topics) / len(topics) if topics else 0
+            if relevance >= min_relevance:
+                candidates.append({
+                    "type": "preference",
+                    "category": pref.get("category", ""),
+                    "key": pref.get("key", ""),
+                    "value": pref.get("value", ""),
+                    "topic_match": matched_topics[0] if matched_topics else "",
+                    "relevance_score": relevance,
+                })
         
-        # Search knowledge (topic-matched + all active knowledge for context)
+        # Search knowledge (direct topic match + mapped topic types)
         cursor = self.store.conn.cursor()
         seen_knowledge = set()
+        
+        # Topic-to-knowledge-type mapping
+        topic_type_map = {
+            '数据库': 'database', '数据': 'database',
+            '前端': 'framework', '后端': 'framework', '技术选型': 'framework', '框架': 'framework',
+            '部署': 'infrastructure', '架构': 'infrastructure', '云': 'infrastructure',
+            '消息队列': 'mq',
+            '监控': 'monitoring',
+            '编程语言': 'language', '语言': 'language',
+            '工具': 'tool',
+        }
+        
         for topic in topics:
+            # Direct match
             cursor.execute(
                 "SELECT * FROM knowledge_health WHERE owner = ? AND topic LIKE ? ORDER BY freshness_score DESC LIMIT 3",
                 (owner, f"%{topic}%"),
@@ -1348,32 +1491,38 @@ class MemoryManager:
                 row_dict = dict(row)
                 if row_dict["id"] not in seen_knowledge:
                     seen_knowledge.add(row_dict["id"])
-                    candidates.append({
-                        "type": "knowledge",
-                        "topic": row_dict.get("topic", ""),
-                        "freshness": row_dict.get("freshness_score", 0),
-                        "accuracy": row_dict.get("accuracy_score", 0),
-                        "topic_match": topic,
-                    })
+                    relevance = sum(1 for t in topics if t.lower() in row_dict.get("topic", "").lower()) / len(topics)
+                    if relevance >= min_relevance:
+                        candidates.append({
+                            "type": "knowledge",
+                            "topic": row_dict.get("topic", ""),
+                            "freshness": row_dict.get("freshness_score", 0),
+                            "accuracy": row_dict.get("accuracy_score", 0),
+                            "topic_match": topic,
+                            "relevance_score": relevance,
+                        })
+            
+            # Mapped type match (e.g., '部署' -> 'infrastructure:%')
+            mapped_type = topic_type_map.get(topic)
+            if mapped_type:
+                cursor.execute(
+                    "SELECT * FROM knowledge_health WHERE owner = ? AND topic LIKE ? ORDER BY freshness_score DESC LIMIT 3",
+                    (owner, f"{mapped_type}:%"),
+                )
+                for row in cursor.fetchall():
+                    row_dict = dict(row)
+                    if row_dict["id"] not in seen_knowledge:
+                        seen_knowledge.add(row_dict["id"])
+                        candidates.append({
+                            "type": "knowledge",
+                            "topic": row_dict.get("topic", ""),
+                            "freshness": row_dict.get("freshness_score", 0),
+                            "accuracy": row_dict.get("accuracy_score", 0),
+                            "topic_match": f"{topic}->{mapped_type}",
+                            "relevance_score": 0.5,  # Partial match via mapping
+                        })
         
-        # Also include high-freshness knowledge as general context
-        cursor.execute(
-            "SELECT * FROM knowledge_health WHERE owner = ? AND freshness_score > 0.7 ORDER BY freshness_score DESC LIMIT 5",
-            (owner,),
-        )
-        for row in cursor.fetchall():
-            row_dict = dict(row)
-            if row_dict["id"] not in seen_knowledge:
-                seen_knowledge.add(row_dict["id"])
-                candidates.append({
-                    "type": "knowledge",
-                    "topic": row_dict.get("topic", ""),
-                    "freshness": row_dict.get("freshness_score", 0),
-                    "accuracy": row_dict.get("accuracy_score", 0),
-                    "topic_match": "(context)",
-                })
-        
-        # Search consolidated chunks
+        # Search consolidated chunks (direct topic match only)
         for topic in topics:
             cursor.execute(
                 "SELECT * FROM chunks WHERE owner = ? AND content LIKE ? AND kind LIKE 'consolidated%' LIMIT 2",
@@ -1381,17 +1530,21 @@ class MemoryManager:
             )
             for row in cursor.fetchall():
                 row_dict = dict(row)
-                candidates.append({
-                    "type": "consolidated",
-                    "content": row_dict.get("content", ""),
-                    "kind": row_dict.get("kind", ""),
-                    "topic_match": topic,
-                })
+                content = row_dict.get("content", "")
+                relevance = sum(1 for t in topics if t.lower() in content.lower()) / len(topics)
+                if relevance >= min_relevance:
+                    candidates.append({
+                        "type": "consolidated",
+                        "content": content,
+                        "kind": row_dict.get("kind", ""),
+                        "topic_match": topic,
+                        "relevance_score": relevance,
+                    })
         
-        # Step 3: Deduplicate and rank
+        # Step 3: Deduplicate and sort by relevance
         seen = set()
         unique = []
-        for c in candidates:
+        for c in sorted(candidates, key=lambda x: x.get("relevance_score", 0), reverse=True):
             key = f"{c['type']}:{c.get('id', '')}{c.get('topic', '')}{c.get('key', '')}"
             if key not in seen:
                 seen.add(key)
@@ -1428,22 +1581,24 @@ class MemoryManager:
             if term.lower() in text.lower():
                 topics.add(term)
         
-        # Chinese topic patterns
+        # Chinese topic patterns (mapped to stored knowledge topic types)
         topic_patterns = [
-            (r'(?:数据库|DB|数据存储)', '数据库'),
-            (r'(?:前端|前端框架|UI)', '前端'),
+            (r'(?:数据库|DB|数据存储|数据)', '数据库'),
+            (r'(?:前端|前端框架|UI|界面)', '前端'),
             (r'(?:后端|后端框架|服务端)', '后端'),
-            (r'(?:部署|部署方案|云平台)', '部署'),
-            (r'(?:消息队列|MQ)', '消息队列'),
+            (r'(?:部署|部署方案|云平台|云|基础设施)', '部署'),
+            (r'(?:消息队列|MQ|消息中间件)', '消息队列'),
             (r'(?:缓存)', '缓存'),
-            (r'(?:容器|容器化)', '容器'),
-            (r'(?:监控|监控系统)', '监控'),
+            (r'(?:容器|容器化|Docker)', '容器'),
+            (r'(?:监控|监控系统|Prometheus|Grafana)', '监控'),
             (r'(?:CI/CD|持续集成|流水线)', 'CI/CD'),
             (r'(?:测试|测试框架)', '测试'),
             (r'(?:安全|认证|授权)', '安全'),
-            (r'(?:性能|优化)', '性能'),
+            (r'(?:性能|优化|查询)', '性能'),
             (r'(?:架构|系统架构)', '架构'),
-            (r'(?:框架|技术栈|技术选型)', '技术选型'),
+            (r'(?:框架|技术栈|技术选型|选型)', '技术选型'),
+            (r'(?:编程语言|语言|代码)', '编程语言'),
+            (r'(?:工具|编辑器|IDE)', '工具'),
         ]
         for pattern, topic in topic_patterns:
             if _re.search(pattern, text, _re.IGNORECASE):

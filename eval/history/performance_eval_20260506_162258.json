@@ -1,0 +1,33 @@
+{
+  "fact_extraction": {
+    "precision": 0.6153846153846154,
+    "recall": 0.8,
+    "f1": 0.6956521739130435,
+    "total_expected": 10,
+    "total_actual": 13,
+    "total_correct": 8
+  },
+  "contradiction_detection": {
+    "detection_rate": 1.0,
+    "false_positives": 0,
+    "final_accuracy": 1.0
+  },
+  "retrieval": {
+    "recall_at_1": 1.0,
+    "recall_at_3": 1.0,
+    "recall_at_5": 1.0,
+    "mrr": 1.0
+  },
+  "proactive_recommendation": {
+    "precision": 1.0,
+    "recall": 0.125,
+    "f1": 0.2222222222222222,
+    "false_positive_queries": 0
+  },
+  "full_retrieval": {
+    "composite": 67.05,
+    "recall_at_1": 0.5801,
+    "mrr": 0.6867,
+    "f1": 0.5029
+  }
+}
