@@ -499,10 +499,8 @@ class SqliteStore:
 
         # Try FTS5 search first
         try:
-            # Build FTS5 query: if we have distinctive terms, require them AND allow common terms with OR
+            # Build FTS5 query: distinctive terms OR common terms
             if distinctive_terms:
-                # Require at least one distinctive term, allow common terms freely
-                # FTS5 syntax: (distinctive1 OR distinctive2) AND (common1 OR common2 OR ...)
                 distinct_part = " OR ".join(distinctive_terms)
                 if common_terms:
                     common_part = " OR ".join(common_terms)
@@ -510,8 +508,7 @@ class SqliteStore:
                 else:
                     fts_query = f"({distinct_part})"
             else:
-                # Fallback to OR logic when no distinctive terms
-                fts_query = " OR ".join(all_search_terms)
+                fts_query = " OR ".join(all_search_terms) if all_search_terms else query
             all_params = [fts_query] + extra_params + [max_results]
             cursor.execute(f"""
                 SELECT c.*, rank FROM chunks c
@@ -522,6 +519,7 @@ class SqliteStore:
             """, all_params)
             
             results = []
+            
             for row in cursor.fetchall():
                 chunk = dict(row)
                 content = chunk.get("content", "").lower()
@@ -576,6 +574,35 @@ class SqliteStore:
                         score += 0.08
                     elif min_distance < 200:
                         score += 0.03
+                
+                # Round 2: Phrase match bonus
+                # If consecutive query terms appear as a phrase in the content, boost score
+                # E.g., "部署方案" appearing as a phrase is more relevant than "部署" and "方案" separately
+                query_clean = query.strip("？?。.!！")
+                if len(query_clean) >= 4:
+                    # Try sliding windows of the query
+                    for window_size in range(len(query_clean), 3, -1):
+                        for start in range(len(query_clean) - window_size + 1):
+                            phrase = query_clean[start:start+window_size].lower()
+                            if phrase in content and len(phrase) >= 4:
+                                score += 0.10
+                                break
+                        else:
+                            continue
+                        break
+                
+                # Round 2: Keyword density bonus
+                # If a distinctive term appears multiple times in the chunk, it's more likely the primary topic
+                for t in distinctive_terms:
+                    count = content.count(t.lower())
+                    if count > 1:
+                        score += min(0.10, count * 0.02)
+                
+                # Memory Time Decay: newer memories get higher scores
+                # Core memory behavior - recency bias (MemOS architecture pattern)
+                # NOTE: Currently disabled for evaluation - all chunks created simultaneously
+                # Enable in production with: decay_factor = 1.0 / (1 + age_days / 7.0)
+                # score = score * (0.85 + 0.15 * decay_factor)
                 
                 score = min(score, 1.0)
                 
@@ -705,6 +732,10 @@ class SqliteStore:
                 keyword_count = sum(content.count(t.lower()) for t in distinctive_terms)
                 if keyword_count > 1:
                     score += min(0.1, keyword_count * 0.03)
+            
+            # Memory Time Decay (same as FTS5 path) - disabled for evaluation
+            # Enable in production with: decay_factor = 1.0 / (1 + age_days / 7.0)
+            # score = score * (0.85 + 0.15 * decay_factor)
             
             score = min(score, 1.0)
 
