@@ -532,20 +532,29 @@ class SqliteStore:
                 matching_common = sum(1 for t in common_terms if t.lower() in content or t.lower() in summary)
                 total_matching = matching_distinctive + matching_common
                 
-                # Distinctive terms weighted 3x common terms
+                # Round 1 optimization: heavily weight distinctive terms
+                # Distinctive terms (English/numbers/3+char Chinese) are the real discriminators
                 if distinctive_terms:
                     distinctive_ratio = matching_distinctive / len(distinctive_terms)
-                    score = 0.2 + 0.5 * distinctive_ratio
+                    score = 0.15 + 0.70 * distinctive_ratio
                     if common_terms:
                         common_ratio = matching_common / len(common_terms)
-                        score += 0.3 * common_ratio
+                        score += 0.10 * common_ratio
                 else:
                     score = 0.1 + 0.7 * (total_matching / len(all_search_terms))
                 
-                # Exact match bonus
+                # Exact match bonus (full query phrase match)
                 query_lower = query.lower()
                 if query_lower in content:
                     score += 0.15
+                
+                # Specificity bonus: if chunk contains distinctive terms that are rare (English/numbers),
+                # give extra weight because these are high-signal matches
+                for t in distinctive_terms:
+                    if t.lower() in content and re.match(r'^[a-zA-Z0-9]+$', t):
+                        # English/number terms are high-specificity
+                        score += 0.05
+                        break
                 
                 # Proximity boost
                 matched_all_terms = [t for t in all_search_terms if t.lower() in content or t.lower() in (summary or "")]
@@ -644,13 +653,13 @@ class SqliteStore:
             if distinctive_terms and matching_distinctive == 0:
                 continue
             
-            # Distinctive terms weighted heavily
+            # Round 1 optimization: heavily weight distinctive terms (same as FTS path)
             if distinctive_terms:
                 distinctive_ratio = matching_distinctive / len(distinctive_terms)
-                score = 0.2 + 0.5 * distinctive_ratio
+                score = 0.15 + 0.70 * distinctive_ratio
                 if common_terms:
                     common_ratio = matching_common / len(common_terms)
-                    score += 0.3 * common_ratio
+                    score += 0.10 * common_ratio
             else:
                 total_matching = matching_distinctive + matching_common
                 score = 0.1 + 0.7 * (total_matching / len(all_search_terms))
@@ -660,6 +669,12 @@ class SqliteStore:
                 score += 0.15
             if summary and query_lower in summary:
                 score += 0.05
+            
+            # Specificity bonus for English/number terms
+            for t in distinctive_terms:
+                if t.lower() in content and re.match(r'^[a-zA-Z0-9]+$', t):
+                    score += 0.05
+                    break
             
             # Proximity boost: if multiple matched terms appear close together, boost score
             # This helps distinguish relevant context from scattered term matches

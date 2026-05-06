@@ -1,0 +1,43 @@
+{
+  "evaluation_id": "efficiency-20260506_125753",
+  "timestamp": "2026-05-06T12:57:53.663284",
+  "write_latency": {
+    "p50_ms": 1.85,
+    "p95_ms": 2.21,
+    "p99_ms": 2.72
+  },
+  "query_latency": {
+    "p50_ms": 1.33,
+    "p95_ms": 1.9
+  },
+  "operation_saving_rate": 0.77,
+  "task_details": [
+    {
+      "task": "查找前端框架决策",
+      "without_memory": 5,
+      "with_memory": 1
+    },
+    {
+      "task": "查找API规范",
+      "without_memory": 4,
+      "with_memory": 1
+    },
+    {
+      "task": "查找部署流程",
+      "without_memory": 6,
+      "with_memory": 1
+    },
+    {
+      "task": "查找团队成员偏好",
+      "without_memory": 3,
+      "with_memory": 1
+    },
+    {
+      "task": "查找历史故障记录",
+      "without_memory": 5,
+      "with_memory": 1
+    }
+  ],
+  "total_write_ops": 200,
+  "total_query_ops": 24
+}
